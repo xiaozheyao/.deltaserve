@@ -154,12 +154,8 @@ class LLMEngine:
         self._init_cache()
 
         # Create the scheduler.
-        self.scheduler = Scheduler(
-            scheduler_config, 
-            cache_config, 
-            lora_config, 
-            delta_config
-        )
+        self.scheduler = Scheduler(scheduler_config, cache_config, lora_config,
+                                   delta_config)
 
         # Metric Logging.
         if self.log_stats:
@@ -363,6 +359,7 @@ class LLMEngine:
                 self.scheduler_config)
         if self.delta_config:
             pass
+
     def _init_cache(self) -> None:
         """Profiles the memory usage and initializes the KV cache.
 
@@ -448,10 +445,11 @@ class LLMEngine:
     ):
         if prompt_token_ids is None:
             assert prompt is not None
-            prompt_token_ids = self.tokenizer.encode(request_id=request_id,
-                                                     prompt=prompt,
-                                                     lora_request=lora_request,
-                                                     delta_request=delta_request)
+            prompt_token_ids = self.tokenizer.encode(
+                request_id=request_id,
+                prompt=prompt,
+                lora_request=lora_request,
+                delta_request=delta_request)
         return prompt_token_ids
 
     def add_request(
@@ -524,8 +522,7 @@ class LLMEngine:
             prompt=prompt,
             prompt_token_ids=prompt_token_ids,
             lora_request=lora_request,
-            delta_request=delta_request
-        )
+            delta_request=delta_request)
 
         # Create the sequences.
         block_size = self.cache_config.block_size

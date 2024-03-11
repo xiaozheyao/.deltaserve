@@ -24,9 +24,11 @@ def _torch_device(idx):
 
 def ext_gemm_half_q_half(x, q_handle, q4_width, force_cuda):
     """Matrix multiplication, returns x @ q4"""
-    output_shape = x.shape[:-1] + (q4_width,)
+    output_shape = x.shape[:-1] + (q4_width, )
     x = x.view(-1, x.shape[-1])
-    output = torch.empty((x.shape[0], q4_width), dtype=torch.half, device=x.device)
+    output = torch.empty((x.shape[0], q4_width),
+                         dtype=torch.half,
+                         device=x.device)
     gemm_half_q_half(x, q_handle, output, force_cuda)
     return output.view(output_shape)
 
@@ -61,7 +63,7 @@ def ext_make_q_matrix(w: dict, temp_dq, key: str = None):
         # GPTQ with g_idx (act_order)
         if "g_idx" in w and not (w["g_idx"] == 0).all().item():
             w["q_perm"] = torch.empty(
-                (w["qweight"].shape[0] * 8,),
+                (w["qweight"].shape[0] * 8, ),
                 dtype=torch.short,
                 device=w["qweight"].device,
             )
@@ -107,7 +109,7 @@ class ExLlamaV2DeviceTensors:
 
     def prepare(self):
         self.scratch = torch.empty(
-            (self.scratch_bytes // 2,),
+            (self.scratch_bytes // 2, ),
             dtype=torch.half,
             device=_torch_device(self.device_idx),
         )

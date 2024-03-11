@@ -6,7 +6,9 @@ import transformers
 from loguru import logger
 from vllm.deltas.utils import ext_gemm_half_q_half, ext_make_q_matrix
 
+
 class QuantLinear(nn.Module):
+
     def __init__(
         self,
         bits: int,
@@ -23,32 +25,30 @@ class QuantLinear(nn.Module):
         self.bits = bits
         self.group_size = infeatures
         self.maxq = 2**self.bits - 1
-        
+
         self.register_buffer(
             "qweight",
-            torch.zeros((infeatures // 32 * self.bits, outfeatures), dtype=torch.int32),
+            torch.zeros((infeatures // 32 * self.bits, outfeatures),
+                        dtype=torch.int32),
         )
         self.register_buffer(
-            "qzeros", torch.zeros((1, outfeatures // 32 * self.bits), dtype=torch.int32)
-        )
+            "qzeros",
+            torch.zeros((1, outfeatures // 32 * self.bits), dtype=torch.int32))
         self.register_buffer(
-            "scales", torch.zeros((1, outfeatures), dtype=torch.float16)
-        )
+            "scales", torch.zeros((1, outfeatures), dtype=torch.float16))
         self.register_buffer(
             "g_idx",
-            torch.tensor(
-                [i // infeatures for i in range(infeatures)], dtype=torch.int32
-            ),
+            torch.tensor([i // infeatures for i in range(infeatures)],
+                         dtype=torch.int32),
         )
         if bias:
             self.register_buffer(
-                "bias", torch.zeros((outfeatures), dtype=torch.float16)
-            )
+                "bias", torch.zeros((outfeatures), dtype=torch.float16))
         else:
             self.bias = None
         if self.bits == 4:
             self.padding = -outfeatures % 32
-            
+
     def post_init(self, temp_dq):
         if self.bits == 4:
             assert self.qweight.device.type == "cuda"
@@ -63,7 +63,7 @@ class QuantLinear(nn.Module):
             self.q_handle = ext_make_q_matrix(self.q_tensors, temp_dq)
         else:
             raise NotImplementedError("Only 4 bits are supported.")
-    
+
     def temp_dq_size(self):
         return self.infeatures * self.outfeatures * 2 + 128
 
@@ -71,11 +71,13 @@ class QuantLinear(nn.Module):
         return self.outfeatures * max_input_len * max_batch_size * 4 + 128
 
     def scratch_space_fixed(self, max_input_len=2048, max_batch_size=8):
-        return self.temp_dq_size() + self.temp_fwd_size(max_input_len, max_batch_size)
+        return self.temp_dq_size() + self.temp_fwd_size(
+            max_input_len, max_batch_size)
 
     def forward(self, x):
         if self.bits == 4:
-            output = ext_gemm_half_q_half(x, self.q_handle, self.outfeatures, False)
+            output = ext_gemm_half_q_half(x, self.q_handle, self.outfeatures,
+                                          False)
             if self.bias:
                 output.add_(self.bias)
             return output
