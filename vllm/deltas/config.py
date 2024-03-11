@@ -4,7 +4,7 @@ from transformers.utils.hub import PushToHubMixin
 from os.path import join, isfile
 
 @dataclass
-class BaseCompressionConfig(PushToHubMixin):
+class DeltaCompressionConfig(PushToHubMixin):
     bits: int = field(default=4, metadata={"choices": [2, 3, 4, 8, 16]})
     # sparsity = how many parameters we set to zero after quantization
     sparsity: float = field(default=0)

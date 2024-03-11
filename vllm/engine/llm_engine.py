@@ -11,6 +11,8 @@ from transformers import PreTrainedTokenizer
 
 import vllm
 from vllm.lora.request import LoRARequest
+from vllm.deltas.request import DeltaRequest
+from vllm.deltas.config import DeltaCompressionConfig
 from vllm.config import (CacheConfig, DeviceConfig, ModelConfig,
                          ParallelConfig, SchedulerConfig, LoRAConfig)
 from vllm.core.scheduler import Scheduler, SchedulerOutputs
@@ -84,6 +86,7 @@ class LLMEngine:
         scheduler_config: SchedulerConfig,
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
+        delta_config: Optional[DeltaCompressionConfig],
         placement_group: Optional["PlacementGroup"],
         log_stats: bool,
     ) -> None:
@@ -96,6 +99,8 @@ class LLMEngine:
             f"tokenizer_revision={model_config.tokenizer_revision}, "
             f"trust_remote_code={model_config.trust_remote_code}, "
             f"dtype={model_config.dtype}, "
+            f"lora_config={lora_config}, "
+            f"delta_config={delta_config}, "
             f"max_seq_len={model_config.max_model_len}, "
             f"download_dir={model_config.download_dir!r}, "
             f"load_format={model_config.load_format}, "
@@ -112,6 +117,7 @@ class LLMEngine:
         self.model_config = model_config
         self.cache_config = cache_config
         self.lora_config = lora_config
+        self.delta_config = delta_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
         self.device_config = device_config
@@ -148,7 +154,12 @@ class LLMEngine:
         self._init_cache()
 
         # Create the scheduler.
-        self.scheduler = Scheduler(scheduler_config, cache_config, lora_config)
+        self.scheduler = Scheduler(
+            scheduler_config, 
+            cache_config, 
+            lora_config, 
+            delta_config
+        )
 
         # Metric Logging.
         if self.log_stats:
@@ -200,6 +211,7 @@ class LLMEngine:
             rank=0,
             distributed_init_method=distributed_init_method,
             lora_config=self.lora_config,
+            delta_config=self.delta_config,
             kv_cache_dtype=self.cache_config.cache_dtype,
             is_driver_worker=True,
         )
@@ -209,6 +221,7 @@ class LLMEngine:
     def _init_tokenizer(self, **tokenizer_init_kwargs):
         init_kwargs = dict(
             enable_lora=bool(self.lora_config),
+            enable_delta=bool(self.delta_config),
             max_num_seqs=self.scheduler_config.max_num_seqs,
             max_input_length=None,
             tokenizer_mode=self.model_config.tokenizer_mode,
@@ -293,6 +306,7 @@ class LLMEngine:
         scheduler_config = copy.deepcopy(self.scheduler_config)
         device_config = copy.deepcopy(self.device_config)
         lora_config = copy.deepcopy(self.lora_config)
+        delta_config = copy.deepcopy(self.delta_config)
         kv_cache_dtype = self.cache_config.cache_dtype
 
         for rank, (worker, (node_id,
@@ -310,6 +324,7 @@ class LLMEngine:
                     rank,
                     distributed_init_method,
                     lora_config=lora_config,
+                    delta_config=delta_config,
                     kv_cache_dtype=kv_cache_dtype,
                 ))
 
@@ -324,6 +339,7 @@ class LLMEngine:
             driver_rank,
             distributed_init_method,
             lora_config=self.lora_config,
+            delta_config=self.delta_config,
             kv_cache_dtype=kv_cache_dtype,
             is_driver_worker=True,
         )
@@ -345,7 +361,8 @@ class LLMEngine:
             self.lora_config.verify_with_model_config(self.model_config)
             self.lora_config.verify_with_scheduler_config(
                 self.scheduler_config)
-
+        if self.delta_config:
+            pass
     def _init_cache(self) -> None:
         """Profiles the memory usage and initializes the KV cache.
 
@@ -427,12 +444,14 @@ class LLMEngine:
         prompt: Optional[str],
         prompt_token_ids: Optional[List[int]] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ):
         if prompt_token_ids is None:
             assert prompt is not None
             prompt_token_ids = self.tokenizer.encode(request_id=request_id,
                                                      prompt=prompt,
-                                                     lora_request=lora_request)
+                                                     lora_request=lora_request,
+                                                     delta_request=delta_request)
         return prompt_token_ids
 
     def add_request(
@@ -443,6 +462,7 @@ class LLMEngine:
         prompt_token_ids: Optional[List[int]] = None,
         arrival_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ) -> None:
         """Add a request to the engine's request pool.
 
@@ -487,6 +507,9 @@ class LLMEngine:
         if lora_request is not None and not self.lora_config:
             raise ValueError(f"Got lora_request {lora_request} but LoRA is "
                              "not enabled!")
+        if delta_request is not None and not self.delta_config:
+            raise ValueError(f"Got delta_request {delta_request} but Delta "
+                             "Compression is not enabled!")
         max_logprobs = self.get_model_config().max_logprobs
         if (sampling_params.logprobs
                 and sampling_params.logprobs > max_logprobs) or (
@@ -500,15 +523,17 @@ class LLMEngine:
             request_id=request_id,
             prompt=prompt,
             prompt_token_ids=prompt_token_ids,
-            lora_request=lora_request)
+            lora_request=lora_request,
+            delta_request=delta_request
+        )
 
         # Create the sequences.
         block_size = self.cache_config.block_size
         seq_id = next(self.seq_counter)
         eos_token_id = self.tokenizer.get_lora_tokenizer(
-            lora_request).eos_token_id
+            lora_request, delta_request).eos_token_id
         seq = Sequence(seq_id, prompt, prompt_token_ids, block_size,
-                       eos_token_id, lora_request)
+                       eos_token_id, lora_request, delta_request)
 
         # Defensive copy of SamplingParams, which are used by the sampler,
         # this doesn't deep-copy LogitsProcessor objects
@@ -1049,6 +1074,13 @@ class LLMEngine:
             lora_request=lora_request,
         )
 
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        assert delta_request.delta_int_id > 0, "delta_id must be greater than 0."
+        return self._run_workers(
+            "add_delta",
+            delta_request=delta_request,
+        )
+
     def remove_lora(self, lora_id: int) -> bool:
         assert lora_id > 0, "lora_id must be greater than 0."
         return self._run_workers(
@@ -1056,8 +1088,18 @@ class LLMEngine:
             lora_id=lora_id,
         )
 
+    def remove_delta(self, delta_id: int) -> bool:
+        assert delta_id > 0, "delta_id must be greater than 0."
+        return self._run_workers(
+            "remove_delta",
+            delta_id=delta_id,
+        )
+
     def list_loras(self) -> List[int]:
         return self._run_workers("list_loras")
+
+    def list_deltas(self) -> List[int]:
+        return self._run_workers("list_deltas")
 
     def _run_workers(
         self,
