@@ -115,7 +115,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
 #endif
 
 #ifndef USE_ROCM
-  pybind11::module deltazip = ops.def_submodule("deltazip", "deltazip ops");
+  pybind11::module deltazip = m.def_submodule("deltazip", "deltazip ops");
   deltazip.def("pack_rows_4", &pack_rows_4, "pack_rows_4");
   deltazip.def("pack_columns", &pack_columns, "pack_columns");
   deltazip.def("quantize_err", &quantize_err, "quantize_err");

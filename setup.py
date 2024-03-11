@@ -346,7 +346,7 @@ if _is_cuda():
     vllm_extension_sources.append(
         "csrc/quantization/marlin/marlin_cuda_kernel.cu")
     vllm_extension_sources.append("csrc/custom_all_reduce.cu")
-    
+
     additional_sources = [
         glob("csrc/quantization/deltazip/exllama/cuda/*.cu"),
         glob("csrc/quantization/deltazip/exllama/cpp/*.cpp"),
