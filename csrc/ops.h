@@ -1,6 +1,7 @@
 #pragma once
 
 #include <torch/extension.h>
+#include "quantization/deltazip/lowbits_ops.h"
 
 void paged_attention_v1(
   torch::Tensor& out,

@@ -338,6 +338,7 @@ vllm_extension_sources = [
     "csrc/cuda_utils_kernels.cu",
     "csrc/moe_align_block_size_kernels.cu",
     "csrc/pybind.cpp",
+    "csrc/quantization/deltazip/lowbits_ops.cc",
 ]
 
 if _is_cuda():
@@ -345,7 +346,14 @@ if _is_cuda():
     vllm_extension_sources.append(
         "csrc/quantization/marlin/marlin_cuda_kernel.cu")
     vllm_extension_sources.append("csrc/custom_all_reduce.cu")
-
+    
+    additional_sources = [
+        glob("csrc/quantization/deltazip/exllama/cuda/*.cu"),
+        glob("csrc/quantization/deltazip/exllama/cpp/*.cpp"),
+    ]
+    vllm_extension_sources += [
+        item for sublist in additional_sources for item in sublist
+    ]
     # Add MoE kernels.
     ext_modules.append(
         CUDAExtension(
