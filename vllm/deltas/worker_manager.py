@@ -13,16 +13,13 @@ from vllm.deltas.request import DeltaRequest
 from vllm.deltas.config import DeltaCompressionConfig
 from loguru import logger
 
+
 class AbstractWorkerManager(ABC):
     """Abstract class for managing LoRA/Delta models on the worker side."""
 
-    def __init__(self, 
-                 max_num_seqs: int,
-                 max_num_batched_tokens: int,
-                 vocab_size: int, 
-                 delta_config: DeltaCompressionConfig,
-                 device: torch.device
-                ):
+    def __init__(self, max_num_seqs: int, max_num_batched_tokens: int,
+                 vocab_size: int, delta_config: DeltaCompressionConfig,
+                 device: torch.device):
         self.max_num_seqs = max_num_seqs
         self.max_num_batched_tokens = max_num_batched_tokens
         self.vocab_size = vocab_size
@@ -42,7 +39,7 @@ class AbstractWorkerManager(ABC):
 
     @abstractmethod
     def set_active_deltas(self, lora_requests: List[DeltaRequest],
-                         lora_mapping: LoRAMapping) -> None:
+                          lora_mapping: LoRAMapping) -> None:
         ...
 
     @abstractmethod
@@ -64,6 +61,7 @@ class AbstractWorkerManager(ABC):
     @abstractmethod
     def list_deltas(self) -> Set[int]:
         ...
+
 
 class WorkerDeltaManager(AbstractWorkerManager):
     """WorkerDeltaManager manages the deltas on the worker side. """

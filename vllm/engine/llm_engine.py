@@ -358,7 +358,7 @@ class LLMEngine:
             self.lora_config.verify_with_scheduler_config(
                 self.scheduler_config)
         if self.delta_config:
-            pass
+            logger.info("ignored verifying delta_config")
 
     def _init_cache(self) -> None:
         """Profiles the memory usage and initializes the KV cache.
@@ -508,6 +508,10 @@ class LLMEngine:
         if delta_request is not None and not self.delta_config:
             raise ValueError(f"Got delta_request {delta_request} but Delta "
                              "Compression is not enabled!")
+        if delta_request and lora_request:
+            raise ValueError(
+                "LoRA and Delta Compression cannot be used together!")
+
         max_logprobs = self.get_model_config().max_logprobs
         if (sampling_params.logprobs
                 and sampling_params.logprobs > max_logprobs) or (
@@ -529,6 +533,7 @@ class LLMEngine:
         seq_id = next(self.seq_counter)
         eos_token_id = self.tokenizer.get_lora_tokenizer(
             lora_request, delta_request).eos_token_id
+
         seq = Sequence(seq_id, prompt, prompt_token_ids, block_size,
                        eos_token_id, lora_request, delta_request)
 
@@ -538,7 +543,7 @@ class LLMEngine:
 
         # Create the sequence group.
         seq_group = SequenceGroup(request_id, [seq], sampling_params,
-                                  arrival_time, lora_request)
+                                  arrival_time, lora_request, delta_request)
 
         # Add the sequence group to the scheduler.
         self.scheduler.add_seq_group(seq_group)

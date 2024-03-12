@@ -19,6 +19,8 @@ from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.worker.cache_engine import CacheEngine
 from vllm.worker.model_runner import ModelRunner
 from vllm.lora.request import LoRARequest
+from vllm.deltas.config import DeltaCompressionConfig
+from vllm.deltas.request import DeltaRequest
 
 
 class Worker:
@@ -39,6 +41,7 @@ class Worker:
         rank: int,
         distributed_init_method: str,
         lora_config: Optional[LoRAConfig] = None,
+        delta_config: Optional[DeltaCompressionConfig] = None,
         kv_cache_dtype: Optional[str] = "auto",
         is_driver_worker: bool = False,
     ) -> None:
@@ -50,6 +53,7 @@ class Worker:
         self.rank = rank
         self.distributed_init_method = distributed_init_method
         self.lora_config = lora_config
+        self.delta_config = delta_config
         self.is_driver_worker = is_driver_worker
         if self.is_driver_worker:
             assert self.rank == 0, "The driver worker must have rank 0."
@@ -59,6 +63,7 @@ class Worker:
                                         scheduler_config,
                                         device_config,
                                         lora_config=self.lora_config,
+                                        delta_config=self.delta_config,
                                         kv_cache_dtype=kv_cache_dtype,
                                         is_driver_worker=is_driver_worker)
         # Uninitialized cache engine. Will be initialized by
@@ -231,6 +236,15 @@ class Worker:
 
     def list_loras(self) -> Set[int]:
         return self.model_runner.list_loras()
+
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        return self.model_runner.add_delta(delta_request)
+
+    def remove_delta(self, delta_id: int) -> bool:
+        return self.model_runner.remove_delta(delta_id)
+
+    def list_deltas(self) -> Set[int]:
+        return self.model_runner.list_deltas()
 
     @property
     def max_model_len(self) -> int:

@@ -22,6 +22,7 @@ from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
 from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
 from vllm.utils import in_wsl, measure_cuda_memory
+from vllm.deltas.config import DeltaCompressionConfig
 
 logger = init_logger(__name__)
 
@@ -42,13 +43,20 @@ class ModelRunner:
         scheduler_config: SchedulerConfig,
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
+        delta_config: Optional[DeltaCompressionConfig],
         kv_cache_dtype: Optional[str] = "auto",
         is_driver_worker: bool = False,
     ):
         self.model_config = model_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
+        # lora config & delta config cannot be non-None at the same time
+        # TODO(xiaozhe): enable both lora and delta at the same time
+        assert (lora_config is None) or (
+            delta_config
+            is None), "LoRA and Delta cannot be enabled at the same time"
         self.lora_config = lora_config
+        self.delta_config = delta_config
         self.is_driver_worker = is_driver_worker
 
         # model_config can be None in tests/samplers/test_sampler.py.
@@ -62,6 +70,7 @@ class ModelRunner:
         self.model = None
         self.block_size = None  # Set after initial profiling.
         self.lora_manager = None
+        self.delta_manager = None
 
         self.graph_runners: Dict[int, CUDAGraphRunner] = {}
         self.graph_memory_pool = None  # Set during graph capture.
@@ -89,6 +98,7 @@ class ModelRunner:
             self.model = get_model(self.model_config,
                                    self.device_config,
                                    lora_config=self.lora_config,
+                                   delta_config=self.delta_config,
                                    parallel_config=self.parallel_config,
                                    scheduler_config=self.scheduler_config)
 
@@ -112,6 +122,16 @@ class ModelRunner:
                 self.lora_config, self.device, self.model.embedding_modules,
                 self.model.embedding_padding_modules)
             self.model = self.lora_manager.create_lora_manager(self.model)
+
+        if self.delta_config:
+            assert hasattr(self.model, "supported_delta_modules"
+                           ) and self.model.supported_delta_modules, (
+                               "Model does not support Delta")
+            assert hasattr(
+                self.model,
+                "embedding_modules"), "Model does not have embedding_modules"
+            assert hasattr(self.model, "embedding_padding_modules"
+                           ), "Model does not have embedding_padding_modules"
 
     def set_block_size(self, block_size: int) -> None:
         self.block_size = block_size
@@ -322,10 +342,10 @@ class ModelRunner:
 
         batch_size = len(input_tokens)
         max_context_len = max(context_lens)
-        use_captured_graph = (
-            not self.model_config.enforce_eager
-            and batch_size <= _BATCH_SIZES_TO_CAPTURE[-1]
-            and max_context_len <= self.max_context_len_to_capture)
+        use_captured_graph = (not self.model_config.enforce_eager
+                              and batch_size <= _BATCH_SIZES_TO_CAPTURE[-1]
+                              and max_context_len
+                              <= self.max_context_len_to_capture)
         if use_captured_graph:
             # Pad the input tokens, positions, and slot mapping to match the
             # batch size of the captured graph.
@@ -461,10 +481,11 @@ class ModelRunner:
                                             target_device=self.device,
                                             pin_memory=pin_memory)
         categorized_sample_indices = {
-            t: _async_h2d(seq_ids,
-                          dtype=torch.int,
-                          target_device=self.device,
-                          pin_memory=pin_memory)
+            t:
+            _async_h2d(seq_ids,
+                       dtype=torch.int,
+                       target_device=self.device,
+                       pin_memory=pin_memory)
             for t, seq_ids in categorized_sample_indices.items()
         }
 

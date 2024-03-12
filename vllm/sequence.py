@@ -2,11 +2,12 @@
 import copy
 import enum
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Union, TYPE_CHECKING
+from typing import Dict, List, Optional, Union, TYPE_CHECKING, Any
 
 from vllm.block import LogicalTokenBlock
 from vllm.sampling_params import SamplingParams
 from vllm.lora.request import LoRARequest
+from vllm.deltas.request import DeltaRequest
 
 if TYPE_CHECKING:
     import torch
@@ -160,12 +161,14 @@ class Sequence:
         block_size: int,
         eos_token_id: Optional[int] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ) -> None:
         self.seq_id = seq_id
         self.prompt = prompt
         self.block_size = block_size
         self.eos_token_id = eos_token_id
         self.lora_request = lora_request
+        self.delta_request = delta_request
 
         self.data = SequenceData(prompt_token_ids)
         self.output_logprobs: SampleLogprobs = []
@@ -185,6 +188,10 @@ class Sequence:
     @property
     def lora_int_id(self) -> int:
         return self.lora_request.lora_int_id if self.lora_request else 0
+
+    @property
+    def delta_int_id(self) -> int:
+        return self.delta_request.delta_int_id if self.delta_request else 0
 
     def hash_of_block(self, logical_idx: int) -> int:
         # Compute the number of tokens in the sequence
@@ -289,7 +296,7 @@ class SequenceGroupState:
     """Mutable state tied to a specific sequence group"""
 
     # torch.Generator used in seeded sampling
-    generator: Optional = None
+    generator: Optional[Any] = None
 
 
 class SequenceGroup:
@@ -310,6 +317,7 @@ class SequenceGroup:
         sampling_params: SamplingParams,
         arrival_time: float,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ) -> None:
         self.request_id = request_id
         self.seqs_dict = {seq.seq_id: seq for seq in seqs}
@@ -320,6 +328,7 @@ class SequenceGroup:
                                       first_token_time=None,
                                       time_in_queue=None)
         self.lora_request = lora_request
+        self.delta_request = delta_request
         self.prompt_logprobs: Optional[PromptLogprobs] = None
         self.state = SequenceGroupState()
 
@@ -338,6 +347,10 @@ class SequenceGroup:
     @property
     def lora_int_id(self) -> int:
         return self.lora_request.lora_int_id if self.lora_request else 0
+
+    @property
+    def delta_int_id(self) -> int:
+        return self.delta_request.delta_int_id if self.delta_request else 0
 
     def get_last_latency(self, now: float) -> float:
         """Gets last token latency for Request level timings."""
@@ -449,6 +462,7 @@ class SequenceGroupMetadata:
         sampling_params: SamplingParams,
         block_tables: Dict[int, List[int]],
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
         computed_block_nums: Optional[List[int]] = None,
         state: Optional[SequenceGroupState] = None,
     ) -> None:
@@ -458,12 +472,17 @@ class SequenceGroupMetadata:
         self.sampling_params = sampling_params
         self.block_tables = block_tables
         self.lora_request = lora_request
+        self.delta_request = delta_request
         self.computed_block_nums = computed_block_nums
         self.state = SequenceGroupState() if state is None else state
 
     @property
     def lora_int_id(self) -> int:
         return self.lora_request.lora_int_id if self.lora_request else 0
+
+    @property
+    def delta_int_id(self) -> int:
+        return self.delta_request.delta_int_id if self.delta_request else 0
 
 
 class SequenceOutput:
