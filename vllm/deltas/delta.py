@@ -1,6 +1,4 @@
-from typing import List, Optional
-import torch
-from vllm.utils import in_wsl
+from typing import Optional
 
 
 class DeltaLayerWeights:

@@ -50,7 +50,7 @@ YAPF_EXCLUDES=(
 
 # Format specified files
 format() {
-    yapf --in-place "${YAPF_FLAGS[@]}" "$@"
+    yapf --fix --in-place "${YAPF_FLAGS[@]}" "$@"
 }
 
 # Format files that differ from main branch. Ignores dirs that are not slated
@@ -73,7 +73,7 @@ format_changed() {
 
 # Format all files
 format_all() {
-    yapf --in-place "${YAPF_FLAGS[@]}" "${YAPF_EXCLUDES[@]}" .
+    yapf --fix --in-place "${YAPF_FLAGS[@]}" "${YAPF_EXCLUDES[@]}" .
 }
 
 ## This flag formats individual files. --files *must* be the first command line
@@ -138,7 +138,7 @@ echo 'vLLM codespell: Done'
 
 # Lint specified files
 lint() {
-    ruff "$@"
+    ruff "--fix" "$@"
 }
 
 # Lint files that differ from main branch. Ignores dirs that are not slated

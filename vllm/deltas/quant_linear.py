@@ -1,9 +1,5 @@
-import math
 import torch
-import numpy as np
 import torch.nn as nn
-import transformers
-from loguru import logger
 from vllm.deltas.utils import ext_gemm_half_q_half, ext_make_q_matrix
 
 

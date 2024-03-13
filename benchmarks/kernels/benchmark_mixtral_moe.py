@@ -64,7 +64,7 @@ def run_grid(bs, method):
         print(f'{tp_size=} {bs=}')
         print(f'{config}')
         # warmup
-        print(f'warming up')
+        print('warming up')
         try:
             for _ in range(num_warmup_trials):
                 run_timing(
@@ -82,7 +82,7 @@ def run_grid(bs, method):
             continue
 
         # trial
-        print(f'benchmarking')
+        print('benchmarking')
         for _ in range(num_trials):
             kernel_dur_ms = run_timing(
                 num_calls=num_calls,

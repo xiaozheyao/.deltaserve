@@ -23,6 +23,7 @@ from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
 from vllm.utils import in_wsl, measure_cuda_memory
 from vllm.deltas.config import DeltaCompressionConfig
+from vllm.deltas.request import DeltaRequest
 
 logger = init_logger(__name__)
 
@@ -132,6 +133,8 @@ class ModelRunner:
                 "embedding_modules"), "Model does not have embedding_modules"
             assert hasattr(self.model, "embedding_padding_modules"
                            ), "Model does not have embedding_padding_modules"
+            logger.error("Delta is not supported yet.")
+            self.delta_manager = None
 
     def set_block_size(self, block_size: int) -> None:
         self.block_size = block_size
@@ -701,6 +704,21 @@ class ModelRunner:
         if not self.lora_manager:
             raise RuntimeError("LoRA is not enabled.")
         return self.lora_manager.list_loras()
+
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        if not self.delta_manager:
+            raise RuntimeError("Delta is not enabled.")
+        return self.delta_manager.add_delta(delta_request)
+
+    def remove_delta(self, delta_id: int) -> bool:
+        if not self.delta_manager:
+            raise RuntimeError("Delta is not enabled.")
+        return self.delta_manager.remove_delta(delta_id)
+
+    def list_deltas(self) -> Set[int]:
+        if not self.delta_manager:
+            raise RuntimeError("Delta is not enabled.")
+        return self.delta_manager.list_deltas()
 
     @torch.inference_mode()
     def capture_model(self, kv_caches: List[KVCache]) -> None:

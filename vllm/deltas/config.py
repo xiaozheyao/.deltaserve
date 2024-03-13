@@ -1,7 +1,7 @@
 import json
 from dataclasses import dataclass, field, fields
 from transformers.utils.hub import PushToHubMixin
-from os.path import join, isfile
+from os.path import join
 
 
 @dataclass
@@ -25,7 +25,7 @@ class DeltaCompressionConfig(PushToHubMixin):
     def __post_init__(self):
         fields_info = fields(self)
         if self.sparsity < 0 or self.sparsity > 1:
-            raise ValueError(f"sparsity must be [0, 1]")
+            raise ValueError("sparsity must be [0, 1]")
         if self.bits not in fields_info[0].metadata["choices"]:
             raise ValueError(
                 f"only support quantize to {fields_info[0].metadata['choices']} bits."
