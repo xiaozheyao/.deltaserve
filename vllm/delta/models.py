@@ -1,12 +1,13 @@
 import re
 import math
 import copy
+import torch
 import torch.nn as nn
-from typing import Dict, Optional, List, Callable, Hashable, Any, Type
+from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 
 from vllm.delta.delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from vllm.delta.config import DeltaConfig
-from vllm.delta.layers import BaseLayerWithDelta, from_layer, from_layer_sampler
+from vllm.delta.layers import BaseLayerWithDelta, from_layer, from_layer_sampler, DeltaMapping
 from vllm.delta.utils import replace_submodule
 from vllm.logger import init_logger
 from vllm.utils import LRUCache, in_wsl
@@ -15,6 +16,78 @@ logger = init_logger(__name__)
 
 _GLOBAL_DELTA_ID = 0
 
+def convert_mapping(
+    mapping: DeltaMapping, delta_index_to_id: List[Optional[int]],
+    max_deltas: int, vocab_size: int, extra_vocab_size: int
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, List[int]]:
+    """Converts DeltaMapping to index tensors.
+
+    Args:
+        mapping: DeltaMapping mapping rows in a batch to Delta ids.
+        delta_index_to_id: List mapping Delta ids to Delta indices.
+        max_deltas: Maximum number of Deltas.
+        vocab_size: Model vocab size.
+        extra_vocab_size: Extra vocab size each Delta can have.
+
+    Returns:
+        A tuple of tensors:
+            base_indices: Tensor of shape [batch_size] mapping batch rows to
+                Delta indices.
+            sampler_indices: Tensor of shape [batch_size] mapping requests to
+                Delta indices for sampler. For generation, this will be the
+                same as base_indicies. For prefill, this will map requests
+                to Delta indices.
+            sampler_indices_padded: Tensor of shape [batch_size] mapping
+                requests to Delta indices for sampler with padding.
+                Same as sampler_indicies, but -1 is replaced with
+                max_deltas.
+            embeddings_indices: Tensor of shape [2, batch_size] mapping
+                requests to embedding indices. First row is for embeddings
+                added by the Deltas, second row is for the Delta.emb
+                embeddings.
+            indices_len: List of lengths of the above tensors.
+    """
+    indices = list(mapping.index_mapping).copy()
+    embedding_indices = indices.copy()
+    delta_indices = indices.copy()
+    prompt_mapping = [
+        delta_index_to_id.index(x) if x > 0 else -1
+        for x in mapping.prompt_mapping
+    ]
+    delta_idx = None
+    for i in range(len(indices)):
+        # TODO index can be slow. optimize
+        delta_idx = (delta_index_to_id.index(indices[i])
+                    if indices[i] > 0 else -1)
+        embedding_indices[i] = delta_idx if indices[i] > 0 else 0
+        indices[i] = i
+        delta_indices[i] = delta_idx
+
+    indices = torch.tensor([indices, delta_indices, embedding_indices],
+                           dtype=torch.long,
+                           device="cuda")
+    prompt_mapping = torch.tensor(prompt_mapping,
+                                  device="cuda",
+                                  dtype=torch.long)
+    embeddings_indices = torch.stack([
+        indices[2] * extra_vocab_size,
+        indices[2] * (vocab_size + extra_vocab_size)
+    ])
+    embeddings_indices[embeddings_indices == -1] = max_deltas - 1
+    base_indices = indices[1]
+    sampler_indices = prompt_mapping
+    sampler_indices_padded = sampler_indices.clone()
+    sampler_indices_padded[sampler_indices_padded == -1] = max_deltas - 1
+    sampler_indices_padded = (
+        torch.arange(
+            0, len(sampler_indices_padded), device="cuda", dtype=torch.long) +
+        (sampler_indices_padded * len(sampler_indices_padded)))
+    indices_len = (base_indices.shape[-1], sampler_indices.shape[-1],
+                   sampler_indices_padded.shape[-1],
+                   embeddings_indices.shape[-1])
+
+    return (base_indices, sampler_indices, sampler_indices_padded,
+            embeddings_indices, indices_len)
 
 def get_delta_id():
     global _GLOBAL_DELTA_ID
@@ -178,7 +251,7 @@ class DeltaModelManager:
 
     def set_delta_mapping(self, delta_mapping: DeltaMapping) -> None:
         if self._last_mapping != delta_mapping:
-            self._set_lora_mapping(delta_mapping)
+            self._set_delta_mapping(delta_mapping)
         self._last_mapping = delta_mapping
 
     def list_deltas(self) -> Dict[int, DeltaModel]:
@@ -269,7 +342,7 @@ class DeltaModelManager:
                 if replacement_deltas[i]:
                     continue
                 replacement_deltas[i] = None
-            delta_model.loras[module_name] = PackedDeltaLayerWeights.pack(
+            delta_model.deltas[module_name] = PackedDeltaLayerWeights.pack(
                 replacement_deltas
             )
 
@@ -286,7 +359,7 @@ class DeltaLRUCache(LRUCache):
         return super()._on_remove(key, value)
 
 
-class LRUCacheLoRAModelManager(DeltaModelManager):
+class LRUCacheDeltaModelManager(DeltaModelManager):
     """A model manager that manages multiple Deltas with LRU cache."""
 
     def __init__(
@@ -300,10 +373,10 @@ class LRUCacheLoRAModelManager(DeltaModelManager):
         super().__init__(
             model, max_num_seqs, max_num_batched_tokens, vocab_size, delta_config
         )
-        self._registered_loras: DeltaLRUCache = DeltaLRUCache(
+        self._registered_deltas: DeltaLRUCache = DeltaLRUCache(
             self.capacity, self.deactivate_delta
         )
-        self._active_loras: DeltaLRUCache = DeltaLRUCache(
+        self._active_deltas: DeltaLRUCache = DeltaLRUCache(
             self.delta_slots, self._deactivate_delta
         )
 
@@ -318,7 +391,7 @@ class LRUCacheLoRAModelManager(DeltaModelManager):
             was_added = True
         else:
             # We always touch to update the LRU cache order
-            self._registered_loras.touch(delta.id)
+            self._registered_deltas.touch(delta.id)
             was_added = False
         return was_added
 
@@ -330,10 +403,10 @@ class LRUCacheLoRAModelManager(DeltaModelManager):
             delta_id not in self._active_deltas
             and len(self._active_deltas) >= self.delta_slots
         ):
-            self._active_loras.remove_oldest()
+            self._active_deltas.remove_oldest()
         result = super().activate_delta(delta_id)
         # We always touch to update the LRU cache order
-        self._active_loras.touch(delta_id)
+        self._active_deltas.touch(delta_id)
         return result
 
     def remove_oldest_delta(self) -> bool:
@@ -343,7 +416,7 @@ class LRUCacheLoRAModelManager(DeltaModelManager):
         return False
 
 
-def create_lora_manager(
+def create_delta_manager(
     model: nn.Module,
     max_num_seqs: int,
     max_num_batched_tokens: int,
@@ -353,14 +426,14 @@ def create_lora_manager(
     **kwargs,
 ) -> DeltaModelManager:
     """Create a Delta adapter for a given model."""
-    if not hasattr(model, "supported_lora_modules"):
+    if not hasattr(model, "supported_delta_modules"):
         raise ValueError(f"Model {type(model)} is not supported for Delta.")
-    lora_manager = delta_manager_cls(
+    delta_manager = delta_manager_cls(
         model=model,
         max_num_seqs=max_num_seqs,
         max_num_batched_tokens=max_num_batched_tokens,
         vocab_size=vocab_size,
-        lora_config=delta_config,
+        delta_config=delta_config,
         **kwargs,
     )
-    return lora_manager
+    return delta_manager

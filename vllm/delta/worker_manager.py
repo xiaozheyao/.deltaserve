@@ -2,11 +2,12 @@ from abc import ABC, abstractmethod, abstractproperty
 from typing import Any, List, Optional, Set, Type
 import torch
 
-from vllm.lora.layers import LoRAMapping
-
-from vllm.delta.request import DeltaRequest
-from vllm.delta.config import DeltaConfig
+from .layers import DeltaMapping
+from .request import DeltaRequest
+from .config import DeltaConfig
 from vllm.logger import init_logger
+
+from .models import DeltaModel, DeltaModelManager, LRUCacheDeltaModelManager, create_delta_manager
 
 logger = init_logger(__name__)
 
@@ -36,7 +37,7 @@ class AbstractWorkerManager(ABC):
 
     @abstractmethod
     def set_active_deltas(self, lora_requests: List[DeltaRequest],
-                          lora_mapping: LoRAMapping) -> None:
+                          lora_mapping: DeltaMapping) -> None:
         ...
 
     @abstractmethod
@@ -113,7 +114,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
                 f"Failed to load delta model from {delta_request.delta_path}: {e}"
             )
             return None
-        return delta_model
+        return None
 
     def add_delta(self, delta_request: DeltaRequest) -> bool:
         if delta_request.delta_int_id in self.list_deltas():
@@ -133,7 +134,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
         return set(self._delta_manager.list_deltas())
 
 class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
-    _delta_manager_cls = LRUCacheDeltaManager
+    _delta_manager_cls = LRUCacheDeltaModelManager
     
     def create_delta_manager(self, model) -> Any:
         delta_manager = create_delta_manager(
