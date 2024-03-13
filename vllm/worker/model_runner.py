@@ -154,10 +154,16 @@ class ModelRunner:
                 self.model, "embedding_padding_modules"
             ), "Model does not have embedding_padding_modules"
 
-            logger.error("Delta is not supported yet.")
+            # logger.error("Delta is not supported yet.")
             self.delta_manager = LRUCacheWorkerDeltaManager(
-                
+                self.scheduler_config.max_num_seqs,
+                self.scheduler_config.max_num_batched_tokens
+                + self.scheduler_config.max_paddings,
+                self.vocab_size,
+                self.delta_config,
+                self.device,
             )
+            self.model = self.delta_manager.create_delta_manager(self.model)
 
     def set_block_size(self, block_size: int) -> None:
         self.block_size = block_size

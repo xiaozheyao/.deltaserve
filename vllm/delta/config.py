@@ -69,7 +69,7 @@ class CompressionConfig(PushToHubMixin):
 class DeltaConfig:
     max_deltas: int
     max_cpu_deltas: Optional[int] = None
-    
+    delta_extra_vocab_size: int = 0
     def __post_init__(self):
         if self.max_cpu_deltas is None:
             self.max_cpu_deltas = self.max_deltas

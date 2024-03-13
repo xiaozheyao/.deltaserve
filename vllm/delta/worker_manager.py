@@ -86,6 +86,10 @@ class WorkerDeltaManager(AbstractWorkerManager):
     def create_delta_manager(self, model) -> Any:
         raise NotImplementedError
 
+    def set_active_deltas(self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping) -> None:
+        self._apply_deltas(delta_requests)
+        self._delta_manager.set_delta_mapping(delta_mapping)
+    
     def _apply_deltas(self, delta_requests: List[DeltaRequest]) -> None:
         deltas_that_exist = self.list_deltas()
         deltas_map = {
@@ -116,6 +120,14 @@ class WorkerDeltaManager(AbstractWorkerManager):
             return None
         return None
 
+    def add_dummy_delta(self, delta_request: DeltaRequest) -> bool:
+        if delta_request.delta_int_id in self.list_deltas():
+            return False
+        raise NotImplementedError
+        return self._delta_manager.add_delta(
+            self._delta_manager.create_dummy_delta(delta_request.delta_int_id)
+        )
+    
     def add_delta(self, delta_request: DeltaRequest) -> bool:
         if delta_request.delta_int_id in self.list_deltas():
             return False
@@ -139,7 +151,7 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
     def create_delta_manager(self, model) -> Any:
         delta_manager = create_delta_manager(
             model,
-            delta_manger_cls = self._delta_manager_cls,
+            delta_manager_cls = self._delta_manager_cls,
             max_num_seqs = self.max_num_seqs,
             vocab_size = self.vocab_size,
             delta_config = self.delta_config,

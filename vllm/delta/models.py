@@ -133,6 +133,20 @@ class DeltaModelManager:
         self.max_num_batched_tokens = math.ceil(max_num_batched_tokens / 8) * 8
         self.delta_index_to_id: List[Optional[int]] = [None] * self.delta_slots
         self.vocab_size = vocab_size
+        self.base_indices = torch.empty(self.max_num_batched_tokens,
+                                        dtype=torch.long,
+                                        device="cuda")
+        self.sampler_indices = torch.empty(self.max_num_batched_tokens,
+                                           dtype=torch.long,
+                                           device="cuda")
+        self.sampler_indices_padded = torch.empty(self.max_num_batched_tokens,
+                                                  dtype=torch.long,
+                                                  device="cuda")
+        self.embeddings_indices = torch.empty(2,
+                                              self.max_num_batched_tokens,
+                                              dtype=torch.long,
+                                              device="cuda")
+        
         self.offset = []
         # todo(xiaozhe): figure out if we want to pre-define the length
         # below are dummpy for now
@@ -142,7 +156,9 @@ class DeltaModelManager:
             self.supported_delta_modules = copy.deepcopy(
                 self.model.supported_delta_modules
             )
-
+            self.packed_modules_mapping = copy.deepcopy(
+                self.model.packed_modules_mapping)
+        self.packed_modules: Dict[str, List[str]] = {}
         self.modules: Dict[str, "BaseLayerWithDelta"] = {}
         self._registered_deltas: Dict[int, DeltaModel] = {}
         self._active_deltas: Dict[int, None] = {}
