@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from vllm.deltas.utils import ext_gemm_half_q_half, ext_make_q_matrix
+from vllm.delta.utils import ext_gemm_half_q_half, ext_make_q_matrix
 
 
 class QuantLinear(nn.Module):

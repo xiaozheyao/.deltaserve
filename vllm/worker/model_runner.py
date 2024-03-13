@@ -22,8 +22,8 @@ from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
 from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
 from vllm.utils import in_wsl, measure_cuda_memory
-from vllm.deltas.config import DeltaConfig
-from vllm.deltas.request import DeltaRequest
+from vllm.delta.config import DeltaConfig
+from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
 

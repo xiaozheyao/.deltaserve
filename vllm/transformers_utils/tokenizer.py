@@ -7,6 +7,7 @@ from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
 from vllm.utils import make_async, LRUCache
 from vllm.transformers_utils.tokenizers import *
+from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
 
@@ -106,7 +107,9 @@ class TokenizerGroup:
     def encode(self,
                prompt: str,
                request_id: Optional[str] = None,
-               lora_request: Optional[LoRARequest] = None) -> List[int]:
+               lora_request: Optional[LoRARequest] = None,
+               delta_request: Optional[DeltaRequest] = None,
+               ) -> List[int]:
         tokenizer = self.get_lora_tokenizer(lora_request)
         return tokenizer.encode(prompt)
 
@@ -114,13 +117,16 @@ class TokenizerGroup:
             self,
             prompt: str,
             request_id: Optional[str] = None,
-            lora_request: Optional[LoRARequest] = None) -> List[int]:
+            lora_request: Optional[LoRARequest] = None,
+            delta_request: Optional[DeltaRequest] = None
+            ) -> List[int]:
         tokenizer = await self.get_lora_tokenizer_async(lora_request)
         return tokenizer.encode(prompt)
 
     def get_lora_tokenizer(
             self,
-            lora_request: Optional[LoRARequest] = None
+            lora_request: Optional[LoRARequest] = None,
+            delta_request: Optional[DeltaRequest] = None,
     ) -> "PreTrainedTokenizer":
         if not lora_request or not self.enable_lora:
             return self.tokenizer

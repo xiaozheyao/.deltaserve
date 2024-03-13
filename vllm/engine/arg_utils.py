@@ -5,7 +5,7 @@ from typing import Optional, Tuple
 
 from vllm.config import (CacheConfig, DeviceConfig, ModelConfig,
                          ParallelConfig, SchedulerConfig, LoRAConfig)
-
+from vllm.delta.config import DeltaConfig
 
 @dataclass
 class EngineArgs:
@@ -46,6 +46,9 @@ class EngineArgs:
     lora_extra_vocab_size: int = 256
     lora_dtype = 'auto'
     max_cpu_loras: Optional[int] = None
+    enable_delta: bool = False
+    max_deltas: int = 1
+    max_cpu_deltas: Optional[int] = None
     device: str = 'auto'
     ray_workers_use_nsight: bool = False
 
@@ -300,7 +303,7 @@ class EngineArgs:
     def create_engine_configs(
         self,
     ) -> Tuple[ModelConfig, CacheConfig, ParallelConfig, SchedulerConfig,
-               DeviceConfig, Optional[LoRAConfig]]:
+               DeviceConfig, Optional[LoRAConfig], Optional[DeltaConfig]]:
         device_config = DeviceConfig(self.device)
         model_config = ModelConfig(
             self.model, self.tokenizer, self.tokenizer_mode,
@@ -331,8 +334,13 @@ class EngineArgs:
             lora_dtype=self.lora_dtype,
             max_cpu_loras=self.max_cpu_loras if self.max_cpu_loras
             and self.max_cpu_loras > 0 else None) if self.enable_lora else None
+        delta_config = DeltaConfig(
+            max_deltas=self.max_deltas,
+            max_cpu_deltas=self.max_cpu_deltas if self.max_cpu_deltas else None
+        )
+        
         return (model_config, cache_config, parallel_config, scheduler_config,
-                device_config, lora_config)
+                device_config, lora_config, delta_config)
 
 
 @dataclass

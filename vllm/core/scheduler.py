@@ -10,6 +10,7 @@ from vllm.lora.request import LoRARequest
 from vllm.logger import init_logger
 from vllm.sequence import (Sequence, SequenceData, SequenceGroup,
                            SequenceGroupMetadata, SequenceStatus)
+from vllm.delta.config import DeltaConfig
 
 logger = init_logger(__name__)
 
@@ -75,6 +76,7 @@ class Scheduler:
         scheduler_config: SchedulerConfig,
         cache_config: CacheConfig,
         lora_config: Optional[LoRAConfig],
+        delta_config: Optional[DeltaConfig]
     ) -> None:
         self.scheduler_config = scheduler_config
         self.cache_config = cache_config
@@ -107,6 +109,10 @@ class Scheduler:
     def lora_enabled(self) -> bool:
         return bool(self.lora_config)
 
+    @property
+    def delta_enabled(self) -> bool:
+        return bool(self.delta_config)
+    
     def add_seq_group(self, seq_group: SequenceGroup) -> None:
         # Add sequence groups to the waiting queue.
         self.waiting.append(seq_group)

@@ -7,7 +7,7 @@ from typing import Dict, List, Optional, Union, TYPE_CHECKING, Any
 from vllm.block import LogicalTokenBlock
 from vllm.sampling_params import SamplingParams
 from vllm.lora.request import LoRARequest
-from vllm.deltas.request import DeltaRequest
+from vllm.delta.request import DeltaRequest
 
 if TYPE_CHECKING:
     import torch

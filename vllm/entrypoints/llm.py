@@ -9,7 +9,7 @@ from vllm.engine.llm_engine import LLMEngine
 from vllm.outputs import RequestOutput
 from vllm.sampling_params import SamplingParams
 from vllm.utils import Counter
-
+from vllm.delta.request import DeltaRequest
 
 class LLM:
     """An LLM for generating texts from given prompts and sampling parameters.
@@ -126,6 +126,7 @@ class LLM:
         prompt_token_ids: Optional[List[List[int]]] = None,
         use_tqdm: bool = True,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ) -> List[RequestOutput]:
         """Generates the completions for the input prompts.
 
@@ -141,7 +142,7 @@ class LLM:
                 use the tokenizer to convert the prompts to token IDs.
             use_tqdm: Whether to use tqdm to display the progress bar.
             lora_request: LoRA request to use for generation, if any.
-
+            delta_request: Delta request to use for generation, if any.
         Returns:
             A list of `RequestOutput` objects containing the generated
             completions in the same order as the input prompts.
@@ -170,7 +171,9 @@ class LLM:
             self._add_request(prompt,
                               sampling_params,
                               token_ids,
-                              lora_request=lora_request)
+                              lora_request=lora_request,
+                              delta_request=delta_request
+                             )
         return self._run_engine(use_tqdm)
 
     def _add_request(
@@ -179,13 +182,16 @@ class LLM:
         sampling_params: SamplingParams,
         prompt_token_ids: Optional[List[int]],
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ) -> None:
         request_id = str(next(self.request_counter))
         self.llm_engine.add_request(request_id,
                                     prompt,
                                     sampling_params,
                                     prompt_token_ids,
-                                    lora_request=lora_request)
+                                    lora_request=lora_request,
+                                    delta_request=delta_request
+                                    )
 
     def _run_engine(self, use_tqdm: bool) -> List[RequestOutput]:
         # Initialize tqdm.

@@ -4,8 +4,8 @@ import torch
 
 from vllm.lora.layers import LoRAMapping
 
-from vllm.deltas.request import DeltaRequest
-from vllm.deltas.config import DeltaConfig
+from vllm.delta.request import DeltaRequest
+from vllm.delta.config import DeltaConfig
 from vllm.logger import init_logger
 
 logger = init_logger(__name__)

@@ -11,8 +11,8 @@ from transformers import PreTrainedTokenizer
 
 import vllm
 from vllm.lora.request import LoRARequest
-from vllm.deltas.request import DeltaRequest
-from vllm.deltas.config import DeltaConfig
+from vllm.delta.request import DeltaRequest
+from vllm.delta.config import DeltaConfig
 from vllm.config import (CacheConfig, DeviceConfig, ModelConfig,
                          ParallelConfig, SchedulerConfig, LoRAConfig)
 from vllm.core.scheduler import Scheduler, SchedulerOutputs

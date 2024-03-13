@@ -19,8 +19,8 @@ from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.worker.cache_engine import CacheEngine
 from vllm.worker.model_runner import ModelRunner
 from vllm.lora.request import LoRARequest
-from vllm.deltas.config import DeltaConfig
-from vllm.deltas.request import DeltaRequest
+from vllm.delta.config import DeltaConfig
+from vllm.delta.request import DeltaRequest
 
 
 class Worker:
