@@ -11,6 +11,7 @@ from vllm.logger import init_logger
 from vllm.sequence import (Sequence, SequenceData, SequenceGroup,
                            SequenceGroupMetadata, SequenceStatus)
 from vllm.delta.config import DeltaConfig
+from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
 
@@ -29,7 +30,6 @@ class PreemptionMode(enum.Enum):
 
 
 class SchedulerOutputs:
-
     def __init__(
         self,
         scheduled_seq_groups: Iterable[SequenceGroup],
@@ -51,9 +51,13 @@ class SchedulerOutputs:
         self.ignored_seq_groups = ignored_seq_groups
 
         self.num_loras = len(self.lora_requests)
+        self.num_deltas = len(self.delta_requests)
+        
         if self.num_loras > 0:
             self._sort_by_lora_ids()
-
+        if self.num_deltas > 0:
+            self._sort_by_delta_ids()
+            
     def is_empty(self) -> bool:
         # NOTE: We do not consider the ignored sequence groups.
         return (not self.scheduled_seq_groups and not self.blocks_to_swap_in
@@ -64,11 +68,19 @@ class SchedulerOutputs:
                                            key=lambda g:
                                            (g.lora_int_id, g.request_id))
 
+    def _sort_by_delta_ids(self) -> bool:
+        self.scheduled_seq_groups = sorted(self.scheduled_seq_groups, 
+                                           key=lambda g: 
+                                               (g.delta_int_id, g.request_id))
+
     @property
     def lora_requests(self) -> Set[LoRARequest]:
         return {g.lora_request for g in self.scheduled_seq_groups}
-
-
+    
+    @property
+    def delta_requests(self) -> Set[DeltaRequest]:
+        return {g.delta_request for g in self.scheduled_seq_groups}
+    
 class Scheduler:
 
     def __init__(
@@ -84,6 +96,7 @@ class Scheduler:
         # simple and NOT fair. It can lead to starvation of some
         # LoRAs. This should be improved in the future.
         self.lora_config = lora_config
+        self.delta_config = delta_config
 
         self.prompt_limit = min(self.scheduler_config.max_model_len,
                                 self.scheduler_config.max_num_batched_tokens)
@@ -179,6 +192,10 @@ class Scheduler:
             curr_loras = set(
                 seq_group.lora_int_id
                 for seq_group in self.running) if self.lora_enabled else None
+            curr_deltas = set(
+                seq_group.delta_int_id
+                for seq_group in self.running) if self.delta_enabled else None
+            
             seq_lens: List[int] = []
 
             # Optimization: We do not sort the waiting queue since the preempted
@@ -218,11 +235,21 @@ class Scheduler:
                     continue
 
                 lora_int_id = 0
+                delta_int_id = 0
                 if self.lora_enabled:
                     lora_int_id = seq_group.lora_int_id
                     if (lora_int_id > 0 and lora_int_id not in curr_loras
                             and len(curr_loras) >= self.lora_config.max_loras):
                         # We don't have a space for another LoRA, so
+                        # we ignore this request for now.
+                        leftover_waiting_sequences.appendleft(seq_group)
+                        self.waiting.popleft()
+                        continue
+                if self.delta_enabled:
+                    delta_int_id = seq_group.delta_int_id
+                    if (delta_int_id > 0 and delta_int_id not in curr_deltas
+                            and len(curr_deltas) >= self.delta_config.max_deltas):
+                        # We don't have a space for another delta, so
                         # we ignore this request for now.
                         leftover_waiting_sequences.appendleft(seq_group)
                         self.waiting.popleft()
@@ -249,6 +276,9 @@ class Scheduler:
 
                 if lora_int_id > 0:
                     curr_loras.add(lora_int_id)
+                if delta_int_id > 0:
+                    curr_deltas.add(delta_int_id)
+                    
                 self.waiting.popleft()
                 self._allocate(seq_group)
                 self.running.append(seq_group)
@@ -307,12 +337,16 @@ class Scheduler:
             curr_loras = set(
                 seq_group.lora_int_id
                 for seq_group in self.running) if self.lora_enabled else None
-
+            curr_deltas = set(
+                seq_group.delta_int_id
+                for seq_group in self.running) if self.delta_enabled else None
+            
             leftover_swapped = deque()
 
             while self.swapped:
                 seq_group = self.swapped[0]
                 lora_int_id = 0
+                delta_int_id = 0
                 if self.lora_enabled:
                     lora_int_id = seq_group.lora_int_id
                     if (lora_int_id > 0 and lora_int_id not in curr_loras
@@ -322,7 +356,15 @@ class Scheduler:
                         leftover_swapped.appendleft(seq_group)
                         self.swapped.popleft()
                         continue
-
+                if self.delta_enabled:
+                    delta_int_id = seq_group.delta_int_id
+                    if (delta_int_id > 0 and delta_int_id not in curr_deltas
+                            and len(curr_deltas) >= self.delta_config.max_deltas):
+                        # We don't have a space for another delta, so
+                        # we ignore this request for now.
+                        leftover_swapped.appendleft(seq_group)
+                        self.swapped.popleft()
+                        continue
                 # If the sequence group cannot be swapped in, stop.
                 if not self.block_manager.can_swap_in(seq_group):
                     break
@@ -336,6 +378,9 @@ class Scheduler:
 
                 if lora_int_id > 0:
                     curr_loras.add(lora_int_id)
+                if delta_int_id > 0:
+                    curr_deltas.add(delta_int_id)
+
                 self.swapped.popleft()
                 self._swap_in(seq_group, blocks_to_swap_in)
                 self._append_slot(seq_group, blocks_to_copy)
@@ -390,6 +435,7 @@ class Scheduler:
                 sampling_params=seq_group.sampling_params,
                 block_tables=block_tables,
                 lora_request=seq_group.lora_request,
+                delta_request=seq_group.delta_request,
                 computed_block_nums=self.block_manager.
                 get_common_computed_block_ids(seq_group),
                 state=seq_group.state,

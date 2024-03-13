@@ -106,7 +106,7 @@ class LLMEngine:
 
         self.model_executor = executor_class(model_config, cache_config,
                                              parallel_config, scheduler_config,
-                                             device_config, lora_config)
+                                             device_config, lora_config, delta_config)
 
         # Create the scheduler.
         # NOTE: the cache_config here have been updated with the numbers of

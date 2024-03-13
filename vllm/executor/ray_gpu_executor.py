@@ -16,7 +16,8 @@ from vllm.lora.request import LoRARequest
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.utils import (set_cuda_visible_devices, get_ip, get_open_port,
                         get_distributed_init_method, make_async)
-
+from vllm.delta.config import DeltaConfig
+from vllm.delta.request import DeltaRequest
 if ray is not None:
     from ray.util.scheduling_strategies import PlacementGroupSchedulingStrategy
 
@@ -47,10 +48,12 @@ class RayGPUExecutor(ExecutorBase):
         scheduler_config: SchedulerConfig,
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
+        delta_config: Optional[DeltaConfig],
     ) -> None:
         self.model_config = model_config
         self.cache_config = cache_config
         self.lora_config = lora_config
+        self.delta_config = delta_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
         self.device_config = device_config
@@ -162,6 +165,7 @@ class RayGPUExecutor(ExecutorBase):
         scheduler_config = copy.deepcopy(self.scheduler_config)
         device_config = copy.deepcopy(self.device_config)
         lora_config = copy.deepcopy(self.lora_config)
+        delta_config = copy.deepcopy(self.delta_config)
         kv_cache_dtype = self.cache_config.cache_dtype
 
         # Initialize the actual workers with the Worker class.
@@ -180,6 +184,7 @@ class RayGPUExecutor(ExecutorBase):
                     rank,
                     distributed_init_method,
                     lora_config=lora_config,
+                    delta_config=delta_config,
                     kv_cache_dtype=kv_cache_dtype,
                 ))
 
@@ -195,6 +200,7 @@ class RayGPUExecutor(ExecutorBase):
             driver_rank,
             distributed_init_method,
             lora_config=self.lora_config,
+            delta_config=self.delta_config,
             kv_cache_dtype=kv_cache_dtype,
             is_driver_worker=True,
         )
@@ -295,6 +301,23 @@ class RayGPUExecutor(ExecutorBase):
 
     def list_loras(self) -> List[int]:
         return self._run_workers("list_loras")
+
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        assert delta_request.delta_int_id > 0, "delta_id must be greater than 0."
+        return self._run_workers(
+            "add_delta",
+            delta_request=delta_request,
+        )
+
+    def remove_delta(self, delta_id: int) -> bool:
+        assert delta_id > 0, "delta_id must be greater than 0."
+        return self._run_workers(
+            "remove_delta",
+            delta_id=delta_id,
+        )
+
+    def list_deltas(self) -> List[int]:
+        return self._run_workers("list_deltas")
 
     def _run_workers(
         self,

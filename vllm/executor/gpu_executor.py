@@ -10,7 +10,8 @@ from vllm.logger import init_logger
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.utils import (get_ip, get_open_port, get_distributed_init_method,
                         make_async)
-
+from vllm.delta.config import DeltaConfig
+from vllm.delta.request import DeltaRequest
 logger = init_logger(__name__)
 
 # A map between the device type (in device config) to its worker module.
@@ -30,10 +31,12 @@ class GPUExecutor(ExecutorBase):
         scheduler_config: SchedulerConfig,
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
+        delta_config: Optional[DeltaConfig]
     ) -> None:
         self.model_config = model_config
         self.cache_config = cache_config
         self.lora_config = lora_config
+        self.delta_config = delta_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
         self.device_config = device_config
@@ -70,6 +73,7 @@ class GPUExecutor(ExecutorBase):
             rank=0,
             distributed_init_method=distributed_init_method,
             lora_config=self.lora_config,
+            delta_config=self.delta_config,
             kv_cache_dtype=self.cache_config.cache_dtype,
             is_driver_worker=True,
         )
@@ -135,6 +139,18 @@ class GPUExecutor(ExecutorBase):
     def list_loras(self) -> List[int]:
         return self.driver_worker.list_loras()
 
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        assert delta_request.delta_int_id > 0, "delta_id must be greater than 0."
+        return self.driver_worker.add_delta(delta_request)
+
+    def remove_delta(self, delta_id: int) -> bool:
+        assert delta_id > 0, "delta_id must be greater than 0."
+        return self.driver_worker.remove_delta(delta_id)
+
+    def list_deltas(self) -> List[int]:
+        return self.driver_worker.list_deltas()
+    
+    
     def check_health(self) -> None:
         # GPUExecutor will always be healthy as long as
         # it's running.
