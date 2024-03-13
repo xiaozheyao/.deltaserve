@@ -1,11 +1,12 @@
 import json
+from typing import Optional
 from dataclasses import dataclass, field, fields
 from transformers.utils.hub import PushToHubMixin
 from os.path import join
 
 
 @dataclass
-class DeltaCompressionConfig(PushToHubMixin):
+class CompressionConfig(PushToHubMixin):
     bits: int = field(default=4, metadata={"choices": [2, 3, 4, 8, 16]})
     # sparsity = how many parameters we set to zero after quantization
     sparsity: float = field(default=0)
@@ -63,3 +64,14 @@ class DeltaCompressionConfig(PushToHubMixin):
             "prunem": self.prunem,
             "block_size": self.block_size,
         }
+
+@dataclass
+class DeltaConfig:
+    max_deltas: int
+    max_cpu_deltas: Optional[int] = None
+    
+    def __post_init__(self):
+        if self.max_cpu_deltas is None:
+            self.max_cpu_deltas = self.max_deltas
+        elif self.max_cpu_deltas < self.max_deltas:
+            raise ValueError("max_cpu_deltas must be greater than max_deltas")

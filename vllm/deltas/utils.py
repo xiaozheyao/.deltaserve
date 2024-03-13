@@ -1,5 +1,9 @@
 import torch
-from loguru import logger
+from vllm.logger import init_logger
+import gc
+import cupy as cp
+
+logger = init_logger(__name__)
 
 none_tensor = torch.empty((1, 1), device="meta")
 
@@ -122,3 +126,14 @@ class ExLlamaV2DeviceTensors:
         size_half = size_bytes // 2
         scratch_slice = self.scratch.narrow(0, 0, size_half)
         return scratch_slice
+
+def get_submodules(model, key):
+    parent = model.get_submodule(".".join(key.split(".")[:-1]))
+    target_name = key.split(".")[-1]
+    target = model.get_submodule(key)
+    return parent, target, target_name
+
+def garbage_collection():
+    torch.cuda.empty_cache()
+    cp.get_default_memory_pool().free_all_blocks()
+    gc.collect()

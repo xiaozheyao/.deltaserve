@@ -12,7 +12,7 @@ from transformers import PreTrainedTokenizer
 import vllm
 from vllm.lora.request import LoRARequest
 from vllm.deltas.request import DeltaRequest
-from vllm.deltas.config import DeltaCompressionConfig
+from vllm.deltas.config import DeltaConfig
 from vllm.config import (CacheConfig, DeviceConfig, ModelConfig,
                          ParallelConfig, SchedulerConfig, LoRAConfig)
 from vllm.core.scheduler import Scheduler, SchedulerOutputs
@@ -86,7 +86,7 @@ class LLMEngine:
         scheduler_config: SchedulerConfig,
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
-        delta_config: Optional[DeltaCompressionConfig],
+        delta_config: Optional[DeltaConfig],
         placement_group: Optional["PlacementGroup"],
         log_stats: bool,
     ) -> None:

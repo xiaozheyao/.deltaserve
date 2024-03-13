@@ -19,7 +19,7 @@ from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.worker.cache_engine import CacheEngine
 from vllm.worker.model_runner import ModelRunner
 from vllm.lora.request import LoRARequest
-from vllm.deltas.config import DeltaCompressionConfig
+from vllm.deltas.config import DeltaConfig
 from vllm.deltas.request import DeltaRequest
 
 
@@ -41,7 +41,7 @@ class Worker:
         rank: int,
         distributed_init_method: str,
         lora_config: Optional[LoRAConfig] = None,
-        delta_config: Optional[DeltaCompressionConfig] = None,
+        delta_config: Optional[DeltaConfig] = None,
         kv_cache_dtype: Optional[str] = "auto",
         is_driver_worker: bool = False,
     ) -> None:

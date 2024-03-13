@@ -22,7 +22,7 @@ from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
 from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
 from vllm.utils import in_wsl, measure_cuda_memory
-from vllm.deltas.config import DeltaCompressionConfig
+from vllm.deltas.config import DeltaConfig
 from vllm.deltas.request import DeltaRequest
 
 logger = init_logger(__name__)
@@ -44,7 +44,7 @@ class ModelRunner:
         scheduler_config: SchedulerConfig,
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
-        delta_config: Optional[DeltaCompressionConfig],
+        delta_config: Optional[DeltaConfig],
         kv_cache_dtype: Optional[str] = "auto",
         is_driver_worker: bool = False,
     ):

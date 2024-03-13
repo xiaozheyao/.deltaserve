@@ -5,15 +5,17 @@ import torch
 from vllm.lora.layers import LoRAMapping
 
 from vllm.deltas.request import DeltaRequest
-from vllm.deltas.config import DeltaCompressionConfig
-from loguru import logger
+from vllm.deltas.config import DeltaConfig
+from vllm.logger import init_logger
+
+logger = init_logger(__name__)
 
 
 class AbstractWorkerManager(ABC):
     """Abstract class for managing LoRA/Delta models on the worker side."""
 
     def __init__(self, max_num_seqs: int, max_num_batched_tokens: int,
-                 vocab_size: int, delta_config: DeltaCompressionConfig,
+                 vocab_size: int, delta_config: DeltaConfig,
                  device: torch.device):
         self.max_num_seqs = max_num_seqs
         self.max_num_batched_tokens = max_num_batched_tokens
@@ -67,7 +69,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
         max_num_seqs: int,
         max_num_batched_tokens: int,
         vocab_size: int,
-        delta_config: DeltaCompressionConfig,
+        delta_config: DeltaConfig,
         device: torch.device,
         delta_model_cls: Type[DeltaModel] = DeltaModel,
     ):
@@ -129,3 +131,40 @@ class WorkerDeltaManager(AbstractWorkerManager):
 
     def list_deltas(self) -> Set[int]:
         return set(self._delta_manager.list_deltas())
+
+class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
+    _delta_manager_cls = LRUCacheDeltaManager
+    
+    def create_delta_manager(self, model) -> Any:
+        delta_manager = create_delta_manager(
+            model,
+            delta_manger_cls = self._delta_manager_cls,
+            max_num_seqs = self.max_num_seqs,
+            vocab_size = self.vocab_size,
+            delta_config = self.delta_config,
+            max_num_batched_tokens = self.max_num_batched_tokens,
+        )
+        self._delta_manager: LRUCacheDeltaModelManager = delta_manager
+        return delta_manager.model
+
+    def _apply_deltas(self, delta_requests: List[DeltaRequest]) -> None:
+        delta_maps = {
+            delta_request.delta_int_id: delta_request
+            for delta_request in delta_requests
+        }
+        if len(delta_maps) > self._delta_manager.delta_slots:
+            raise RuntimeError(
+                f"Number of requested deltas ({len(delta_maps)}) is greater than the number of GPU delta slots "
+                f"({self._delta_manager.delta_slots}).")
+        for delta in delta_maps.values():
+            self.add_delta(delta)
+    
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        if delta_request.delta_int_id in self.list_deltas():
+            if len(self._delta_manager) + 1 > self._delta_manager.capacity:
+                self._delta_manager.remove_oldest_delta()
+            delta = self._delta_manager.add_delta(delta)
+        else:
+            loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
+        self._delta_manager.activate_delta(delta_request.delta_int_id)
+        return loaded
