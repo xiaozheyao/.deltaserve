@@ -58,6 +58,9 @@ class LRUCache:
         self.cache = OrderedDict()
         self.capacity = capacity
 
+    def keys(self):
+        return self.cache.keys()
+
     def __contains__(self, key: Hashable) -> bool:
         return key in self.cache
 

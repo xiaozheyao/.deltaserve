@@ -685,6 +685,7 @@ class ModelRunner:
                     flat_lora_index_mapping,
                     lora_prompt_mapping,
                 )
+                delta_mapping = None
             elif self.delta_config:
                 flat_delta_index_mapping = [
                     item for sublist in delta_index_mapping for item in sublist
@@ -693,6 +694,7 @@ class ModelRunner:
                     flat_delta_index_mapping,
                     delta_prompt_mapping,
                 )
+                lora_mapping = None
             else:
                 lora_mapping = None
                 delta_mapping = None
@@ -780,7 +782,7 @@ class ModelRunner:
         if self.lora_config:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
-            self.set_activate_deltas(delta_requests, delta_mapping)
+            self.set_active_deltas(delta_requests, delta_mapping)
         
         # Execute the model.
         if input_metadata.use_cuda_graph:
@@ -888,12 +890,12 @@ class ModelRunner:
             raise RuntimeError("LoRA is not enabled.")
         return self.lora_manager.list_loras()
 
-    def set_activate_deltas(
+    def set_active_deltas(
         self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping
     ):
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
-        self.delta_manager.set_activate_deltas(delta_requests, delta_mapping)
+        self.delta_manager.set_active_deltas(delta_requests, delta_mapping)
     
     def add_delta(self, delta_request: DeltaRequest) -> bool:
         if not self.delta_manager:

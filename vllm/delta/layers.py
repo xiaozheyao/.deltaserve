@@ -15,6 +15,12 @@ from vllm.model_executor.layers.linear import (
 from vllm.model_executor.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding, ParallelLMHead
 )
+from vllm.model_executor.parallel_utils.communication_op import (
+    tensor_model_parallel_all_gather,
+    tensor_model_parallel_all_reduce,
+    tensor_model_parallel_gather,
+)
+
 from .quant_linear import QuantLinear
 from .config import DeltaConfig
 
@@ -101,8 +107,8 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.indices_len = indices_len
 
     def forward(self, x:torch.Tensor) -> torch.Tensor:
-        print(f"VocabParallelEmbeddingWithDelta")
-
+        return self.base_layer(x)
+    
 class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
@@ -127,23 +133,31 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         print(f"ColumnParallelLinearWithDelta")
-    
+        
 class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
         super().__init__(base_layer)
-
+    
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        print(f"MergedColumnParallelLinearWithDelta")
+        return self.base_layer(x)
 
 class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__(base_layer)
     
-
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        print(f"QKVParallelLinearWithDelta")
+        return self.base_layer(x)
+        
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
 
-
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        print(f"RowParallelLinearWithDelta")
+        return self.base_layer(x)
 
 class SamplerWithDelta(BaseLayerWithDelta):
 
@@ -159,6 +173,42 @@ class SamplerWithDelta(BaseLayerWithDelta):
         self.hidden_size = hidden_size
         self.dtype = dtype
         self.device = device
+        
+    @property
+    def logits_as_hidden_states(self):
+        return self.base_layer.logits_as_hidden_states
+
+    @property
+    def vocab_size(self):
+        return self.base_layer.vocab_size
+
+    @property
+    def org_vocab_size(self):
+        return self.base_layer.org_vocab_size
+
+    @property
+    def include_gpu_probs_tensor(self):
+        return self.base_layer.include_gpu_probs_tensor
+    
+    def _get_logits(
+        self,
+        hidden_states: torch.Tensor,
+        embedding: torch.Tensor,
+        embedding_bias: Optional[torch.Tensor] = None,
+    ) -> torch.Tensor:
+        # Get the logits for the next tokens.
+        logits = torch.matmul(hidden_states, embedding.t())
+        if embedding_bias is not None:
+            logits += embedding_bias
+        logits = tensor_model_parallel_gather(logits)
+        if logits is None:
+            return None
+        # Remove paddings in vocab (if any).
+        logits = logits[:, :self.base_layer.vocab_size]
+        return logits
+    
+    def forward(self, *args, **kwargs):
+        return type(self.base_layer).forward(self, *args, **kwargs)
 
 def from_layer(
         layer: nn.Module,
