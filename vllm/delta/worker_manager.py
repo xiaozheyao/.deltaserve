@@ -127,12 +127,12 @@ class WorkerDeltaManager(AbstractWorkerManager):
         return self._delta_manager.add_delta(
             self._delta_manager.create_dummy_delta(delta_request.delta_int_id)
         )
-    
+
     def add_delta(self, delta_request: DeltaRequest) -> bool:
         if delta_request.delta_int_id in self.list_deltas():
             return False
         delta = self._load_delta(delta_request)
-        loaded = self._delta_manager.add_lora(delta)
+        loaded = self._delta_manager.add_delta(delta)
         self._delta_manager.activate_delta(delta.id)
         return loaded
 

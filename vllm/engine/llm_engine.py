@@ -103,7 +103,6 @@ class LLMEngine:
 
         self._init_tokenizer()
         self.seq_counter = Counter()
-
         self.model_executor = executor_class(model_config, cache_config,
                                              parallel_config, scheduler_config,
                                              device_config, lora_config, delta_config)
@@ -265,6 +264,7 @@ class LLMEngine:
                              f"{max_logprobs} logprobs.")
         if arrival_time is None:
             arrival_time = time.monotonic()
+       
         prompt_token_ids = self.encode_request(
             request_id=request_id,
             prompt=prompt,
@@ -808,7 +808,7 @@ class LLMEngine:
         return self.model_executor.add_lora(lora_request)
 
     def add_delta(self, delta_request: DeltaRequest) -> bool:
-        return self.model_executor.add_lora(delta_request)
+        return self.model_executor.add_delta(delta_request)
 
     def remove_lora(self, lora_id: int) -> bool:
         return self.model_executor.remove_lora(lora_id)

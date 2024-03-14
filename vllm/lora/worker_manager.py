@@ -6,8 +6,8 @@ import torch
 
 from vllm.lora.models import (LoRAModel, LoRAModelManager,
                               LRUCacheLoRAModelManager, create_lora_manager)
-from vllm.lora.request import LoRARequest
 from vllm.lora.layers import LoRAMapping
+from vllm.lora.request import LoRARequest
 from vllm.config import LoRAConfig
 
 logger = logging.getLogger(__name__)

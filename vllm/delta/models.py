@@ -194,7 +194,6 @@ class DeltaModelManager:
         index, _ = first_free_slot
         self._active_deltas[delta_id] = None
         delta_model = self._registered_deltas[delta_id]
-        print(self._registered_deltas.keys())
         self.delta_index_to_id[index] = delta_model.id
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
@@ -309,7 +308,6 @@ class DeltaModelManager:
                         self.model.config,
                     ),
                 )
-            print(module_name)
             self.register_module(module_name, new_module)
             self._register_packed_modules(module_name)
             new_module.set_mapping(

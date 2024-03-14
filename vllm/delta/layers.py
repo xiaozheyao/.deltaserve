@@ -132,14 +132,14 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.indices_len = indices_len
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print(f"ColumnParallelLinearWithDelta")
-        
+        # print(f"ColumnParallelLinearWithDelta")
+        pass
 class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
         super().__init__(base_layer)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print(f"MergedColumnParallelLinearWithDelta")
+        # print(f"MergedColumnParallelLinearWithDelta")
         return self.base_layer(x)
 
 class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
@@ -147,7 +147,7 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         super().__init__(base_layer)
     
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print(f"QKVParallelLinearWithDelta")
+        # print(f"QKVParallelLinearWithDelta")
         return self.base_layer(x)
         
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
@@ -156,7 +156,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.base_layer = base_layer
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print(f"RowParallelLinearWithDelta")
+        # print(f"RowParallelLinearWithDelta")
         return self.base_layer(x)
 
 class SamplerWithDelta(BaseLayerWithDelta):

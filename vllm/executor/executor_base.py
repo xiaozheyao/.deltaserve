@@ -4,8 +4,8 @@ from typing import Dict, List, Optional
 from vllm.config import (CacheConfig, DeviceConfig, ModelConfig,
                          ParallelConfig, SchedulerConfig, LoRAConfig)
 from vllm.lora.request import LoRARequest
+from vllm.delta.request import DeltaRequest
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
-
 
 class ExecutorBase(ABC):
     """Base class for all executors.
@@ -46,6 +46,18 @@ class ExecutorBase(ABC):
 
     @abstractmethod
     def list_loras(self) -> List[int]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def remove_delta(self, delta_id: int) -> bool:
+        raise NotImplementedError
+
+    @abstractmethod
+    def list_deltas(self) -> List[int]:
         raise NotImplementedError
 
     @abstractmethod

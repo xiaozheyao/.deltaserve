@@ -88,6 +88,11 @@ class LLM:
     ) -> None:
         if "disable_log_stats" not in kwargs:
             kwargs["disable_log_stats"] = True
+        if "enable_lora" in kwargs and "enable_delta" in kwargs:
+            if kwargs["enable_lora"] and kwargs["enable_delta"]:
+                raise ValueError("LoRA and Delta cannot be enabled at the same "
+                                 "time.")
+        
         engine_args = EngineArgs(
             model=model,
             tokenizer=tokenizer,
@@ -192,7 +197,7 @@ class LLM:
                                     prompt_token_ids,
                                     lora_request=lora_request,
                                     delta_request=delta_request
-                                    )
+                                   )
 
     def _run_engine(self, use_tqdm: bool) -> List[RequestOutput]:
         # Initialize tqdm.
