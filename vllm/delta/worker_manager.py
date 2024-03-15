@@ -175,7 +175,8 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
-            delta = self._delta_manager.add_delta(delta)
+            delta = self._load_delta(delta_request)
+            loaded = self._delta_manager.add_delta(delta)
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
         self._delta_manager.activate_delta(delta_request.delta_int_id)
