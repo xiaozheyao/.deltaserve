@@ -572,6 +572,7 @@ class LRUCacheLoRAModelManager(LoRAModelManager):
 
     def add_lora(self, lora: LoRAModel) -> bool:
         """Add a LoRAModel to the manager."""
+        logger.info("Adding lora. int id: %d", lora.id)
         if lora.id not in self._registered_loras:
             self._add_lora(lora)
             was_added = True

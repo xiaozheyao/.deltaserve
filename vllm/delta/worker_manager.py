@@ -103,7 +103,6 @@ class WorkerDeltaManager(AbstractWorkerManager):
         new_deltas = set(deltas_map)
         deltas_to_add = new_deltas - deltas_that_exist
         deltas_to_remove = deltas_that_exist - new_deltas
-
         for delta_id in deltas_to_remove:
             self.remove_delta(delta_id)
 
@@ -173,7 +172,7 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             self.add_delta(delta)
     
     def add_delta(self, delta_request: DeltaRequest) -> bool:
-        if delta_request.delta_int_id in self.list_deltas():
+        if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
             delta = self._delta_manager.add_delta(delta)

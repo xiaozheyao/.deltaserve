@@ -648,7 +648,8 @@ class LLMEngine:
             self.stat_logger.log(self._get_stats(scheduler_outputs=None))
 
     def _get_stats(self,
-                   scheduler_outputs: Optional[SchedulerOutputs]) -> Stats:
+                   scheduler_outputs: Optional[SchedulerOutputs]
+                  ) -> Stats:
         """Get Stats to be Logged to Prometheus."""
         now = time.monotonic()
 
@@ -818,7 +819,7 @@ class LLMEngine:
 
     def list_loras(self) -> List[int]:
         return self.model_executor.list_loras()
-    
+
     def list_deltas(self) -> List[int]:
         return self.model_executor.list_deltas()
     

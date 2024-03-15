@@ -130,6 +130,7 @@ class ModelRunner:
             assert hasattr(
                 self.model, "embedding_padding_modules"
             ), "Model does not have embedding_padding_modules"
+            
             self.lora_manager = LRUCacheWorkerLoRAManager(
                 self.scheduler_config.max_num_seqs,
                 self.scheduler_config.max_num_batched_tokens
@@ -153,8 +154,7 @@ class ModelRunner:
             assert hasattr(
                 self.model, "embedding_padding_modules"
             ), "Model does not have embedding_padding_modules"
-
-            # logger.error("Delta is not supported yet.")
+            
             self.delta_manager = LRUCacheWorkerDeltaManager(
                 self.scheduler_config.max_num_seqs,
                 self.scheduler_config.max_num_batched_tokens
@@ -250,6 +250,7 @@ class ModelRunner:
                 lora_requests.add(seq_group_metadata.lora_request)
             if delta_id > 0:
                 delta_requests.add(seq_group_metadata.delta_request)
+            
             lora_index_mapping.append([lora_id] * (prompt_len - computed_len))
 
             lora_prompt_mapping.extend(
@@ -270,7 +271,6 @@ class ModelRunner:
                     else 1
                 )
             )
-
             if seq_group_metadata.block_tables is None:
                 # During memory profiling, the block tables are not initialized
                 # yet. In this case, we just use a dummy slot mapping.
@@ -783,7 +783,7 @@ class ModelRunner:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
             self.set_active_deltas(delta_requests, delta_mapping)
-        
+
         # Execute the model.
         if input_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]
@@ -868,6 +868,11 @@ class ModelRunner:
             raise RuntimeError("LoRA is not enabled.")
         return self.lora_manager.remove_all_loras()
 
+    def remove_all_deltas(self) -> bool:
+        if not self.delta_manager:
+            raise RuntimeError("Delta is not enabled.")
+        return self.delta_manager.remove_all_deltas()
+
     def set_active_loras(
         self, lora_requests: List[LoRARequest], lora_mapping: LoRAMapping
     ) -> None:
@@ -875,38 +880,38 @@ class ModelRunner:
             raise RuntimeError("LoRA is not enabled.")
         self.lora_manager.set_active_loras(lora_requests, lora_mapping)
 
-    def add_lora(self, lora_request: LoRARequest) -> bool:
-        if not self.lora_manager:
-            raise RuntimeError("LoRA is not enabled.")
-        return self.lora_manager.add_lora(lora_request)
-
-    def remove_lora(self, lora_id: int) -> bool:
-        if not self.lora_manager:
-            raise RuntimeError("LoRA is not enabled.")
-        return self.lora_manager.remove_lora(lora_id)
-
-    def list_loras(self) -> Set[int]:
-        if not self.lora_manager:
-            raise RuntimeError("LoRA is not enabled.")
-        return self.lora_manager.list_loras()
-
     def set_active_deltas(
         self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping
     ):
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         self.delta_manager.set_active_deltas(delta_requests, delta_mapping)
-    
+
+    def add_lora(self, lora_request: LoRARequest) -> bool:
+        if not self.lora_manager:
+            raise RuntimeError("LoRA is not enabled.")
+        return self.lora_manager.add_lora(lora_request)
+
     def add_delta(self, delta_request: DeltaRequest) -> bool:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.add_delta(delta_request)
+
+    def remove_lora(self, lora_id: int) -> bool:
+        if not self.lora_manager:
+            raise RuntimeError("LoRA is not enabled.")
+        return self.lora_manager.remove_lora(lora_id)
 
     def remove_delta(self, delta_id: int) -> bool:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.remove_delta(delta_id)
 
+    def list_loras(self) -> Set[int]:
+        if not self.lora_manager:
+            raise RuntimeError("LoRA is not enabled.")
+        return self.lora_manager.list_loras()
+    
     def list_deltas(self) -> Set[int]:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
@@ -979,6 +984,13 @@ class ModelRunner:
                     )
                     self.set_active_loras(set(), lora_mapping)
 
+                if self.delta_config:
+                    delta_mapping = DeltaMapping(
+                        [0] * batch_size,
+                        [0] * batch_size,
+                    )
+                    self.set_active_deltas(set(), delta_mapping)
+                
                 graph_runner = CUDAGraphRunner(self.model)
                 graph_runner.capture(
                     input_tokens[:batch_size],

@@ -125,9 +125,10 @@ class WorkerLoRAManager(AbstractWorkerLoRAManager):
                 f"({self._lora_manager.lora_slots}).")
 
         new_loras = set(loras_map)
+        logger.info(new_loras)
         loras_to_add = new_loras - loras_that_exist
         loras_to_remove = loras_that_exist - new_loras
-
+        logger.info(f"loras_to_add: {loras_to_add}, loras_to_remove: {loras_to_remove}")
         for lora_id in loras_to_remove:
             self.remove_lora(lora_id)
 
@@ -219,6 +220,7 @@ class LRUCacheWorkerLoRAManager(WorkerLoRAManager):
                 f"Number of requested LoRAs ({len(loras_map)}) is greater "
                 "than the number of GPU LoRA slots "
                 f"({self._lora_manager.lora_slots}).")
+        logger.info(f"loras_map: {loras_map}")
         for lora in loras_map.values():
             self.add_lora(lora)
 
