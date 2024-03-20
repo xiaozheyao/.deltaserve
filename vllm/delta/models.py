@@ -7,11 +7,10 @@ import torch
 import cupy as cp
 import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
-
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
 from .layers import BaseLayerWithDelta, from_layer, from_layer_sampler, DeltaMapping
-from .utils import replace_submodule, deltazip_post_init, find_layers, make_quant
+from .utils import replace_submodule
 from .compressor import LosslessCompressor
 
 import transformers
@@ -132,6 +131,7 @@ class DeltaModel:
         device: Optional[int] = None,
         trust_remote_code: bool = False,
     ) -> "DeltaModel":
+        pin_memory = str(device) == "cpu" and not in_wsl()
         logger.debug(f"Loading DeltaModel from {path_or_name}")
         config = AutoConfig.from_pretrained(path_or_name,
                                             trust_remote=trust_remote_code)
@@ -148,41 +148,14 @@ class DeltaModel:
         torch.nn.init.uniform_ = skip
         torch.nn.init.normal_ = skip
         transformers.modeling_utils._init_weights = False
-        init_contexts = [no_init_weights()]
-        if compress_config.bits not in [2, 4, 8]:
-            raise ValueError(
-                f"Unsupported bits: {compress_config.bits}. Expected 2, 4, or 8"
-            )
-        with ContextManagers(init_contexts):
-            model = AutoModelForCausalLM.from_config(
-                config,
-                trust_remote_code=trust_remote_code,
-                torch_dtype=torch.float16)
-            layers = find_layers(model)
-            # TODO(xiaozhe): this is only for llama-series models.
-            # Extend later on.
-            ignore_layers = ["lm_head"] + ["model.embed_tokens", "model.norm"]
-            for name in list(layers.keys()):
-                if any([
-                        name.startswith(ignore_layer)
-                        for ignore_layer in ignore_layers
-                ]):
-                    logger.info(
-                        f"{name} not been quantized, will be ignored when make_quant."
-                    )
-                    del layers[name]
-            make_quant(
-                model,
-                layers,
-                bits=compress_config.bits,
-                desc_act=compress_config.desc_act,
-            )
-            model.tie_weights()
-
         lossless_compressor = LosslessCompressor(compress_config.lossless,
                                                  device_id=0)
         metadata = None
         tensors = {}
+        ignore_modules = [
+            "lm_head", "model.embed_tokens", "model.norm", "input_layernorm",
+            "post_attention_layernorm"
+        ]
         with safe_open(os.path.join(path_or_name, model_tensor_filename),
                        "numpy") as f:
             metadata = f.metadata()
@@ -202,35 +175,23 @@ class DeltaModel:
             use_bfloat16=False,
             target_device="cuda:0",
         )
-        missing_keys, unexpected_keys = model.load_state_dict(tensors,
-                                                              strict=False,
-                                                              assign=True)
-        if missing_keys:
-            logger.warning(f"[DeltaZip] Missing keys: {missing_keys}")
-        if unexpected_keys:
-            logger.warning(f"[DeltaZip] Unexpected keys: {unexpected_keys}")
-
-        model = model.to(device)
-        model = deltazip_post_init(
-            model,
-            use_act_order=compress_config.desc_act,
-        )
-        model.eval()
-        del tensor_dtypes, tensor_shapes, tensors, layers
-        model_config = model.config.to_dict()
-        seq_len_keys = ["max_position_embeddings", "seq_length", "n_positions"]
-        if any([k in model_config for k in seq_len_keys]):
-            for key in seq_len_keys:
-                if key in model_config:
-                    model.seqlen = model_config[key]
-                    break
-        else:
-            logger.warning(
-                "can't get model's sequence length from model config, will set to 4096."
+        modules = {}
+        module_names = set([
+            x.rsplit('.', 1)[0] for x in tensors.keys()
+            if all([y not in x for y in ignore_modules])
+        ])
+        for module in module_names:
+            modules[module] = DeltaLayerWeights(
+                module_name=module,
+                qweight=tensors[module + ".qweight"],
+                qzeros=tensors[module + ".qzeros"],
+                scales=tensors[module + ".scales"],
+                g_idx=tensors[module + ".g_idx"],
+                compress_config=compress_config,
             )
-            model.seqlen = 4096
+        del tensor_dtypes, tensor_shapes, tensors
         del lossless_compressor
-        return cls(id, model)
+        return cls(id, modules)
 
 
 class DeltaModelManager:

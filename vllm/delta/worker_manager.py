@@ -121,7 +121,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
                 f"Failed to load delta model from {delta_request.delta_local_path}: {e}"
             )
             return None
-        return None
+        return delta
 
     def add_dummy_delta(self, delta_request: DeltaRequest) -> bool:
         if delta_request.delta_int_id in self.list_deltas():
