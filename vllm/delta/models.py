@@ -110,7 +110,7 @@ class DeltaModel:
         return self.deltas.get(module_name, None)
 
     @classmethod
-    def from_checkpoint(cls):
+    def from_checkpoint(cls, path_or_name: str, id: int) -> "DeltaModel":
         raise NotImplementedError
 
 

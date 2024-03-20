@@ -244,6 +244,14 @@ else()
     "requested architectures (${VLLM_GPU_ARCHES}) are supported, i.e. >= 8.0")
 endif()
 
+# _deltazip_ extension
+#
+#
+
+set(VLLM_DELTAZIP_EXT_SRC
+  "csrc/deltazip/deltazip_ops.cc"
+)
+
 #
 # Add the `default` target which detects which extensions should be
 # built based on platform/architecture.  This is the same logic that
