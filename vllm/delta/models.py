@@ -1,16 +1,30 @@
+import os
 import re
 import math
 import copy
+import json
 import torch
+import cupy as cp
 import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 
-from vllm.delta.delta import DeltaLayerWeights, PackedDeltaLayerWeights
-from vllm.delta.config import DeltaConfig
-from vllm.delta.layers import BaseLayerWithDelta, from_layer, from_layer_sampler, DeltaMapping
-from vllm.delta.utils import replace_submodule
+from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
+from .config import DeltaConfig, CompressionConfig
+from .layers import BaseLayerWithDelta, from_layer, from_layer_sampler, DeltaMapping
+from .utils import replace_submodule, deltazip_post_init, find_layers, make_quant
+from .compressor import LosslessCompressor
+
+
+import transformers
+from transformers import AutoConfig
+from transformers.modeling_utils import no_init_weights
+from transformers.utils.generic import ContextManagers
+from transformers import AutoModelForCausalLM
+
 from vllm.logger import init_logger
 from vllm.utils import LRUCache, in_wsl
+
+from safetensors import safe_open
 
 logger = init_logger(__name__)
 
@@ -110,10 +124,106 @@ class DeltaModel:
         return self.deltas.get(module_name, None)
 
     @classmethod
-    def from_checkpoint(cls, path_or_name: str, id: int) -> "DeltaModel":
-        raise NotImplementedError
+    def from_checkpoint(cls, 
+                        path_or_name: str, 
+                        id: int,
+                        device: Optional[int] = None,
+                        trust_remote_code: bool = False,
+                        ) -> "DeltaModel":
+        logger.debug(f"Loading DeltaModel from {path_or_name}")
+        config = AutoConfig.from_pretrained(path_or_name, trust_remote=trust_remote_code)
+        compress_config = CompressionConfig.from_pretrained(path_or_name)
+        logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
 
+        model_tensor_filename = "deltazip-compressed.safetensors"
+        def skip(*args, **kwargs):
+            pass
 
+        torch.nn.init.kaiming_uniform_ = skip
+        torch.nn.init.uniform_ = skip
+        torch.nn.init.normal_ = skip
+        transformers.modeling_utils._init_weights = False
+        init_contexts = [no_init_weights()]
+        if compress_config.bits not in [2,4,8]:
+            raise ValueError(f"Unsupported bits: {compress_config.bits}. Expected 2, 4, or 8")
+        with ContextManagers(init_contexts):
+            model = AutoModelForCausalLM.from_config(
+                config, 
+                trust_remote_code=trust_remote_code, 
+                torch_dtype = torch.float16
+            )
+            layers = find_layers(model)
+            # TODO(xiaozhe): this is only for llama-series models. 
+            # Extend later on.
+            ignore_layers = ["lm_head"] + ["model.embed_tokens", "model.norm"]
+            for name in list(layers.keys()):
+                if any(
+                    [
+                        name.startswith(ignore_layer)
+                        for ignore_layer in ignore_layers
+                    ]
+                ):
+                    logger.info(
+                        f"{name} not been quantized, will be ignored when make_quant."
+                    )
+                    del layers[name]
+            make_quant(
+                model,
+                layers,
+                bits=compress_config.bits,
+                desc_act=compress_config.desc_act,
+            )
+            model.tie_weights()
+
+        lossless_compressor = LosslessCompressor(compress_config.lossless, device_id=0)
+        metadata = None
+        tensors = {}
+        with safe_open(os.path.join(path_or_name, model_tensor_filename), "numpy") as f:
+            metadata = f.metadata()
+            keys = f.keys()
+            for key in keys:
+                tensors[key] = f.get_tensor(key)
+        tensor_dtypes = json.loads(metadata["dtype"])
+        tensor_shapes = json.loads(metadata["shape"])
+        
+        with cp.cuda.Device(0):
+            for key in tensors.keys():
+                tensors[key] = cp.array(tensors[key], copy=False)
+        tensors = lossless_compressor.decompress_state_dict(
+            tensors,
+            tensor_shapes,
+            tensor_dtypes,
+            use_bfloat16=False,
+            target_device="cuda:0",
+        )
+        missing_keys, unexpected_keys = model.load_state_dict(tensors, strict=False, assign=True)
+        if missing_keys:
+            logger.warning(f"[DeltaZip] Missing keys: {missing_keys}")
+        if unexpected_keys:
+            logger.warning(f"[DeltaZip] Unexpected keys: {unexpected_keys}")
+            
+        model = model.to(device)
+        model = deltazip_post_init(
+            model,
+            use_act_order=compress_config.desc_act,
+        )
+        model.eval()
+        del tensor_dtypes, tensor_shapes, tensors, layers
+        model_config = model.config.to_dict()
+        seq_len_keys = ["max_position_embeddings", "seq_length", "n_positions"]
+        if any([k in model_config for k in seq_len_keys]):
+            for key in seq_len_keys:
+                if key in model_config:
+                    model.seqlen = model_config[key]
+                    break
+        else:
+            logger.warning(
+                "can't get model's sequence length from model config, will set to 4096."
+            )
+            model.seqlen = 4096
+        del lossless_compressor
+        return cls(id, model)
+            
 class DeltaModelManager:
     """A manager that manages multiple full-fine-tuned models."""
 

@@ -3,6 +3,8 @@ from vllm.logger import init_logger
 import gc
 import cupy as cp
 import torch.nn as nn
+from typing import Optional, Union
+import transformers
 
 logger = init_logger(__name__)
 
@@ -146,3 +148,113 @@ def replace_submodule(model: nn.Module, module_name: str,
     target_name = module_name.split(".")[-1]
     setattr(parent, target_name, new_module)
     return new_module
+
+def deltazip_post_init(
+    model, use_act_order: bool, max_input_length: Optional[int] = None
+):
+    """
+    The max_input_length argument is specific to the exllama backend, that requires to initialize a buffer temp_state.
+    """
+    ## exllamav2
+    fixed_bytes = {}
+    model_uses_exllamav2 = False
+
+    for _, submodule in model.named_modules():
+        if hasattr(submodule, "QUANT_TYPE"):
+            model_uses_exllamav2 = True
+            device = submodule.qweight.device
+            scratch_fixed = submodule.scratch_space_fixed()
+            fixed_bytes[device] = max(scratch_fixed, fixed_bytes.get(device, 0))
+
+    if model_uses_exllamav2:
+        from deltazip.nn_modules.exllama_utils import ExLlamaV2DeviceTensors
+
+        device_tensors = {}
+        for device, scratch_bytes in fixed_bytes.items():
+            device_tensors[device] = ExLlamaV2DeviceTensors(device.index, scratch_bytes)
+
+        # have persistent buffers, otherwise we will get OOM
+        model.device_tensors = device_tensors
+
+        for _, submodule in model.named_modules():
+            if hasattr(submodule, "QUANT_TYPE"):
+                device = submodule.qweight.device
+                submodule.post_init(temp_dq=model.device_tensors[device])
+    torch.cuda.empty_cache()
+
+    return model
+
+def find_layers(module, layers=None, name=""):
+    if not layers:
+        layers = [transformers.pytorch_utils.Conv1D, nn.Conv2d, nn.Linear]
+    if type(module) in layers:
+        return {name: module}
+    res = {}
+    for name1, child in module.named_children():
+        res.update(
+            find_layers(
+                child, layers=layers, name=name + "." + name1 if name != "" else name1
+            )
+        )
+    return res
+
+def get_device(obj: Union[torch.Tensor, nn.Module]):
+    if isinstance(obj, torch.Tensor):
+        return obj.device
+    return next(obj.parameters()).device
+
+
+def move_to_device(obj: Union[torch.Tensor, nn.Module], device: torch.device):
+    if get_device(obj) != device:
+        obj = obj.to(device)
+    return obj
+
+def make_quant(
+    module,
+    names,
+    bits,
+    name="",
+    use_triton=False,
+    use_cuda_fp16=True,
+    desc_act=False,
+    use_exllama: bool = False,
+):
+    from .quant_linear import QuantLinear
+
+    if isinstance(module, QuantLinear):
+        return
+    for attr in dir(module):
+        tmp = getattr(module, attr)
+        name1 = name + "." + attr if name != "" else attr
+        if name1 in names:
+            ori_layer_device = get_device(getattr(module, attr))
+            delattr(module, attr)
+            if type(tmp) == nn.Linear:
+                in_features = tmp.in_features
+                out_features = tmp.out_features
+            if isinstance(bits, dict):
+                real_bits = bits[name1]
+            else:
+                real_bits = bits
+            new_layer = QuantLinear(
+                real_bits,
+                in_features,
+                out_features,
+                tmp.bias is not None,
+                # use_triton=use_triton,
+                # use_exllama=use_exllama,
+            )
+            new_layer.device = ori_layer_device
+            setattr(module, attr, new_layer.to(ori_layer_device))
+
+    for name1, child in module.named_children():
+        make_quant(
+            child,
+            names,
+            bits,
+            name + "." + name1 if name != "" else name1,
+            use_triton=use_triton,
+            use_cuda_fp16=use_cuda_fp16,
+            desc_act=desc_act,
+            use_exllama=use_exllama,
+        )

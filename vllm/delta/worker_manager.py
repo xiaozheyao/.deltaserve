@@ -113,11 +113,11 @@ class WorkerDeltaManager(AbstractWorkerManager):
         try:
             delta = self._delta_model_cls.from_checkpoint(
                 delta_request.delta_local_path,
-                delta_model_id=delta_request.delta_int_id,
+                id=delta_request.delta_int_id,
             )
         except Exception as e:
             logger.error(
-                f"Failed to load delta model from {delta_request.delta_path}: {e}"
+                f"Failed to load delta model from {delta_request.delta_local_path}: {e}"
             )
             return None
         return None

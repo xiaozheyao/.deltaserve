@@ -75,3 +75,4 @@ class DeltaConfig:
             self.max_cpu_deltas = self.max_deltas
         elif self.max_cpu_deltas < self.max_deltas:
             raise ValueError("max_cpu_deltas must be greater than max_deltas")
+        

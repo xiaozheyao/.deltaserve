@@ -3,6 +3,7 @@ from typing import List, Optional
 from transformers import PreTrainedTokenizer
 
 from vllm.lora.request import LoRARequest
+from vllm.delta.request import DeltaRequest
 from vllm.transformers_utils.tokenizer import (get_lora_tokenizer,
                                                get_lora_tokenizer_async)
 from vllm.transformers_utils.tokenizer_group.base_tokenizer_group import (
@@ -37,7 +38,8 @@ class TokenizerGroup(BaseTokenizerGroup):
     def encode(self,
                prompt: str,
                request_id: Optional[str] = None,
-               lora_request: Optional[LoRARequest] = None) -> List[int]:
+               lora_request: Optional[LoRARequest] = None,
+               delta_request: Optional[DeltaRequest] = None) -> List[int]:
         tokenizer = self.get_lora_tokenizer(lora_request)
         return tokenizer.encode(prompt)
 
