@@ -179,7 +179,7 @@ class Scheduler:
         blocks_to_copy: Dict[int, List[int]] = {}
 
         # Fix the current time.
-        now = time.monotonic()
+        now = time.time()
 
         # Join waiting sequences if possible.
         if not self.swapped:
