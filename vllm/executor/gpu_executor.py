@@ -12,6 +12,7 @@ from vllm.utils import (get_ip, get_open_port, get_distributed_init_method,
                         make_async)
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
+
 logger = init_logger(__name__)
 
 # A map between the device type (in device config) to its worker module.
@@ -23,16 +24,12 @@ DEVICE_TO_WORKER_MODULE_MAP = {
 
 class GPUExecutor(ExecutorBase):
 
-    def __init__(
-        self,
-        model_config: ModelConfig,
-        cache_config: CacheConfig,
-        parallel_config: ParallelConfig,
-        scheduler_config: SchedulerConfig,
-        device_config: DeviceConfig,
-        lora_config: Optional[LoRAConfig],
-        delta_config: Optional[DeltaConfig]
-    ) -> None:
+    def __init__(self, model_config: ModelConfig, cache_config: CacheConfig,
+                 parallel_config: ParallelConfig,
+                 scheduler_config: SchedulerConfig,
+                 device_config: DeviceConfig,
+                 lora_config: Optional[LoRAConfig],
+                 delta_config: Optional[DeltaConfig]) -> None:
         self.model_config = model_config
         self.cache_config = cache_config
         self.lora_config = lora_config
@@ -149,8 +146,7 @@ class GPUExecutor(ExecutorBase):
 
     def list_deltas(self) -> List[int]:
         return self.driver_worker.list_deltas()
-    
-    
+
     def check_health(self) -> None:
         # GPUExecutor will always be healthy as long as
         # it's running.

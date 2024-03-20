@@ -187,8 +187,10 @@ def _is_neuron() -> bool:
 def _install_punica() -> bool:
     return bool(int(os.getenv("VLLM_INSTALL_PUNICA_KERNELS", "0")))
 
+
 def _install_deltazip() -> bool:
     return bool(int(os.getenv("VLLM_INSTALL_DELTAZIP_KERNELS", "0")))
+
 
 def get_hipcc_rocm_version():
     # Run the hipcc --version command
@@ -329,7 +331,7 @@ if _is_cuda():
         ext_modules.append(CMakeExtension(name="vllm._punica_C"))
     if _install_deltazip():
         ext_modules.append(CMakeExtension(name="vllm._deltazip_C"))
-        
+
 if not _is_neuron():
     ext_modules.append(CMakeExtension(name="vllm._C"))
 

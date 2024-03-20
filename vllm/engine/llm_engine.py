@@ -106,7 +106,8 @@ class LLMEngine:
         self.seq_counter = Counter()
         self.model_executor = executor_class(model_config, cache_config,
                                              parallel_config, scheduler_config,
-                                             device_config, lora_config, delta_config)
+                                             device_config, lora_config,
+                                             delta_config)
 
         # Ping the tokenizer to ensure liveness if it runs in a
         # different process.
@@ -115,7 +116,8 @@ class LLMEngine:
         # Create the scheduler.
         # NOTE: the cache_config here have been updated with the numbers of
         # GPU and CPU blocks, which are profiled in the distributed executor.
-        self.scheduler = Scheduler(scheduler_config, cache_config, lora_config, delta_config)
+        self.scheduler = Scheduler(scheduler_config, cache_config, lora_config,
+                                   delta_config)
 
         # Metric Logging.
         if self.log_stats:
@@ -654,8 +656,7 @@ class LLMEngine:
             self.stat_logger.log(self._get_stats(scheduler_outputs=None))
 
     def _get_stats(self,
-                   scheduler_outputs: Optional[SchedulerOutputs]
-                  ) -> Stats:
+                   scheduler_outputs: Optional[SchedulerOutputs]) -> Stats:
         """Get Stats to be Logged to Prometheus."""
         now = time.time()
 
@@ -828,6 +829,6 @@ class LLMEngine:
 
     def list_deltas(self) -> List[int]:
         return self.model_executor.list_deltas()
-    
+
     def check_health(self) -> None:
         self.model_executor.check_health()

@@ -128,7 +128,9 @@ class WorkerLoRAManager(AbstractWorkerLoRAManager):
         logger.info(new_loras)
         loras_to_add = new_loras - loras_that_exist
         loras_to_remove = loras_that_exist - new_loras
-        logger.info(f"loras_to_add: {loras_to_add}, loras_to_remove: {loras_to_remove}")
+        logger.info(
+            f"loras_to_add: {loras_to_add}, loras_to_remove: {loras_to_remove}"
+        )
         for lora_id in loras_to_remove:
             self.remove_lora(lora_id)
 

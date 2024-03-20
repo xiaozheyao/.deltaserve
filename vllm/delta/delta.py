@@ -13,6 +13,7 @@ class DeltaLayerWeights:
     ) -> None:
         self.module_name = module_name
 
+
 class PackedDeltaLayerWeights(DeltaLayerWeights):
     """Delta used for packed layers (eg. qkv_proj)."""
 
@@ -20,13 +21,11 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         self,
         module_name: str,
     ) -> None:
-        super().__init__(
-            module_name=module_name,
-        )
-        
+        super().__init__(module_name=module_name, )
 
     @classmethod
-    def pack(cls, loras: List["DeltaLayerWeights"]) -> "PackedDeltaLayerWeights":
+    def pack(cls,
+             loras: List["DeltaLayerWeights"]) -> "PackedDeltaLayerWeights":
         """Pack a list of LoRAs into a single LoRA.
 
         If LoRA is None, it signifies that the submodule does not have a LoRA.
@@ -45,6 +44,8 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
     def is_packed(self) -> bool:
         return True
 
+
 class DeltaZipWeight:
+
     def __init__(self, qweight) -> None:
         self.qweight = qweight

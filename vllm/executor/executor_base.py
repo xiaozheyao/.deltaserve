@@ -7,6 +7,7 @@ from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 
+
 class ExecutorBase(ABC):
     """Base class for all executors.
 

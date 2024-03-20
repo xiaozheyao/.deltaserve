@@ -65,14 +65,15 @@ class CompressionConfig(PushToHubMixin):
             "block_size": self.block_size,
         }
 
+
 @dataclass
 class DeltaConfig:
     max_deltas: int
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0
+
     def __post_init__(self):
         if self.max_cpu_deltas is None:
             self.max_cpu_deltas = self.max_deltas
         elif self.max_cpu_deltas < self.max_deltas:
             raise ValueError("max_cpu_deltas must be greater than max_deltas")
-        

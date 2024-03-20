@@ -13,8 +13,7 @@ from vllm.model_executor.layers.linear import (
     MergedColumnParallelLinear,
 )
 from vllm.model_executor.layers.vocab_parallel_embedding import (
-    VocabParallelEmbedding, ParallelLMHead
-)
+    VocabParallelEmbedding, ParallelLMHead)
 from vllm.model_executor.parallel_utils.communication_op import (
     tensor_model_parallel_all_gather,
     tensor_model_parallel_all_reduce,
@@ -27,17 +26,19 @@ from .config import DeltaConfig
 if TYPE_CHECKING:
     pass
 
+
 def _apply_delta(
     x: torch.Tensor,
     quant_linears: List[QuantLinear],
 ):
     """Applies multiple delta to the input tensor"""
-    # todo(xiaozhe): checkout when quant_linear 
+    # todo(xiaozhe): checkout when quant_linear
     # and x are on different devices
     outputs = []
     for ql in quant_linears:
         outputs.append(ql(x))
     return torch.stack(outputs, dim=0)
+
 
 @dataclass
 class DeltaMapping:
@@ -50,10 +51,11 @@ class DeltaMapping:
         self.index_mapping = tuple(self.index_mapping)
         self.prompt_mapping = tuple(self.prompt_mapping)
 
+
 class BaseLayerWithDelta(nn.Module):
 
     def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig,
-                            model_config: PretrainedConfig) -> None:
+                             model_config: PretrainedConfig) -> None:
         """Initializes lora matrices."""
         ...
 
@@ -80,20 +82,23 @@ class BaseLayerWithDelta(nn.Module):
         """Sets the mapping indices."""
         ...
 
+
 class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
+
     def __init__(self, base_layer: VocabParallelEmbedding) -> None:
         super().__init__()
         self.base_layer = base_layer
-        
+
     def reset_delta(self, index: int):
         pass
-    
+
     def set_delta(
-        self, int: int,
+        self,
+        int: int,
         delta: List[QuantLinear],
     ):
         pass
-    
+
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -106,20 +111,22 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.embeddings_indices = embeddings_indices
         self.indices_len = indices_len
 
-    def forward(self, x:torch.Tensor) -> torch.Tensor:
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.base_layer(x)
-    
+
+
 class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
+
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
-    
+
     def reset_delta(self, index: int):
         pass
-    
+
     def set_delta(self, index: int, delta: Any):
         pass
-    
+
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -130,27 +137,34 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     ):
         self.indices = base_indices
         self.indices_len = indices_len
-    
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # print(f"ColumnParallelLinearWithDelta")
         pass
+
+
 class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
+
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
         super().__init__(base_layer)
-    
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # print(f"MergedColumnParallelLinearWithDelta")
         return self.base_layer(x)
 
+
 class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
+
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__(base_layer)
-    
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # print(f"QKVParallelLinearWithDelta")
         return self.base_layer(x)
-        
+
+
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
+
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
@@ -158,6 +172,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # print(f"RowParallelLinearWithDelta")
         return self.base_layer(x)
+
 
 class SamplerWithDelta(BaseLayerWithDelta):
 
@@ -173,7 +188,7 @@ class SamplerWithDelta(BaseLayerWithDelta):
         self.hidden_size = hidden_size
         self.dtype = dtype
         self.device = device
-        
+
     @property
     def logits_as_hidden_states(self):
         return self.base_layer.logits_as_hidden_states
@@ -189,7 +204,7 @@ class SamplerWithDelta(BaseLayerWithDelta):
     @property
     def include_gpu_probs_tensor(self):
         return self.base_layer.include_gpu_probs_tensor
-    
+
     def _get_logits(
         self,
         hidden_states: torch.Tensor,
@@ -206,9 +221,10 @@ class SamplerWithDelta(BaseLayerWithDelta):
         # Remove paddings in vocab (if any).
         logits = logits[:, :self.base_layer.vocab_size]
         return logits
-    
+
     def forward(self, *args, **kwargs):
         return type(self.base_layer).forward(self, *args, **kwargs)
+
 
 def from_layer(
         layer: nn.Module,
@@ -238,6 +254,6 @@ def from_layer_sampler(
     model_config: Optional[PretrainedConfig] = None,
 ) -> SamplerWithDelta:
     ret = SamplerWithDelta(layer, lm_head.embedding_dim, lm_head.weight.dtype,
-                          lm_head.weight.device)
+                           lm_head.weight.device)
     # ret.create_lora_weights(max_loras, lora_config, model_config)
     return ret

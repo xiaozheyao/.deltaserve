@@ -130,17 +130,20 @@ class ExLlamaV2DeviceTensors:
         scratch_slice = self.scratch.narrow(0, 0, size_half)
         return scratch_slice
 
+
 def get_submodules(model, key):
     parent = model.get_submodule(".".join(key.split(".")[:-1]))
     target_name = key.split(".")[-1]
     target = model.get_submodule(key)
     return parent, target, target_name
 
+
 def garbage_collection():
     torch.cuda.empty_cache()
     cp.get_default_memory_pool().free_all_blocks()
     gc.collect()
-    
+
+
 def replace_submodule(model: nn.Module, module_name: str,
                       new_module: nn.Module) -> nn.Module:
     """Replace a submodule in a model with a new module."""
@@ -149,9 +152,10 @@ def replace_submodule(model: nn.Module, module_name: str,
     setattr(parent, target_name, new_module)
     return new_module
 
-def deltazip_post_init(
-    model, use_act_order: bool, max_input_length: Optional[int] = None
-):
+
+def deltazip_post_init(model,
+                       use_act_order: bool,
+                       max_input_length: Optional[int] = None):
     """
     The max_input_length argument is specific to the exllama backend, that requires to initialize a buffer temp_state.
     """
@@ -164,14 +168,16 @@ def deltazip_post_init(
             model_uses_exllamav2 = True
             device = submodule.qweight.device
             scratch_fixed = submodule.scratch_space_fixed()
-            fixed_bytes[device] = max(scratch_fixed, fixed_bytes.get(device, 0))
+            fixed_bytes[device] = max(scratch_fixed,
+                                      fixed_bytes.get(device, 0))
 
     if model_uses_exllamav2:
         from deltazip.nn_modules.exllama_utils import ExLlamaV2DeviceTensors
 
         device_tensors = {}
         for device, scratch_bytes in fixed_bytes.items():
-            device_tensors[device] = ExLlamaV2DeviceTensors(device.index, scratch_bytes)
+            device_tensors[device] = ExLlamaV2DeviceTensors(
+                device.index, scratch_bytes)
 
         # have persistent buffers, otherwise we will get OOM
         model.device_tensors = device_tensors
@@ -184,6 +190,7 @@ def deltazip_post_init(
 
     return model
 
+
 def find_layers(module, layers=None, name=""):
     if not layers:
         layers = [transformers.pytorch_utils.Conv1D, nn.Conv2d, nn.Linear]
@@ -192,11 +199,11 @@ def find_layers(module, layers=None, name=""):
     res = {}
     for name1, child in module.named_children():
         res.update(
-            find_layers(
-                child, layers=layers, name=name + "." + name1 if name != "" else name1
-            )
-        )
+            find_layers(child,
+                        layers=layers,
+                        name=name + "." + name1 if name != "" else name1))
     return res
+
 
 def get_device(obj: Union[torch.Tensor, nn.Module]):
     if isinstance(obj, torch.Tensor):
@@ -208,6 +215,7 @@ def move_to_device(obj: Union[torch.Tensor, nn.Module], device: torch.device):
     if get_device(obj) != device:
         obj = obj.to(device)
     return obj
+
 
 def make_quant(
     module,

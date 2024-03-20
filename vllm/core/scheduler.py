@@ -30,6 +30,7 @@ class PreemptionMode(enum.Enum):
 
 
 class SchedulerOutputs:
+
     def __init__(
         self,
         scheduled_seq_groups: Iterable[SequenceGroup],
@@ -52,12 +53,12 @@ class SchedulerOutputs:
 
         self.num_loras = len(self.lora_requests)
         self.num_deltas = len(self.delta_requests)
-        
+
         if self.num_loras > 0:
             self._sort_by_lora_ids()
         if self.num_deltas > 0:
             self._sort_by_delta_ids()
-            
+
     def is_empty(self) -> bool:
         # NOTE: We do not consider the ignored sequence groups.
         return (not self.scheduled_seq_groups and not self.blocks_to_swap_in
@@ -69,27 +70,24 @@ class SchedulerOutputs:
                                            (g.lora_int_id, g.request_id))
 
     def _sort_by_delta_ids(self) -> bool:
-        self.scheduled_seq_groups = sorted(self.scheduled_seq_groups, 
-                                           key=lambda g: 
-                                               (g.delta_int_id, g.request_id))
+        self.scheduled_seq_groups = sorted(self.scheduled_seq_groups,
+                                           key=lambda g:
+                                           (g.delta_int_id, g.request_id))
 
     @property
     def lora_requests(self) -> Set[LoRARequest]:
         return {g.lora_request for g in self.scheduled_seq_groups}
-    
+
     @property
     def delta_requests(self) -> Set[DeltaRequest]:
         return {g.delta_request for g in self.scheduled_seq_groups}
-    
+
+
 class Scheduler:
 
-    def __init__(
-        self,
-        scheduler_config: SchedulerConfig,
-        cache_config: CacheConfig,
-        lora_config: Optional[LoRAConfig],
-        delta_config: Optional[DeltaConfig]
-    ) -> None:
+    def __init__(self, scheduler_config: SchedulerConfig,
+                 cache_config: CacheConfig, lora_config: Optional[LoRAConfig],
+                 delta_config: Optional[DeltaConfig]) -> None:
         self.scheduler_config = scheduler_config
         self.cache_config = cache_config
         # Note for LoRA scheduling: the current policy is extremely
@@ -125,7 +123,7 @@ class Scheduler:
     @property
     def delta_enabled(self) -> bool:
         return bool(self.delta_config)
-    
+
     def add_seq_group(self, seq_group: SequenceGroup) -> None:
         # Add sequence groups to the waiting queue.
         self.waiting.append(seq_group)
@@ -195,7 +193,7 @@ class Scheduler:
             curr_deltas = set(
                 seq_group.delta_int_id
                 for seq_group in self.running) if self.delta_enabled else None
-            
+
             seq_lens: List[int] = []
 
             # Optimization: We do not sort the waiting queue since the preempted
@@ -248,7 +246,8 @@ class Scheduler:
                 if self.delta_enabled:
                     delta_int_id = seq_group.delta_int_id
                     if (delta_int_id > 0 and delta_int_id not in curr_deltas
-                            and len(curr_deltas) >= self.delta_config.max_deltas):
+                            and len(curr_deltas)
+                            >= self.delta_config.max_deltas):
                         # We don't have a space for another delta, so
                         # we ignore this request for now.
                         leftover_waiting_sequences.appendleft(seq_group)
@@ -258,15 +257,15 @@ class Scheduler:
                 # If the number of batched tokens exceeds the limit, stop.
                 new_seq_lens = seq_lens + [num_prompt_tokens]
                 num_batched_tokens = len(new_seq_lens) * max(new_seq_lens)
-                if (num_batched_tokens >
-                        self.scheduler_config.max_num_batched_tokens):
+                if (num_batched_tokens
+                        > self.scheduler_config.max_num_batched_tokens):
                     break
 
                 # The total number of sequences in the RUNNING state should not
                 # exceed the maximum number of sequences.
                 num_new_seqs = seq_group.get_max_num_running_seqs()
-                if (num_curr_seqs + num_new_seqs >
-                        self.scheduler_config.max_num_seqs):
+                if (num_curr_seqs + num_new_seqs
+                        > self.scheduler_config.max_num_seqs):
                     break
 
                 num_paddings = num_batched_tokens - sum(new_seq_lens)
@@ -278,7 +277,7 @@ class Scheduler:
                     curr_loras.add(lora_int_id)
                 if delta_int_id > 0:
                     curr_deltas.add(delta_int_id)
-                    
+
                 self.waiting.popleft()
                 self._allocate(seq_group)
                 self.running.append(seq_group)
@@ -340,7 +339,7 @@ class Scheduler:
             curr_deltas = set(
                 seq_group.delta_int_id
                 for seq_group in self.running) if self.delta_enabled else None
-            
+
             leftover_swapped = deque()
 
             while self.swapped:
@@ -359,7 +358,8 @@ class Scheduler:
                 if self.delta_enabled:
                     delta_int_id = seq_group.delta_int_id
                     if (delta_int_id > 0 and delta_int_id not in curr_deltas
-                            and len(curr_deltas) >= self.delta_config.max_deltas):
+                            and len(curr_deltas)
+                            >= self.delta_config.max_deltas):
                         # We don't have a space for another delta, so
                         # we ignore this request for now.
                         leftover_swapped.appendleft(seq_group)
@@ -372,8 +372,8 @@ class Scheduler:
                 # The total number of sequences in the RUNNING state should not
                 # exceed the maximum number of sequences.
                 num_new_seqs = seq_group.get_max_num_running_seqs()
-                if (num_curr_seqs + num_new_seqs >
-                        self.scheduler_config.max_num_seqs):
+                if (num_curr_seqs + num_new_seqs
+                        > self.scheduler_config.max_num_seqs):
                     break
 
                 if lora_int_id > 0:

@@ -6,6 +6,7 @@ from transformers import PreTrainedTokenizer
 from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
 
+
 class BaseTokenizerGroup(ABC):
     """A group of tokenizers that can be used for LoRA adapters."""
 
@@ -22,11 +23,13 @@ class BaseTokenizerGroup(ABC):
         pass
 
     @abstractmethod
-    def encode(self,
-               prompt: str,
-               request_id: Optional[str] = None,
-               lora_request: Optional[LoRARequest] = None,
-               delta_request: Optional[DeltaRequest]=None,) -> List[int]:
+    def encode(
+        self,
+        prompt: str,
+        request_id: Optional[str] = None,
+        lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
+    ) -> List[int]:
         """Encode a prompt using the tokenizer group."""
         pass
 
@@ -36,7 +39,7 @@ class BaseTokenizerGroup(ABC):
             prompt: str,
             request_id: Optional[str] = None,
             lora_request: Optional[LoRARequest] = None,
-            delta_request: Optional[DeltaRequest]=None) -> List[int]:
+            delta_request: Optional[DeltaRequest] = None) -> List[int]:
         """Encode a prompt using the tokenizer group."""
         pass
 

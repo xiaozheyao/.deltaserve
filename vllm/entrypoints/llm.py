@@ -11,6 +11,7 @@ from vllm.sampling_params import SamplingParams
 from vllm.utils import Counter
 from vllm.delta.request import DeltaRequest
 
+
 class LLM:
     """An LLM for generating texts from given prompts and sampling parameters.
 
@@ -90,9 +91,10 @@ class LLM:
             kwargs["disable_log_stats"] = True
         if "enable_lora" in kwargs and "enable_delta" in kwargs:
             if kwargs["enable_lora"] and kwargs["enable_delta"]:
-                raise ValueError("LoRA and Delta cannot be enabled at the same "
-                                 "time.")
-        
+                raise ValueError(
+                    "LoRA and Delta cannot be enabled at the same "
+                    "time.")
+
         engine_args = EngineArgs(
             model=model,
             tokenizer=tokenizer,
@@ -158,7 +160,7 @@ class LLM:
         if isinstance(prompts, str):
             # Convert a single prompt to a list.
             prompts = [prompts]
-        
+
         if (prompts is not None and prompt_token_ids is not None
                 and len(prompts) != len(prompt_token_ids)):
             raise ValueError("The lengths of prompts and prompt_token_ids "
@@ -178,8 +180,7 @@ class LLM:
                               sampling_params,
                               token_ids,
                               lora_request=lora_request,
-                              delta_request=delta_request
-                             )
+                              delta_request=delta_request)
         return self._run_engine(use_tqdm)
 
     def _add_request(
@@ -196,8 +197,7 @@ class LLM:
                                     sampling_params,
                                     prompt_token_ids,
                                     lora_request=lora_request,
-                                    delta_request=delta_request
-                                   )
+                                    delta_request=delta_request)
 
     def _run_engine(self, use_tqdm: bool) -> List[RequestOutput]:
         # Initialize tqdm.
