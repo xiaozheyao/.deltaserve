@@ -1,7 +1,9 @@
 import torch
 import torch.nn as nn
 from vllm.delta.utils import ext_gemm_half_q_half, ext_make_q_matrix
+from vllm.logger import init_logger
 
+logger = init_logger(__name__)
 
 class QuantLinear(nn.Module):
 
@@ -71,6 +73,7 @@ class QuantLinear(nn.Module):
             max_input_len, max_batch_size)
 
     def forward(self, x):
+        logger.info("QuantLinear forward")
         if self.bits == 4:
             output = ext_gemm_half_q_half(x, self.q_handle, self.outfeatures,
                                           False)
@@ -79,3 +82,18 @@ class QuantLinear(nn.Module):
             return output
         else:
             raise NotImplementedError("Only 4 bits are supported.")
+
+    @classmethod
+    def from_tensors(cls, qweight, qzeros, scales, g_idx, bias):
+        # TODO(xiaozhe): debug only, fix later
+        bits = 4
+        infeatures = qweight.shape[0] * 32
+        outfeatures = qweight.shape[1]
+        obj = cls(bits, infeatures, outfeatures, bias)
+        obj.qweight = qweight
+        obj.qzeros = qzeros
+        obj.scales = scales
+        obj.g_idx = g_idx
+        if bias:
+            obj.bias = bias
+        return obj

@@ -15,10 +15,6 @@ from .compressor import LosslessCompressor
 
 import transformers
 from transformers import AutoConfig
-from transformers.modeling_utils import no_init_weights
-from transformers.utils.generic import ContextManagers
-from transformers import AutoModelForCausalLM
-
 from vllm.logger import init_logger
 from vllm.utils import LRUCache, in_wsl
 

@@ -292,6 +292,7 @@ class ColumnParallelLinearWithLoRA(BaseLayerWithLoRA):
             max_loras: int,
             lora_config: LoRAConfig,
             model_config: Optional[PretrainedConfig] = None) -> None:
+        
         self.lora_a_stacked = torch.zeros(
             max_loras,
             1,
