@@ -277,11 +277,45 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
-        
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print(f"RowParallelLinearWithDelta")
-        return self.base_layer(x)
+    
+    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
+        self.qls = [None] * max_deltas
+    
+    def reset_delta(self, index: int):
+        self.qls[index] = None
+    
+    def set_delta(self, index: int, delta: DeltaLayerWeights):
+        self.qls[index] = QuantLinear.from_tensors(
+            delta.qweight,
+            delta.qzeros,
+            delta.scales,
+            delta.g_idx,
+            bias=None,
+        )
+    
+    def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
+        output = self.base_layer.linear_method.apply_weights(
+            self.base_layer.linear_weights, x
+        )
+        output = _apply_delta(
+            x, self.qls, output
+        )
+        return output
 
+    def forward(self, input_):
+        output_ = self.apply_weights(input_)
+        if not self.base_layer.skip_bias_add:
+            output = (output_ + self.base_layer.bias
+                      if self.base_layer.bias is not None else output_)
+            output_bias = None
+        else:
+            output = output_
+            output_bias = self.base_layer.bias
+        return output, output_bias
+
+    @property
+    def weight(self):
+        return self.base_layer.weight
 
 class SamplerWithDelta(BaseLayerWithDelta):
 
@@ -314,6 +348,23 @@ class SamplerWithDelta(BaseLayerWithDelta):
     def include_gpu_probs_tensor(self):
         return self.base_layer.include_gpu_probs_tensor
 
+    def create_delta_weights(
+            self, 
+            max_deltas: int, 
+            delta_config: DeltaConfig, 
+            model_config: Optional[PretrainedConfig] = None,
+        ) -> None:
+        self.qls = [None] * max_deltas
+
+    def set_delta(self, index: int, delta: DeltaLayerWeights):
+        self.qls[index] = QuantLinear.from_tensors(
+            delta.qweight[0],
+            delta.qzeros[0],
+            delta.scales[0],
+            delta.g_idx[0],
+            bias=None,
+        )
+
     def _get_logits(
         self,
         hidden_states: torch.Tensor,
@@ -321,19 +372,20 @@ class SamplerWithDelta(BaseLayerWithDelta):
         embedding_bias: Optional[torch.Tensor] = None,
     ) -> torch.Tensor:
         # Get the logits for the next tokens.
+        # for simplicity, we don't consider the delta here yet
         logits = torch.matmul(hidden_states, embedding.t())
         if embedding_bias is not None:
             logits += embedding_bias
         logits = tensor_model_parallel_gather(logits)
         if logits is None:
             return None
+
         # Remove paddings in vocab (if any).
         logits = logits[:, :self.base_layer.vocab_size]
         return logits
 
     def forward(self, *args, **kwargs):
         return type(self.base_layer).forward(self, *args, **kwargs)
-
 
 def from_layer(
         layer: nn.Module,

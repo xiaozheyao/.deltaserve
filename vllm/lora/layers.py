@@ -785,7 +785,6 @@ class RowParallelLinearWithLoRA(BaseLayerWithLoRA):
 
 
 class SamplerWithLoRA(BaseLayerWithLoRA):
-
     def __init__(
         self,
         base_layer: Sampler,
