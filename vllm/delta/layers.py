@@ -33,11 +33,9 @@ TEST_BITS = 4
 if TYPE_CHECKING:
     pass
 
-def _apply_delta(
-    x: torch.Tensor,
-    quant_linears: List[QuantLinear],
-    base_output: torch.Tensor
-):
+
+def _apply_delta(x: torch.Tensor, quant_linears: List[QuantLinear],
+                 base_output: torch.Tensor):
     """Applies multiple delta to the input tensor"""
     # todo(xiaozhe): checkout when quant_linear
     # and x are on different devices
@@ -56,8 +54,9 @@ def _apply_delta(
             # todo(xiaozhe): This is a hack to make sure the profile runs smoothly, later we should remove this
             # and update the profile to handle this case
             outputs.append(torch.zeros_like(base_output))
-    output= torch.stack(outputs, dim=0)
+    output = torch.stack(outputs, dim=0)
     return output + base_output
+
 
 @dataclass
 class DeltaMapping:
@@ -142,24 +141,24 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
 
     def reset_delta(self, index: int):
         pass
-    
+
     def create_delta_weights(
-        self,
-        max_deltas: int,
-        # let's pretend all quantization is done to the same bit width
-        delta_config: DeltaConfig,
-        model_config: Optional[PretrainedConfig] = None
-    ) -> None:
+            self,
+            max_deltas: int,
+            # let's pretend all quantization is done to the same bit width
+            delta_config: DeltaConfig,
+            model_config: Optional[PretrainedConfig] = None) -> None:
         self.qls: List[QuantLinear] = [None] * max_deltas
-        
+
     def set_delta(self, index: int, delta: DeltaLayerWeights):
         self.qls[index] = QuantLinear.from_tensors(
             delta.qweight[0],
             delta.qzeros[0],
             delta.scales[0],
             delta.g_idx[0],
-            bias=None,)
-        
+            bias=None,
+        )
+
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -171,13 +170,13 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.indices = base_indices
         self.indices_len = indices_len
 
-    def apply_weights(self, x:torch.Tensor, bias: Optional[torch.Tensor]) -> torch.Tensor:
+    def apply_weights(self, x: torch.Tensor,
+                      bias: Optional[torch.Tensor]) -> torch.Tensor:
         output = self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x, bias
-        )
+            self.base_layer.linear_weights, x, bias)
         output = _apply_delta(x, self.qls, output)
         return output
-        
+
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # print(f"ColumnParallelLinearWithDelta")
         bias = (self.base_layer.bias
@@ -196,6 +195,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     def linear_weights(self):
         return self.base_layer.linear_weights
 
+
 class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
@@ -211,7 +211,11 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__(base_layer)
 
-    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: Optional[PretrainedConfig] = None) -> None:
+    def create_delta_weights(
+            self,
+            max_deltas: int,
+            delta_config: DeltaConfig,
+            model_config: Optional[PretrainedConfig] = None) -> None:
         self.tp_size = get_tensor_model_parallel_world_size()
         tp_rank = get_tensor_model_parallel_rank()
         self.q_proj_shard_size = (self.base_layer.num_heads *
@@ -251,39 +255,44 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         #         device=self.base_layer.weight.device
         #     )
         # )
-        
+
     def set_delta(self, index: int, delta: DeltaLayerWeights):
         self.reset_delta(index)
         if self.tp_size == 1:
-            pass 
+            pass
         else:
-            raise NotImplementedError("QKVParallelLinearWithDelta only supports TP size 1")
-        self.qls[index] = [QuantLinear.from_tensors(
-            delta.qweight[i],
-            delta.qzeros[i],
-            delta.scales[i],
-            delta.g_idx[i],
-            bias=None,) for i in range(3)]
-    
+            raise NotImplementedError(
+                "QKVParallelLinearWithDelta only supports TP size 1")
+        self.qls[index] = [
+            QuantLinear.from_tensors(
+                delta.qweight[i],
+                delta.qzeros[i],
+                delta.scales[i],
+                delta.g_idx[i],
+                bias=None,
+            ) for i in range(3)
+        ]
+
     def apply_weights(self, x: torch.Tensor, bias: Any | None) -> torch.Tensor:
         output = self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x, bias
-        )
+            self.base_layer.linear_weights, x, bias)
         output = _apply_delta(x, self.qls, output)
         return output
+
 
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
 
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
-    
-    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
+
+    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig,
+                             model_config: PretrainedConfig) -> None:
         self.qls = [None] * max_deltas
-    
+
     def reset_delta(self, index: int):
         self.qls[index] = None
-    
+
     def set_delta(self, index: int, delta: DeltaLayerWeights):
         self.qls[index] = QuantLinear.from_tensors(
             delta.qweight,
@@ -292,14 +301,11 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             delta.g_idx,
             bias=None,
         )
-    
+
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
         output = self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x
-        )
-        output = _apply_delta(
-            x, self.qls, output
-        )
+            self.base_layer.linear_weights, x)
+        output = _apply_delta(x, self.qls, output)
         return output
 
     def forward(self, input_):
@@ -316,6 +322,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     @property
     def weight(self):
         return self.base_layer.weight
+
 
 class SamplerWithDelta(BaseLayerWithDelta):
 
@@ -349,11 +356,11 @@ class SamplerWithDelta(BaseLayerWithDelta):
         return self.base_layer.include_gpu_probs_tensor
 
     def create_delta_weights(
-            self, 
-            max_deltas: int, 
-            delta_config: DeltaConfig, 
-            model_config: Optional[PretrainedConfig] = None,
-        ) -> None:
+        self,
+        max_deltas: int,
+        delta_config: DeltaConfig,
+        model_config: Optional[PretrainedConfig] = None,
+    ) -> None:
         self.qls = [None] * max_deltas
 
     def set_delta(self, index: int, delta: DeltaLayerWeights):
@@ -386,6 +393,7 @@ class SamplerWithDelta(BaseLayerWithDelta):
 
     def forward(self, *args, **kwargs):
         return type(self.base_layer).forward(self, *args, **kwargs)
+
 
 def from_layer(
         layer: nn.Module,

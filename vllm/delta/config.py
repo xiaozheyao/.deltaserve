@@ -69,8 +69,8 @@ class CompressionConfig(PushToHubMixin):
 
 @dataclass
 class DeltaConfig:
-    max_deltas: int=1
-    max_bitwidth: int=4
+    max_deltas: int = 1
+    max_bitwidth: int = 4
     delta_dtype: Optional[torch.dtype] = torch.int32
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0
@@ -80,5 +80,5 @@ class DeltaConfig:
             self.max_cpu_deltas = self.max_deltas
         elif self.max_cpu_deltas < self.max_deltas:
             raise ValueError("max_cpu_deltas must be greater than max_deltas")
-        if self.max_bitwidth not in [2,4,8]:
+        if self.max_bitwidth not in [2, 4, 8]:
             raise ValueError("max_bitwidth must be 2, 4 or 8")

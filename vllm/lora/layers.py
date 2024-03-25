@@ -292,7 +292,7 @@ class ColumnParallelLinearWithLoRA(BaseLayerWithLoRA):
             max_loras: int,
             lora_config: LoRAConfig,
             model_config: Optional[PretrainedConfig] = None) -> None:
-        
+
         self.lora_a_stacked = torch.zeros(
             max_loras,
             1,
@@ -785,6 +785,7 @@ class RowParallelLinearWithLoRA(BaseLayerWithLoRA):
 
 
 class SamplerWithLoRA(BaseLayerWithLoRA):
+
     def __init__(
         self,
         base_layer: Sampler,
@@ -878,8 +879,10 @@ class SamplerWithLoRA(BaseLayerWithLoRA):
                                 lora_b.T, non_blocking=True)
         if embeddings_tensor is not None:
             self.embeddings_tensors[
-                index, :embeddings_tensor.shape[0], :embeddings_tensor.
-                shape[1], ] = embeddings_tensor
+                index,
+                :embeddings_tensor.shape[0],
+                :embeddings_tensor.shape[1],
+            ] = embeddings_tensor
 
     def set_mapping(
         self,

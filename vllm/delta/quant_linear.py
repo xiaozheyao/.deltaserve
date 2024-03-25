@@ -5,6 +5,7 @@ from vllm.logger import init_logger
 
 logger = init_logger(__name__)
 
+
 class QuantLinear(nn.Module):
 
     def __init__(
@@ -22,7 +23,7 @@ class QuantLinear(nn.Module):
         self.outfeatures = outfeatures
         self.bits = bits
         self.group_size = infeatures
-        self.maxq = 2 ** self.bits - 1
+        self.maxq = 2**self.bits - 1
 
         self.register_buffer(
             "qweight",
@@ -98,6 +99,7 @@ class QuantLinear(nn.Module):
         if bias:
             obj.bias = bias
         # TODO(xiaozhe): here we need the post_init function
-        device_tensor = ExLlamaV2DeviceTensors(obj.qweight.device.index, obj.scratch_space_fixed())
+        device_tensor = ExLlamaV2DeviceTensors(obj.qweight.device.index,
+                                               obj.scratch_space_fixed())
         obj.post_init(temp_dq=device_tensor)
         return obj
