@@ -40,11 +40,18 @@ def _apply_delta(
     """Applies multiple delta to the input tensor"""
     # todo(xiaozhe): checkout when quant_linear
     # and x are on different devices
+    x = x.view(-1, x.shape[-1])
+    base_output = base_output.view(-1, base_output.shape[-1])
     outputs = []
     for ql in quant_linears:
-        outputs.append(ql(x))
-    return torch.stack(outputs, dim=0) + base_output
-
+        if ql:
+            outputs.append(ql(x))
+        else:
+            # todo(xiaozhe): This is a hack to make sure the profile runs smoothly, later we should remove this
+            # and update the profile to handle this case
+            outputs.append(torch.zeros_like(base_output))
+    output= torch.stack(outputs, dim=0)
+    return output  + base_output
 
 @dataclass
 class DeltaMapping:
@@ -162,7 +169,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = _apply_delta(x, self.qls)
+        output = _apply_delta(x, self.qls, output)
         return output
         
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -207,12 +214,23 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                                    self.base_layer.head_size)
         self.q_shard_id = tp_rank
         self.kv_shard_id = tp_rank // self.base_layer.num_kv_head_replicas
+        self.qls: List[QuantLinear] = [None] * max_deltas
 
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        print(f"QKVParallelLinearWithDelta")
-        return self.base_layer(x)
-
+    def set_delta(self, index: int, delta: DeltaLayerWeights):
+        logger.info(f"set_delta {index}, {delta}")
+        self.qls[index] = QuantLinear.from_tensors(
+            delta.qweight[0],
+            delta.qzeros[0],
+            delta.scales[0],
+            delta.g_idx[0],
+            bias=None,)
+    
+    def apply_weights(self, x: torch.Tensor, bias: Any | None) -> torch.Tensor:
+        output = self.base_layer.linear_method.apply_weights(
+            self.base_layer.linear_weights, x, bias
+        )
+        output = _apply_delta(x, self.qls, output)
+        return output
 
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
 

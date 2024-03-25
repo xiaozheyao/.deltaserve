@@ -96,4 +96,13 @@ class QuantLinear(nn.Module):
         obj.g_idx = g_idx
         if bias:
             obj.bias = bias
+        obj.q_tensors = {
+            "qweight": obj.qweight,
+            "qzeros": obj.qzeros,
+            "scales": obj.scales,
+            "g_idx": obj.g_idx,
+        }
+        temp_dq = temp_dq.get_scratch_slice(obj.temp_dq_size())
+        obj.q_handle = ext_make_q_matrix(obj.q_tensors, temp_dq)
+        # TODO(xiaozhe): here we need the post_init function
         return obj
