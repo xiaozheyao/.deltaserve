@@ -9,7 +9,6 @@ uintptr_t make_q_matrix
     torch::Tensor q_scale,
     torch::Tensor q_scale_max,
     torch::Tensor q_groups,
-    torch::Tensor q_group_map,
     torch::Tensor gptq_qzeros,
     torch::Tensor gptq_scales,
     torch::Tensor gptq_g_idx,

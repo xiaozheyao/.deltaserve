@@ -125,6 +125,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
 
 #ifndef USE_ROCM
   pybind11::module deltazip = m.def_submodule("deltazip", "deltazip ops");
+  
   deltazip.def("make_q_matrix", &make_q_matrix, "make_q_matrix");
   deltazip.def("gemm_half_q_half", &gemm_half_q_half, "gemm_half_q_half");
 #endif
