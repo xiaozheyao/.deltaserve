@@ -23,6 +23,8 @@ from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .quant_linear import QuantLinear
 from .config import DeltaConfig
 from vllm.logger import init_logger
+from vllm.model_executor.parallel_utils.parallel_state import (
+    get_tensor_model_parallel_rank, get_tensor_model_parallel_world_size)
 
 logger = init_logger(__name__)
 
@@ -195,6 +197,17 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__(base_layer)
+
+    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: Optional[PretrainedConfig] = None) -> None:
+        self.tp_size = get_tensor_model_parallel_world_size()
+        tp_rank = get_tensor_model_parallel_rank()
+        self.q_proj_shard_size = (self.base_layer.num_heads *
+                                  self.base_layer.head_size)
+        self.kv_proj_shard_size = (self.base_layer.num_kv_heads *
+                                   self.base_layer.head_size)
+        self.q_shard_id = tp_rank
+        self.kv_shard_id = tp_rank // self.base_layer.num_kv_head_replicas
+
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         print(f"QKVParallelLinearWithDelta")
