@@ -1,4 +1,5 @@
 import json
+import torch
 from typing import Optional
 from dataclasses import dataclass, field, fields
 from transformers.utils.hub import PushToHubMixin
@@ -70,6 +71,7 @@ class CompressionConfig(PushToHubMixin):
 class DeltaConfig:
     max_deltas: int=1
     max_bitwidth: int=4
+    delta_dtype: Optional[torch.dtype] = torch.int32
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0
 

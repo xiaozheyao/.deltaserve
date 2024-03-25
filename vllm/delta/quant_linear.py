@@ -22,7 +22,7 @@ class QuantLinear(nn.Module):
         self.outfeatures = outfeatures
         self.bits = bits
         self.group_size = infeatures
-        self.maxq = 2**self.bits - 1
+        self.maxq = 2 ** self.bits - 1
 
         self.register_buffer(
             "qweight",
@@ -58,7 +58,6 @@ class QuantLinear(nn.Module):
                 "g_idx": self.g_idx,
             }
             temp_dq = temp_dq.get_scratch_slice(self.temp_dq_size())
-            logger.info(f"QuantLinear post_init, temp_dq = {temp_dq}, q_tensors = {self.q_tensors}")
             self.q_handle = ext_make_q_matrix(self.q_tensors, temp_dq=temp_dq)
         else:
             raise NotImplementedError("Only 4 bits are supported.")
@@ -74,7 +73,6 @@ class QuantLinear(nn.Module):
             max_input_len, max_batch_size)
 
     def forward(self, x):
-        logger.info("QuantLinear forward")
         if self.bits == 4:
             output = ext_gemm_half_q_half(x, self.q_handle, self.outfeatures,
                                           False)
@@ -88,7 +86,9 @@ class QuantLinear(nn.Module):
     def from_tensors(cls, qweight, qzeros, scales, g_idx, bias):
         # TODO(xiaozhe): debug only, fix later
         bits = 4
-        infeatures = qweight.shape[0] * 32
+        # qweight.shape[0] = infeatures // 32 * bits
+        # infeatures = qweight.shape[0] * 32 // bits
+        infeatures = qweight.shape[0] * 32 // bits
         outfeatures = qweight.shape[1]
         obj = cls(bits, infeatures, outfeatures, bias)
         obj.qweight = qweight
