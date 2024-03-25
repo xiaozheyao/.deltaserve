@@ -466,7 +466,6 @@ class LRUCacheDeltaModelManager(DeltaModelManager):
 
     def add_delta(self, delta: DeltaModel) -> bool:
         """Add a DeltaModel to the manager."""
-        logger.info("Adding Delta. int id: %d", delta.id)
         if delta.id not in self._registered_deltas:
             self._add_delta(delta)
             was_added = True

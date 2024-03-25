@@ -12,7 +12,7 @@ none_tensor = torch.empty((1, 1), device="meta")
 
 try:
     from vllm._C import deltazip
-
+    from vllm._C.deltazip import make_q_matrix, gemm_half_q_half
 except ImportError as e:
     logger.error(f"Error importing deltazip: {e}")
 

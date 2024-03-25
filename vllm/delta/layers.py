@@ -217,7 +217,6 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.qls: List[QuantLinear] = [None] * max_deltas
 
     def set_delta(self, index: int, delta: DeltaLayerWeights):
-        logger.info(f"set_delta {index}, {delta}")
         self.qls[index] = QuantLinear.from_tensors(
             delta.qweight[0],
             delta.qzeros[0],

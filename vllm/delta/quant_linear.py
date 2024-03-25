@@ -1,6 +1,6 @@
 import torch
 import torch.nn as nn
-from vllm.delta.utils import ext_gemm_half_q_half, ext_make_q_matrix
+from vllm.delta.utils import ext_gemm_half_q_half, ext_make_q_matrix, ExLlamaV2DeviceTensors
 from vllm.logger import init_logger
 
 logger = init_logger(__name__)
@@ -58,7 +58,8 @@ class QuantLinear(nn.Module):
                 "g_idx": self.g_idx,
             }
             temp_dq = temp_dq.get_scratch_slice(self.temp_dq_size())
-            self.q_handle = ext_make_q_matrix(self.q_tensors, temp_dq)
+            logger.info(f"QuantLinear post_init, temp_dq = {temp_dq}, q_tensors = {self.q_tensors}")
+            self.q_handle = ext_make_q_matrix(self.q_tensors, temp_dq=temp_dq)
         else:
             raise NotImplementedError("Only 4 bits are supported.")
 
@@ -96,13 +97,7 @@ class QuantLinear(nn.Module):
         obj.g_idx = g_idx
         if bias:
             obj.bias = bias
-        obj.q_tensors = {
-            "qweight": obj.qweight,
-            "qzeros": obj.qzeros,
-            "scales": obj.scales,
-            "g_idx": obj.g_idx,
-        }
-        temp_dq = temp_dq.get_scratch_slice(obj.temp_dq_size())
-        obj.q_handle = ext_make_q_matrix(obj.q_tensors, temp_dq)
         # TODO(xiaozhe): here we need the post_init function
+        device_tensor = ExLlamaV2DeviceTensors(obj.qweight.device.index, obj.scratch_space_fixed())
+        obj.post_init(temp_dq=device_tensor)
         return obj
