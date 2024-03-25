@@ -245,9 +245,6 @@ else()
 endif()
 
 # _deltazip_ extension
-#
-#
-
 set(VLLM_DELTAZIP_EXT_SRC
   "csrc/deltazip/deltazip_ops.cc"
 )

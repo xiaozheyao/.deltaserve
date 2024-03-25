@@ -125,34 +125,7 @@ PYBIND11_MODULE(TORCH_EXTENSION_NAME, m) {
 
 #ifndef USE_ROCM
   pybind11::module deltazip = m.def_submodule("deltazip", "deltazip ops");
-  deltazip.def("pack_rows_4", &pack_rows_4, "pack_rows_4");
-  deltazip.def("pack_columns", &pack_columns, "pack_columns");
-  deltazip.def("quantize_err", &quantize_err, "quantize_err");
-  deltazip.def("quantize", &quantize, "quantize");
   deltazip.def("make_q_matrix", &make_q_matrix, "make_q_matrix");
-  deltazip.def("free_q_matrix", &free_q_matrix, "free_q_matrix");
-  deltazip.def("reconstruct", &reconstruct, "reconstruct");
-  deltazip.def("make_q_mlp", &make_q_mlp, "make_q_mlp");
-  deltazip.def("free_q_mlp", &free_q_mlp, "free_q_mlp");
-  deltazip.def("make_q_moe_mlp", &make_q_moe_mlp, "make_q_moe_mlp");
-  deltazip.def("free_q_moe_mlp", &free_q_moe_mlp, "free_q_moe_mlp");
-  deltazip.def("q_mlp_forward_", &q_mlp_forward_, "q_mlp_forward_");
-  deltazip.def("q_mlp_set_loras", &q_mlp_set_loras, "q_mlp_set_loras");
-  deltazip.def("q_moe_mlp_forward_", &q_moe_mlp_forward_, "q_moe_mlp_forward_");
-  deltazip.def("make_q_attn", &make_q_attn, "make_q_attn");
-  deltazip.def("free_q_attn", &free_q_attn, "free_q_attn");
-  deltazip.def("q_attn_forward_1", &q_attn_forward_1, "q_attn_forward_1");
-  deltazip.def("q_attn_forward_2", &q_attn_forward_2, "q_attn_forward_2");
-  deltazip.def("q_attn_set_loras", &q_attn_set_loras, "q_attn_set_loras");
   deltazip.def("gemm_half_q_half", &gemm_half_q_half, "gemm_half_q_half");
-  deltazip.def("rms_norm", &lowbits_rms_norm, "lowbits_rms_norm");
-  deltazip.def("rms_norm_", &lowbits_rms_norm_, "lowbits_rms_norm_");
-  deltazip.def("rope_", &rope_, "rope_");
-  deltazip.def("apply_rep_penalty", &apply_rep_penalty, "apply_rep_penalty");
-  deltazip.def("sample_basic", &sample_basic, "sample_basic");
-  deltazip.def("logit_filter_exclusive", &logit_filter_exclusive, "logit_filter_exclusive");
-  deltazip.def("fp16_to_fp8", &fp16_to_fp8, "fp16_to_fp8");
-  deltazip.def("fp8_to_fp16", &fp8_to_fp16, "fp8_to_fp16");
-  deltazip.def("gemm_half_half_half", &gemm_half_half_half, "gemm_half_half_half");
 #endif
 }
