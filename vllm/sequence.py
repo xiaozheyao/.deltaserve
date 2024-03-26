@@ -17,8 +17,15 @@ if TYPE_CHECKING:
 
 @dataclass
 class Logprob:
-    """Infos for supporting OpenAI compatible logprobs."""
+    """Infos for supporting OpenAI compatible logprobs and token ranks.
+
+    Attributes:
+        logprob: The logprob of chosen token
+        rank: The vocab rank of chosen token (>=1)
+        decoded_token: The decoded chosen token index
+    """
     logprob: float
+    rank: Optional[int] = None
     decoded_token: Optional[str] = None
 
 
@@ -67,7 +74,7 @@ class SequenceStatus(enum.Enum):
 class RequestMetrics:
     """Metrics associated with a request.
 
-    Args:
+    Attributes:
         arrival_time: The time when the request arrived.
         first_scheduled_time: The time when the request was first scheduled.
         first_token_time: The time when the first token was generated.
@@ -179,6 +186,7 @@ class Sequence:
         # Initialize the logical token blocks with the prompt token ids.
         self._append_tokens_to_blocks(prompt_token_ids)
         self.status = SequenceStatus.WAITING
+        self.stop_reason: Union[int, str, None] = None
 
         # Used for incremental detokenization
         self.prefix_offset = 0
@@ -303,6 +311,25 @@ class SequenceGroupState:
     generator: Optional[Any] = None
 
 
+class MultiModalData:
+    """Multi modal request.
+    
+    Args:
+        type: The data type.
+        data: The actual data.
+        The required shape and semantic meaning of it depends on the vision
+        language config of the hosted model. 
+        See `VisionLanguageConfig` in `config.py`.
+    """
+
+    class Type(enum.Enum):
+        IMAGE = enum.auto()
+
+    def __init__(self, type: Type, data: "torch.Tensor"):
+        self.type = type
+        self.data = data
+
+
 class SequenceGroup:
     """A group of sequences that are generated from the same prompt.
 
@@ -312,6 +339,7 @@ class SequenceGroup:
         sampling_params: The sampling parameters used to generate the outputs.
         arrival_time: The arrival time of the request.
         lora_request: LoRA request.
+        multi_modal_data: Multi modal data associated with the request.
     """
 
     def __init__(
@@ -322,6 +350,7 @@ class SequenceGroup:
         arrival_time: float,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        multi_modal_data: Optional[MultiModalData] = None,
     ) -> None:
         self.request_id = request_id
         self.seqs_dict = {seq.seq_id: seq for seq in seqs}
@@ -335,6 +364,7 @@ class SequenceGroup:
         self.delta_request = delta_request
         self.prompt_logprobs: Optional[PromptLogprobs] = None
         self.state = SequenceGroupState()
+        self.multi_modal_data = multi_modal_data
 
     @property
     def prompt(self) -> str:
@@ -456,6 +486,7 @@ class SequenceGroupMetadata:
             numbers)
         state: Internal state tied to this sequence group.
         lora_request: LoRA request.
+        multi_modal_data: Multi modal data.
     """
 
     def __init__(
@@ -469,6 +500,7 @@ class SequenceGroupMetadata:
         delta_request: Optional[DeltaRequest] = None,
         computed_block_nums: Optional[List[int]] = None,
         state: Optional[SequenceGroupState] = None,
+        multi_modal_data: Optional[MultiModalData] = None,
     ) -> None:
         self.request_id = request_id
         self.is_prompt = is_prompt
@@ -478,6 +510,7 @@ class SequenceGroupMetadata:
         self.lora_request = lora_request
         self.delta_request = delta_request
         self.computed_block_nums = computed_block_nums
+        self.multi_modal_data = multi_modal_data
         self.state = SequenceGroupState() if state is None else state
 
     @property
