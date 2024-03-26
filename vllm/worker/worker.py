@@ -67,7 +67,6 @@ class Worker:
         if self.vision_language_config:
             assert not self.lora_config, (
                 "To be tested: vision language model with LoRA settings.")
-
         self.model_runner = ModelRunner(
             model_config,
             parallel_config,
@@ -93,12 +92,10 @@ class Worker:
             # Related issue:
             # https://discuss.pytorch.org/t/cuda-allocation-lifetime-for-inputs-to-distributed-all-reduce/191573
             os.environ["TORCH_NCCL_AVOID_RECORD_STREAMS"] = "1"
-
             # This env var set by Ray causes exceptions with graph building.
             os.environ.pop("NCCL_ASYNC_ERROR_HANDLING", None)
             self.device = torch.device(f"cuda:{self.local_rank}")
             torch.cuda.set_device(self.device)
-
             _check_if_gpu_supports_dtype(self.model_config.dtype)
             torch.cuda.empty_cache()
             self.init_gpu_memory = torch.cuda.mem_get_info()[0]
@@ -159,6 +156,8 @@ class Worker:
         num_cpu_blocks = max(num_cpu_blocks, 0)
         if self.model_runner.lora_manager:
             self.model_runner.remove_all_loras()
+        if self.model_runner.delta_manager:
+            self.model_runner.remove_all_deltas()
         gc.collect()
         torch.cuda.empty_cache()
         return num_gpu_blocks, num_cpu_blocks
@@ -297,7 +296,7 @@ def init_distributed_environment(
                 "cupy.distributed is already initialized but the cupy world "
                 "size does not match parallel_config.world_size "
                 f"({cupy_world_size} vs. {parallel_config.world_size}).")
-    elif parallel_config.world_size > 1 and cupy_port is not None:
+    elif (parallel_config.world_size > 1 and cupy_port is not None):
         # NOTE(woosuk): We don't initialize CuPy process group when world size
         # is 1.
         # TODO(woosuk): Support multi-node connection.

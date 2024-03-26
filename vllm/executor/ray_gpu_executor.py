@@ -124,6 +124,8 @@ class RayGPUExecutor(ExecutorBase):
             self.driver_dummy_worker.get_node_and_gpu_ids.remote())
         worker_node_and_gpu_ids = ray.get(
             [worker.get_node_and_gpu_ids.remote() for worker in self.workers])
+        
+
 
         node_workers = defaultdict(list)
         node_gpus = defaultdict(list)
@@ -136,10 +138,15 @@ class RayGPUExecutor(ExecutorBase):
             node_gpus[node_id].extend(gpu_ids)
         for node_id, gpu_ids in node_gpus.items():
             node_gpus[node_id] = sorted(gpu_ids)
-
+            
+        logger.info(f"Driver node: {driver_node_id}, driver gpus: {driver_gpu_ids}, worker nodes: {worker_node_and_gpu_ids}")
+        logger.info(f"node_gpus: {node_gpus}")
+        logger.info(f"worker_node_and_gpu_ids: {worker_node_and_gpu_ids}")
+        
         # Set CUDA_VISIBLE_DEVICES for the driver and workers.
         set_cuda_visible_devices(node_gpus[driver_node_id])
         for worker, (node_id, _) in zip(self.workers, worker_node_and_gpu_ids):
+            logger.info(f"Setting CUDA_VISIBLE_DEVICES={node_gpus[node_id]} for worker on node {node_id}")
             worker.set_cuda_visible_devices.remote(node_gpus[node_id])
 
         distributed_init_method = get_distributed_init_method(

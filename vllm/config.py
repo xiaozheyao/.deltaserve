@@ -309,6 +309,23 @@ class ModelConfig:
         total_num_hidden_layers = self.hf_text_config.num_hidden_layers
         return total_num_hidden_layers // parallel_config.pipeline_parallel_size
 
+    def __str__(self):
+        return (f"ModelConfig(model={self.model}, "
+                f"tokenizer={self.tokenizer}, "
+                f"tokenizer_mode={self.tokenizer_mode}, "
+                f"trust_remote_code={self.trust_remote_code}, "
+                f"download_dir={self.download_dir}, "
+                f"load_format={self.load_format}, "
+                f"dtype={self.dtype}, "
+                f"seed={self.seed}, "
+                f"revision={self.revision}, "
+                f"code_revision={self.code_revision}, "
+                f"tokenizer_revision={self.tokenizer_revision}, "
+                f"max_model_len={self.max_model_len}, "
+                f"quantization={self.quantization}, "
+                f"enforce_eager={self.enforce_eager}, "
+                f"max_context_len_to_capture={self.max_context_len_to_capture}, "
+                f"max_logprobs={self.max_logprobs})")
 
 class CacheConfig:
     """Configuration for the KV cache.
@@ -393,6 +410,13 @@ class CacheConfig:
         elif cpu_memory_usage > 0.4 * total_cpu_memory:
             logger.warning("Possibly too large swap space. " + msg)
 
+    def __str__(self) -> str:
+        return (f"CacheConfig(block_size={self.block_size}, "
+                f"gpu_memory_utilization={self.gpu_memory_utilization}, "
+                f"swap_space={self.swap_space_bytes / _GB:.2f} GiB, "
+                f"cache_dtype={self.cache_dtype}, "
+                f"sliding_window={self.sliding_window}, "
+                f"enable_prefix_caching={self.enable_prefix_caching})")
 
 @dataclass
 class TokenizerPoolConfig:
@@ -445,6 +469,10 @@ class TokenizerPoolConfig:
             tokenizer_pool_config = None
         return tokenizer_pool_config
 
+    def __str__(self) -> str:
+        return (f"TokenizerPoolConfig(pool_size={self.pool_size}, "
+                f"pool_type={self.pool_type}, "
+                f"extra_config={self.extra_config})")
 
 class ParallelConfig:
     """Configuration for the distributed execution.
@@ -509,7 +537,14 @@ class ParallelConfig:
         if self.ray_workers_use_nsight and not self.worker_use_ray:
             raise ValueError("Unable to use nsight profiling unless workers "
                              "run with Ray.")
-
+    def __str__(self) -> str:
+        return (f"ParallelConfig(pipeline_parallel_size={self.pipeline_parallel_size}, "
+                f"tensor_parallel_size={self.tensor_parallel_size}, "
+                f"worker_use_ray={self.worker_use_ray}, "
+                f"max_parallel_loading_workers={self.max_parallel_loading_workers}, "
+                f"disable_custom_all_reduce={self.disable_custom_all_reduce}, "
+                f"tokenizer_pool_config={self.tokenizer_pool_config}, "
+                f"ray_workers_use_nsight={self.ray_workers_use_nsight})")
 
 class SchedulerConfig:
     """Scheduler configuration.
@@ -557,10 +592,14 @@ class SchedulerConfig:
                 f"max_num_batched_tokens ({self.max_num_batched_tokens}) must "
                 "be greater than or equal to max_num_seqs "
                 f"({self.max_num_seqs}).")
-
+    
+    def __str__(self) -> str:
+        return (f"SchedulerConfig(max_num_batched_tokens={self.max_num_batched_tokens}, "
+                f"max_num_seqs={self.max_num_seqs}, "
+                f"max_model_len={self.max_model_len}, "
+                f"delay_factor={self.delay_factor})")
 
 class DeviceConfig:
-
     def __init__(self, device: str = "auto") -> None:
         if device == "auto":
             # Automated device type detection
@@ -581,6 +620,9 @@ class DeviceConfig:
             # Set device with device type
             self.device = torch.device(self.device_type)
 
+    def __str__(self) -> str:
+        return (f"DeviceConfig(device_type={self.device_type}, "
+                f"device={self.device})")
 
 @dataclass
 class LoRAConfig:

@@ -1,5 +1,6 @@
-import contextlib
+import os
 import time
+import contextlib
 from typing import Dict, List, Optional, Set, Tuple
 
 import numpy as np
@@ -80,7 +81,6 @@ class ModelRunner:
         self.device_config = (device_config
                               if device_config is not None else DeviceConfig())
         self.device = self.device_config.device
-
         self.model = None
         self.block_size = None  # Set after initial profiling.
         self.lora_manager = None
@@ -102,7 +102,6 @@ class ModelRunner:
         self.pin_memory = is_pin_memory_available()
         self.kv_cache_dtype = kv_cache_dtype
         self.vision_language_config = vision_language_config
-
         self.attn_backend = get_attn_backend(
             self.model_config.dtype if model_config is not None else None)
 

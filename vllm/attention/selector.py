@@ -1,3 +1,4 @@
+import os
 from functools import lru_cache
 
 import torch
@@ -11,6 +12,9 @@ logger = init_logger(__name__)
 
 @lru_cache(maxsize=None)
 def get_attn_backend(dtype: torch.dtype) -> AttentionBackend:
+    logger.info(f"torch cuda available: {torch.cuda.is_available()}")
+    logger.info(f"os.environ['CUDA_VISIBLE_DEVICES']: {os.environ.get('CUDA_VISIBLE_DEVICES')}")
+    logger.info(f"Current cuda device: {torch.cuda.current_device()}")
     if _can_use_flash_attn(dtype):
         logger.info("Using FlashAttention backend.")
         from vllm.attention.backends.flash_attn import (  # noqa: F401
@@ -22,12 +26,12 @@ def get_attn_backend(dtype: torch.dtype) -> AttentionBackend:
             XFormersBackend)
         return XFormersBackend
 
-
 def _can_use_flash_attn(dtype: torch.dtype) -> bool:
     if is_hip():
         # AMD GPUs.
         logger.info("Cannot use FlashAttention backend for AMD GPUs.")
         return False
+
     if torch.cuda.get_device_capability()[0] < 8:
         # Volta and Turing NVIDIA GPUs.
         logger.info("Cannot use FlashAttention backend for Volta and Turing "
