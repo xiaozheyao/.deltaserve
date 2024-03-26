@@ -2,15 +2,16 @@
 import copy
 import enum
 from dataclasses import dataclass
-from typing import Dict, List, Optional, Union, TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Dict, List, Optional, Union,Any
 
 from vllm.block import LogicalTokenBlock
-from vllm.sampling_params import SamplingParams
 from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
+from vllm.sampling_params import SamplingParams
 
 if TYPE_CHECKING:
     import torch
+
     from vllm.spec_decode.metrics import SpecDecodeWorkerMetrics
 
 
@@ -249,6 +250,9 @@ class Sequence:
     def get_token_ids(self) -> List[int]:
         return self.data.get_token_ids()
 
+    def get_prompt_token_ids(self) -> List[int]:
+        return self.data.get_prompt_token_ids()
+
     def get_last_token_id(self) -> int:
         return self.data.get_last_token_id()
 
@@ -441,7 +445,7 @@ class SequenceGroup:
 
 
 class SequenceGroupMetadata:
-    """Metadata for a sequence group. Used to create `InputMetadata`.
+    """Metadata for a sequence group. Used to create `AttentionMetadata`.
 
     Args:
         request_id: The ID of the request.
