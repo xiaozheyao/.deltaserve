@@ -14,19 +14,15 @@ from vllm.config import (
     SchedulerConfig,
 )
 from vllm.logger import init_logger
-from vllm.model_executor import get_model, InputMetadata, SamplingMetadata
-from vllm.sampling_params import SamplingParams
-from vllm.sequence import SamplerOutput, SequenceData, SequenceGroupMetadata
+from vllm.model_executor import get_model, SamplingMetadata
 from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
-from vllm.utils import in_wsl, measure_cuda_memory
 from vllm.delta import DeltaMapping, DeltaConfig, DeltaRequest, LRUCacheWorkerDeltaManager
 from vllm.attention import AttentionMetadata, get_attn_backend
 from vllm.config import (DeviceConfig, LoRAConfig, ModelConfig, ParallelConfig,
                          SchedulerConfig, VisionLanguageConfig)
 from vllm.logger import init_logger
 from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
-from vllm.model_executor.model_loader import get_model
 from vllm.model_executor.parallel_utils import cupy_utils, custom_all_reduce
 from vllm.model_executor.parallel_utils.communication_op import (
     broadcast_tensor_dict)
@@ -177,9 +173,8 @@ class ModelRunner:
         self,
         seq_group_metadata_list: List[SequenceGroupMetadata],
     ) -> Tuple[torch.Tensor, torch.Tensor, AttentionMetadata, List[int],
-               List[int], List[int], List[int], Set[LoRARequest],List[int],
-               List[int], Set[DeltaRequest],
-               torch.Tensor]:
+               List[int], List[int], List[int], Set[LoRARequest], List[int],
+               List[int], Set[DeltaRequest], torch.Tensor]:
         assert len(seq_group_metadata_list) > 0
         input_tokens: List[int] = []
         input_positions: List[int] = []
@@ -250,7 +245,7 @@ class ModelRunner:
                 [delta_id] *
                 (prompt_len - computed_len
                  if seq_group_metadata.sampling_params.prompt_logprobs else 1))
-            
+
             if seq_group_metadata.multi_modal_data:
                 multi_modal_input_list.append(
                     seq_group_metadata.multi_modal_data.data)

@@ -396,7 +396,6 @@ class EngineArgs:
             max_cpu_loras=self.max_cpu_loras if self.max_cpu_loras
             and self.max_cpu_loras > 0 else None) if self.enable_lora else None
 
-        
         if self.image_input_type:
             if (not self.image_token_id or not self.image_input_shape
                     or not self.image_feature_size):
@@ -412,13 +411,14 @@ class EngineArgs:
             )
         else:
             vision_language_config = None
-            
+
         delta_config = DeltaConfig(max_deltas=self.max_deltas,
                                    max_cpu_deltas=self.max_cpu_deltas
                                    if self.max_cpu_deltas else None)
         return (model_config, cache_config, parallel_config, scheduler_config,
                 device_config, lora_config if self.enable_lora else None,
-                delta_config if self.enable_delta else None, vision_language_config)
+                delta_config if self.enable_delta else None,
+                vision_language_config)
 
 
 @dataclass

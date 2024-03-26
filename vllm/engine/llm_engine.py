@@ -111,7 +111,7 @@ class LLMEngine:
         self.model_executor = executor_class(model_config, cache_config,
                                              parallel_config, scheduler_config,
                                              device_config, lora_config,
-                                             delta_config
+                                             delta_config,
                                              vision_language_config)
 
         # Ping the tokenizer to ensure liveness if it runs in a
@@ -316,7 +316,8 @@ class LLMEngine:
 
         # Create the sequence group.
         seq_group = SequenceGroup(request_id, [seq], sampling_params,
-                                  arrival_time, lora_request, delta_request, multi_modal_data)
+                                  arrival_time, lora_request, delta_request,
+                                  multi_modal_data)
 
         # Add the sequence group to the scheduler.
         self.scheduler.add_seq_group(seq_group)
