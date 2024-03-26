@@ -215,7 +215,8 @@ class NeuronModelRunner:
                                                   pin_memory=self.pin_memory)
 
         categorized_sample_indices = {
-            t: maybe_expand_dim(
+            t:
+            maybe_expand_dim(
                 async_tensor_h2d(seq_ids,
                                  dtype=torch.int,
                                  target_device=self.device,

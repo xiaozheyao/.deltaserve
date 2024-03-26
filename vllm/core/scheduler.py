@@ -264,8 +264,8 @@ class Scheduler:
 
                 # If the number of batched tokens exceeds the limit, stop.
                 num_batched_tokens += num_prompt_tokens
-                if (num_batched_tokens >
-                        self.scheduler_config.max_num_batched_tokens):
+                if (num_batched_tokens
+                        > self.scheduler_config.max_num_batched_tokens):
                     break
 
                 # The total number of sequences in the RUNNING state should not
@@ -561,10 +561,9 @@ class Scheduler:
         if self.scheduler_config.delay_factor > 0 and self.waiting:
             earliest_arrival_time = min(
                 [e.metrics.arrival_time for e in self.waiting])
-            passed_delay = (
-                (now - earliest_arrival_time) >
-                (self.scheduler_config.delay_factor * self.last_prompt_latency)
-                or not self.running)
+            passed_delay = ((now - earliest_arrival_time)
+                            > (self.scheduler_config.delay_factor *
+                               self.last_prompt_latency) or not self.running)
         else:
             passed_delay = True
         return passed_delay

@@ -173,8 +173,7 @@ class ModelRunner:
         seq_group_metadata_list: List[SequenceGroupMetadata],
     ) -> Tuple[torch.Tensor, torch.Tensor, AttentionMetadata, List[int],
                List[int], List[int], List[int], Set[LoRARequest], List[int],
-            List[int],
-            Set[DeltaRequest]]:
+               List[int], Set[DeltaRequest]]:
         assert len(seq_group_metadata_list) > 0
         input_tokens: List[int] = []
         input_positions: List[int] = []
@@ -345,19 +344,34 @@ class ModelRunner:
             use_cuda_graph=False,
             kv_cache_dtype=self.kv_cache_dtype,
         )
-        return (input_tokens, input_positions, attn_metadata, prompt_lens,
-                subquery_lens, lora_index_mapping, lora_prompt_mapping,
-                lora_requests, delta_index_mapping,
+        return (
+            input_tokens,
+            input_positions,
+            attn_metadata,
+            prompt_lens,
+            subquery_lens,
+            lora_index_mapping,
+            lora_prompt_mapping,
+            lora_requests,
+            delta_index_mapping,
             delta_prompt_mapping,
-            delta_requests,)
+            delta_requests,
+        )
 
     def _prepare_decode(
         self,
         seq_group_metadata_list: List[SequenceGroupMetadata],
-    ) -> Tuple[torch.Tensor, torch.Tensor, AttentionMetadata, List[int],
-               List[int], Set[LoRARequest], List[int],
+    ) -> Tuple[
+            torch.Tensor,
+            torch.Tensor,
+            AttentionMetadata,
             List[int],
-            Set[DeltaRequest],]:
+            List[int],
+            Set[LoRARequest],
+            List[int],
+            List[int],
+            Set[DeltaRequest],
+    ]:
         assert len(seq_group_metadata_list) > 0
         input_tokens: List[int] = []
         input_positions: List[int] = []
@@ -488,10 +502,17 @@ class ModelRunner:
             use_cuda_graph=use_captured_graph,
             kv_cache_dtype=self.kv_cache_dtype,
         )
-        return (input_tokens, input_positions, attn_metadata,
-                lora_index_mapping, lora_prompt_mapping, lora_requests, delta_index_mapping,
+        return (
+            input_tokens,
+            input_positions,
+            attn_metadata,
+            lora_index_mapping,
+            lora_prompt_mapping,
+            lora_requests,
+            delta_index_mapping,
             delta_prompt_mapping,
-            delta_requests,)
+            delta_requests,
+        )
 
     def _prepare_sample(
         self,
@@ -571,7 +592,8 @@ class ModelRunner:
                                                   pin_memory=self.pin_memory)
 
         categorized_sample_indices = {
-            t: maybe_expand_dim(
+            t:
+            maybe_expand_dim(
                 async_tensor_h2d(seq_ids,
                                  dtype=torch.int,
                                  target_device=self.device,
@@ -604,17 +626,31 @@ class ModelRunner:
             is_prompt = seq_group_metadata_list[0].is_prompt
             # Prepare input tensors.
             if is_prompt:
-                (input_tokens, input_positions, attn_metadata, prompt_lens,
-                 subquery_lens, lora_index_mapping, lora_prompt_mapping,
-                 lora_requests, delta_index_mapping,
+                (
+                    input_tokens,
+                    input_positions,
+                    attn_metadata,
+                    prompt_lens,
+                    subquery_lens,
+                    lora_index_mapping,
+                    lora_prompt_mapping,
+                    lora_requests,
+                    delta_index_mapping,
                     delta_prompt_mapping,
-                    delta_requests,) = self._prepare_prompt(seq_group_metadata_list)
+                    delta_requests,
+                ) = self._prepare_prompt(seq_group_metadata_list)
             else:
-                (input_tokens, input_positions, attn_metadata,
-                 lora_index_mapping, lora_prompt_mapping,
-                 lora_requests, delta_index_mapping,
+                (
+                    input_tokens,
+                    input_positions,
+                    attn_metadata,
+                    lora_index_mapping,
+                    lora_prompt_mapping,
+                    lora_requests,
+                    delta_index_mapping,
                     delta_prompt_mapping,
-                    delta_requests,) = self._prepare_decode(seq_group_metadata_list)
+                    delta_requests,
+                ) = self._prepare_decode(seq_group_metadata_list)
                 prompt_lens = []
                 subquery_lens = None
 
@@ -672,9 +708,16 @@ class ModelRunner:
                 perform_sampling=False,
             )
 
-        return (input_tokens, input_positions, attn_metadata,
-                sampling_metadata, lora_requests, lora_mapping, delta_requests,
-            delta_mapping,)
+        return (
+            input_tokens,
+            input_positions,
+            attn_metadata,
+            sampling_metadata,
+            lora_requests,
+            lora_mapping,
+            delta_requests,
+            delta_mapping,
+        )
 
     @torch.inference_mode()
     def execute_model(
@@ -682,10 +725,16 @@ class ModelRunner:
         seq_group_metadata_list: Optional[List[SequenceGroupMetadata]],
         kv_caches: List[torch.Tensor],
     ) -> Optional[SamplerOutput]:
-        (input_tokens, input_positions, attn_metadata, sampling_metadata,
-         lora_requests,
-         lora_mapping, delta_requests,
-            delta_mapping,) = self.prepare_input_tensors(seq_group_metadata_list)
+        (
+            input_tokens,
+            input_positions,
+            attn_metadata,
+            sampling_metadata,
+            lora_requests,
+            lora_mapping,
+            delta_requests,
+            delta_mapping,
+        ) = self.prepare_input_tensors(seq_group_metadata_list)
 
         if self.lora_config:
             self.set_active_loras(lora_requests, lora_mapping)
