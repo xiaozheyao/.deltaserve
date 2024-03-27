@@ -4,7 +4,7 @@ from typing import Optional
 from dataclasses import dataclass, field, fields
 from transformers.utils.hub import PushToHubMixin
 from os.path import join
-
+from fractions import Fraction
 
 @dataclass
 class CompressionConfig(PushToHubMixin):
@@ -23,7 +23,8 @@ class CompressionConfig(PushToHubMixin):
     true_sequential: bool = field(default=True)
     lossless: str = field(default="none")
     dtype: str = field(default="fp16")
-
+    pack_factor: Fraction = field(default=Fraction(32, 1))
+    
     def __post_init__(self):
         fields_info = fields(self)
         if self.sparsity < 0 or self.sparsity > 1:
@@ -37,7 +38,8 @@ class CompressionConfig(PushToHubMixin):
                 "unless equal to -1, group_size must greater then 0.")
         if not (0 < self.damp_percent < 1):
             raise ValueError("damp_percent must between 0 and 1.")
-
+        self.pack_factor = Fraction(32, self.bits)
+        
     def save_pretrained(self, save_dir: str, **kwargs):
         with open(join(save_dir, "compress_config.json"),
                   "w",
@@ -66,7 +68,6 @@ class CompressionConfig(PushToHubMixin):
             "block_size": self.block_size,
         }
 
-
 @dataclass
 class DeltaConfig:
     max_deltas: int = 1
@@ -74,6 +75,7 @@ class DeltaConfig:
     delta_dtype: Optional[torch.dtype] = torch.int32
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0
+    pack_factor: Fraction = field(default=Fraction(32, 1))
 
     def __post_init__(self):
         if self.max_cpu_deltas is None:
@@ -82,3 +84,4 @@ class DeltaConfig:
             raise ValueError("max_cpu_deltas must be greater than max_deltas")
         if self.max_bitwidth not in [2, 4, 8]:
             raise ValueError("max_bitwidth must be 2, 4 or 8")
+        self.pack_factor = Fraction(32, self.max_bitwidth)

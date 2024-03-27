@@ -270,8 +270,13 @@ class DeltaModelManager:
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:
-                # module_delta.optimize()
-                module.set_delta(index, module_delta)
+                module.set_delta(
+                    index, 
+                    module_delta.qweight,
+                    module_delta.qzeros,
+                    module_delta.scales, 
+                    module_delta.g_idx
+                )
             else:
                 module.reset_delta(index)
         return True
