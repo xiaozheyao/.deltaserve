@@ -224,7 +224,6 @@ class LRUCacheWorkerLoRAManager(WorkerLoRAManager):
                 f"Number of requested LoRAs ({len(loras_map)}) is greater "
                 "than the number of GPU LoRA slots "
                 f"({self._lora_manager.lora_slots}).")
-        logger.info(f"loras_map: {loras_map}")
         for lora in loras_map.values():
             self.add_lora(lora)
 

@@ -11,8 +11,6 @@ logger = init_logger(__name__)
 
 @lru_cache(maxsize=None)
 def get_attn_backend(dtype: torch.dtype) -> AttentionBackend:
-    logger.info(f"os.pid: {os.getpid()}, cuda available: {torch.cuda.is_available()}, cuda_visible_devices: {os.environ.get('CUDA_VISIBLE_DEVICES')}")
-
     if _can_use_flash_attn(dtype):
         logger.info("Using FlashAttention backend.")
         from vllm.attention.backends.flash_attn import (  # noqa: F401
@@ -23,7 +21,6 @@ def get_attn_backend(dtype: torch.dtype) -> AttentionBackend:
         from vllm.attention.backends.xformers import (  # noqa: F401
             XFormersBackend)
         return XFormersBackend
-
 def _can_use_flash_attn(dtype: torch.dtype) -> bool:
     if is_hip():
         # AMD GPUs.

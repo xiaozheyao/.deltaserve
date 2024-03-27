@@ -97,7 +97,6 @@ class RayGPUExecutor(ExecutorBase):
                 placement_group_capture_child_tasks=True,
                 placement_group_bundle_index=bundle_id,
             )
-            logger.info(f"requesting worker with ray_remote_kwargs: {ray_remote_kwargs}")
             worker = ray.remote(
                 num_cpus=0,
                 num_gpus=num_gpus,
@@ -138,16 +137,9 @@ class RayGPUExecutor(ExecutorBase):
         for node_id, gpu_ids in node_gpus.items():
             node_gpus[node_id] = sorted(gpu_ids)
 
-        logger.info(f"Driver node: {driver_node_id}, driver gpus: {driver_gpu_ids}, worker nodes: {worker_node_and_gpu_ids}")
-        logger.info(f"node_gpus: {node_gpus}")
-        logger.info(f"worker_node_and_gpu_ids: {worker_node_and_gpu_ids}")
-        
         # Set CUDA_VISIBLE_DEVICES for the driver and workers.
-        logger.info(f"setting CUDA_VISIBLE_DEVICES={node_gpus[driver_node_id]}")
         set_cuda_visible_devices(node_gpus[driver_node_id])
-
         for worker, (node_id, _) in zip(self.workers, worker_node_and_gpu_ids):
-            logger.info(f"Setting CUDA_VISIBLE_DEVICES={node_gpus[node_id]} for worker on node {node_id}")
             worker.set_cuda_visible_devices.remote(node_gpus[node_id])
 
         distributed_init_method = get_distributed_init_method(

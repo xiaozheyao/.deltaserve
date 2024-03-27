@@ -100,7 +100,6 @@ def _apply_lora_packed_nslice(
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
 
-
 @dataclass
 class LoRAMapping:
     # Per every token in input_ids:
@@ -112,7 +111,9 @@ class LoRAMapping:
         self.index_mapping = tuple(self.index_mapping)
         self.prompt_mapping = tuple(self.prompt_mapping)
 
-
+    def __str__(self):
+        return f"index_mapping: {self.index_mapping}, prompt_mapping: {self.prompt_mapping}"
+    
 class BaseLayerWithLoRA(nn.Module):
 
     def create_lora_weights(

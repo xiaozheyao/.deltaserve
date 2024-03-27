@@ -154,8 +154,7 @@ class ModelRunner:
 
             self.delta_manager = LRUCacheWorkerDeltaManager(
                 self.scheduler_config.max_num_seqs,
-                self.scheduler_config.max_num_batched_tokens +
-                self.scheduler_config.max_paddings,
+                self.scheduler_config.max_num_batched_tokens,
                 self.vocab_size,
                 self.delta_config,
                 self.device,
@@ -440,7 +439,7 @@ class ModelRunner:
                 lora_index_mapping.append(lora_id)
                 lora_prompt_mapping.append(lora_id)
 
-                delta_index_mapping.append([delta_id])
+                delta_index_mapping.append(delta_id)
                 delta_prompt_mapping.append(delta_id)
 
                 if self.sliding_window is not None:
@@ -688,11 +687,8 @@ class ModelRunner:
                 )
                 delta_mapping = None
             elif self.delta_config:
-                flat_delta_index_mapping = [
-                    item for sublist in delta_index_mapping for item in sublist
-                ]
                 delta_mapping = DeltaMapping(
-                    flat_delta_index_mapping,
+                    delta_index_mapping,
                     delta_prompt_mapping,
                 )
                 lora_mapping = None

@@ -55,7 +55,7 @@ def _apply_delta(x: torch.Tensor, quant_linears: List[QuantLinear],
             # and update the profile to handle this case
             outputs.append(torch.zeros_like(base_output))
     output = torch.stack(outputs, dim=0)
-    return output + base_output
+    return (output + base_output).view_as(base_output)
 
 
 @dataclass
@@ -68,7 +68,9 @@ class DeltaMapping:
     def __post_init__(self):
         self.index_mapping = tuple(self.index_mapping)
         self.prompt_mapping = tuple(self.prompt_mapping)
-
+        
+    def __str__(self):
+        return f"index_mapping: {self.index_mapping}, prompt_mapping: {self.prompt_mapping}"
 
 class BaseLayerWithDelta(nn.Module):
 
@@ -178,7 +180,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # print(f"ColumnParallelLinearWithDelta")
         bias = (self.base_layer.bias
                 if not self.base_layer.skip_bias_add else None)
         output_parallel = self.apply_weights(x, bias)
@@ -276,7 +277,7 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def apply_weights(self, x: torch.Tensor, bias: Any | None) -> torch.Tensor:
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias)
-        output = _apply_delta(x, self.qls, output)
+        # output = _apply_delta(x, self.qls, output)
         return output
 
 
