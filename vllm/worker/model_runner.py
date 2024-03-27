@@ -20,7 +20,10 @@ from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
 from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
 
-from vllm.delta import DeltaMapping, DeltaConfig, DeltaRequest, LRUCacheWorkerDeltaManager
+from vllm.delta.config import DeltaConfig
+from vllm.delta.layers import DeltaMapping
+from vllm.delta.request import DeltaRequest
+from vllm.delta.worker_manager import LRUCacheWorkerDeltaManager
 
 from vllm.attention import AttentionMetadata, get_attn_backend
 
@@ -103,6 +106,7 @@ class ModelRunner:
         self.pin_memory = is_pin_memory_available()
         self.kv_cache_dtype = kv_cache_dtype
         self.vision_language_config = vision_language_config
+        
         self.attn_backend = get_attn_backend(
             self.model_config.dtype if model_config is not None else None)
 
@@ -717,6 +721,8 @@ class ModelRunner:
                 "selected_token_indices")
             lora_mapping = metadata_dict.pop("lora_mapping")
             lora_requests = metadata_dict.pop("lora_requests")
+            delta_mapping = metadata_dict.pop("delta_mapping")
+            delta_requests = metadata_dict.pop("delta_requests")
             multi_modal_input = metadata_dict.pop("multi_modal_input")
             attn_metadata = self.attn_backend.make_metadata(**metadata_dict)
             sampling_metadata = SamplingMetadata(

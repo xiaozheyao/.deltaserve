@@ -68,7 +68,9 @@ try:
             return output
 
         def print_debug_info(self) -> None:
-            print(f'CUDA_VISIBLE_DEVICES={os.environ.get("CUDA_VISIBLE_DEVICES", "<none>")}')
+            logger.info(f'CUDA_VISIBLE_DEVICES={os.environ.get("CUDA_VISIBLE_DEVICES", "<none>")}')
+            logger.info(f"ray.get_gpu_ids()={ray.get_gpu_ids()}")
+            # logger.info(f"torch.cuda.current_device()={torch.cuda.current_device()}")
 
 except ImportError as e:
     logger.warning(f"Failed to import Ray with {e!r}. "

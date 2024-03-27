@@ -9,7 +9,6 @@ from vllm.utils import is_hip
 
 logger = init_logger(__name__)
 
-
 @lru_cache(maxsize=None)
 def get_attn_backend(dtype: torch.dtype) -> AttentionBackend:
     logger.info(f"os.pid: {os.getpid()}, cuda available: {torch.cuda.is_available()}, cuda_visible_devices: {os.environ.get('CUDA_VISIBLE_DEVICES')}")

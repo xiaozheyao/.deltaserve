@@ -1,5 +1,4 @@
 """A GPU worker class."""
-
 import gc
 import os
 from typing import Dict, List, Optional, Set, Tuple
@@ -12,20 +11,19 @@ from vllm.config import (CacheConfig, DeviceConfig, LoRAConfig, ModelConfig,
 from vllm.lora.request import LoRARequest
 from vllm.model_executor import set_random_seed
 from vllm.model_executor.parallel_utils import cupy_utils
-from vllm.model_executor.parallel_utils.communication_op import broadcast_tensor_dict
+from vllm.model_executor.parallel_utils.communication_op import (
+    broadcast_tensor_dict)
 from vllm.model_executor.parallel_utils.custom_all_reduce import init_custom_ar
 from vllm.model_executor.parallel_utils.parallel_state import (
-    ensure_model_parallel_initialized, )
+    ensure_model_parallel_initialized)
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.worker.cache_engine import CacheEngine
 from vllm.worker.model_runner import ModelRunner
-from vllm.lora.request import LoRARequest
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
 from vllm.logger import logging
 
 logger = logging.getLogger(__name__)
-
 
 class Worker:
     """A worker class that executes (a partition of) the model on a GPU.
@@ -67,6 +65,11 @@ class Worker:
         if self.vision_language_config:
             assert not self.lora_config, (
                 "To be tested: vision language model with LoRA settings.")
+            assert not self.delta_config, (
+                "To be tested: vision language model with delta settings."
+            )
+        self.print_debug_info()
+        
         self.model_runner = ModelRunner(
             model_config,
             parallel_config,
@@ -92,12 +95,12 @@ class Worker:
             # Related issue:
             # https://discuss.pytorch.org/t/cuda-allocation-lifetime-for-inputs-to-distributed-all-reduce/191573
             os.environ["TORCH_NCCL_AVOID_RECORD_STREAMS"] = "1"
+
             # This env var set by Ray causes exceptions with graph building.
             os.environ.pop("NCCL_ASYNC_ERROR_HANDLING", None)
-            logger.info(f"local_rank={self.local_rank}")
-            logger.info(f"cuda available devices={torch.cuda.device_count()}")
             self.device = torch.device(f"cuda:{self.local_rank}")
             torch.cuda.set_device(self.device)
+
             _check_if_gpu_supports_dtype(self.model_config.dtype)
             torch.cuda.empty_cache()
             self.init_gpu_memory = torch.cuda.mem_get_info()[0]
@@ -248,7 +251,7 @@ class Worker:
 
     def list_deltas(self) -> Set[int]:
         return self.model_runner.list_deltas()
-
+    
     @property
     def max_model_len(self) -> int:
         return self.model_config.max_model_len
@@ -259,12 +262,16 @@ class Worker:
 
     def get_cache_block_size_bytes(self, block_size: int,
                                    cache_dtype: str) -> int:
-        """Get the size of the KV cache block size in bytes."""
+        """Get the size of the KV cache block size in bytes.
+        """
         return CacheEngine.get_cache_block_size(block_size, cache_dtype,
                                                 self.model_config,
                                                 self.parallel_config)
-
-
+    def print_debug_info(self):
+        import ray
+        logger.info(f"ray.get_gpu_ids()={ray.get_gpu_ids()}")
+        logger.info(f"torch.cuda.current_device()={torch.cuda.current_device()}")
+        
 def init_distributed_environment(
     parallel_config: ParallelConfig,
     rank: int,
