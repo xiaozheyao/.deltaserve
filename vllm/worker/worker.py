@@ -94,6 +94,8 @@ class Worker:
             os.environ["TORCH_NCCL_AVOID_RECORD_STREAMS"] = "1"
             # This env var set by Ray causes exceptions with graph building.
             os.environ.pop("NCCL_ASYNC_ERROR_HANDLING", None)
+            logger.info(f"local_rank={self.local_rank}")
+            logger.info(f"cuda available devices={torch.cuda.device_count()}")
             self.device = torch.device(f"cuda:{self.local_rank}")
             torch.cuda.set_device(self.device)
             _check_if_gpu_supports_dtype(self.model_config.dtype)

@@ -12,9 +12,8 @@ logger = init_logger(__name__)
 
 @lru_cache(maxsize=None)
 def get_attn_backend(dtype: torch.dtype) -> AttentionBackend:
-    logger.info(f"torch cuda available: {torch.cuda.is_available()}")
-    logger.info(f"os.environ['CUDA_VISIBLE_DEVICES']: {os.environ.get('CUDA_VISIBLE_DEVICES')}")
-    logger.info(f"Current cuda device: {torch.cuda.current_device()}")
+    logger.info(f"os.pid: {os.getpid()}, cuda available: {torch.cuda.is_available()}, cuda_visible_devices: {os.environ.get('CUDA_VISIBLE_DEVICES')}")
+
     if _can_use_flash_attn(dtype):
         logger.info("Using FlashAttention backend.")
         from vllm.attention.backends.flash_attn import (  # noqa: F401

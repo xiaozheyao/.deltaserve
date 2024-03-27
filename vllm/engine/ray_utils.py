@@ -1,3 +1,4 @@
+import os
 import pickle
 from typing import List, Optional, Tuple
 
@@ -65,6 +66,9 @@ try:
             output = self.worker.execute_model()
             output = pickle.dumps(output)
             return output
+
+        def print_debug_info(self) -> None:
+            print(f'CUDA_VISIBLE_DEVICES={os.environ.get("CUDA_VISIBLE_DEVICES", "<none>")}')
 
 except ImportError as e:
     logger.warning(f"Failed to import Ray with {e!r}. "

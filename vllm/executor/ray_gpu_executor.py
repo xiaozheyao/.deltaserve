@@ -124,8 +124,6 @@ class RayGPUExecutor(ExecutorBase):
             self.driver_dummy_worker.get_node_and_gpu_ids.remote())
         worker_node_and_gpu_ids = ray.get(
             [worker.get_node_and_gpu_ids.remote() for worker in self.workers])
-        
-
 
         node_workers = defaultdict(list)
         node_gpus = defaultdict(list)
@@ -138,16 +136,18 @@ class RayGPUExecutor(ExecutorBase):
             node_gpus[node_id].extend(gpu_ids)
         for node_id, gpu_ids in node_gpus.items():
             node_gpus[node_id] = sorted(gpu_ids)
-            
+
         logger.info(f"Driver node: {driver_node_id}, driver gpus: {driver_gpu_ids}, worker nodes: {worker_node_and_gpu_ids}")
         logger.info(f"node_gpus: {node_gpus}")
         logger.info(f"worker_node_and_gpu_ids: {worker_node_and_gpu_ids}")
         
         # Set CUDA_VISIBLE_DEVICES for the driver and workers.
-        set_cuda_visible_devices(node_gpus[driver_node_id])
+        logger.info(f"setting CUDA_VISIBLE_DEVICES={node_gpus[driver_node_id]}")
+        set_cuda_visible_devices([0,1])
+
         for worker, (node_id, _) in zip(self.workers, worker_node_and_gpu_ids):
             logger.info(f"Setting CUDA_VISIBLE_DEVICES={node_gpus[node_id]} for worker on node {node_id}")
-            worker.set_cuda_visible_devices.remote(node_gpus[node_id])
+            worker.set_cuda_visible_devices.remote([0, 1])
 
         distributed_init_method = get_distributed_init_method(
             driver_ip, get_open_port())
@@ -163,7 +163,9 @@ class RayGPUExecutor(ExecutorBase):
         lora_config = copy.deepcopy(self.lora_config)
         delta_config = copy.deepcopy(self.delta_config)
         kv_cache_dtype = self.cache_config.cache_dtype
-
+        self.driver_dummy_worker.print_debug_info.remote()
+        for worker in self.workers:
+            worker.print_debug_info.remote()
         # Initialize the actual workers with the Worker class.
         for rank, (worker, (node_id, _)) in enumerate(
                 zip(self.workers, worker_node_and_gpu_ids),

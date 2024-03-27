@@ -18,12 +18,14 @@ from vllm.logger import init_logger
 from vllm.model_executor import get_model, SamplingMetadata
 from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
+from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
+
 from vllm.delta import DeltaMapping, DeltaConfig, DeltaRequest, LRUCacheWorkerDeltaManager
+
 from vllm.attention import AttentionMetadata, get_attn_backend
+
 from vllm.config import (DeviceConfig, LoRAConfig, ModelConfig, ParallelConfig,
                          SchedulerConfig, VisionLanguageConfig)
-from vllm.logger import init_logger
-from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
 from vllm.model_executor.parallel_utils import cupy_utils, custom_all_reduce
 from vllm.model_executor.parallel_utils.communication_op import (
     broadcast_tensor_dict)
@@ -47,7 +49,6 @@ _BATCH_SIZES_TO_CAPTURE = [1, 2, 4] + [
     _BATCH_SIZE_ALIGNMENT * i for i in range(1, 33)
 ]
 
-
 class ModelRunner:
 
     def __init__(
@@ -67,9 +68,9 @@ class ModelRunner:
         self.scheduler_config = scheduler_config
         # lora config & delta config cannot be non-None at the same time
         # TODO(xiaozhe): enable both lora and delta at the same time
-        assert (lora_config is None) or (
-            delta_config
-            is None), "LoRA and Delta cannot be enabled at the same time"
+        # assert (lora_config is None) or (
+        #     delta_config
+        #     is None), "LoRA and Delta cannot be enabled at the same time"
         self.lora_config = lora_config
         self.delta_config = delta_config
         self.is_driver_worker = is_driver_worker
@@ -423,8 +424,8 @@ class ModelRunner:
                 position = seq_len - 1
                 input_positions.append(position)
 
-                context_len = (seq_len if self.sliding_window is None else min(
-                    seq_len, self.sliding_window))
+                context_len = seq_len if self.sliding_window is None else min(
+                    seq_len, self.sliding_window)
                 context_lens.append(context_len)
 
                 block_table = seq_group_metadata.block_tables[seq_id]
