@@ -25,6 +25,9 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank, get_tensor_model_parallel_world_size)
 from vllm.model_executor.parallel_utils.utils import (
     split_tensor_along_last_dim)
+from vllm.logger import init_logger
+
+logger = init_logger(__name__)
 
 if TYPE_CHECKING:
     pass
@@ -490,6 +493,8 @@ class MergedColumnParallelLinearWithLoRA(ColumnParallelLinearWithLoRA):
                                                              start_idx:end_idx]
 
         if lora_a[0] is not None:
+            print(f"lora_a[0].shape: {lora_a[0].shape}")
+            print(f"self.lora_a_stacked[0].shape: {self.lora_a_stacked[0].shape}")
             self.lora_a_stacked[0][
                 index, 0, :lora_a[0].shape[1], :lora_a[0].shape[0]].copy_(
                     lora_a[0].T, non_blocking=True)
@@ -558,7 +563,7 @@ class QKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
         lora_b: torch.Tensor,
         embeddings_tensor: Optional[torch.Tensor],
     ):
-        self.reset_lora(index)
+        
         if self.tp_size > 1:
             tp_rank = get_tensor_model_parallel_rank()
             self.q_shard_id = tp_rank
@@ -690,10 +695,12 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
     def set_lora(
         self,
         index: int,
-        lora_a: torch.Tensor,
-        lora_b: torch.Tensor,
+        lora_a: List[torch.Tensor],
+        lora_b: List[torch.Tensor],
         embeddings_tensor: Optional[torch.Tensor],
     ):
+        logger.info(f"setting qkv lora weights")
+        logger.info(f"type of lora_a: {type(lora_a)}")
         self.reset_lora(index)
 
         if self.tp_size > 1:
@@ -812,6 +819,7 @@ class RowParallelLinearWithLoRA(BaseLayerWithLoRA):
         lora_b: torch.Tensor,
         embeddings_tensor: Optional[torch.Tensor],
     ):
+        
         self.reset_lora(index)
         if self.base_layer.tp_size > 1:
             tensor_model_parallel_rank = get_tensor_model_parallel_rank()

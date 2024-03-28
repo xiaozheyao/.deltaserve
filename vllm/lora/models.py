@@ -125,7 +125,10 @@ class LoRAModel:
 
     def get_lora(self, module_name: str) -> Optional[LoRALayerWeights]:
         """Get LoRA for a given module by name"""
-        return self.loras.get(module_name, None)
+        lora = self.loras.get(module_name, None)
+        # if lora is not None:
+        #     logger.info(f"module_name: {module_name}, ispacked: {lora.is_packed}")
+        return lora
 
     # (yard1): TODO see if we can derive target_embedding_padding automatically
     @classmethod
@@ -334,7 +337,9 @@ class LoRAModelManager:
         for module_name, module in self.modules.items():
             module_lora = lora_model.get_lora(module_name)
             if module_lora:
+                
                 module_lora.optimize()
+                logger.info(f"{module_name} has lora packed? {module_lora.is_packed} after optimize?")
                 module.set_lora(index, module_lora.lora_a, module_lora.lora_b,
                                 module_lora.embeddings_tensor)
             else:

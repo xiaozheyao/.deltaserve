@@ -68,7 +68,6 @@ class Worker:
             assert not self.delta_config, (
                 "To be tested: vision language model with delta settings."
             )
-        self.print_debug_info()
         
         self.model_runner = ModelRunner(
             model_config,

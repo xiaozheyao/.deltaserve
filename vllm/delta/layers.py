@@ -19,7 +19,6 @@ from vllm.model_executor.parallel_utils.communication_op import (
     tensor_model_parallel_all_reduce,
     tensor_model_parallel_gather,
 )
-from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .quant_linear import QuantLinear
 from .config import DeltaConfig
 from vllm.logger import init_logger
@@ -159,7 +158,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
             # let's pretend all quantization is done to the same bit width
             delta_config: DeltaConfig,
             model_config: Optional[PretrainedConfig] = None) -> None:
-       
+
         self.qls: List[QuantLinear] = [None] * max_deltas
         scale_and_zero_size = self.base_layer.weight.shape[1] // TEST_GROUPSIZE
         # (without considering pack factor)
@@ -264,6 +263,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
     Both slices must have the same size.
     """
+
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
         super().__init__(base_layer)
 
@@ -274,7 +274,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def reset_delta(self, index: int):
         self.qweight_stacked[0][index] = 0
         self.qweight_stacked[1][index] = 0
-    
+
     def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig | None = None) -> None:
         n_slices = 2
         if not (len(self.base_layer.output_sizes) == n_slices
@@ -299,7 +299,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device
             ) for _ in range(n_slices))
-        
+
 
 class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
@@ -330,33 +330,149 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.kv_shard_id = tp_rank // self.base_layer.num_kv_head_replicas
         self.qls: List[QuantLinear] = [None] * max_deltas
 
-    def set_delta(self, 
-                  index: int, 
+    def set_delta(self,
+                  index: int,
                   qweight: torch.Tensor,
                   qzeros: torch.Tensor,
-                  scales: torch.Tensor, 
+                  scales: torch.Tensor,
                   g_idx: torch.Tensor
-                ):
+                  ):
         self.reset_delta(index)
         if self.tp_size == 1:
-            pass
+            self.qls[index] = QuantLinear.from_tensors(
+                qweight=qweight,
+                qzeros=qzeros,
+                scales=scales,
+                g_idx=g_idx,
+                bias=None,
+            )
         else:
             raise NotImplementedError(
                 "QKVParallelLinearWithDelta only supports TP size 1")
-        # self.qls[index] = QuantLinear.from_tensors(
-        #     qweight=qweight,
-        #     qzeros=qzeros,
-        #     scales=scales,
-        #     g_idx=g_idx,
-        #     bias=None,
-        # )
 
     def apply_weights(self, x: torch.Tensor, bias: Any | None) -> torch.Tensor:
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias)
-        # output = _apply_delta(x, self.qls, output)
+        output = _apply_delta(x, self.qls, output)
         return output
 
+
+class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
+    def __init__(self, base_layer: QKVParallelLinear) -> None:
+        super().__init__(base_layer)
+
+    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig | None = None) -> None:
+        self.tp_size = get_tensor_model_parallel_world_size()
+        tp_rank = get_tensor_model_parallel_rank()
+        self.q_proj_shard_size = (self.base_layer.num_heads *
+                                  self.base_layer.head_size)
+        self.kv_proj_shard_size = (self.base_layer.num_kv_heads *
+                                   self.base_layer.head_size)
+        self.q_shard_id = tp_rank
+        self.pack_factor = delta_config.pack_factor
+        self.kv_shard_id = tp_rank // self.base_layer.num_kv_head_replicas
+        # qkv deltas
+        self.qweight_stacked = (
+            torch.zeros(
+                max_deltas,
+                1,
+                self.base_layer.weight.shape[0] // delta_config.pack_factor,
+                self.base_layer.weight.shape[1],
+                dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device
+            ),
+            torch.zeros(
+                max_deltas,
+                1,
+                self.base_layer.weight.shape[0] // delta_config.pack_factor,
+                self.base_layer.weight.shape[1],
+                dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device
+            ),
+            torch.zeros(
+                max_deltas,
+                1,
+                self.base_layer.weight.shape[0] // delta_config.pack_factor,
+                self.base_layer.weight.shape[1],
+                dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device
+            )
+        )
+        self.qzeros_stacked = (
+            torch.zeros(
+                max_deltas,
+                1,
+                1,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
+                dtype=torch.int32
+            ) * 3
+        )
+        self.scales_stacked = (torch.zeros(
+            max_deltas,
+            1,
+            1,
+            self.base_layer.weight.shape[0],
+            dtype=delta_config.delta_dtype,
+            device=self.base_layer.weight.device
+        ) *3 )
+        self.g_idx = torch.tensor(
+            [
+                i // TEST_GROUPSIZE
+                for i in range(self.base_layer.weight.shape[1])
+            ],
+            dtype=torch.int32,
+        )
+
+    def set_delta(self,
+                  index: int,
+                  qweight: List[torch.Tensor],
+                  qzeros: List[torch.Tensor],
+                  scales: List[torch.Tensor],
+                  g_idx: List[torch.Tensor]
+                  ):
+        if self.tp_size > 1:
+            pass
+        else:
+            if qweight[0] is not None:
+                print(f"qweight[0].shape: {qweight[0].shape}")
+                print(f"self.qweight_stacked[0].shape: {self.qweight_stacked[0].shape}")
+                
+                self.qweight_stacked[0][index, 0, :qweight[0].shape[0], :qweight[0].shape[1]].copy_(
+                    qweight[0], non_blocking=True)
+                
+            if qweight[1] is not None:
+                self.qweight_stacked[1][index, 0, :qweight[1].shape[1], :qweight[1].shape[0]].copy_(
+                    qweight[1].T, non_blocking=True)
+            if qweight[2] is not None:
+                self.qweight_stacked[2][index, 0, :qweight[2].shape[1], :qweight[2].shape[0]].copy_(
+                    qweight[2].T, non_blocking=True)
+                
+            if qzeros[0] is not None:
+                self.qzeros_stacked[0][index, 0, :qzeros[0].shape[1], :qzeros[0].shape[0]].copy_(
+                    qzeros[0].T, non_blocking=True)
+            if qzeros[1] is not None:
+                self.qzeros_stacked[1][index, 0, :qzeros[1].shape[1], :qzeros[1].shape[0]].copy_(
+                    qzeros[1].T, non_blocking=True)
+            if qzeros[2] is not None:
+                self.qzeros_stacked[2][index, 0, :qzeros[2].shape[1], :qzeros[2].shape[0]].copy_(
+                    qzeros[2].T, non_blocking=True)
+            if scales[0] is not None:
+                self.scales_stacked[0][index, 0, :scales[0].shape[1], :scales[0].shape[0]].copy_(
+                    scales[0].T, non_blocking=True)
+            if scales[1] is not None:
+                self.scales_stacked[1][index, 0, :scales[1].shape[1], :scales[1].shape[0]].copy_(
+                    scales[1].T, non_blocking=True)
+            if scales[2] is not None:
+                self.scales_stacked[2][index, 0, :scales[2].shape[1], :scales[2].shape[0]].copy_(
+                    scales[2].T, non_blocking=True)
+            if g_idx[0] is not None:
+                self.g_idx = g_idx[0]
+        
+    def apply_weights(self, x:torch.Tensor, bias: Optional[torch.Tensor]) -> torch.Tensor:
+        output = self.base_layer.linear_method.apply_weights(
+            self.base_layer.linear_weights, x, bias)
+        # output = _apply_delta(x, , output)
+        return output
 
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
 
@@ -482,7 +598,7 @@ def from_layer(
     supported_layer_types = {
         VocabParallelEmbedding: VocabParallelEmbeddingWithDelta,
         ColumnParallelLinear: ColumnParallelLinearWithDelta,
-        QKVParallelLinear: QKVParallelLinearWithDelta,
+        QKVParallelLinear: MergedQKVParallelLinearWithDelta,
         MergedColumnParallelLinear: MergedColumnParallelLinearWithDelta,
         RowParallelLinear: RowParallelLinearWithDelta,
     }

@@ -55,12 +55,13 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         first_delta = next(delta for delta in deltas if delta is not None)
         module_name = first_delta.module_name
         obj = cls(
-            module_name,
-            [delta.qweight if delta is not None else None for delta in deltas],
-            [delta.qzeros if delta is not None else None for delta in deltas],
-            [delta.scales if delta is not None else None for delta in deltas],
-            [delta.g_idx if delta is not None else None
-             for delta in deltas], first_delta.config)
+                module_name,
+                [delta.qweight if delta is not None else None for delta in deltas],
+                [delta.qzeros if delta is not None else None for delta in deltas],
+                [delta.scales if delta is not None else None for delta in deltas],
+                [delta.g_idx if delta is not None else None
+                for delta in deltas], first_delta.config
+            )
         return obj
 
     @property
