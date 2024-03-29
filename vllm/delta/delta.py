@@ -4,8 +4,7 @@ from .config import CompressionConfig
 
 
 class DeltaLayerWeights:
-    """Delta weights for a layer composed of base model and compressed delta.
-    """
+    """Delta weights for a layer composed of base model and compressed delta."""
 
     def __init__(
         self,
@@ -46,8 +45,7 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         )
 
     @classmethod
-    def pack(cls,
-             deltas: List["DeltaLayerWeights"]) -> "PackedDeltaLayerWeights":
+    def pack(cls, deltas: List["DeltaLayerWeights"]) -> "PackedDeltaLayerWeights":
         """Pack a list of Deltas into a single LoRA.
 
         If LoRA is None, it signifies that the submodule does not have a LoRA.
@@ -55,13 +53,13 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         first_delta = next(delta for delta in deltas if delta is not None)
         module_name = first_delta.module_name
         obj = cls(
-                module_name,
-                [delta.qweight if delta is not None else None for delta in deltas],
-                [delta.qzeros if delta is not None else None for delta in deltas],
-                [delta.scales if delta is not None else None for delta in deltas],
-                [delta.g_idx if delta is not None else None
-                for delta in deltas], first_delta.config
-            )
+            module_name,
+            [delta.qweight if delta is not None else None for delta in deltas],
+            [delta.qzeros if delta is not None else None for delta in deltas],
+            [delta.scales if delta is not None else None for delta in deltas],
+            [delta.g_idx if delta is not None else None for delta in deltas],
+            first_delta.config,
+        )
         return obj
 
     @property

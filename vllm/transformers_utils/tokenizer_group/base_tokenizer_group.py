@@ -16,9 +16,9 @@ class BaseTokenizerGroup(ABC):
         pass
 
     @abstractmethod
-    def get_max_input_len(self,
-                          lora_request: Optional[LoRARequest] = None
-                          ) -> Optional[int]:
+    def get_max_input_len(
+        self, lora_request: Optional[LoRARequest] = None
+    ) -> Optional[int]:
         """Get the maximum input length for the LoRA request."""
         pass
 
@@ -35,26 +35,25 @@ class BaseTokenizerGroup(ABC):
 
     @abstractmethod
     async def encode_async(
-            self,
-            prompt: str,
-            request_id: Optional[str] = None,
-            lora_request: Optional[LoRARequest] = None,
-            delta_request: Optional[DeltaRequest] = None) -> List[int]:
+        self,
+        prompt: str,
+        request_id: Optional[str] = None,
+        lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
+    ) -> List[int]:
         """Encode a prompt using the tokenizer group."""
         pass
 
     @abstractmethod
     def get_lora_tokenizer(
-            self,
-            lora_request: Optional[LoRARequest] = None
+        self, lora_request: Optional[LoRARequest] = None
     ) -> "PreTrainedTokenizer":
         """Get a tokenizer for a LoRA request."""
         pass
 
     @abstractmethod
     async def get_lora_tokenizer_async(
-            self,
-            lora_request: Optional[LoRARequest] = None
+        self, lora_request: Optional[LoRARequest] = None
     ) -> "PreTrainedTokenizer":
         """Get a tokenizer for a LoRA request."""
         pass

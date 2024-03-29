@@ -1,11 +1,13 @@
 """A layer that compute logits from hidden_stats."""
+
 from typing import Optional
 
 import torch
 import torch.nn as nn
 
 from vllm.model_executor.parallel_utils.communication_op import (
-    tensor_model_parallel_gather)
+    tensor_model_parallel_gather,
+)
 from vllm.model_executor.sampling_metadata import SamplingMetadata
 
 
@@ -18,11 +20,13 @@ class LogitsProcessor(nn.Module):
     3. Apply logits processors (if any).
     """
 
-    def __init__(self,
-                 vocab_size: int,
-                 org_vocab_size: Optional[int] = None,
-                 scale: Optional[float] = 1.0,
-                 logits_as_input: bool = False) -> None:
+    def __init__(
+        self,
+        vocab_size: int,
+        org_vocab_size: Optional[int] = None,
+        scale: Optional[float] = 1.0,
+        logits_as_input: bool = False,
+    ) -> None:
         """
         Args:
             scale: A scaling factor to apply to the logits.
@@ -45,8 +49,7 @@ class LogitsProcessor(nn.Module):
         if self.logits_as_input:
             logits = hidden_states
         else:
-            hidden_states = _prune_hidden_states(hidden_states,
-                                                 sampling_metadata)
+            hidden_states = _prune_hidden_states(hidden_states, sampling_metadata)
 
             # Get the logits for the next tokens.
             logits = self._get_logits(hidden_states, embedding, embedding_bias)
@@ -59,8 +62,12 @@ class LogitsProcessor(nn.Module):
 
         return logits
 
-    def _get_logits(self, hidden_states: torch.Tensor, embedding: torch.Tensor,
-                    embedding_bias: Optional[torch.Tensor]) -> torch.Tensor:
+    def _get_logits(
+        self,
+        hidden_states: torch.Tensor,
+        embedding: torch.Tensor,
+        embedding_bias: Optional[torch.Tensor],
+    ) -> torch.Tensor:
         # Get the logits for the next tokens.
         logits = torch.matmul(hidden_states, embedding.t())
         if embedding_bias is not None:
@@ -68,7 +75,7 @@ class LogitsProcessor(nn.Module):
         logits = tensor_model_parallel_gather(logits)
         # Remove paddings in vocab (if any).
         if logits is not None:
-            logits = logits[:, :self.org_vocab_size]
+            logits = logits[:, : self.org_vocab_size]
         return logits
 
 
@@ -76,8 +83,7 @@ def _prune_hidden_states(
     hidden_states: torch.Tensor,
     sampling_metadata: SamplingMetadata,
 ) -> torch.Tensor:
-    return hidden_states.index_select(0,
-                                      sampling_metadata.selected_token_indices)
+    return hidden_states.index_select(0, sampling_metadata.selected_token_indices)
 
 
 def _apply_logits_processors(

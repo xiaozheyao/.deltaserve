@@ -26,21 +26,22 @@ def get_lora_model(model_id: str, target_modules: List[str], rank: int):
     return lora_model
 
 
-def do_sample(llm,
-              lora_path: Optional[str] = None,
-              lora_id: Optional[int] = None,
-              logprobs: int = 0,
-              n_tokens: int = 256):
+def do_sample(
+    llm,
+    lora_path: Optional[str] = None,
+    lora_id: Optional[int] = None,
+    logprobs: int = 0,
+    n_tokens: int = 256,
+):
     prompts = PROMPTS
-    sampling_params = vllm.SamplingParams(temperature=0,
-                                          max_tokens=n_tokens,
-                                          logprobs=logprobs,
-                                          stop=["[/assistant]"])
+    sampling_params = vllm.SamplingParams(
+        temperature=0, max_tokens=n_tokens, logprobs=logprobs, stop=["[/assistant]"]
+    )
     outputs = llm.generate(
         prompts,
         sampling_params,
-        lora_request=LoRARequest(str(lora_id), lora_id, lora_path)
-        if lora_id else None)
+        lora_request=LoRARequest(str(lora_id), lora_id, lora_path) if lora_id else None,
+    )
     # Print the outputs.
     generated_texts = []
     generated_logprobs = []
@@ -49,21 +50,23 @@ def do_sample(llm,
         generated_text = output.outputs[0].text
         generated_texts.append(generated_text)
         print(f"Prompt: {prompt!r}, Generated text: {generated_text!r}")
-        generated_logprobs.append([
-            list(logprob.keys()) for out in output.outputs
-            for logprob in out.logprobs
-        ])
+        generated_logprobs.append(
+            [list(logprob.keys()) for out in output.outputs for logprob in out.logprobs]
+        )
     return generated_logprobs if logprobs else generated_texts
 
 
 SUPPORTED_MODULES = [
-    "qkv_proj", "o_proj", "gate_up_proj", "down_proj", "embed_tokens",
-    "lm_head"
+    "qkv_proj",
+    "o_proj",
+    "gate_up_proj",
+    "down_proj",
+    "embed_tokens",
+    "lm_head",
 ]
 TARGET_MODULES_LIST = []
 for length in range(2, 6):
-    TARGET_MODULES_LIST.extend(
-        [sample(SUPPORTED_MODULES, length) for _ in range(3)])
+    TARGET_MODULES_LIST.extend([sample(SUPPORTED_MODULES, length) for _ in range(3)])
 
 
 # Test the correctness when layer and rank are varied
@@ -74,12 +77,14 @@ for length in range(2, 6):
 @pytest.mark.parametrize("target_modules", TARGET_MODULES_LIST)
 @pytest.mark.parametrize("rank", [8, 16, 32, 64])
 def test_layer_variation_correctness(tp_size, target_modules, rank):
-    llm = vllm.LLM(MODEL_PATH,
-                   enable_lora=True,
-                   max_num_seqs=16,
-                   max_loras=4,
-                   tensor_parallel_size=tp_size,
-                   worker_use_ray=True)
+    llm = vllm.LLM(
+        MODEL_PATH,
+        enable_lora=True,
+        max_num_seqs=16,
+        max_loras=4,
+        tensor_parallel_size=tp_size,
+        worker_use_ray=True,
+    )
     model = get_lora_model(MODEL_PATH, target_modules, rank)
     with tempfile.TemporaryDirectory() as tmpdir:
         model.save_pretrained(tmpdir)
@@ -92,12 +97,14 @@ def test_layer_variation_correctness(tp_size, target_modules, rank):
     with tempfile.TemporaryDirectory() as tmpdir:
         merged_model = model.merge_and_unload()
         merged_model.save_pretrained(tmpdir)
-        llm = vllm.LLM(tmpdir,
-                       tokenizer=MODEL_PATH,
-                       enable_lora=False,
-                       max_num_seqs=16,
-                       tensor_parallel_size=tp_size,
-                       worker_use_ray=True)
+        llm = vllm.LLM(
+            tmpdir,
+            tokenizer=MODEL_PATH,
+            enable_lora=False,
+            max_num_seqs=16,
+            tensor_parallel_size=tp_size,
+            worker_use_ray=True,
+        )
     probs = do_sample(llm, logprobs=5, n_tokens=32)
     del llm
     cleanup()

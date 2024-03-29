@@ -1,7 +1,6 @@
 from typing import List, Optional, Tuple, Union
 
-from transformers import (AutoTokenizer, PreTrainedTokenizer,
-                          PreTrainedTokenizerFast)
+from transformers import AutoTokenizer, PreTrainedTokenizer, PreTrainedTokenizerFast
 
 from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
@@ -24,8 +23,7 @@ def get_cached_tokenizer(
     function caches these properties for faster access."""
 
     tokenizer_all_special_ids = set(tokenizer.all_special_ids)
-    tokenizer_all_special_tokens_extended = (
-        tokenizer.all_special_tokens_extended)
+    tokenizer_all_special_tokens_extended = tokenizer.all_special_tokens_extended
     tokenizer_all_special_tokens = set(tokenizer.all_special_tokens)
 
     class CachedTokenizer(tokenizer.__class__):
@@ -59,8 +57,7 @@ def get_tokenizer(
     """Gets a tokenizer for the given model name via Huggingface."""
     if tokenizer_mode == "slow":
         if kwargs.get("use_fast", False):
-            raise ValueError(
-                "Cannot use the fast tokenizer in slow tokenizer mode.")
+            raise ValueError("Cannot use the fast tokenizer in slow tokenizer mode.")
         kwargs["use_fast"] = False
 
     try:
@@ -69,18 +66,21 @@ def get_tokenizer(
             *args,
             trust_remote_code=trust_remote_code,
             tokenizer_revision=tokenizer_revision,
-            **kwargs)
+            **kwargs,
+        )
     except ValueError as e:
         # If the error pertains to the tokenizer class not existing or not
         # currently being imported, suggest using the --trust-remote-code flag.
-        if (not trust_remote_code and
-            ("does not exist or is not currently imported." in str(e)
-             or "requires you to execute the tokenizer file" in str(e))):
+        if not trust_remote_code and (
+            "does not exist or is not currently imported." in str(e)
+            or "requires you to execute the tokenizer file" in str(e)
+        ):
             err_msg = (
                 "Failed to load the tokenizer. If the tokenizer is a custom "
                 "tokenizer not yet available in the HuggingFace transformers "
                 "library, consider setting `trust_remote_code=True` in LLM "
-                "or using the `--trust-remote-code` flag in the CLI.")
+                "or using the `--trust-remote-code` flag in the CLI."
+            )
             raise RuntimeError(err_msg) from e
         else:
             raise e
@@ -93,31 +93,34 @@ def get_tokenizer(
                 *args,
                 trust_remote_code=trust_remote_code,
                 tokenizer_revision=tokenizer_revision,
-                **kwargs)
+                **kwargs,
+            )
         else:
             raise e
 
     if not isinstance(tokenizer, PreTrainedTokenizerFast):
         logger.warning(
             "Using a slow tokenizer. This might cause a significant "
-            "slowdown. Consider using a fast tokenizer instead.")
+            "slowdown. Consider using a fast tokenizer instead."
+        )
     return get_cached_tokenizer(tokenizer)
 
 
-def get_lora_tokenizer(lora_request: LoRARequest, *args,
-                       **kwargs) -> Optional[PreTrainedTokenizer]:
+def get_lora_tokenizer(
+    lora_request: LoRARequest, *args, **kwargs
+) -> Optional[PreTrainedTokenizer]:
     if lora_request is None:
         return None
     try:
-        tokenizer = get_tokenizer(lora_request.lora_local_path, *args,
-                                  **kwargs)
+        tokenizer = get_tokenizer(lora_request.lora_local_path, *args, **kwargs)
     except OSError as e:
         # No tokenizer was found in the LoRA folder,
         # use base model tokenizer
         logger.warning(
             f"No tokenizer found in {lora_request.lora_local_path}, "
             "using base model tokenizer instead. "
-            f"(Exception: {str(e)})")
+            f"(Exception: {str(e)})"
+        )
         tokenizer = None
     return tokenizer
 
@@ -177,12 +180,13 @@ def convert_prompt_ids_to_tokens(
     """
     # Offset a little more in case we have special tokens.
     prefix_offset = max(
-        len(prompt_ids) - INITIAL_INCREMENTAL_DETOKENIZATION_OFFSET - 2, 0)
+        len(prompt_ids) - INITIAL_INCREMENTAL_DETOKENIZATION_OFFSET - 2, 0
+    )
     # We do not need to convert the whole prompt to tokens.
     new_tokens = tokenizer.convert_ids_to_tokens(
-        prompt_ids[prefix_offset:], skip_special_tokens=skip_special_tokens)
-    prefix_offset = max(
-        len(new_tokens) - INITIAL_INCREMENTAL_DETOKENIZATION_OFFSET, 0)
+        prompt_ids[prefix_offset:], skip_special_tokens=skip_special_tokens
+    )
+    prefix_offset = max(len(new_tokens) - INITIAL_INCREMENTAL_DETOKENIZATION_OFFSET, 0)
     read_offset = len(new_tokens)
     return new_tokens, prefix_offset, read_offset
 
@@ -227,15 +231,14 @@ def detokenize_incrementally(
     # This is the first iteration for this sequence
     is_first_iter = prev_tokens is None
     if is_first_iter:
-        (prev_tokens, prefix_offset,
-         read_offset) = convert_prompt_ids_to_tokens(
-             tokenizer,
-             all_input_ids[:-1],
-             skip_special_tokens=skip_special_tokens)
+        (prev_tokens, prefix_offset, read_offset) = convert_prompt_ids_to_tokens(
+            tokenizer, all_input_ids[:-1], skip_special_tokens=skip_special_tokens
+        )
 
     # Put new_token_id in a list so skip_special_tokens is respected
     new_tokens = tokenizer.convert_ids_to_tokens(
-        [new_token_id], skip_special_tokens=skip_special_tokens)
+        [new_token_id], skip_special_tokens=skip_special_tokens
+    )
     output_tokens = prev_tokens + new_tokens
 
     # If this is the first iteration, return all tokens.
@@ -247,9 +250,9 @@ def detokenize_incrementally(
     # surrounding ids.
     if tokenizer.is_fast or not tokenizer.get_added_vocab():
         prefix_text = tokenizer.convert_tokens_to_string(
-            output_tokens[prefix_offset:read_offset])
-        new_text = tokenizer.convert_tokens_to_string(
-            output_tokens[prefix_offset:])
+            output_tokens[prefix_offset:read_offset]
+        )
+        new_text = tokenizer.convert_tokens_to_string(output_tokens[prefix_offset:])
     else:
         prefix_text = _convert_tokens_to_string_with_added_encoders(
             tokenizer,
@@ -269,7 +272,7 @@ def detokenize_incrementally(
         # from byte fallback tokenization.
         # If it's in the middle, it's probably a real invalid id generated
         # by the model
-        new_text = new_text[len(prefix_text):]
+        new_text = new_text[len(prefix_text) :]
         return new_tokens, new_text, read_offset, len(output_tokens)
     else:
         return new_tokens, "", prefix_offset, read_offset

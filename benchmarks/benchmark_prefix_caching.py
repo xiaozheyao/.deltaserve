@@ -16,11 +16,13 @@ def test_prefix(llm=None, sampling_params=None, prompts=None):
 
 
 def main(args):
-    llm = LLM(model="baichuan-inc/Baichuan2-13B-Chat",
-              tokenizer_mode='auto',
-              trust_remote_code=True,
-              enforce_eager=True,
-              enable_prefix_caching=args.enable_prefix_caching)
+    llm = LLM(
+        model="baichuan-inc/Baichuan2-13B-Chat",
+        tokenizer_mode="auto",
+        trust_remote_code=True,
+        enforce_eager=True,
+        enable_prefix_caching=args.enable_prefix_caching,
+    )
 
     num_prompts = 100
     prompts = [PROMPT] * num_prompts
@@ -43,10 +45,11 @@ def main(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description='Benchmark the performance with or without automatic '
-        'prefix caching.')
-    parser.add_argument('--enable-prefix-caching',
-                        action='store_true',
-                        help='enable prefix caching')
+        description="Benchmark the performance with or without automatic "
+        "prefix caching."
+    )
+    parser.add_argument(
+        "--enable-prefix-caching", action="store_true", help="enable prefix caching"
+    )
     args = parser.parse_args()
     main(args)

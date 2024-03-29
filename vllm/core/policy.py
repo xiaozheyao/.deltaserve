@@ -23,7 +23,8 @@ class Policy:
                 seq_groups,
                 key=lambda seq_group: self.get_priority(now, seq_group),
                 reverse=True,
-            ))
+            )
+        )
 
 
 class FCFS(Policy):
@@ -39,7 +40,7 @@ class FCFS(Policy):
 class PolicyFactory:
 
     _POLICY_REGISTRY = {
-        'fcfs': FCFS,
+        "fcfs": FCFS,
     }
 
     @classmethod

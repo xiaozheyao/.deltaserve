@@ -20,13 +20,14 @@ def test_ranks(
     vllm_model = vllm_runner(model, dtype=dtype, max_logprobs=num_top_logprobs)
 
     ## Test greedy logprobs ranks
-    vllm_sampling_params = SamplingParams(temperature=0.0,
-                                          top_p=1.0,
-                                          max_tokens=max_tokens,
-                                          logprobs=num_top_logprobs,
-                                          prompt_logprobs=num_prompt_logprobs)
-    vllm_results = vllm_model.generate_w_logprobs(example_prompts,
-                                                  vllm_sampling_params)
+    vllm_sampling_params = SamplingParams(
+        temperature=0.0,
+        top_p=1.0,
+        max_tokens=max_tokens,
+        logprobs=num_top_logprobs,
+        prompt_logprobs=num_prompt_logprobs,
+    )
+    vllm_results = vllm_model.generate_w_logprobs(example_prompts, vllm_sampling_params)
     for result in vllm_results:
         assert result[2] is not None
         assert len(result[2]) == len(result[0])
@@ -36,11 +37,13 @@ def test_ranks(
             assert logprobs[token].rank == 1
 
     ## Test non-greedy logprobs ranks
-    sampling_params = SamplingParams(temperature=1.0,
-                                     top_p=1.0,
-                                     max_tokens=max_tokens,
-                                     logprobs=num_top_logprobs,
-                                     prompt_logprobs=num_prompt_logprobs)
+    sampling_params = SamplingParams(
+        temperature=1.0,
+        top_p=1.0,
+        max_tokens=max_tokens,
+        logprobs=num_top_logprobs,
+        prompt_logprobs=num_prompt_logprobs,
+    )
     res = vllm_model.generate_w_logprobs(example_prompts, sampling_params)
     for result in res:
         assert result[2] is not None

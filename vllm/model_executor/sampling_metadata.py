@@ -56,7 +56,8 @@ class SamplingMetadata:
             f"prompt_lens={self.prompt_lens}, "
             f"selected_token_indices={self.selected_token_indices}, "
             f"categorized_sample_indices={self.categorized_sample_indices}), "
-            f"perform_sampling={self.perform_sampling})")
+            f"perform_sampling={self.perform_sampling})"
+        )
 
 
 @dataclass
@@ -85,7 +86,7 @@ class SamplingTensors:
         dtype: torch.dtype,
         *,
         extra_seeds_to_generate: int = 0,
-        extra_entropy: Optional[Tuple[int, ...]] = None
+        extra_entropy: Optional[Tuple[int, ...]] = None,
     ) -> Tuple["SamplingTensors", bool, bool, bool]:
         """
         extra_seeds_to_generate: extra seeds to generate using the
@@ -109,8 +110,9 @@ class SamplingTensors:
         do_min_p = False
 
         # We need one base seed per Triton slice.
-        seeds_to_generate = (extra_seeds_to_generate +
-                             get_num_triton_sampler_splits(vocab_size))
+        seeds_to_generate = extra_seeds_to_generate + get_num_triton_sampler_splits(
+            vocab_size
+        )
 
         sample_indices_start_idx = 0
         for i, seq_group in enumerate(sampling_metadata.seq_groups):
@@ -133,18 +135,23 @@ class SamplingTensors:
                 # (i.e., greedy sampling or beam search).
                 # Set the temperature to 1 to avoid division by zero.
                 temperature = 1.0
-            if not do_top_p_top_k and (top_p < 1.0 - _SAMPLING_EPS
-                                       or top_k != vocab_size):
+            if not do_top_p_top_k and (
+                top_p < 1.0 - _SAMPLING_EPS or top_k != vocab_size
+            ):
                 do_top_p_top_k = True
             if not do_min_p and min_p > _SAMPLING_EPS:
                 do_min_p = True
-            if not do_penalties and (abs(p) >= _SAMPLING_EPS
-                                     or abs(f) >= _SAMPLING_EPS
-                                     or abs(r - 1.0) >= _SAMPLING_EPS):
+            if not do_penalties and (
+                abs(p) >= _SAMPLING_EPS
+                or abs(f) >= _SAMPLING_EPS
+                or abs(r - 1.0) >= _SAMPLING_EPS
+            ):
                 do_penalties = True
 
-            if (i < sampling_metadata.num_prompts
-                    and sampling_params.prompt_logprobs is not None):
+            if (
+                i < sampling_metadata.num_prompts
+                and sampling_params.prompt_logprobs is not None
+            ):
                 # For tokens in the prompt that we only need to get
                 # their logprobs
                 prompt_len = sampling_metadata.prompt_lens[i]
@@ -187,29 +194,50 @@ class SamplingTensors:
                     *extra_entropy,
                     seq_id,
                     seeds_to_generate=seeds_to_generate,
-                    is_greedy=is_greedy)
+                    is_greedy=is_greedy,
+                )
                 sampling_seeds.append(seq_seeds)
                 sample_indices.append(sample_indices_start_idx)
                 sample_indices_start_idx += 1
 
         sampling_tensors = SamplingTensors.from_lists(
-            temperatures, top_ps, top_ks, min_ps, presence_penalties,
-            frequency_penalties, repetition_penalties, sampling_seeds,
-            sample_indices, prompt_tokens, output_tokens, vocab_size,
-            extra_seeds_to_generate, device, dtype)
+            temperatures,
+            top_ps,
+            top_ks,
+            min_ps,
+            presence_penalties,
+            frequency_penalties,
+            repetition_penalties,
+            sampling_seeds,
+            sample_indices,
+            prompt_tokens,
+            output_tokens,
+            vocab_size,
+            extra_seeds_to_generate,
+            device,
+            dtype,
+        )
         return (sampling_tensors, do_penalties, do_top_p_top_k, do_min_p)
 
     @classmethod
-    def from_lists(cls, temperatures: List[float], top_ps: List[float],
-                   top_ks: List[int], min_ps: List[float],
-                   presence_penalties: List[float],
-                   frequency_penalties: List[float],
-                   repetition_penalties: List[float],
-                   sampling_seeds: List[int], sample_indices: List[int],
-                   prompt_tokens: List[List[int]],
-                   output_tokens: List[List[int]], vocab_size: int,
-                   extra_seeds_to_generate: int, device: torch.device,
-                   dtype: torch.dtype) -> "SamplingTensors":
+    def from_lists(
+        cls,
+        temperatures: List[float],
+        top_ps: List[float],
+        top_ks: List[int],
+        min_ps: List[float],
+        presence_penalties: List[float],
+        frequency_penalties: List[float],
+        repetition_penalties: List[float],
+        sampling_seeds: List[int],
+        sample_indices: List[int],
+        prompt_tokens: List[List[int]],
+        output_tokens: List[List[int]],
+        vocab_size: int,
+        extra_seeds_to_generate: int,
+        device: torch.device,
+        dtype: torch.dtype,
+    ) -> "SamplingTensors":
         # Note that the performance will be very bad without
         # pinned memory.
         pin_memory = is_pin_memory_available()
@@ -299,8 +327,7 @@ class SamplingTensors:
 
         # How many seeds the sample operation itself will need.
         num_base_seeds = sampling_seeds_t.shape[0] - extra_seeds_to_generate
-        sampling_seeds_gpu = sampling_seeds_t.to(device=device,
-                                                 non_blocking=True)
+        sampling_seeds_gpu = sampling_seeds_t.to(device=device, non_blocking=True)
         extra_seeds_gpu = sampling_seeds_gpu[num_base_seeds:]
         if not extra_seeds_gpu.numel():
             extra_seeds_gpu = None
@@ -311,17 +338,19 @@ class SamplingTensors:
             top_ps=top_ps_t.to(device=device, non_blocking=True),
             top_ks=top_ks_t.to(device=device, non_blocking=True),
             min_ps=min_ps_t.to(device=device, non_blocking=True),
-            presence_penalties=presence_penalties_t.to(device=device,
-                                                       non_blocking=True),
-            frequency_penalties=frequency_penalties_t.to(device=device,
-                                                         non_blocking=True),
-            repetition_penalties=repetition_penalties_t.to(device=device,
-                                                           non_blocking=True),
+            presence_penalties=presence_penalties_t.to(
+                device=device, non_blocking=True
+            ),
+            frequency_penalties=frequency_penalties_t.to(
+                device=device, non_blocking=True
+            ),
+            repetition_penalties=repetition_penalties_t.to(
+                device=device, non_blocking=True
+            ),
             prompt_tokens=prompt_tensor.to(device=device, non_blocking=True),
             output_tokens=output_tensor.to(device=device, non_blocking=True),
             sampling_seeds=sampling_seeds_gpu,
-            sample_indices=sample_indices_t.to(device=device,
-                                               non_blocking=True),
+            sample_indices=sample_indices_t.to(device=device, non_blocking=True),
             extra_seeds=extra_seeds_gpu,
         )
 
@@ -337,7 +366,7 @@ class SamplingTensors:
             if seed is None:
                 randint_fn = random.randint
             else:
-                generator = random.Random(str((seed, ) + extra_entropy))
+                generator = random.Random(str((seed,) + extra_entropy))
                 randint_fn = generator.randint
             lo, hi = torch.iinfo(torch.long).min, torch.iinfo(torch.long).max
             # If the user/random sets seed = 0 but request should

@@ -4,16 +4,19 @@ NOTE(woosuk): At the moment, this file includes a lot of duplicated code from
 XFormers backend. The duplicated code will be removed once we use flash-attn or
 flashinfer for all the attention operations.
 """
+
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple, Type
 
 import torch
 from flash_attn import flash_attn_varlen_func
 
-from vllm.attention.backends.abstract import (AttentionBackend, AttentionImpl,
-                                              AttentionMetadata)
-from vllm.attention.ops.paged_attn import (PagedAttention,
-                                           PagedAttentionMetadata)
+from vllm.attention.backends.abstract import (
+    AttentionBackend,
+    AttentionImpl,
+    AttentionMetadata,
+)
+from vllm.attention.ops.paged_attn import PagedAttention, PagedAttentionMetadata
 
 
 class FlashAttentionBackend(AttentionBackend):
@@ -33,8 +36,9 @@ class FlashAttentionBackend(AttentionBackend):
         num_kv_heads: int,
         head_size: int,
     ) -> Tuple[int, ...]:
-        return PagedAttention.get_kv_cache_shape(num_blocks, block_size,
-                                                 num_kv_heads, head_size)
+        return PagedAttention.get_kv_cache_shape(
+            num_blocks, block_size, num_kv_heads, head_size
+        )
 
     @staticmethod
     def swap_blocks(
@@ -61,6 +65,7 @@ class FlashAttentionMetadata(AttentionMetadata, PagedAttentionMetadata):
     dynamically, it should be stored in tensor. The tensor has to be
     updated from `CUDAGraphRunner.forward` API.
     """
+
     # Currently, input sequences can only contain all prompts
     # or all decoding. True if all sequences are prompts.
     is_prompt: bool
@@ -107,11 +112,11 @@ class FlashAttentionMetadata(AttentionMetadata, PagedAttentionMetadata):
 class FlashAttentionImpl(AttentionImpl):
     """
     If the input tensors contain prompt tokens, the layout is as follows:
-    |<--------------- num_prompt_tokens -------------->|	
+    |<--------------- num_prompt_tokens -------------->|
     |<--prompt_0-->|<--prompt_1-->|...|<--prompt_N-1-->|
 
-    Otherwise, the layout is as follows:	
-    |<------------------ num_generation_tokens (M) ----------------->|	
+    Otherwise, the layout is as follows:
+    |<------------------ num_generation_tokens (M) ----------------->|
     |<--generation_0-->|..........|<--generation_M-1-->|<--padding-->|
 
     Generation tokens can contain padding when cuda-graph is used.
@@ -134,8 +139,9 @@ class FlashAttentionImpl(AttentionImpl):
         self.head_size = head_size
         self.scale = float(scale)
         self.num_kv_heads = num_heads if num_kv_heads is None else num_kv_heads
-        self.sliding_window = ((sliding_window, sliding_window)
-                               if sliding_window is not None else (-1, -1))
+        self.sliding_window = (
+            (sliding_window, sliding_window) if sliding_window is not None else (-1, -1)
+        )
         if alibi_slopes is not None:
             alibi_slopes = torch.tensor(alibi_slopes, dtype=torch.float32)
         self.alibi_slopes = alibi_slopes
@@ -147,7 +153,8 @@ class FlashAttentionImpl(AttentionImpl):
         if head_size not in suppored_head_sizes:
             raise ValueError(
                 f"Head size {head_size} is not supported by PagedAttention. "
-                f"Supported head sizes are: {suppored_head_sizes}.")
+                f"Supported head sizes are: {suppored_head_sizes}."
+            )
 
     def forward(
         self,
@@ -176,15 +183,20 @@ class FlashAttentionImpl(AttentionImpl):
 
         if kv_cache is not None:
             key_cache, value_cache = PagedAttention.split_kv_cache(
-                kv_cache, self.num_kv_heads, self.head_size)
+                kv_cache, self.num_kv_heads, self.head_size
+            )
 
             # Reshape the input keys and values and store them in the cache.
             # If kv_cache is not provided, the new key and value tensors are
             # not cached. This happens during the initial memory profiling run.
-            PagedAttention.write_to_paged_cache(key, value, key_cache,
-                                                value_cache,
-                                                attn_metadata.slot_mapping,
-                                                attn_metadata.kv_cache_dtype)
+            PagedAttention.write_to_paged_cache(
+                key,
+                value,
+                key_cache,
+                value_cache,
+                attn_metadata.slot_mapping,
+                attn_metadata.kv_cache_dtype,
+            )
 
         if attn_metadata.is_prompt:
             # Prompt run.

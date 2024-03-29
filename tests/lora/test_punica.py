@@ -43,12 +43,45 @@ def _lora_ref_impl(
 
 
 H1 = H2 = [
-    128, 256, 512, 1024, 1152, 1280, 1536, 2048, 2304, 2560, 2752, 3072, 3456,
-    3584, 4096, 4608, 5120, 5504, 5632, 6144, 6848, 6912, 7168, 8192, 9216,
-    10240, 11008, 13824, 14336, 22016, 24576, 27392, 32000, 32256, 32512,
-    32768, 33024
+    128,
+    256,
+    512,
+    1024,
+    1152,
+    1280,
+    1536,
+    2048,
+    2304,
+    2560,
+    2752,
+    3072,
+    3456,
+    3584,
+    4096,
+    4608,
+    5120,
+    5504,
+    5632,
+    6144,
+    6848,
+    6912,
+    7168,
+    8192,
+    9216,
+    10240,
+    11008,
+    13824,
+    14336,
+    22016,
+    24576,
+    27392,
+    32000,
+    32256,
+    32512,
+    32768,
+    33024,
 ]
-SEED = [0xabcdabcd987]
+SEED = [0xABCDABCD987]
 
 
 @pytest.mark.parametrize("dtype_str", ["float16", "bfloat16"])
@@ -66,19 +99,9 @@ def test_lora_correctness(dtype_str, h1, h2, seed):
     dtype = getattr(torch, dtype_str)
     device = torch.device("cuda")
 
-    wa_T_all = torch.randn(num_loras,
-                           num_layers,
-                           r,
-                           h1,
-                           dtype=dtype,
-                           device=device)
-    wb_T_all = torch.randn(num_loras,
-                           num_layers,
-                           h2,
-                           r,
-                           dtype=dtype,
-                           device=device)
-    indices = torch.randint(num_loras, (bs, ), dtype=torch.long, device=device)
+    wa_T_all = torch.randn(num_loras, num_layers, r, h1, dtype=dtype, device=device)
+    wb_T_all = torch.randn(num_loras, num_layers, h2, r, dtype=dtype, device=device)
+    indices = torch.randint(num_loras, (bs,), dtype=torch.long, device=device)
 
     for layer_idx in range(num_layers):
         x = torch.randn(bs, h1, dtype=dtype, device=device)
@@ -88,8 +111,7 @@ def test_lora_correctness(dtype_str, h1, h2, seed):
         _lora_ref_impl(y_ref, x, wa_T_all, wb_T_all, indices, layer_idx, scale)
 
         y_our = y.clone()
-        punica.add_lora(y_our, x, wa_T_all, wb_T_all, indices, layer_idx,
-                        scale)
+        punica.add_lora(y_our, x, wa_T_all, wb_T_all, indices, layer_idx, scale)
 
         assert_close(y_ref, y_our)
 
@@ -111,44 +133,20 @@ def test_lora_correctness_slice(dtype_str, h1, h2, seed):
     dtype = getattr(torch, dtype_str)
     device = torch.device("cuda")
 
-    wa_T_all_0 = torch.randn(num_loras,
-                             num_layers,
-                             r,
-                             h1,
-                             dtype=dtype,
-                             device=device)
-    wa_T_all_1 = torch.randn(num_loras,
-                             num_layers,
-                             r,
-                             h1,
-                             dtype=dtype,
-                             device=device)
-    wa_T_all_2 = torch.randn(num_loras,
-                             num_layers,
-                             r,
-                             h1,
-                             dtype=dtype,
-                             device=device)
-    wb_T_all_0 = torch.randn(num_loras,
-                             num_layers,
-                             h2 // 3,
-                             r,
-                             dtype=dtype,
-                             device=device)
-    wb_T_all_1 = torch.randn(num_loras,
-                             num_layers,
-                             h2 // 3,
-                             r,
-                             dtype=dtype,
-                             device=device)
-    wb_T_all_2 = torch.randn(num_loras,
-                             num_layers,
-                             h2 // 3,
-                             r,
-                             dtype=dtype,
-                             device=device)
+    wa_T_all_0 = torch.randn(num_loras, num_layers, r, h1, dtype=dtype, device=device)
+    wa_T_all_1 = torch.randn(num_loras, num_layers, r, h1, dtype=dtype, device=device)
+    wa_T_all_2 = torch.randn(num_loras, num_layers, r, h1, dtype=dtype, device=device)
+    wb_T_all_0 = torch.randn(
+        num_loras, num_layers, h2 // 3, r, dtype=dtype, device=device
+    )
+    wb_T_all_1 = torch.randn(
+        num_loras, num_layers, h2 // 3, r, dtype=dtype, device=device
+    )
+    wb_T_all_2 = torch.randn(
+        num_loras, num_layers, h2 // 3, r, dtype=dtype, device=device
+    )
 
-    indices = torch.randint(num_loras, (bs, ), dtype=torch.long, device=device)
+    indices = torch.randint(num_loras, (bs,), dtype=torch.long, device=device)
 
     for layer_idx in range(num_layers):
         x = torch.randn(bs, h1, dtype=dtype, device=device)
@@ -156,21 +154,27 @@ def test_lora_correctness_slice(dtype_str, h1, h2, seed):
         s = h2 // 3
 
         y_ref = y.clone()
-        _lora_ref_impl(y_ref[:, :s], x, wa_T_all_0, wb_T_all_0, indices,
-                       layer_idx, scale)
-        _lora_ref_impl(y_ref[:, s:s * 2], x, wa_T_all_1, wb_T_all_1, indices,
-                       layer_idx, scale)
-        _lora_ref_impl(y_ref[:, s * 2:], x, wa_T_all_2, wb_T_all_2, indices,
-                       layer_idx, scale)
+        _lora_ref_impl(
+            y_ref[:, :s], x, wa_T_all_0, wb_T_all_0, indices, layer_idx, scale
+        )
+        _lora_ref_impl(
+            y_ref[:, s : s * 2], x, wa_T_all_1, wb_T_all_1, indices, layer_idx, scale
+        )
+        _lora_ref_impl(
+            y_ref[:, s * 2 :], x, wa_T_all_2, wb_T_all_2, indices, layer_idx, scale
+        )
 
         y_our = y.clone()
-        punica.add_lora_slice(y_our, x, wa_T_all_0, wb_T_all_0, indices,
-                              layer_idx, scale, 0, s)
-        punica.add_lora_slice(y_our, x, wa_T_all_1, wb_T_all_1, indices,
-                              layer_idx, scale, s, s)
-        punica.add_lora_slice(y_our, x, wa_T_all_2, wb_T_all_2, indices,
-                              layer_idx, scale, s * 2, s)
+        punica.add_lora_slice(
+            y_our, x, wa_T_all_0, wb_T_all_0, indices, layer_idx, scale, 0, s
+        )
+        punica.add_lora_slice(
+            y_our, x, wa_T_all_1, wb_T_all_1, indices, layer_idx, scale, s, s
+        )
+        punica.add_lora_slice(
+            y_our, x, wa_T_all_2, wb_T_all_2, indices, layer_idx, scale, s * 2, s
+        )
 
         assert_close(y_ref[:, :s], y_our[:, :s])
-        assert_close(y_ref[:, s:s * 2], y_our[:, s:s * 2])
-        assert_close(y_ref[:, s * 2:], y_our[:, s * 2:])
+        assert_close(y_ref[:, s : s * 2], y_our[:, s : s * 2])
+        assert_close(y_ref[:, s * 2 :], y_our[:, s * 2 :])

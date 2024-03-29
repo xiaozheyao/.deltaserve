@@ -9,7 +9,8 @@ prefix = (
     "teaching role. They have 5 years of previous teaching experience "
     "as an assistant teacher at a co-ed, public school with experience "
     "in middle school math teaching. Based on these information, fulfill "
-    "the following paragraph: ")
+    "the following paragraph: "
+)
 
 # Sample prompts.
 prompts = [

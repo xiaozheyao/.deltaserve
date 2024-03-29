@@ -1,4 +1,5 @@
 """A GPU worker class."""
+
 import gc
 import os
 from typing import Dict, List, Optional, Set, Tuple
@@ -6,16 +7,23 @@ from typing import Dict, List, Optional, Set, Tuple
 import torch
 import torch.distributed
 
-from vllm.config import (CacheConfig, DeviceConfig, LoRAConfig, ModelConfig,
-                         ParallelConfig, SchedulerConfig, VisionLanguageConfig)
+from vllm.config import (
+    CacheConfig,
+    DeviceConfig,
+    LoRAConfig,
+    ModelConfig,
+    ParallelConfig,
+    SchedulerConfig,
+    VisionLanguageConfig,
+)
 from vllm.lora.request import LoRARequest
 from vllm.model_executor import set_random_seed
 from vllm.model_executor.parallel_utils import cupy_utils
-from vllm.model_executor.parallel_utils.communication_op import (
-    broadcast_tensor_dict)
+from vllm.model_executor.parallel_utils.communication_op import broadcast_tensor_dict
 from vllm.model_executor.parallel_utils.custom_all_reduce import init_custom_ar
 from vllm.model_executor.parallel_utils.parallel_state import (
-    ensure_model_parallel_initialized)
+    ensure_model_parallel_initialized,
+)
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.worker.cache_engine import CacheEngine
 from vllm.worker.model_runner import ModelRunner
@@ -24,6 +32,7 @@ from vllm.delta.request import DeltaRequest
 from vllm.logger import logging
 
 logger = logging.getLogger(__name__)
+
 
 class Worker:
     """A worker class that executes (a partition of) the model on a GPU.
@@ -63,12 +72,13 @@ class Worker:
 
         self.vision_language_config = vision_language_config
         if self.vision_language_config:
-            assert not self.lora_config, (
-                "To be tested: vision language model with LoRA settings.")
-            assert not self.delta_config, (
-                "To be tested: vision language model with delta settings."
-            )
-        
+            assert (
+                not self.lora_config
+            ), "To be tested: vision language model with LoRA settings."
+            assert (
+                not self.delta_config
+            ), "To be tested: vision language model with delta settings."
+
         self.model_runner = ModelRunner(
             model_config,
             parallel_config,
@@ -78,7 +88,8 @@ class Worker:
             delta_config=self.delta_config,
             kv_cache_dtype=kv_cache_dtype,
             is_driver_worker=is_driver_worker,
-            vision_language_config=vision_language_config)
+            vision_language_config=vision_language_config,
+        )
         # Uninitialized cache engine. Will be initialized by
         # self.init_cache_engine().
         self.cache_config = None
@@ -104,11 +115,11 @@ class Worker:
             torch.cuda.empty_cache()
             self.init_gpu_memory = torch.cuda.mem_get_info()[0]
         else:
-            raise RuntimeError(
-                f"Not support device type: {self.device_config.device}")
+            raise RuntimeError(f"Not support device type: {self.device_config.device}")
         # Initialize the distributed environment.
-        init_distributed_environment(self.parallel_config, self.rank,
-                                     cupy_port, self.distributed_init_method)
+        init_distributed_environment(
+            self.parallel_config, self.rank, cupy_port, self.distributed_init_method
+        )
         # Set random seed.
         set_random_seed(self.model_config.seed)
 
@@ -148,13 +159,14 @@ class Worker:
         peak_memory = self.init_gpu_memory - free_gpu_memory
         assert peak_memory > 0, (
             "Error in memory profiling. This happens when the GPU memory was "
-            "not properly cleaned up before initializing the vLLM instance.")
+            "not properly cleaned up before initializing the vLLM instance."
+        )
 
-        cache_block_size = self.get_cache_block_size_bytes(
-            block_size, cache_dtype)
+        cache_block_size = self.get_cache_block_size_bytes(block_size, cache_dtype)
         num_gpu_blocks = int(
-            (total_gpu_memory * gpu_memory_utilization - peak_memory) //
-            cache_block_size)
+            (total_gpu_memory * gpu_memory_utilization - peak_memory)
+            // cache_block_size
+        )
         num_cpu_blocks = int(cpu_swap_space // cache_block_size)
         num_gpu_blocks = max(num_gpu_blocks, 0)
         num_cpu_blocks = max(num_cpu_blocks, 0)
@@ -168,8 +180,9 @@ class Worker:
 
     def init_cache_engine(self, cache_config: CacheConfig) -> None:
         self.cache_config = cache_config
-        self.cache_engine = CacheEngine(self.cache_config, self.model_config,
-                                        self.parallel_config)
+        self.cache_engine = CacheEngine(
+            self.cache_config, self.model_config, self.parallel_config
+        )
         self.gpu_cache = self.cache_engine.gpu_cache
         self.model_runner.set_block_size(self.cache_engine.block_size)
 
@@ -229,8 +242,9 @@ class Worker:
         if num_seq_groups == 0:
             return {}
 
-        output = self.model_runner.execute_model(seq_group_metadata_list,
-                                                 self.gpu_cache)
+        output = self.model_runner.execute_model(
+            seq_group_metadata_list, self.gpu_cache
+        )
         return output
 
     def add_lora(self, lora_request: LoRARequest) -> bool:
@@ -250,7 +264,7 @@ class Worker:
 
     def list_deltas(self) -> Set[int]:
         return self.model_runner.list_deltas()
-    
+
     @property
     def max_model_len(self) -> int:
         return self.model_config.max_model_len
@@ -259,18 +273,19 @@ class Worker:
     def vocab_size(self) -> int:
         return self.model_runner.vocab_size
 
-    def get_cache_block_size_bytes(self, block_size: int,
-                                   cache_dtype: str) -> int:
-        """Get the size of the KV cache block size in bytes.
-        """
-        return CacheEngine.get_cache_block_size(block_size, cache_dtype,
-                                                self.model_config,
-                                                self.parallel_config)
+    def get_cache_block_size_bytes(self, block_size: int, cache_dtype: str) -> int:
+        """Get the size of the KV cache block size in bytes."""
+        return CacheEngine.get_cache_block_size(
+            block_size, cache_dtype, self.model_config, self.parallel_config
+        )
+
     def print_debug_info(self):
         import ray
+
         logger.info(f"ray.get_gpu_ids()={ray.get_gpu_ids()}")
         logger.info(f"torch.cuda.current_device()={torch.cuda.current_device()}")
-        
+
+
 def init_distributed_environment(
     parallel_config: ParallelConfig,
     rank: int,
@@ -284,11 +299,13 @@ def init_distributed_environment(
             raise RuntimeError(
                 "torch.distributed is already initialized but the torch world "
                 "size does not match parallel_config.world_size "
-                f"({torch_world_size} vs. {parallel_config.world_size}).")
+                f"({torch_world_size} vs. {parallel_config.world_size})."
+            )
     elif not distributed_init_method:
         raise ValueError(
             "distributed_init_method must be set if torch.distributed "
-            "is not already initialized")
+            "is not already initialized"
+        )
     else:
         torch.distributed.init_process_group(
             backend="nccl",
@@ -303,8 +320,9 @@ def init_distributed_environment(
             raise RuntimeError(
                 "cupy.distributed is already initialized but the cupy world "
                 "size does not match parallel_config.world_size "
-                f"({cupy_world_size} vs. {parallel_config.world_size}).")
-    elif (parallel_config.world_size > 1 and cupy_port is not None):
+                f"({cupy_world_size} vs. {parallel_config.world_size})."
+            )
+    elif parallel_config.world_size > 1 and cupy_port is not None:
         # NOTE(woosuk): We don't initialize CuPy process group when world size
         # is 1.
         # TODO(woosuk): Support multi-node connection.
@@ -319,8 +337,9 @@ def init_distributed_environment(
     torch.distributed.all_reduce(torch.zeros(1).cuda())
     if cupy_utils.is_initialized():
         cupy_utils.all_reduce(torch.zeros(1).cuda())
-    ensure_model_parallel_initialized(parallel_config.tensor_parallel_size,
-                                      parallel_config.pipeline_parallel_size)
+    ensure_model_parallel_initialized(
+        parallel_config.tensor_parallel_size, parallel_config.pipeline_parallel_size
+    )
 
     # Initialize a custom fast all-reduce implementation.
     if not parallel_config.disable_custom_all_reduce:
@@ -338,4 +357,5 @@ def _check_if_gpu_supports_dtype(torch_dtype: torch.dtype):
                 f"of at least 8.0. Your {gpu_name} GPU has compute capability "
                 f"{compute_capability[0]}.{compute_capability[1]}. "
                 "You can use float16 instead by explicitly setting the"
-                "`dtype` flag in CLI, for example: --dtype=half.")
+                "`dtype` flag in CLI, for example: --dtype=half."
+            )

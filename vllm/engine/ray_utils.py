@@ -18,6 +18,7 @@ try:
         def __init__(self, init_cached_hf_modules=False) -> None:
             if init_cached_hf_modules:
                 from transformers.dynamic_module_utils import init_hf_modules
+
                 init_hf_modules()
             self.worker = None
             # Since the compiled DAG runs a main execution
@@ -40,8 +41,10 @@ try:
                 # exceptions in ray worker may cause deadlock
                 # see https://github.com/vllm-project/vllm/issues/3455
                 # print the error and inform the user to solve the error
-                msg = (f"Error executing method {method}. "
-                       "This might cause deadlock in distributed execution.")
+                msg = (
+                    f"Error executing method {method}. "
+                    "This might cause deadlock in distributed execution."
+                )
                 logger.exception(msg)
                 raise e
 
@@ -59,6 +62,7 @@ try:
         def execute_model_compiled_dag_remote(self, ignored):
             """Used only when compiled DAG is enabled."""
             import torch
+
             if not self.compiled_dag_cuda_device_set:
                 torch.cuda.set_device(self.worker.device)
                 self.compiled_dag_cuda_device_set = True
@@ -68,14 +72,18 @@ try:
             return output
 
         def print_debug_info(self) -> None:
-            logger.info(f'CUDA_VISIBLE_DEVICES={os.environ.get("CUDA_VISIBLE_DEVICES", "<none>")}')
+            logger.info(
+                f'CUDA_VISIBLE_DEVICES={os.environ.get("CUDA_VISIBLE_DEVICES", "<none>")}'
+            )
             logger.info(f"ray.get_gpu_ids()={ray.get_gpu_ids()}")
             # logger.info(f"torch.cuda.current_device()={torch.cuda.current_device()}")
 
 except ImportError as e:
-    logger.warning(f"Failed to import Ray with {e!r}. "
-                   "For distributed inference, please install Ray with "
-                   "`pip install ray`.")
+    logger.warning(
+        f"Failed to import Ray with {e!r}. "
+        "For distributed inference, please install Ray with "
+        "`pip install ray`."
+    )
     ray = None
     RayWorkerVllm = None
 
@@ -97,14 +105,16 @@ def initialize_ray_cluster(
     """
     if ray is None:
         raise ImportError(
-            "Ray is not installed. Please install Ray to use distributed "
-            "serving.")
+            "Ray is not installed. Please install Ray to use distributed " "serving."
+        )
 
     # Connect to a ray cluster.
     if is_hip():
-        ray.init(address=ray_address,
-                 ignore_reinit_error=True,
-                 num_gpus=parallel_config.world_size)
+        ray.init(
+            address=ray_address,
+            ignore_reinit_error=True,
+            num_gpus=parallel_config.world_size,
+        )
     else:
         ray.init(address=ray_address, ignore_reinit_error=True)
 
@@ -122,24 +132,24 @@ def initialize_ray_cluster(
         for bundle in bundles:
             bundle_gpus = bundle.get("GPU", 0)
             if bundle_gpus > 1:
-                raise ValueError(
-                    "Placement group bundle cannot have more than 1 GPU.")
+                raise ValueError("Placement group bundle cannot have more than 1 GPU.")
             if bundle_gpus:
                 gpu_bundles += 1
         if parallel_config.world_size > gpu_bundles:
             raise ValueError(
                 "The number of required GPUs exceeds the total number of "
-                "available GPUs in the placement group.")
+                "available GPUs in the placement group."
+            )
     else:
         num_gpus_in_cluster = ray.cluster_resources().get("GPU", 0)
         if parallel_config.world_size > num_gpus_in_cluster:
             raise ValueError(
                 "The number of required GPUs exceeds the total number of "
-                "available GPUs in the cluster.")
+                "available GPUs in the cluster."
+            )
         # Create a new placement group
-        placement_group_specs = ([{"GPU": 1}] * parallel_config.world_size)
-        current_placement_group = ray.util.placement_group(
-            placement_group_specs)
+        placement_group_specs = [{"GPU": 1}] * parallel_config.world_size
+        current_placement_group = ray.util.placement_group(placement_group_specs)
         # Wait until PG is ready - this will block until all
         # requested resources are available, and will timeout
         # if they cannot be provisioned.

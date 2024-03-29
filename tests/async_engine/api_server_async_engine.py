@@ -1,4 +1,5 @@
 """vllm.entrypoints.api_server with some extra logging for testing."""
+
 import argparse
 from typing import Any, Dict
 
@@ -47,4 +48,5 @@ if __name__ == "__main__":
         host=args.host,
         port=args.port,
         log_level="debug",
-        timeout_keep_alive=vllm.entrypoints.api_server.TIMEOUT_KEEP_ALIVE)
+        timeout_keep_alive=vllm.entrypoints.api_server.TIMEOUT_KEEP_ALIVE,
+    )

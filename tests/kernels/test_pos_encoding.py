@@ -15,9 +15,7 @@ NUM_HEADS = [7, 17]  # Arbitrary values for testing
 BATCH_SIZES = [1, 5]  # Arbitrary values for testing
 SEQ_LENS = [11, 8192]  # Arbitrary values for testing
 SEEDS = [0]
-CUDA_DEVICES = [
-    f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)
-]
+CUDA_DEVICES = [f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)]
 
 
 @pytest.mark.parametrize("is_neox_style", IS_NEOX_STYLE)
@@ -55,10 +53,7 @@ def test_rotary_embedding(
     rope = rope.to(dtype=dtype)
 
     positions = torch.randint(0, max_position, (batch_size, seq_len))
-    query = torch.randn(batch_size,
-                        seq_len,
-                        num_heads * head_size,
-                        dtype=dtype)
+    query = torch.randn(batch_size, seq_len, num_heads * head_size, dtype=dtype)
     key = torch.randn_like(query)
 
     # NOTE(woosuk): The reference implementation should be executed first
@@ -66,14 +61,15 @@ def test_rotary_embedding(
     ref_query, ref_key = rope._forward(positions, query, key)
     out_query, out_key = rope.forward(positions, query, key)
     # Compare the results.
-    assert torch.allclose(out_query,
-                          ref_query,
-                          atol=get_default_atol(out_query),
-                          rtol=get_default_rtol(out_query))
-    assert torch.allclose(out_key,
-                          ref_key,
-                          atol=get_default_atol(out_key),
-                          rtol=get_default_rtol(out_key))
+    assert torch.allclose(
+        out_query,
+        ref_query,
+        atol=get_default_atol(out_query),
+        rtol=get_default_rtol(out_query),
+    )
+    assert torch.allclose(
+        out_key, ref_key, atol=get_default_atol(out_key), rtol=get_default_rtol(out_key)
+    )
 
 
 @pytest.mark.parametrize("is_neox_style", IS_NEOX_STYLE)
@@ -105,37 +101,39 @@ def test_batched_rotary_embedding(
     torch.set_default_device(device)
     if rotary_dim is None:
         rotary_dim = head_size
-    rope = get_rope(head_size, rotary_dim, max_position, base, is_neox_style, {
-        "type": "linear",
-        "factor": (1, )
-    })
+    rope = get_rope(
+        head_size,
+        rotary_dim,
+        max_position,
+        base,
+        is_neox_style,
+        {"type": "linear", "factor": (1,)},
+    )
     rope = rope.to(dtype=dtype)
 
     positions = torch.randint(0, max_position, (batch_size, seq_len))
-    query = torch.randn(batch_size,
-                        seq_len,
-                        num_heads * head_size,
-                        dtype=dtype)
+    query = torch.randn(batch_size, seq_len, num_heads * head_size, dtype=dtype)
     key = torch.randn_like(query)
 
     # NOTE(woosuk): The reference implementation should be executed first
     # because the custom kernel is in-place.
     ref_query, ref_key = rope._forward(positions, query, key)
-    out_query, out_key = rope.forward(positions,
-                                      query,
-                                      key,
-                                      offsets=torch.zeros(batch_size * seq_len,
-                                                          dtype=int,
-                                                          device=device))
+    out_query, out_key = rope.forward(
+        positions,
+        query,
+        key,
+        offsets=torch.zeros(batch_size * seq_len, dtype=int, device=device),
+    )
     # Compare the results.
-    assert torch.allclose(out_query,
-                          ref_query,
-                          atol=get_default_atol(out_query),
-                          rtol=get_default_rtol(out_query))
-    assert torch.allclose(out_key,
-                          ref_key,
-                          atol=get_default_atol(out_key),
-                          rtol=get_default_rtol(out_key))
+    assert torch.allclose(
+        out_query,
+        ref_query,
+        atol=get_default_atol(out_query),
+        rtol=get_default_rtol(out_query),
+    )
+    assert torch.allclose(
+        out_key, ref_key, atol=get_default_atol(out_key), rtol=get_default_rtol(out_key)
+    )
 
 
 @pytest.mark.parametrize("is_neox_style", IS_NEOX_STYLE)
@@ -168,41 +166,47 @@ def test_batched_rotary_embedding_multi_lora(
     if rotary_dim is None:
         rotary_dim = head_size
     scaling_factors: List[int] = [1, 2, 4]
-    rope = get_rope(head_size, rotary_dim, max_position, base, is_neox_style, {
-        "type": "linear",
-        "factor": tuple(scaling_factors)
-    })
+    rope = get_rope(
+        head_size,
+        rotary_dim,
+        max_position,
+        base,
+        is_neox_style,
+        {"type": "linear", "factor": tuple(scaling_factors)},
+    )
     rope = rope.to(dtype=dtype)
 
     positions = torch.randint(0, max_position, (batch_size, seq_len))
-    query = torch.randn(batch_size,
-                        seq_len,
-                        num_heads * head_size,
-                        dtype=dtype)
+    query = torch.randn(batch_size, seq_len, num_heads * head_size, dtype=dtype)
     key = torch.randn_like(query)
 
     offset_map = torch.tensor(
         list(
-            accumulate([0] + [
-                max_position * scaling_factor * 2
-                for scaling_factor in scaling_factors[:-1]
-            ])))
-    query_types = torch.randint(0,
-                                len(scaling_factors), (batch_size, seq_len),
-                                device=device)
+            accumulate(
+                [0]
+                + [
+                    max_position * scaling_factor * 2
+                    for scaling_factor in scaling_factors[:-1]
+                ]
+            )
+        )
+    )
+    query_types = torch.randint(
+        0, len(scaling_factors), (batch_size, seq_len), device=device
+    )
     query_offsets = offset_map[query_types]
 
     # NOTE(woosuk): The reference implementation should be executed first
     # because the custom kernel is in-place.
     ref_query, ref_key = rope._forward(positions, query, key, query_offsets)
-    out_query, out_key = rope.forward(positions, query, key,
-                                      query_offsets.flatten())
+    out_query, out_key = rope.forward(positions, query, key, query_offsets.flatten())
     # Compare the results.
-    assert torch.allclose(out_query,
-                          ref_query,
-                          atol=get_default_atol(out_query),
-                          rtol=get_default_rtol(out_query))
-    assert torch.allclose(out_key,
-                          ref_key,
-                          atol=get_default_atol(out_key),
-                          rtol=get_default_rtol(out_key))
+    assert torch.allclose(
+        out_query,
+        ref_query,
+        atol=get_default_atol(out_query),
+        rtol=get_default_rtol(out_query),
+    )
+    assert torch.allclose(
+        out_key, ref_key, atol=get_default_atol(out_key), rtol=get_default_rtol(out_key)
+    )

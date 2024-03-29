@@ -1,7 +1,13 @@
 from typing import Dict, List, Optional
 
-from vllm.config import (CacheConfig, DeviceConfig, LoRAConfig, ModelConfig,
-                         ParallelConfig, SchedulerConfig)
+from vllm.config import (
+    CacheConfig,
+    DeviceConfig,
+    LoRAConfig,
+    ModelConfig,
+    ParallelConfig,
+    SchedulerConfig,
+)
 from vllm.executor.executor_base import ExecutorBase
 from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
@@ -49,30 +55,32 @@ class NeuronExecutor(ExecutorBase):
         self.driver_worker.init_device()
         self.driver_worker.load_model()
 
-    def execute_model(self,
-                      seq_group_metadata_list: List[SequenceGroupMetadata],
-                      blocks_to_swap_in: Dict[int, int],
-                      blocks_to_swap_out: Dict[int, int],
-                      blocks_to_copy: Dict[int, List[int]]) -> SamplerOutput:
-        assert (blocks_to_swap_in == {} and blocks_to_swap_out == {}
-                and blocks_to_copy == {}), (
-                    "Cache operations are not supported for Neuron backend.")
+    def execute_model(
+        self,
+        seq_group_metadata_list: List[SequenceGroupMetadata],
+        blocks_to_swap_in: Dict[int, int],
+        blocks_to_swap_out: Dict[int, int],
+        blocks_to_copy: Dict[int, List[int]],
+    ) -> SamplerOutput:
+        assert (
+            blocks_to_swap_in == {}
+            and blocks_to_swap_out == {}
+            and blocks_to_copy == {}
+        ), "Cache operations are not supported for Neuron backend."
 
         output = self.driver_worker.execute_model(
-            seq_group_metadata_list=seq_group_metadata_list)
+            seq_group_metadata_list=seq_group_metadata_list
+        )
         return output
 
     def add_lora(self, lora_request: LoRARequest) -> bool:
-        raise NotImplementedError(
-            "LoRA is not implemented for neuron backend.")
+        raise NotImplementedError("LoRA is not implemented for neuron backend.")
 
     def remove_lora(self, lora_id: int) -> bool:
-        raise NotImplementedError(
-            "LoRA is not implemented for neuron backend.")
+        raise NotImplementedError("LoRA is not implemented for neuron backend.")
 
     def list_loras(self) -> List[int]:
-        raise NotImplementedError(
-            "LoRA is not implemented for neuron backend.")
+        raise NotImplementedError("LoRA is not implemented for neuron backend.")
 
     def check_health(self) -> None:
         # NeuronExecutor will always be healthy as long as

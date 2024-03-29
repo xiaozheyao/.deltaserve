@@ -2,15 +2,18 @@ from typing import Dict, List, Optional, Tuple
 
 import torch
 
-from vllm.config import (DeviceConfig, ModelConfig, ParallelConfig,
-                         SchedulerConfig)
+from vllm.config import DeviceConfig, ModelConfig, ParallelConfig, SchedulerConfig
 from vllm.logger import init_logger
 from vllm.model_executor import SamplingMetadata
 from vllm.model_executor.neuron_model_loader import get_neuron_model
 from vllm.sampling_params import SamplingParams, SamplingType
 from vllm.sequence import SamplerOutput, SequenceData, SequenceGroupMetadata
-from vllm.utils import (async_tensor_h2d, is_pin_memory_available,
-                        make_tensor_with_pad, maybe_expand_dim)
+from vllm.utils import (
+    async_tensor_h2d,
+    is_pin_memory_available,
+    make_tensor_with_pad,
+    maybe_expand_dim,
+)
 
 logger = init_logger(__name__)
 
@@ -31,18 +34,23 @@ class NeuronModelRunner:
         self.scheduler_config = scheduler_config
 
         if model_config is not None and model_config.get_sliding_window():
-            logger.warning("Sliding window is not supported on Neuron. "
-                           "The model will run without sliding window.")
-        self.device_config = (device_config
-                              if device_config is not None else DeviceConfig())
+            logger.warning(
+                "Sliding window is not supported on Neuron. "
+                "The model will run without sliding window."
+            )
+        self.device_config = (
+            device_config if device_config is not None else DeviceConfig()
+        )
         self.device = self.device_config.device
         self.model = None
         self.pin_memory = is_pin_memory_available()
 
     def load_model(self) -> None:
-        self.model = get_neuron_model(self.model_config,
-                                      parallel_config=self.parallel_config,
-                                      scheduler_config=self.scheduler_config)
+        self.model = get_neuron_model(
+            self.model_config,
+            parallel_config=self.parallel_config,
+            scheduler_config=self.scheduler_config,
+        )
 
     def _prepare_prompt(
         self,
@@ -75,19 +83,15 @@ class NeuronModelRunner:
 
         max_prompt_len = max(prompt_lens)
         assert max_prompt_len > 0
-        input_tokens = make_tensor_with_pad(input_tokens,
-                                            max_prompt_len,
-                                            pad=0,
-                                            dtype=torch.long,
-                                            device=self.device)
-        input_positions = make_tensor_with_pad(input_positions,
-                                               max_prompt_len,
-                                               pad=0,
-                                               dtype=torch.long,
-                                               device=self.device)
-        input_block_ids = torch.tensor(input_block_ids,
-                                       dtype=torch.long,
-                                       device=self.device)
+        input_tokens = make_tensor_with_pad(
+            input_tokens, max_prompt_len, pad=0, dtype=torch.long, device=self.device
+        )
+        input_positions = make_tensor_with_pad(
+            input_positions, max_prompt_len, pad=0, dtype=torch.long, device=self.device
+        )
+        input_block_ids = torch.tensor(
+            input_block_ids, dtype=torch.long, device=self.device
+        )
 
         return input_tokens, input_positions, input_block_ids, prompt_lens
 
@@ -121,22 +125,16 @@ class NeuronModelRunner:
                 assert len(block_table) == 1
                 input_block_ids.append(block_table[0])
 
-        input_tokens = make_tensor_with_pad(input_tokens,
-                                            max_len=1,
-                                            pad=0,
-                                            dtype=torch.long,
-                                            device=self.device)
-        input_positions = make_tensor_with_pad(input_positions,
-                                               max_len=1,
-                                               pad=0,
-                                               dtype=torch.long,
-                                               device=self.device)
-        context_lens = torch.tensor(context_lens,
-                                    dtype=torch.int,
-                                    device=self.device)
-        input_block_ids = torch.tensor(input_block_ids,
-                                       dtype=torch.long,
-                                       device=self.device)
+        input_tokens = make_tensor_with_pad(
+            input_tokens, max_len=1, pad=0, dtype=torch.long, device=self.device
+        )
+        input_positions = make_tensor_with_pad(
+            input_positions, max_len=1, pad=0, dtype=torch.long, device=self.device
+        )
+        context_lens = torch.tensor(context_lens, dtype=torch.int, device=self.device)
+        input_block_ids = torch.tensor(
+            input_block_ids, dtype=torch.long, device=self.device
+        )
 
         return input_tokens, input_positions, input_block_ids
 
@@ -166,61 +164,72 @@ class NeuronModelRunner:
                     # NOTE: prompt token positions do not need sample, skip
                     categorized_sample_indices_start_idx += prompt_len - 1
 
-                categorized_sample_indices[
-                    sampling_params.sampling_type].append([
+                categorized_sample_indices[sampling_params.sampling_type].append(
+                    [
                         categorized_sample_indices_start_idx,
-                        categorized_sampled_token_indices_start_idx
-                    ])
+                        categorized_sampled_token_indices_start_idx,
+                    ]
+                )
                 categorized_sample_indices_start_idx += 1
                 categorized_sampled_token_indices_start_idx += 1
 
                 if sampling_params.prompt_logprobs is not None:
                     selected_token_indices.extend(
-                        range(selected_token_start_idx,
-                              selected_token_start_idx + prompt_len - 1))
-                selected_token_indices.append(selected_token_start_idx +
-                                              prompt_len - 1)
+                        range(
+                            selected_token_start_idx,
+                            selected_token_start_idx + prompt_len - 1,
+                        )
+                    )
+                selected_token_indices.append(selected_token_start_idx + prompt_len - 1)
                 selected_token_start_idx += prompt_len
 
                 if sampling_params.seed is not None:
                     seq_group_metadata.state.generator = torch.Generator(
-                        device=self.device).manual_seed(sampling_params.seed)
+                        device=self.device
+                    ).manual_seed(sampling_params.seed)
             else:
                 num_seqs = len(seq_ids)
                 selected_token_indices.extend(
-                    range(selected_token_start_idx,
-                          selected_token_start_idx + num_seqs))
+                    range(selected_token_start_idx, selected_token_start_idx + num_seqs)
+                )
                 selected_token_start_idx += num_seqs
 
-                categorized_sample_indices[
-                    sampling_params.sampling_type].extend(
-                        zip(
-                            range(
-                                categorized_sample_indices_start_idx,
-                                categorized_sample_indices_start_idx +
-                                num_seqs),
-                            range(
-                                categorized_sampled_token_indices_start_idx,
-                                categorized_sampled_token_indices_start_idx +
-                                num_seqs)))
+                categorized_sample_indices[sampling_params.sampling_type].extend(
+                    zip(
+                        range(
+                            categorized_sample_indices_start_idx,
+                            categorized_sample_indices_start_idx + num_seqs,
+                        ),
+                        range(
+                            categorized_sampled_token_indices_start_idx,
+                            categorized_sampled_token_indices_start_idx + num_seqs,
+                        ),
+                    )
+                )
                 categorized_sample_indices_start_idx += num_seqs
                 categorized_sampled_token_indices_start_idx += num_seqs
 
             if sampling_params.seed is not None:
                 generators.append(seq_group_metadata.state.generator)
 
-        selected_token_indices = async_tensor_h2d(selected_token_indices,
-                                                  dtype=torch.long,
-                                                  target_device=self.device,
-                                                  pin_memory=self.pin_memory)
+        selected_token_indices = async_tensor_h2d(
+            selected_token_indices,
+            dtype=torch.long,
+            target_device=self.device,
+            pin_memory=self.pin_memory,
+        )
 
         categorized_sample_indices = {
-            t:
-            maybe_expand_dim(
-                async_tensor_h2d(seq_ids,
-                                 dtype=torch.int,
-                                 target_device=self.device,
-                                 pin_memory=self.pin_memory), 2, 2)
+            t: maybe_expand_dim(
+                async_tensor_h2d(
+                    seq_ids,
+                    dtype=torch.int,
+                    target_device=self.device,
+                    pin_memory=self.pin_memory,
+                ),
+                2,
+                2,
+            )
             for t, seq_ids in categorized_sample_indices.items()
         }
 
@@ -247,25 +256,26 @@ class NeuronModelRunner:
         is_prompt = seq_group_metadata_list[0].is_prompt
         # Prepare input tensors.
         if is_prompt:
-            (input_tokens, input_positions, input_block_ids,
-             prompt_lens) = self._prepare_prompt(seq_group_metadata_list)
+            (input_tokens, input_positions, input_block_ids, prompt_lens) = (
+                self._prepare_prompt(seq_group_metadata_list)
+            )
         else:
-            (input_tokens, input_positions,
-             input_block_ids) = self._prepare_decode(seq_group_metadata_list)
+            (input_tokens, input_positions, input_block_ids) = self._prepare_decode(
+                seq_group_metadata_list
+            )
             prompt_lens = []
-        sampling_metadata = self._prepare_sample(seq_group_metadata_list,
-                                                 prompt_lens)
+        sampling_metadata = self._prepare_sample(seq_group_metadata_list, prompt_lens)
 
-        return (input_tokens, input_positions, input_block_ids,
-                sampling_metadata)
+        return (input_tokens, input_positions, input_block_ids, sampling_metadata)
 
     @torch.inference_mode()
     def execute_model(
         self,
         seq_group_metadata_list: Optional[List[SequenceGroupMetadata]],
     ) -> Optional[SamplerOutput]:
-        (input_tokens, input_positions, input_block_ids, sampling_metadata
-         ) = self.prepare_input_tensors(seq_group_metadata_list)
+        (input_tokens, input_positions, input_block_ids, sampling_metadata) = (
+            self.prepare_input_tensors(seq_group_metadata_list)
+        )
 
         hidden_states = self.model(
             input_ids=input_tokens,

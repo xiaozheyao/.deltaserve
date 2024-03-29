@@ -1,19 +1,18 @@
 """A Neuron worker class."""
+
 from typing import List, Optional
 
 import torch
 import torch.distributed
 
-from vllm.config import (DeviceConfig, ModelConfig, ParallelConfig,
-                         SchedulerConfig)
+from vllm.config import DeviceConfig, ModelConfig, ParallelConfig, SchedulerConfig
 from vllm.model_executor import set_random_seed
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
 from vllm.worker.neuron_model_runner import NeuronModelRunner
 
 
 class NeuronWorker:
-    """A worker class that executes the model on a group of neuron cores.
-    """
+    """A worker class that executes the model on a group of neuron cores."""
 
     def __init__(
         self,
@@ -27,8 +26,9 @@ class NeuronWorker:
         self.scheduler_config = scheduler_config
         self.device_config = device_config
 
-        self.model_runner = NeuronModelRunner(model_config, parallel_config,
-                                              scheduler_config, device_config)
+        self.model_runner = NeuronModelRunner(
+            model_config, parallel_config, scheduler_config, device_config
+        )
 
     def init_device(self) -> None:
         # Set random seed.

@@ -6,6 +6,7 @@ from transformers.utils.hub import PushToHubMixin
 from os.path import join
 from fractions import Fraction
 
+
 @dataclass
 class CompressionConfig(PushToHubMixin):
     bits: int = field(default=4, metadata={"choices": [2, 3, 4, 8, 16]})
@@ -14,8 +15,7 @@ class CompressionConfig(PushToHubMixin):
     prunen: int = field(default=0)
     prunem: int = field(default=0)
     group_size: int = field(default=-1)
-    group_rows: int = field(
-        default=-1)  # deprecated, for backward compatibility
+    group_rows: int = field(default=-1)  # deprecated, for backward compatibility
     block_size: int = field(default=128)
     damp_percent: float = field(default=0.01)
     desc_act: bool = field(default=True)
@@ -24,7 +24,7 @@ class CompressionConfig(PushToHubMixin):
     lossless: str = field(default="none")
     dtype: str = field(default="fp16")
     pack_factor: Fraction = field(default=Fraction(32, 1))
-    
+
     def __post_init__(self):
         fields_info = fields(self)
         if self.sparsity < 0 or self.sparsity > 1:
@@ -34,23 +34,18 @@ class CompressionConfig(PushToHubMixin):
                 f"only support quantize to {fields_info[0].metadata['choices']} bits."
             )
         if self.group_size != -1 and self.group_size <= 0:
-            raise ValueError(
-                "unless equal to -1, group_size must greater then 0.")
+            raise ValueError("unless equal to -1, group_size must greater then 0.")
         if not (0 < self.damp_percent < 1):
             raise ValueError("damp_percent must between 0 and 1.")
         self.pack_factor = Fraction(32, self.bits)
-        
+
     def save_pretrained(self, save_dir: str, **kwargs):
-        with open(join(save_dir, "compress_config.json"),
-                  "w",
-                  encoding="utf-8") as f:
+        with open(join(save_dir, "compress_config.json"), "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=2)
 
     @classmethod
     def from_pretrained(cls, save_dir: str):
-        with open(join(save_dir, "compress_config.json"),
-                  "r",
-                  encoding="utf-8") as f:
+        with open(join(save_dir, "compress_config.json"), "r", encoding="utf-8") as f:
             return cls(**json.load(f))
 
     def to_dict(self):
@@ -68,10 +63,11 @@ class CompressionConfig(PushToHubMixin):
             "block_size": self.block_size,
         }
 
+
 @dataclass
 class DeltaConfig:
     max_deltas: int = 1
-    max_bitwidth: int = 4
+    max_bitwidth: int = 2
     delta_dtype: Optional[torch.dtype] = torch.int32
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0

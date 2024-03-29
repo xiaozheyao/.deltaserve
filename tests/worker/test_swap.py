@@ -7,17 +7,23 @@ from vllm.worker.worker import Worker
 
 def test_swap() -> None:
     # Configure the engine.
-    engine_args = EngineArgs(model="facebook/opt-125m",
-                             dtype="half",
-                             load_format="dummy")
-    (model_config, cache_config, parallel_config, scheduler_config,
-     device_config, _, _) = engine_args.create_engine_configs()
+    engine_args = EngineArgs(
+        model="facebook/opt-125m", dtype="half", load_format="dummy"
+    )
+    (
+        model_config,
+        cache_config,
+        parallel_config,
+        scheduler_config,
+        device_config,
+        _,
+        _,
+    ) = engine_args.create_engine_configs()
     cache_config.num_gpu_blocks = 100
     cache_config.num_cpu_blocks = 100
 
     # Create the worker.
-    distributed_init_method = get_distributed_init_method(
-        get_ip(), get_open_port())
+    distributed_init_method = get_distributed_init_method(get_ip(), get_open_port())
     worker = Worker(
         model_config=model_config,
         parallel_config=parallel_config,
@@ -47,15 +53,16 @@ def test_swap() -> None:
         cpu_key_cache.random_()
         cpu_value_cache.random_()
 
-    allclose = lambda a, b: torch.allclose(
-        a.cuda(), b.cuda(), rtol=0.0, atol=0.0)
+    allclose = lambda a, b: torch.allclose(a.cuda(), b.cuda(), rtol=0.0, atol=0.0)
 
     # Test swap out.
     blocks_to_swap_out = {3: 72, 56: 35, 84: 34}
-    worker.execute_model(seq_group_metadata_list=[],
-                         blocks_to_swap_in={},
-                         blocks_to_swap_out=blocks_to_swap_out,
-                         blocks_to_copy={})
+    worker.execute_model(
+        seq_group_metadata_list=[],
+        blocks_to_swap_in={},
+        blocks_to_swap_out=blocks_to_swap_out,
+        blocks_to_copy={},
+    )
     for i in range(num_layers):
         gpu_key_cache, gpu_value_cache = gpu_cache[i]
         cpu_key_cache, cpu_value_cache = cpu_cache[i]
@@ -65,10 +72,12 @@ def test_swap() -> None:
 
     # Test swap in.
     blocks_to_swap_in = {19: 45, 67: 23, 12: 78, 40: 99, 1: 71}
-    worker.execute_model(seq_group_metadata_list=[],
-                         blocks_to_swap_in=blocks_to_swap_in,
-                         blocks_to_swap_out={},
-                         blocks_to_copy={})
+    worker.execute_model(
+        seq_group_metadata_list=[],
+        blocks_to_swap_in=blocks_to_swap_in,
+        blocks_to_swap_out={},
+        blocks_to_copy={},
+    )
     for i in range(num_layers):
         gpu_key_cache, gpu_value_cache = gpu_cache[i]
         cpu_key_cache, cpu_value_cache = cpu_cache[i]

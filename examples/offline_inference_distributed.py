@@ -32,7 +32,7 @@ class LLMPredictor:
         generated_text = []
         for output in outputs:
             prompt.append(output.prompt)
-            generated_text.append(' '.join([o.text for o in output.outputs]))
+            generated_text.append(" ".join([o.text for o in output.outputs]))
         return {
             "prompt": prompt,
             "generated_text": generated_text,

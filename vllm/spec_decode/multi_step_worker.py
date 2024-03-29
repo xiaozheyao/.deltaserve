@@ -4,8 +4,7 @@ from typing import Dict, List, Optional, Tuple
 import torch
 
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
-from vllm.spec_decode.interfaces import (SpeculativeProposals,
-                                         SpeculativeProposer)
+from vllm.spec_decode.interfaces import SpeculativeProposals, SpeculativeProposer
 from vllm.spec_decode.util import sampler_output_to_torch
 from vllm.worker.worker import Worker
 
@@ -49,13 +48,18 @@ class MultiStepWorker(Worker):
         """Run the model forward pass num_steps times. Returns the list of
         sampler output, one per model forward pass.
         """
-        self._raise_if_unsupported(seq_group_metadata_list, blocks_to_swap_in,
-                                   blocks_to_swap_out, blocks_to_copy)
+        self._raise_if_unsupported(
+            seq_group_metadata_list,
+            blocks_to_swap_in,
+            blocks_to_swap_out,
+            blocks_to_copy,
+        )
 
         # Shallow copy input data so modifications (such as appending tokens)
         # do not cause side-effects.
         copied_seq_group_metadata_list = self._shallow_copy_inputs(
-            seq_group_metadata_list)
+            seq_group_metadata_list
+        )
 
         # Assert enough KV space for num_steps tokens per sequence.
         self._assert_enough_kv_space(seq_group_metadata_list, num_steps)
@@ -70,8 +74,7 @@ class MultiStepWorker(Worker):
                 blocks_to_copy=blocks_to_copy,
             )
 
-            self._append_new_tokens(model_output,
-                                    copied_seq_group_metadata_list)
+            self._append_new_tokens(model_output, copied_seq_group_metadata_list)
             model_outputs.append(model_output)
 
         return model_outputs
@@ -97,14 +100,17 @@ class MultiStepWorker(Worker):
         )
 
     def _append_new_tokens(
-            self, model_output: SamplerOutput,
-            seq_group_metadata_list: SequenceGroupMetadata) -> None:
+        self,
+        model_output: SamplerOutput,
+        seq_group_metadata_list: SequenceGroupMetadata,
+    ) -> None:
         """Given model output from a single run, append the tokens to the
         sequences. This is normally done outside of the worker, but it is
         required if the worker is to perform multiple forward passes.
         """
         for seq_group_metadata, sequence_group_outputs in zip(
-                seq_group_metadata_list, model_output):
+            seq_group_metadata_list, model_output
+        ):
             seq_group_metadata.is_prompt = False
 
             for seq_output in sequence_group_outputs.samples:
@@ -141,16 +147,15 @@ class MultiStepWorker(Worker):
             new_seq_data = {}
             for seq_id, old_seq_data in seq_group_metadata.seq_data.items():
                 new_seq_data[seq_id] = copy.copy(old_seq_data)
-                new_seq_data[
-                    seq_id].output_token_ids = old_seq_data.output_token_ids[:]
+                new_seq_data[seq_id].output_token_ids = old_seq_data.output_token_ids[:]
 
             seq_group_metadata.seq_data = new_seq_data
 
         return new_seq_group_metadata_list
 
     def _assert_enough_kv_space(
-            self, seq_group_metadata_list: List[SequenceGroupMetadata],
-            num_steps: int) -> None:
+        self, seq_group_metadata_list: List[SequenceGroupMetadata], num_steps: int
+    ) -> None:
         """Assert there are enough physical blocks per sequence to store the
         current KV plus additional KV from num_steps tokens.
         """
@@ -170,10 +175,8 @@ class MultiStepWorker(Worker):
 
             # The allocated number of kv slots is the number of allocated blocks
             # times the number of slots of block.
-            number_physical_blocks = len(
-                seq_group_metadata.block_tables[seq_id])
-            allocated_kv_slots = (number_physical_blocks *
-                                  self.model_runner.block_size)
+            number_physical_blocks = len(seq_group_metadata.block_tables[seq_id])
+            allocated_kv_slots = number_physical_blocks * self.model_runner.block_size
 
             if required_num_kv_slots > allocated_kv_slots:
                 request_id = seq_group_metadata.request_id
@@ -181,7 +184,8 @@ class MultiStepWorker(Worker):
                     "The worker attempted to run "
                     f"{num_steps} times but found insufficient KV space for "
                     f"{request_id=} {seq_id=}. ({allocated_kv_slots=} "
-                    f"{required_num_kv_slots=}).")
+                    f"{required_num_kv_slots=})."
+                )
 
     def _raise_if_unsupported(
         self,
@@ -195,13 +199,14 @@ class MultiStepWorker(Worker):
         """
         if any([blocks_to_swap_in, blocks_to_swap_out, blocks_to_copy]):
             raise NotImplementedError(
-                "MultiStepWorker does not support cache operations")
+                "MultiStepWorker does not support cache operations"
+            )
 
         if any(
-                len(seq_group_metadata.seq_data.keys()) != 1
-                for seq_group_metadata in seq_group_metadata_list):
-            raise NotImplementedError(
-                "MultiStepWorker does not support beam search.")
+            len(seq_group_metadata.seq_data.keys()) != 1
+            for seq_group_metadata in seq_group_metadata_list
+        ):
+            raise NotImplementedError("MultiStepWorker does not support beam search.")
 
 
 class DraftModelTop1Proposer(SpeculativeProposer):
@@ -248,9 +253,9 @@ class DraftModelTop1Proposer(SpeculativeProposer):
         """
 
         # Split speculative- and non-speculative- sequences.
-        (proposal_lens, nonzero_proposal_len_seqs,
-         nonzero_proposal_len_indices) = self._split_by_max_model_len(
-             seq_group_metadata_list, max_proposal_len)
+        (proposal_lens, nonzero_proposal_len_seqs, nonzero_proposal_len_indices) = (
+            self._split_by_max_model_len(seq_group_metadata_list, max_proposal_len)
+        )
 
         if nonzero_proposal_len_seqs:
             # Speculate tokens using the draft worker for the speculative
@@ -289,8 +294,7 @@ class DraftModelTop1Proposer(SpeculativeProposer):
         seq_group_metadata_list: List[SequenceGroupMetadata],
         max_proposal_len: int,
     ) -> Tuple[List[int], List[SequenceGroupMetadata], List[int]]:
-        """Determine which sequences would exceed the max model length.
-        """
+        """Determine which sequences would exceed the max model length."""
 
         proposal_lens: List[int] = []
         nonzero_proposal_len_seqs: List[SequenceGroupMetadata] = []
@@ -308,8 +312,7 @@ class DraftModelTop1Proposer(SpeculativeProposer):
             else:
                 proposal_lens.append(0)
 
-        return (proposal_lens, nonzero_proposal_len_seqs,
-                nonzero_proposal_len_indices)
+        return (proposal_lens, nonzero_proposal_len_seqs, nonzero_proposal_len_indices)
 
     def _merge_outputs(
         self,
@@ -325,46 +328,49 @@ class DraftModelTop1Proposer(SpeculativeProposer):
         if maybe_sampler_output is None:
             # If no speculative tokens, the sampler output will be None.
             # In this case we return empty tensors.
-            proposal_tokens = torch.zeros(0,
-                                          max_proposal_len,
-                                          dtype=torch.long,
-                                          device=self._device)
-            proposal_probs = torch.zeros(0,
-                                         max_proposal_len,
-                                         self._vocab_size,
-                                         dtype=torch.float32,
-                                         device=self._device)
-            proposal_lens = torch.zeros(len(proposal_lens),
-                                        dtype=torch.long,
-                                        device=self._device)
+            proposal_tokens = torch.zeros(
+                0, max_proposal_len, dtype=torch.long, device=self._device
+            )
+            proposal_probs = torch.zeros(
+                0,
+                max_proposal_len,
+                self._vocab_size,
+                dtype=torch.float32,
+                device=self._device,
+            )
+            proposal_lens = torch.zeros(
+                len(proposal_lens), dtype=torch.long, device=self._device
+            )
             return proposal_tokens, proposal_probs, proposal_lens
 
         sampler_output = maybe_sampler_output
 
-        proposal_tokens, proposal_probs = sampler_output_to_torch(
-            sampler_output)
+        proposal_tokens, proposal_probs = sampler_output_to_torch(sampler_output)
 
         # Now, reformat the output GPU tensors such that each sequence has
         # a proposal. the proposal can be empty, e.g. [-1, -1, -1]
 
-        entire_proposal_tokens = torch.full(size=(batch_size,
-                                                  *proposal_tokens.shape[1:]),
-                                            fill_value=-1,
-                                            dtype=torch.long,
-                                            device=self._device)
+        entire_proposal_tokens = torch.full(
+            size=(batch_size, *proposal_tokens.shape[1:]),
+            fill_value=-1,
+            dtype=torch.long,
+            device=self._device,
+        )
         entire_proposal_tokens[nonzero_proposal_len_indices] = proposal_tokens
-        entire_proposal_probs = torch.zeros(batch_size,
-                                            *proposal_probs.shape[1:],
-                                            dtype=torch.float32,
-                                            device=self._device)
+        entire_proposal_probs = torch.zeros(
+            batch_size,
+            *proposal_probs.shape[1:],
+            dtype=torch.float32,
+            device=self._device,
+        )
         entire_proposal_probs[nonzero_proposal_len_indices] = proposal_probs
 
-        proposal_tokens, proposal_probs = (entire_proposal_tokens,
-                                           entire_proposal_probs)
+        proposal_tokens, proposal_probs = (
+            entire_proposal_tokens,
+            entire_proposal_probs,
+        )
 
-        proposal_lens = torch.zeros(batch_size,
-                                    dtype=torch.long,
-                                    device=self._device)
+        proposal_lens = torch.zeros(batch_size, dtype=torch.long, device=self._device)
         proposal_lens[nonzero_proposal_len_indices] = max_proposal_len
 
         return proposal_tokens, proposal_probs, proposal_lens

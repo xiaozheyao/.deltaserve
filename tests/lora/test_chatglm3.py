@@ -10,12 +10,10 @@ def do_sample(llm, lora_path: str, lora_id: int) -> str:
     prompts = [
         PROMPT_TEMPLATE.format(query="How many singers do we have?"),
         PROMPT_TEMPLATE.format(
-            query=
-            "What is the average, minimum, and maximum age of all singers from France?"  # noqa: E501
+            query="What is the average, minimum, and maximum age of all singers from France?"  # noqa: E501
         ),
         PROMPT_TEMPLATE.format(
-            query=
-            "Show name, country, age for all singers ordered by age from the oldest to the youngest."  # noqa: E501
+            query="Show name, country, age for all singers ordered by age from the oldest to the youngest."  # noqa: E501
         ),
     ]
     print(prompts)
@@ -23,8 +21,8 @@ def do_sample(llm, lora_path: str, lora_id: int) -> str:
     outputs = llm.generate(
         prompts,
         sampling_params,
-        lora_request=LoRARequest(str(lora_id), lora_id, lora_path)
-        if lora_id else None)
+        lora_request=LoRARequest(str(lora_id), lora_id, lora_path) if lora_id else None,
+    )
     # Print the outputs.
     generated_texts = []
     for output in outputs:
@@ -36,12 +34,14 @@ def do_sample(llm, lora_path: str, lora_id: int) -> str:
 
 
 def test_chatglm3_lora(chatglm3_lora_files):
-    llm = vllm.LLM(MODEL_PATH,
-                   max_model_len=1024,
-                   enable_lora=True,
-                   max_loras=4,
-                   max_lora_rank=64,
-                   trust_remote_code=True)
+    llm = vllm.LLM(
+        MODEL_PATH,
+        max_model_len=1024,
+        enable_lora=True,
+        max_loras=4,
+        max_lora_rank=64,
+        trust_remote_code=True,
+    )
 
     expected_lora_output = [
         "SELECT count(*) FROM singer",

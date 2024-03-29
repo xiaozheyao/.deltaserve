@@ -112,8 +112,9 @@ async def async_request_vllm(
 
                     # When streaming, '\0' is appended to the end of response.
                     body = data.decode("utf-8").strip("\0")
-                    output.generated_text = json.loads(
-                        body)["text"][0][len(request_func_input.prompt):]
+                    output.generated_text = json.loads(body)["text"][0][
+                        len(request_func_input.prompt) :
+                    ]
                     output.success = True
 
                 else:
@@ -185,8 +186,7 @@ async def async_request_deepspeed_mii(
             "max_new_tokens": request_func_input.output_len,
             "ignore_eos": True,
             "do_sample": True,
-            "temperature":
-            0.01,  # deepspeed-mii does not accept 0.0 temperature.
+            "temperature": 0.01,  # deepspeed-mii does not accept 0.0 temperature.
             "top_p": 1.0,
         }
         output = RequestFuncOutput()
@@ -199,8 +199,9 @@ async def async_request_deepspeed_mii(
 
         st = time.perf_counter()
         try:
-            async with session.post(url=request_func_input.api_url,
-                                    json=payload) as resp:
+            async with session.post(
+                url=request_func_input.api_url, json=payload
+            ) as resp:
                 if resp.status == 200:
                     parsed_resp = await resp.json()
                     output.latency = time.perf_counter() - st
@@ -233,9 +234,7 @@ async def async_request_openai_completions(
             "max_tokens": request_func_input.output_len,
             "stream": True,
         }
-        headers = {
-            "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY')}"
-        }
+        headers = {"Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY')}"}
 
         output = RequestFuncOutput()
         output.prompt_len = request_func_input.prompt_len
@@ -244,8 +243,9 @@ async def async_request_openai_completions(
         ttft = 0
         st = time.perf_counter()
         try:
-            async with session.post(url=api_url, json=payload,
-                                    headers=headers) as response:
+            async with session.post(
+                url=api_url, json=payload, headers=headers
+            ) as response:
                 if response.status == 200:
                     async for chunk in response.content:
                         if ttft == 0:
@@ -301,7 +301,7 @@ async def async_request_openai_chat_completions(
         }
         headers = {
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY')}"
+            "Authorization": f"Bearer {os.environ.get('OPENAI_API_KEY')}",
         }
 
         output = RequestFuncOutput()
@@ -311,8 +311,9 @@ async def async_request_openai_chat_completions(
         ttft = 0
         st = time.perf_counter()
         try:
-            async with session.post(url=api_url, json=payload,
-                                    headers=headers) as response:
+            async with session.post(
+                url=api_url, json=payload, headers=headers
+            ) as response:
                 if response.status == 200:
                     async for chunk in response.content:
                         if ttft == 0:
@@ -329,8 +330,7 @@ async def async_request_openai_chat_completions(
                         else:
                             body = json.loads(chunk)
                             if "content" in body["choices"][0]["delta"]:
-                                generated_text += body["choices"][0]["delta"][
-                                    "content"]
+                                generated_text += body["choices"][0]["delta"]["content"]
 
                     output.generated_text = generated_text
                     output.success = True
@@ -349,7 +349,7 @@ async def async_request_openai_chat_completions(
 # introduced in Python 3.9
 def remove_prefix(text: str, prefix: str) -> str:
     if text.startswith(prefix):
-        return text[len(prefix):]
+        return text[len(prefix) :]
     return text
 
 

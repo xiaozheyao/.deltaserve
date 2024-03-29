@@ -8,15 +8,10 @@ from vllm.spec_decode.metrics import AsyncMetricsCollector
 
 
 def test_initial_call_returns_none():
-    """Expect first call to get metrics to return None.
-    """
+    """Expect first call to get metrics to return None."""
     rej_sampler = MagicMock()
-    rej_sampler.num_accepted_tokens = torch.tensor(0,
-                                                   dtype=torch.long,
-                                                   device='cuda')
-    rej_sampler.num_emitted_tokens = torch.tensor(0,
-                                                  dtype=torch.long,
-                                                  device='cuda')
+    rej_sampler.num_accepted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
+    rej_sampler.num_emitted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
     rej_sampler.num_draft_tokens = 0
 
     collector = AsyncMetricsCollector(rej_sampler)
@@ -26,26 +21,21 @@ def test_initial_call_returns_none():
 
 
 def test_second_call_returns_metrics():
-    """Expect second call to not return None.
-    """
+    """Expect second call to not return None."""
     rej_sampler = MagicMock()
-    rej_sampler.num_accepted_tokens = torch.tensor(0,
-                                                   dtype=torch.long,
-                                                   device='cuda')
-    rej_sampler.num_emitted_tokens = torch.tensor(0,
-                                                  dtype=torch.long,
-                                                  device='cuda')
+    rej_sampler.num_accepted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
+    rej_sampler.num_emitted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
     rej_sampler.num_draft_tokens = 0
 
     collect_interval_s = 5.0
     timer = MagicMock()
-    timer.side_effect = [
-        0.0, collect_interval_s + 0.1, collect_interval_s + 0.2
-    ]
+    timer.side_effect = [0.0, collect_interval_s + 0.1, collect_interval_s + 0.2]
 
-    collector = AsyncMetricsCollector(rejection_sampler=rej_sampler,
-                                      timer=timer,
-                                      collect_interval_s=collect_interval_s)
+    collector = AsyncMetricsCollector(
+        rejection_sampler=rej_sampler,
+        timer=timer,
+        collect_interval_s=collect_interval_s,
+    )
     collector.init_gpu_tensors(rank=0)
     _ = collector.maybe_collect_rejsample_metrics(k=5)
     metrics = collector.maybe_collect_rejsample_metrics(k=5)
@@ -54,15 +44,10 @@ def test_second_call_returns_metrics():
 
 @pytest.mark.parametrize("rank", [1, 2, 3, 4])
 def test_nonzero_rank_noop(rank):
-    """Verify nonzero ranks don't collect metrics.
-    """
+    """Verify nonzero ranks don't collect metrics."""
     rej_sampler = MagicMock()
-    rej_sampler.num_accepted_tokens = torch.tensor(0,
-                                                   dtype=torch.long,
-                                                   device='cuda')
-    rej_sampler.num_emitted_tokens = torch.tensor(0,
-                                                  dtype=torch.long,
-                                                  device='cuda')
+    rej_sampler.num_accepted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
+    rej_sampler.num_emitted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
     rej_sampler.num_draft_tokens = 0
 
     collector = AsyncMetricsCollector(rej_sampler)
@@ -73,27 +58,27 @@ def test_nonzero_rank_noop(rank):
 
 
 def test_noop_until_time():
-    """Verify metrics aren't collected until enough time passes.
-    """
+    """Verify metrics aren't collected until enough time passes."""
     rej_sampler = MagicMock()
-    rej_sampler.num_accepted_tokens = torch.tensor(0,
-                                                   dtype=torch.long,
-                                                   device='cuda')
-    rej_sampler.num_emitted_tokens = torch.tensor(0,
-                                                  dtype=torch.long,
-                                                  device='cuda')
+    rej_sampler.num_accepted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
+    rej_sampler.num_emitted_tokens = torch.tensor(0, dtype=torch.long, device="cuda")
     rej_sampler.num_draft_tokens = 0
 
     collect_interval_s = 5.0
     timer = MagicMock()
     timer.side_effect = [
-        0.0, collect_interval_s - 0.1, collect_interval_s - 0.1,
-        collect_interval_s + 0.1, collect_interval_s + 0.1
+        0.0,
+        collect_interval_s - 0.1,
+        collect_interval_s - 0.1,
+        collect_interval_s + 0.1,
+        collect_interval_s + 0.1,
     ]
 
-    collector = AsyncMetricsCollector(rejection_sampler=rej_sampler,
-                                      timer=timer,
-                                      collect_interval_s=collect_interval_s)
+    collector = AsyncMetricsCollector(
+        rejection_sampler=rej_sampler,
+        timer=timer,
+        collect_interval_s=collect_interval_s,
+    )
     collector.init_gpu_tensors(rank=0)
 
     _ = collector.maybe_collect_rejsample_metrics(k=5)
@@ -107,8 +92,7 @@ def test_noop_until_time():
 
 @pytest.mark.parametrize("has_data", [True, False])
 def test_initial_metrics_has_correct_values(has_data: bool):
-    """Test correctness of metrics data.
-    """
+    """Test correctness of metrics data."""
     if has_data:
         num_accepted_tokens = 103
         num_emitted_tokens = 104
@@ -120,26 +104,27 @@ def test_initial_metrics_has_correct_values(has_data: bool):
     k = 5
 
     num_possible_tokens = AsyncMetricsCollector.get_max_num_accepted_tokens(
-        num_draft_tokens, k)
+        num_draft_tokens, k
+    )
 
     rej_sampler = MagicMock()
-    rej_sampler.num_accepted_tokens = torch.tensor(num_accepted_tokens,
-                                                   dtype=torch.long,
-                                                   device='cuda')
-    rej_sampler.num_emitted_tokens = torch.tensor(num_emitted_tokens,
-                                                  dtype=torch.long,
-                                                  device='cuda')
+    rej_sampler.num_accepted_tokens = torch.tensor(
+        num_accepted_tokens, dtype=torch.long, device="cuda"
+    )
+    rej_sampler.num_emitted_tokens = torch.tensor(
+        num_emitted_tokens, dtype=torch.long, device="cuda"
+    )
     rej_sampler.num_draft_tokens = num_draft_tokens
 
     collect_interval_s = 5.0
     timer = MagicMock()
-    timer.side_effect = [
-        0.0, collect_interval_s + 0.1, collect_interval_s + 0.2
-    ]
+    timer.side_effect = [0.0, collect_interval_s + 0.1, collect_interval_s + 0.2]
 
-    collector = AsyncMetricsCollector(rejection_sampler=rej_sampler,
-                                      timer=timer,
-                                      collect_interval_s=collect_interval_s)
+    collector = AsyncMetricsCollector(
+        rejection_sampler=rej_sampler,
+        timer=timer,
+        collect_interval_s=collect_interval_s,
+    )
     collector.init_gpu_tensors(rank=0)
     _ = collector.maybe_collect_rejsample_metrics(k)
     metrics = collector.maybe_collect_rejsample_metrics(k)
@@ -150,10 +135,8 @@ def test_initial_metrics_has_correct_values(has_data: bool):
     assert metrics.emitted_tokens == num_emitted_tokens
 
     if has_data:
-        assert (metrics.draft_acceptance_rate == num_accepted_tokens /
-                num_draft_tokens)
-        assert (metrics.system_efficiency == num_emitted_tokens /
-                num_possible_tokens)
+        assert metrics.draft_acceptance_rate == num_accepted_tokens / num_draft_tokens
+        assert metrics.system_efficiency == num_emitted_tokens / num_possible_tokens
     else:
         assert math.isnan(metrics.draft_acceptance_rate)
         assert math.isnan(metrics.system_efficiency)

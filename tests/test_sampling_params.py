@@ -1,5 +1,6 @@
 """Tests for the SamplingParams class.
 """
+
 from vllm import SamplingParams
 
 
@@ -10,4 +11,5 @@ def test_max_tokens_none():
 
 if __name__ == "__main__":
     import pytest
+
     pytest.main([__file__])

@@ -44,27 +44,27 @@ def _multi_split_sample(
         for _ in range(n_splits)
     ]
     sampled_logprobs_tmp = [
-        torch.empty(sampled_logprobs_size,
-                    dtype=probs.dtype,
-                    device=probs.device) for _ in range(n_splits)
+        torch.empty(sampled_logprobs_size, dtype=probs.dtype, device=probs.device)
+        for _ in range(n_splits)
     ]
     # We are purposefuly using sampled_tokens_size as we need to always
     # save modified probs in this case.
     sampled_modified_probs_tmp = [
-        torch.empty(sampled_tokens_size,
-                    dtype=probs.dtype,
-                    device=probs.device) for _ in range(n_splits)
+        torch.empty(sampled_tokens_size, dtype=probs.dtype, device=probs.device)
+        for _ in range(n_splits)
     ]
     for i in range(n_splits):
         n_samples = sample_indices.shape[0]
         n_cols = split_probs[i].shape[1]
         n_best = sampled_tokens_tmp[i].shape[1]
-        uniform_noise = seeded_uniform(n_samples,
-                                       n_best,
-                                       n_cols,
-                                       seeds=seeds[i].flatten(),
-                                       device=split_probs[i].device,
-                                       dtype=split_probs[i].dtype)
+        uniform_noise = seeded_uniform(
+            n_samples,
+            n_best,
+            n_cols,
+            seeds=seeds[i].flatten(),
+            device=split_probs[i].device,
+            dtype=split_probs[i].dtype,
+        )
         # TODO(yard1): See if we can remove the contiguous() calls.
         # Will need kernel support.
         _sample(
@@ -86,9 +86,9 @@ def _multi_split_sample(
     sampled_tokens = torch.stack(sampled_tokens_tmp)
     sampled_modified_probs = torch.stack(sampled_modified_probs_tmp)
     # Reduce the results from the splits.
-    sampled_modified_probs, indices = torch.max(sampled_modified_probs,
-                                                dim=0,
-                                                keepdim=True)
+    sampled_modified_probs, indices = torch.max(
+        sampled_modified_probs, dim=0, keepdim=True
+    )
     sampled_tokens = sampled_tokens.gather(0, indices).squeeze(0)
     if save_logprobs:
         sampled_logprobs = torch.stack(sampled_logprobs_tmp)
@@ -160,7 +160,8 @@ def sample(
     if save_logprobs:
         if logprobs is None:
             raise ValueError(
-                "logprobs tensor must be provided if save_logprobs is True")
+                "logprobs tensor must be provided if save_logprobs is True"
+            )
         sampled_logprobs_size = sampled_tokens_size
     else:
         # Empty tensors to invoke the kernel
@@ -178,35 +179,39 @@ def sample(
     # do an argmax+gather to combine the results.
     n_splits = get_num_triton_sampler_splits(probs.shape[1])
     if n_splits > 1:
-        (sampled_tokens, sampled_logprobs,
-         sampled_modified_probs) = _multi_split_sample(
-             probs,
-             seeds,
-             n_splits,
-             sampled_tokens_size,
-             sampled_logprobs_size,
-             sample_indices,
-             logprobs=logprobs,
-             modify_greedy_probs=modify_greedy_probs,
-             save_logprobs=save_logprobs)
+        (sampled_tokens, sampled_logprobs, sampled_modified_probs) = (
+            _multi_split_sample(
+                probs,
+                seeds,
+                n_splits,
+                sampled_tokens_size,
+                sampled_logprobs_size,
+                sample_indices,
+                logprobs=logprobs,
+                modify_greedy_probs=modify_greedy_probs,
+                save_logprobs=save_logprobs,
+            )
+        )
     else:
-        sampled_tokens = torch.empty(sampled_tokens_size,
-                                     dtype=torch.long,
-                                     device=probs.device)
-        sampled_logprobs = torch.empty(sampled_logprobs_size,
-                                       dtype=probs.dtype,
-                                       device=probs.device)
-        sampled_modified_probs = torch.empty(sampled_modified_probs_size,
-                                             dtype=probs.dtype,
-                                             device=probs.device)
+        sampled_tokens = torch.empty(
+            sampled_tokens_size, dtype=torch.long, device=probs.device
+        )
+        sampled_logprobs = torch.empty(
+            sampled_logprobs_size, dtype=probs.dtype, device=probs.device
+        )
+        sampled_modified_probs = torch.empty(
+            sampled_modified_probs_size, dtype=probs.dtype, device=probs.device
+        )
         n_samples = sample_indices.shape[0]
         n_cols = probs.shape[1]
-        uniform_noise = seeded_uniform(n_samples,
-                                       max_best_of,
-                                       n_cols,
-                                       seeds=seeds.flatten(),
-                                       device=probs.device,
-                                       dtype=probs.dtype)
+        uniform_noise = seeded_uniform(
+            n_samples,
+            max_best_of,
+            n_cols,
+            seeds=seeds.flatten(),
+            device=probs.device,
+            dtype=probs.dtype,
+        )
 
         _sample(
             probs,
@@ -221,22 +226,27 @@ def sample(
             save_logprobs=save_logprobs,
             save_modified_probs=_save_modified_probs,
         )
-    return (sampled_tokens, sampled_logprobs if save_logprobs else None,
-            sampled_modified_probs if _save_modified_probs else None)
+    return (
+        sampled_tokens,
+        sampled_logprobs if save_logprobs else None,
+        sampled_modified_probs if _save_modified_probs else None,
+    )
 
 
-def _sample(probs: torch.Tensor,
-            logprobs: torch.Tensor,
-            sample_indices: torch.Tensor,
-            output_samples: torch.Tensor,
-            output_logprobs: torch.Tensor,
-            output_modified_probs: torch.Tensor,
-            seeds: torch.Tensor,
-            uniform_noise: torch.Tensor,
-            *,
-            modify_greedy_probs: bool = False,
-            save_logprobs: bool = True,
-            save_modified_probs: bool = False) -> torch.Tensor:
+def _sample(
+    probs: torch.Tensor,
+    logprobs: torch.Tensor,
+    sample_indices: torch.Tensor,
+    output_samples: torch.Tensor,
+    output_logprobs: torch.Tensor,
+    output_modified_probs: torch.Tensor,
+    seeds: torch.Tensor,
+    uniform_noise: torch.Tensor,
+    *,
+    modify_greedy_probs: bool = False,
+    save_logprobs: bool = True,
+    save_modified_probs: bool = False,
+) -> torch.Tensor:
     """Sample tokens from probs.
 
     Args:
@@ -325,16 +335,26 @@ def _uniform_to_exponential(uniform_noise):
 
 @triton.jit
 def _sample_triton(
-        sample_indices_ptr: torch.Tensor, output_ptr: torch.Tensor,
-        output_logprobs_ptr: torch.Tensor,
-        output_modified_probs_ptr: torch.Tensor, probs_ptr: torch.Tensor,
-        logprobs_ptr: torch.Tensor, seeds_ptr: torch.Tensor,
-        uniform_noise_ptr: torch.Tensor, output_row_stride: int,
-        probs_row_stride: int, uniform_noise_row_stride: int,
-        uniform_noise_best_stride: int, n_samples: int, n_cols: int,
-        n_best: int, block_size: tl.constexpr,
-        modify_greedy_probs: tl.constexpr, save_logprobs: tl.constexpr,
-        save_modified_probs: tl.constexpr):
+    sample_indices_ptr: torch.Tensor,
+    output_ptr: torch.Tensor,
+    output_logprobs_ptr: torch.Tensor,
+    output_modified_probs_ptr: torch.Tensor,
+    probs_ptr: torch.Tensor,
+    logprobs_ptr: torch.Tensor,
+    seeds_ptr: torch.Tensor,
+    uniform_noise_ptr: torch.Tensor,
+    output_row_stride: int,
+    probs_row_stride: int,
+    uniform_noise_row_stride: int,
+    uniform_noise_best_stride: int,
+    n_samples: int,
+    n_cols: int,
+    n_best: int,
+    block_size: tl.constexpr,
+    modify_greedy_probs: tl.constexpr,
+    save_logprobs: tl.constexpr,
+    save_modified_probs: tl.constexpr,
+):
     # The rows are independent, so we parallelize across those
     sample_idx = tl.program_id(0)
     best_idx = tl.program_id(1)
@@ -353,17 +373,19 @@ def _sample_triton(
     col_offsets = tl.arange(0, block_size)
 
     # Load the row into SRAM, using a mask since block_size may be > than n_cols
-    row = tl.load(row_start_ptr + col_offsets,
-                  mask=col_offsets < n_cols,
-                  other=float("-inf"))
+    row = tl.load(
+        row_start_ptr + col_offsets, mask=col_offsets < n_cols, other=float("-inf")
+    )
 
     if uses_random_sampling:
-        uniform_noise_start_ptr = (uniform_noise_ptr +
-                                   sample_idx * uniform_noise_row_stride +
-                                   best_idx * uniform_noise_best_stride)
-        uniform_noise = tl.load(uniform_noise_start_ptr + col_offsets,
-                                mask=col_offsets < n_cols,
-                                other=0.5)
+        uniform_noise_start_ptr = (
+            uniform_noise_ptr
+            + sample_idx * uniform_noise_row_stride
+            + best_idx * uniform_noise_best_stride
+        )
+        uniform_noise = tl.load(
+            uniform_noise_start_ptr + col_offsets, mask=col_offsets < n_cols, other=0.5
+        )
         exponential_noise = _uniform_to_exponential(uniform_noise)
         row /= exponential_noise
 
@@ -374,8 +396,7 @@ def _sample_triton(
     if sampled_token >= n_cols:
         sampled_token = n_cols - 1
     # Write back output to DRAM
-    output_row_start_ptr = (output_ptr + sample_idx * output_row_stride +
-                            best_idx)
+    output_row_start_ptr = output_ptr + sample_idx * output_row_stride + best_idx
     tl.store(output_row_start_ptr, sampled_token)
 
     if modify_greedy_probs:  # noqa
@@ -385,21 +406,22 @@ def _sample_triton(
             # the sampling method must be encoded within the sampled
             # probability distributions.
             row = tl.where(col_offsets == sampled_token, 1.0, 0.0)
-            tl.store(row_start_ptr + col_offsets,
-                     row,
-                     mask=col_offsets < n_cols)
+            tl.store(row_start_ptr + col_offsets, row, mask=col_offsets < n_cols)
 
     if save_modified_probs:
-        output_row_start_ptr = (output_modified_probs_ptr +
-                                sample_idx * output_row_stride + best_idx)
+        output_row_start_ptr = (
+            output_modified_probs_ptr + sample_idx * output_row_stride + best_idx
+        )
         tl.store(output_row_start_ptr, sampled_value)
 
     if save_logprobs:
         # Load the row into SRAM, using a mask since block_size
         # may be > than n_cols
-        sampled_logprob = tl.load(logprobs_ptr + row_idx * probs_row_stride +
-                                  sampled_token)
+        sampled_logprob = tl.load(
+            logprobs_ptr + row_idx * probs_row_stride + sampled_token
+        )
         # Write back output to DRAM
-        output_row_start_ptr = (output_logprobs_ptr +
-                                sample_idx * output_row_stride + best_idx)
+        output_row_start_ptr = (
+            output_logprobs_ptr + sample_idx * output_row_stride + best_idx
+        )
         tl.store(output_row_start_ptr, sampled_logprob)

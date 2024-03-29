@@ -1,8 +1,15 @@
 from abc import ABC, abstractmethod
 from typing import Dict, List, Optional
 
-from vllm.config import (CacheConfig, DeviceConfig, LoRAConfig, ModelConfig,
-                         ParallelConfig, SchedulerConfig, VisionLanguageConfig)
+from vllm.config import (
+    CacheConfig,
+    DeviceConfig,
+    LoRAConfig,
+    ModelConfig,
+    ParallelConfig,
+    SchedulerConfig,
+    VisionLanguageConfig,
+)
 from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
 from vllm.sequence import SamplerOutput, SequenceGroupMetadata
@@ -30,11 +37,13 @@ class ExecutorBase(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def execute_model(self,
-                      seq_group_metadata_list: List[SequenceGroupMetadata],
-                      blocks_to_swap_in: Dict[int, int],
-                      blocks_to_swap_out: Dict[int, int],
-                      blocks_to_copy: Dict[int, List[int]]) -> SamplerOutput:
+    def execute_model(
+        self,
+        seq_group_metadata_list: List[SequenceGroupMetadata],
+        blocks_to_swap_in: Dict[int, int],
+        blocks_to_swap_out: Dict[int, int],
+        blocks_to_copy: Dict[int, List[int]],
+    ) -> SamplerOutput:
         """Executes one model step on the given sequences."""
         raise NotImplementedError
 

@@ -1,4 +1,5 @@
 """Custom activation functions."""
+
 import math
 from typing import Optional
 
@@ -9,7 +10,9 @@ import torch.nn.functional as F
 from vllm._C import ops
 from vllm.model_executor.layers.quantization import QuantizationConfig
 from vllm.model_executor.parallel_utils.parallel_state import (
-    get_tensor_model_parallel_rank, get_tensor_model_parallel_world_size)
+    get_tensor_model_parallel_rank,
+    get_tensor_model_parallel_world_size,
+)
 from vllm.model_executor.parallel_utils.utils import divide
 from vllm.model_executor.utils import set_weight_attrs
 
@@ -31,7 +34,7 @@ class SiluAndMul(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         d = x.shape[-1] // 2
-        output_shape = (x.shape[:-1] + (d, ))
+        output_shape = x.shape[:-1] + (d,)
         out = torch.empty(output_shape, dtype=x.dtype, device=x.device)
         ops.silu_and_mul(out, x)
         return out
@@ -60,7 +63,7 @@ class GeluAndMul(nn.Module):
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         d = x.shape[-1] // 2
-        output_shape = (x.shape[:-1] + (d, ))
+        output_shape = x.shape[:-1] + (d,)
         out = torch.empty(output_shape, dtype=x.dtype, device=x.device)
         if self.approximate == "none":
             ops.gelu_and_mul(out, x)
@@ -74,8 +77,7 @@ class NewGELU(nn.Module):
     def _forward(self, x: torch.Tensor) -> torch.Tensor:
         """PyTorch-native implementation equivalent to forward()."""
         c = math.sqrt(2.0 / math.pi)
-        return 0.5 * x * (1.0 + torch.tanh(c *
-                                           (x + 0.044715 * torch.pow(x, 3.0))))
+        return 0.5 * x * (1.0 + torch.tanh(c * (x + 0.044715 * torch.pow(x, 3.0))))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = torch.empty_like(x)
@@ -87,8 +89,7 @@ class FastGELU(nn.Module):
 
     def _forward(self, x: torch.Tensor) -> torch.Tensor:
         """PyTorch-native implementation equivalent to forward()."""
-        return 0.5 * x * (1.0 + torch.tanh(x * 0.7978845608 *
-                                           (1.0 + 0.044715 * x * x)))
+        return 0.5 * x * (1.0 + torch.tanh(x * 0.7978845608 * (1.0 + 0.044715 * x * x)))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         out = torch.empty_like(x)
@@ -114,14 +115,14 @@ class ScaledActivation(nn.Module):
         self.input_is_parallel = input_is_parallel
         if input_is_parallel:
             tp_size = get_tensor_model_parallel_world_size()
-            intermediate_size_per_partition = divide(intermediate_size,
-                                                     tp_size)
+            intermediate_size_per_partition = divide(intermediate_size, tp_size)
         else:
             intermediate_size_per_partition = intermediate_size
         if params_dtype is None:
             params_dtype = torch.get_default_dtype()
         self.scales = nn.Parameter(
-            torch.empty(intermediate_size_per_partition, dtype=params_dtype))
+            torch.empty(intermediate_size_per_partition, dtype=params_dtype)
+        )
         set_weight_attrs(self.scales, {"weight_loader": self.weight_loader})
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -157,15 +158,16 @@ def get_act_fn(
     """Get an activation function by name."""
     act_fn_name = act_fn_name.lower()
     if act_fn_name not in _ACTIVATION_REGISTRY:
-        raise ValueError(
-            f"Activation function {act_fn_name!r} is not supported.")
+        raise ValueError(f"Activation function {act_fn_name!r} is not supported.")
 
     act_fn = _ACTIVATION_REGISTRY[act_fn_name]
-    if (quant_config is not None
-            and act_fn_name in quant_config.get_scaled_act_names()):
+    if quant_config is not None and act_fn_name in quant_config.get_scaled_act_names():
         if intermediate_size is None:
-            raise ValueError("intermediate_size must be specified for scaled "
-                             "activation functions.")
-        return ScaledActivation(act_fn, intermediate_size, input_is_parallel,
-                                params_dtype)
+            raise ValueError(
+                "intermediate_size must be specified for scaled "
+                "activation functions."
+            )
+        return ScaledActivation(
+            act_fn, intermediate_size, input_is_parallel, params_dtype
+        )
     return act_fn

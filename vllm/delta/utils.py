@@ -31,11 +31,9 @@ def _torch_device(idx):
 
 def ext_gemm_half_q_half(x, q_handle, q4_width, force_cuda):
     """Matrix multiplication, returns x @ q4"""
-    output_shape = x.shape[:-1] + (q4_width, )
+    output_shape = x.shape[:-1] + (q4_width,)
     x = x.view(-1, x.shape[-1])
-    output = torch.empty((x.shape[0], q4_width),
-                         dtype=torch.half,
-                         device=x.device)
+    output = torch.empty((x.shape[0], q4_width), dtype=torch.half, device=x.device)
     gemm_half_q_half(x, q_handle, output, force_cuda)
     return output.view(output_shape)
 
@@ -70,7 +68,7 @@ def ext_make_q_matrix(w: dict, temp_dq, key: str = None):
         # GPTQ with g_idx (act_order)
         if "g_idx" in w and not (w["g_idx"] == 0).all().item():
             w["q_perm"] = torch.empty(
-                (w["qweight"].shape[0] * 8, ),
+                (w["qweight"].shape[0] * 8,),
                 dtype=torch.short,
                 device=w["qweight"].device,
             )
@@ -116,7 +114,7 @@ class ExLlamaV2DeviceTensors:
 
     def prepare(self):
         self.scratch = torch.empty(
-            (self.scratch_bytes // 2, ),
+            (self.scratch_bytes // 2,),
             dtype=torch.half,
             device=_torch_device(self.device_idx),
         )
@@ -144,8 +142,9 @@ def garbage_collection():
     gc.collect()
 
 
-def replace_submodule(model: nn.Module, module_name: str,
-                      new_module: nn.Module) -> nn.Module:
+def replace_submodule(
+    model: nn.Module, module_name: str, new_module: nn.Module
+) -> nn.Module:
     """Replace a submodule in a model with a new module."""
     parent = model.get_submodule(".".join(module_name.split(".")[:-1]))
     target_name = module_name.split(".")[-1]
@@ -153,9 +152,9 @@ def replace_submodule(model: nn.Module, module_name: str,
     return new_module
 
 
-def deltazip_post_init(model,
-                       use_act_order: bool,
-                       max_input_length: Optional[int] = None):
+def deltazip_post_init(
+    model, use_act_order: bool, max_input_length: Optional[int] = None
+):
     """
     The max_input_length argument is specific to the exllama backend, that requires to initialize a buffer temp_state.
     """
@@ -168,16 +167,14 @@ def deltazip_post_init(model,
             model_uses_exllamav2 = True
             device = submodule.qweight.device
             scratch_fixed = submodule.scratch_space_fixed()
-            fixed_bytes[device] = max(scratch_fixed,
-                                      fixed_bytes.get(device, 0))
+            fixed_bytes[device] = max(scratch_fixed, fixed_bytes.get(device, 0))
 
     if model_uses_exllamav2:
         from deltazip.nn_modules.exllama_utils import ExLlamaV2DeviceTensors
 
         device_tensors = {}
         for device, scratch_bytes in fixed_bytes.items():
-            device_tensors[device] = ExLlamaV2DeviceTensors(
-                device.index, scratch_bytes)
+            device_tensors[device] = ExLlamaV2DeviceTensors(device.index, scratch_bytes)
 
         # have persistent buffers, otherwise we will get OOM
         model.device_tensors = device_tensors
@@ -199,9 +196,10 @@ def find_layers(module, layers=None, name=""):
     res = {}
     for name1, child in module.named_children():
         res.update(
-            find_layers(child,
-                        layers=layers,
-                        name=name + "." + name1 if name != "" else name1))
+            find_layers(
+                child, layers=layers, name=name + "." + name1 if name != "" else name1
+            )
+        )
     return res
 
 

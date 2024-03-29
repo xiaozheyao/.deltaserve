@@ -4,61 +4,52 @@
 import torch
 from transformers import AutoTokenizer
 
-from vllm.model_executor.guided_logits_processors import (JSONLogitsProcessor,
-                                                          RegexLogitsProcessor)
+from vllm.model_executor.guided_logits_processors import (
+    JSONLogitsProcessor,
+    RegexLogitsProcessor,
+)
 
 TEST_SCHEMA = {
     "type": "object",
     "properties": {
-        "name": {
-            "type": "string"
-        },
-        "age": {
-            "type": "integer"
-        },
+        "name": {"type": "string"},
+        "age": {"type": "integer"},
         "skills": {
             "type": "array",
-            "items": {
-                "type": "string",
-                "maxLength": 10
-            },
-            "minItems": 3
+            "items": {"type": "string", "maxLength": 10},
+            "minItems": 3,
         },
         "work history": {
             "type": "array",
             "items": {
                 "type": "object",
                 "properties": {
-                    "company": {
-                        "type": "string"
-                    },
-                    "duration": {
-                        "type": "string"
-                    },
-                    "position": {
-                        "type": "string"
-                    }
+                    "company": {"type": "string"},
+                    "duration": {"type": "string"},
+                    "position": {"type": "string"},
                 },
-                "required": ["company", "position"]
-            }
-        }
+                "required": ["company", "position"],
+            },
+        },
     },
-    "required": ["name", "age", "skills", "work history"]
+    "required": ["name", "age", "skills", "work history"],
 }
 
-TEST_REGEX = (r"((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.){3}"
-              r"(25[0-5]|(2[0-4]|1\d|[1-9]|)\d)")
+TEST_REGEX = (
+    r"((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.){3}" r"(25[0-5]|(2[0-4]|1\d|[1-9]|)\d)"
+)
 
 
 def test_guided_logits_processors():
     """Basic unit test for RegexLogitsProcessor and JSONLogitsProcessor."""
-    tokenizer = AutoTokenizer.from_pretrained('HuggingFaceH4/zephyr-7b-beta')
+    tokenizer = AutoTokenizer.from_pretrained("HuggingFaceH4/zephyr-7b-beta")
     regex_LP = RegexLogitsProcessor(TEST_REGEX, tokenizer)
     json_LP = JSONLogitsProcessor(TEST_SCHEMA, tokenizer)
 
     regex_LP.init_state()
     token_ids = tokenizer.encode(
-        f"Give an example IPv4 address with this regex: {TEST_REGEX}")
+        f"Give an example IPv4 address with this regex: {TEST_REGEX}"
+    )
     tensor = torch.rand(32000)
     original_tensor = torch.clone(tensor)
     regex_LP(token_ids, tensor)
@@ -67,7 +58,8 @@ def test_guided_logits_processors():
 
     json_LP.init_state()
     token_ids = tokenizer.encode(
-        f"Give an employee profile that fits this schema: {TEST_SCHEMA}")
+        f"Give an employee profile that fits this schema: {TEST_SCHEMA}"
+    )
     tensor = torch.rand(32000)
     original_tensor = torch.clone(tensor)
     json_LP(token_ids, tensor)

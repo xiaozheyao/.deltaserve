@@ -16,15 +16,15 @@ import sys
 
 from sphinx.ext import autodoc
 
-sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
+sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
 
 logger = logging.getLogger(__name__)
 
 # -- Project information -----------------------------------------------------
 
-project = 'vLLM'
-copyright = '2024, vLLM Team'
-author = 'the vLLM Team'
+project = "vLLM"
+copyright = "2024, vLLM Team"
+author = "the vLLM Team"
 
 # -- General configuration ---------------------------------------------------
 
@@ -43,7 +43,7 @@ extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -60,12 +60,12 @@ copybutton_prompt_is_regexp = True
 # a list of builtin themes.
 #
 html_title = project
-html_theme = 'sphinx_book_theme'
-html_logo = 'assets/logos/vllm-logo-text-light.png'
+html_theme = "sphinx_book_theme"
+html_logo = "assets/logos/vllm-logo-text-light.png"
 html_theme_options = {
-    'path_to_docs': 'docs/source',
-    'repository_url': 'https://github.com/vllm-project/vllm',
-    'use_repository_button': True,
+    "path_to_docs": "docs/source",
+    "repository_url": "https://github.com/vllm-project/vllm",
+    "use_repository_button": True,
 }
 
 # Add any paths that contain custom static files (such as style sheets) here,
@@ -91,7 +91,8 @@ for mock_target in autodoc_mock_imports:
         logger.info(
             f"Potentially problematic mock target ({mock_target}) found; "
             "autodoc_mock_imports cannot mock modules that have already "
-            "been loaded into sys.modules when the sphinx build starts.")
+            "been loaded into sys.modules when the sphinx build starts."
+        )
 
 
 class MockedClassDocumenter(autodoc.ClassDocumenter):

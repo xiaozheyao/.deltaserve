@@ -12,15 +12,19 @@ from huggingface_hub import snapshot_download
 
 import vllm
 from vllm.config import LoRAConfig
-from vllm.model_executor.layers.linear import (ColumnParallelLinear,
-                                               MergedColumnParallelLinear,
-                                               RowParallelLinear)
+from vllm.model_executor.layers.linear import (
+    ColumnParallelLinear,
+    MergedColumnParallelLinear,
+    RowParallelLinear,
+)
 from vllm.model_executor.layers.logits_processor import LogitsProcessor
 from vllm.model_executor.layers.sampler import Sampler
 from vllm.model_executor.layers.vocab_parallel_embedding import ParallelLMHead
 from vllm.model_executor.model_loader import get_model
 from vllm.model_executor.parallel_utils.parallel_state import (
-    destroy_model_parallel, initialize_model_parallel)
+    destroy_model_parallel,
+    initialize_model_parallel,
+)
 
 
 def cleanup():
@@ -70,25 +74,31 @@ def dist_init_torch_only():
 @pytest.fixture
 def dummy_model() -> nn.Module:
     model = nn.Sequential(
-        OrderedDict([
-            ("dense1", ColumnParallelLinear(764, 100)),
-            ("dense2", RowParallelLinear(100, 50)),
-            (
-                "layer1",
-                nn.Sequential(
-                    OrderedDict([
-                        ("dense1", ColumnParallelLinear(100, 10)),
-                        ("dense2", RowParallelLinear(10, 50)),
-                    ])),
-            ),
-            ("act2", nn.ReLU()),
-            ("output", ColumnParallelLinear(50, 10)),
-            ("outact", nn.Sigmoid()),
-            # Special handling for lm_head & sampler
-            ("lm_head", ParallelLMHead(512, 10)),
-            ("logits_processor", LogitsProcessor(512)),
-            ("sampler", Sampler())
-        ]))
+        OrderedDict(
+            [
+                ("dense1", ColumnParallelLinear(764, 100)),
+                ("dense2", RowParallelLinear(100, 50)),
+                (
+                    "layer1",
+                    nn.Sequential(
+                        OrderedDict(
+                            [
+                                ("dense1", ColumnParallelLinear(100, 10)),
+                                ("dense2", RowParallelLinear(10, 50)),
+                            ]
+                        )
+                    ),
+                ),
+                ("act2", nn.ReLU()),
+                ("output", ColumnParallelLinear(50, 10)),
+                ("outact", nn.Sigmoid()),
+                # Special handling for lm_head & sampler
+                ("lm_head", ParallelLMHead(512, 10)),
+                ("logits_processor", LogitsProcessor(512)),
+                ("sampler", Sampler()),
+            ]
+        )
+    )
     model.config = MagicMock()
     return model
 
@@ -96,25 +106,31 @@ def dummy_model() -> nn.Module:
 @pytest.fixture
 def dummy_model_gate_up() -> nn.Module:
     model = nn.Sequential(
-        OrderedDict([
-            ("dense1", ColumnParallelLinear(764, 100)),
-            ("dense2", RowParallelLinear(100, 50)),
-            (
-                "layer1",
-                nn.Sequential(
-                    OrderedDict([
-                        ("dense1", ColumnParallelLinear(100, 10)),
-                        ("dense2", RowParallelLinear(10, 50)),
-                    ])),
-            ),
-            ("act2", nn.ReLU()),
-            ("gate_up_proj", MergedColumnParallelLinear(50, [5, 5])),
-            ("outact", nn.Sigmoid()),
-            # Special handling for lm_head & sampler
-            ("lm_head", ParallelLMHead(512, 10)),
-            ("logits_processor", LogitsProcessor(512)),
-            ("sampler", Sampler())
-        ]))
+        OrderedDict(
+            [
+                ("dense1", ColumnParallelLinear(764, 100)),
+                ("dense2", RowParallelLinear(100, 50)),
+                (
+                    "layer1",
+                    nn.Sequential(
+                        OrderedDict(
+                            [
+                                ("dense1", ColumnParallelLinear(100, 10)),
+                                ("dense2", RowParallelLinear(10, 50)),
+                            ]
+                        )
+                    ),
+                ),
+                ("act2", nn.ReLU()),
+                ("gate_up_proj", MergedColumnParallelLinear(50, [5, 5])),
+                ("outact", nn.Sigmoid()),
+                # Special handling for lm_head & sampler
+                ("lm_head", ParallelLMHead(512, 10)),
+                ("logits_processor", LogitsProcessor(512)),
+                ("sampler", Sampler()),
+            ]
+        )
+    )
     model.config = MagicMock()
     return model
 
@@ -150,10 +166,11 @@ def llama_2_7b_engine_extra_embeddings() -> nn.Module:
     get_model_old = get_model
 
     def get_model_patched(model_config, device_config, **kwargs):
-        return get_model_old(model_config,
-                             device_config,
-                             lora_config=LoRAConfig(max_loras=4,
-                                                    max_lora_rank=8))
+        return get_model_old(
+            model_config,
+            device_config,
+            lora_config=LoRAConfig(max_loras=4, max_lora_rank=8),
+        )
 
     with patch("vllm.worker.model_runner.get_model", get_model_patched):
         engine = vllm.LLM("meta-llama/Llama-2-7b-hf", enable_lora=False)
@@ -163,7 +180,7 @@ def llama_2_7b_engine_extra_embeddings() -> nn.Module:
 
 
 @pytest.fixture
-def llama_2_7b_model_extra_embeddings(
-        llama_2_7b_engine_extra_embeddings) -> nn.Module:
-    yield (llama_2_7b_engine_extra_embeddings.model_executor.driver_worker.
-           model_runner.model)
+def llama_2_7b_model_extra_embeddings(llama_2_7b_engine_extra_embeddings) -> nn.Module:
+    yield (
+        llama_2_7b_engine_extra_embeddings.model_executor.driver_worker.model_runner.model
+    )

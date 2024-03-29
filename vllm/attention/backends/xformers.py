@@ -1,18 +1,23 @@
 """Attention layer with xFormers and PagedAttention."""
+
 import importlib
 from dataclasses import dataclass
 from typing import Dict, List, Optional, Tuple, Type
 
 import torch
 from xformers import ops as xops
-from xformers.ops.fmha.attn_bias import (AttentionBias,
-                                         BlockDiagonalCausalMask,
-                                         LowerTriangularMaskWithTensorBias)
+from xformers.ops.fmha.attn_bias import (
+    AttentionBias,
+    BlockDiagonalCausalMask,
+    LowerTriangularMaskWithTensorBias,
+)
 
-from vllm.attention.backends.abstract import (AttentionBackend, AttentionImpl,
-                                              AttentionMetadata)
-from vllm.attention.ops.paged_attn import (PagedAttention,
-                                           PagedAttentionMetadata)
+from vllm.attention.backends.abstract import (
+    AttentionBackend,
+    AttentionImpl,
+    AttentionMetadata,
+)
+from vllm.attention.ops.paged_attn import PagedAttention, PagedAttentionMetadata
 from vllm.logger import init_logger
 from vllm.utils import is_hip
 
@@ -36,8 +41,9 @@ class XFormersBackend(AttentionBackend):
         num_kv_heads: int,
         head_size: int,
     ) -> Tuple[int, ...]:
-        return PagedAttention.get_kv_cache_shape(num_blocks, block_size,
-                                                 num_kv_heads, head_size)
+        return PagedAttention.get_kv_cache_shape(
+            num_blocks, block_size, num_kv_heads, head_size
+        )
 
     @staticmethod
     def swap_blocks(
@@ -64,6 +70,7 @@ class XFormersMetadata(AttentionMetadata, PagedAttentionMetadata):
     dynamically, it should be stored in tensor. The tensor has to be
     updated from `CUDAGraphRunner.forward` API.
     """
+
     # Currently, input sequences can only contain all prompts
     # or all decoding. True if all sequences are prompts.
     is_prompt: bool
@@ -125,11 +132,11 @@ class XFormersMetadata(AttentionMetadata, PagedAttentionMetadata):
 class XFormersImpl(AttentionImpl):
     """
     If the input tensors contain prompt tokens, the layout is as follows:
-    |<--------------- num_prompt_tokens --------------->|	
+    |<--------------- num_prompt_tokens --------------->|
     |<--prompt_0-->|<--prompt_1-->|...|<--prompt_N-1--->|
 
-    Otherwise, the layout is as follows:	
-    |<------------------ num_generation_tokens (M) ----------------->|	
+    Otherwise, the layout is as follows:
+    |<------------------ num_generation_tokens (M) ----------------->|
     |<--generation_0-->|..........|<--generation_M-1-->|<--padding-->|
 
     Generation tokens can contain padding when cuda-graph is used.
@@ -164,7 +171,8 @@ class XFormersImpl(AttentionImpl):
         if head_size not in suppored_head_sizes:
             raise ValueError(
                 f"Head size {head_size} is not supported by PagedAttention. "
-                f"Supported head sizes are: {suppored_head_sizes}.")
+                f"Supported head sizes are: {suppored_head_sizes}."
+            )
 
         # AMD Radeon 7900 series (gfx1100) currently does not support xFormers
         # nor FlashAttention. As a temporary workaround, we use naive PyTorch
@@ -197,15 +205,20 @@ class XFormersImpl(AttentionImpl):
 
         if kv_cache is not None:
             key_cache, value_cache = PagedAttention.split_kv_cache(
-                kv_cache, self.num_kv_heads, self.head_size)
+                kv_cache, self.num_kv_heads, self.head_size
+            )
 
             # Reshape the input keys and values and store them in the cache.
             # If kv_cache is not provided, the new key and value tensors are
             # not cached. This happens during the initial memory profiling run.
-            PagedAttention.write_to_paged_cache(key, value, key_cache,
-                                                value_cache,
-                                                attn_metadata.slot_mapping,
-                                                attn_metadata.kv_cache_dtype)
+            PagedAttention.write_to_paged_cache(
+                key,
+                value,
+                key_cache,
+                value_cache,
+                attn_metadata.slot_mapping,
+                attn_metadata.kv_cache_dtype,
+            )
 
         if attn_metadata.is_prompt:
             # Prompt run.
@@ -218,18 +231,24 @@ class XFormersImpl(AttentionImpl):
                     # project the key and value tensors to the desired number of
                     # heads.
                     # TODO(woosuk): Use MQA/GQA kernels for higher performance.
-                    query = query.view(query.shape[0], self.num_kv_heads,
-                                       self.num_queries_per_kv,
-                                       query.shape[-1])
-                    key = key[:, :,
-                              None, :].expand(key.shape[0], self.num_kv_heads,
-                                              self.num_queries_per_kv,
-                                              key.shape[-1])
-                    value = value[:, :,
-                                  None, :].expand(value.shape[0],
-                                                  self.num_kv_heads,
-                                                  self.num_queries_per_kv,
-                                                  value.shape[-1])
+                    query = query.view(
+                        query.shape[0],
+                        self.num_kv_heads,
+                        self.num_queries_per_kv,
+                        query.shape[-1],
+                    )
+                    key = key[:, :, None, :].expand(
+                        key.shape[0],
+                        self.num_kv_heads,
+                        self.num_queries_per_kv,
+                        key.shape[-1],
+                    )
+                    value = value[:, :, None, :].expand(
+                        value.shape[0],
+                        self.num_kv_heads,
+                        self.num_queries_per_kv,
+                        value.shape[-1],
+                    )
 
                 if self.use_naive_attention:
                     output = torch.empty_like(query)
@@ -256,7 +275,8 @@ class XFormersImpl(AttentionImpl):
                     return output.reshape(num_tokens, hidden_size)
 
                 output = self._run_memory_efficient_xformers_forward(
-                    query, key, value, attn_metadata)
+                    query, key, value, attn_metadata
+                )
             else:
                 # prefix-enabled attention
                 output = PagedAttention.forward_prefix(
@@ -313,18 +333,24 @@ class XFormersImpl(AttentionImpl):
         if attn_metadata.attn_bias is None:
             if self.alibi_slopes is None:
                 attn_bias = BlockDiagonalCausalMask.from_seqlens(
-                    attn_metadata.prompt_lens)
+                    attn_metadata.prompt_lens
+                )
                 if self.sliding_window is not None:
-                    attn_bias = attn_bias.make_local_attention(
-                        self.sliding_window)
+                    attn_bias = attn_bias.make_local_attention(self.sliding_window)
                 attn_metadata.attn_bias = [attn_bias]
             else:
                 attn_metadata.attn_bias = _make_alibi_bias(
-                    self.alibi_slopes, self.num_kv_heads, query.dtype,
-                    attn_metadata.prompt_lens)
+                    self.alibi_slopes,
+                    self.num_kv_heads,
+                    query.dtype,
+                    attn_metadata.prompt_lens,
+                )
 
-        op = xops.fmha.MemoryEfficientAttentionFlashAttentionOp[0] if (
-            is_hip()) else None
+        op = (
+            xops.fmha.MemoryEfficientAttentionFlashAttentionOp[0]
+            if (is_hip())
+            else None
+        )
         # No alibi slopes.
         # TODO(woosuk): Too many view operations. Let's try to reduce
         # them in the future for code readability.
@@ -339,7 +365,8 @@ class XFormersImpl(AttentionImpl):
                 attn_bias=attn_metadata.attn_bias[0],
                 p=0.0,
                 scale=self.scale,
-                op=op)
+                op=op,
+            )
 
             return out.view_as(query)
 
@@ -358,7 +385,8 @@ class XFormersImpl(AttentionImpl):
                 attn_bias=attn_metadata.attn_bias[i],
                 p=0.0,
                 scale=self.scale,
-                op=op)
+                op=op,
+            )
             # TODO(woosuk): Unnecessary copy. Optimize.
             output[start:end].copy_(out.squeeze(0))
             start += prompt_len
@@ -407,8 +435,10 @@ def _check_use_naive_attention() -> bool:
     # For ROCm, check whether flash attention is installed or not.
     has_flash_attn = importlib.util.find_spec("flash_attn") is None
     if not has_flash_attn:
-        logger.warning("flash_attn is not installed. Using naive attention. "
-                       "This will take significantly more GPU memory.")
+        logger.warning(
+            "flash_attn is not installed. Using naive attention. "
+            "This will take significantly more GPU memory."
+        )
         return True
     return False
 
@@ -426,11 +456,9 @@ def _naive_masked_attention(
     key = key.view(-1, num_kv_heads, head_size)
     value = value.view(-1, num_kv_heads, head_size)
     seq_len, _, _ = query.shape
-    attn_mask = torch.triu(torch.ones(seq_len,
-                                      seq_len,
-                                      dtype=query.dtype,
-                                      device=query.device),
-                           diagonal=1)
+    attn_mask = torch.triu(
+        torch.ones(seq_len, seq_len, dtype=query.dtype, device=query.device), diagonal=1
+    )
     attn_mask = attn_mask * torch.finfo(query.dtype).min
 
     attn_weights = scale * torch.einsum("qhd,khd->hqk", query, key).float()

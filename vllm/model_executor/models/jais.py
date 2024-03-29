@@ -26,19 +26,24 @@ import torch
 from torch import nn
 
 from vllm.attention import Attention, AttentionMetadata
-from vllm.model_executor.layers.linear import (ColumnParallelLinear,
-                                               LinearMethodBase,
-                                               QKVParallelLinear,
-                                               RowParallelLinear)
+from vllm.model_executor.layers.linear import (
+    ColumnParallelLinear,
+    LinearMethodBase,
+    QKVParallelLinear,
+    RowParallelLinear,
+)
 from vllm.model_executor.layers.logits_processor import LogitsProcessor
 from vllm.model_executor.layers.sampler import Sampler
-from vllm.model_executor.layers.vocab_parallel_embedding import (
-    VocabParallelEmbedding)
+from vllm.model_executor.layers.vocab_parallel_embedding import VocabParallelEmbedding
 from vllm.model_executor.parallel_utils.parallel_state import (
-    get_tensor_model_parallel_rank, get_tensor_model_parallel_world_size)
+    get_tensor_model_parallel_rank,
+    get_tensor_model_parallel_world_size,
+)
 from vllm.model_executor.sampling_metadata import SamplingMetadata
-from vllm.model_executor.weight_utils import (default_weight_loader,
-                                              hf_model_weights_iterator)
+from vllm.model_executor.weight_utils import (
+    default_weight_loader,
+    hf_model_weights_iterator,
+)
 from vllm.sequence import SamplerOutput
 from vllm.transformers_utils.configs import JAISConfig
 
@@ -52,16 +57,18 @@ class SwiGLUActivation(nn.Module):
 def _get_alibi_slopes(n):
 
     def get_slopes_power_of_2(n):
-        start = 2**(-(2**-(math.log2(n) - 3)))
+        start = 2 ** (-(2 ** -(math.log2(n) - 3)))
         ratio = start
         return [start * ratio**i for i in range(n)]
 
     if math.log2(n).is_integer():
         return get_slopes_power_of_2(n)
     else:
-        closest_power_of_2 = 2**math.floor(math.log2(n))
-        return (get_slopes_power_of_2(closest_power_of_2) + _get_alibi_slopes(
-            2 * closest_power_of_2)[0::2][:n - closest_power_of_2])
+        closest_power_of_2 = 2 ** math.floor(math.log2(n))
+        return (
+            get_slopes_power_of_2(closest_power_of_2)
+            + _get_alibi_slopes(2 * closest_power_of_2)[0::2][: n - closest_power_of_2]
+        )
 
 
 class JAISAttention(nn.Module):
@@ -74,8 +81,7 @@ class JAISAttention(nn.Module):
         super().__init__()
         self.hidden_size = config.hidden_size
         total_num_heads = config.num_attention_heads
-        tensor_model_parallel_world_size = (
-            get_tensor_model_parallel_world_size())
+        tensor_model_parallel_world_size = get_tensor_model_parallel_world_size()
         assert total_num_heads % tensor_model_parallel_world_size == 0
         self.num_heads = total_num_heads // tensor_model_parallel_world_size
         self.head_dim = self.hidden_size // total_num_heads
@@ -140,12 +146,16 @@ class JAISMLP(nn.Module):
             bias=True,
             linear_method=linear_method,
         )
-        self.c_fc2 = (ColumnParallelLinear(
-            hidden_size,
-            intermediate_size,
-            bias=True,
-            linear_method=linear_method,
-        ) if self.swiglu else None)
+        self.c_fc2 = (
+            ColumnParallelLinear(
+                hidden_size,
+                intermediate_size,
+                bias=True,
+                linear_method=linear_method,
+            )
+            if self.swiglu
+            else None
+        )
         self.c_proj = RowParallelLinear(
             intermediate_size,
             hidden_size,
@@ -159,8 +169,11 @@ class JAISMLP(nn.Module):
         if self.swiglu:
             hidden_states2, _ = self.c_fc2(hidden_states)
         hidden_states, _ = self.c_fc(hidden_states)
-        hidden_states = (self.act(hidden_states, hidden_states2)
-                         if self.swiglu else self.act(hidden_states))
+        hidden_states = (
+            self.act(hidden_states, hidden_states2)
+            if self.swiglu
+            else self.act(hidden_states)
+        )
         hidden_states, _ = self.c_proj(hidden_states)
         return hidden_states
 
@@ -174,8 +187,7 @@ class JAISBlock(nn.Module):
     ):
         super().__init__()
         hidden_size = config.hidden_size
-        inner_dim = (config.n_inner if config.n_inner is not None else 4 *
-                     hidden_size)
+        inner_dim = config.n_inner if config.n_inner is not None else 4 * hidden_size
 
         self.ln_1 = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
         self.attn = JAISAttention(config, linear_method)
@@ -220,17 +232,18 @@ class JAISModel(nn.Module):
         assert not config.reorder_and_upcast_attn
         self.embed_dim = config.hidden_size
         self.wte = VocabParallelEmbedding(config.vocab_size, self.embed_dim)
-        self.wpe = (nn.Embedding(config.max_position_embeddings,
-                                 self.embed_dim)
-                    if config.position_embedding_type != "alibi" else None)
+        self.wpe = (
+            nn.Embedding(config.max_position_embeddings, self.embed_dim)
+            if config.position_embedding_type != "alibi"
+            else None
+        )
         if hasattr(config, "embeddings_scale"):
             self.embeddings_scale = config.embeddings_scale
         else:
             self.embeddings_scale = config.mup_embeddings_scale
-        self.h = nn.ModuleList([
-            JAISBlock(config, linear_method)
-            for _ in range(config.num_hidden_layers)
-        ])
+        self.h = nn.ModuleList(
+            [JAISBlock(config, linear_method) for _ in range(config.num_hidden_layers)]
+        )
         self.ln_f = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_epsilon)
 
     def forward(
@@ -246,8 +259,9 @@ class JAISModel(nn.Module):
             hidden_states = inputs_embeds + position_embeds
         else:
             hidden_states = inputs_embeds
-        hidden_states *= torch.tensor(float(self.embeddings_scale),
-                                      dtype=hidden_states.dtype)
+        hidden_states *= torch.tensor(
+            float(self.embeddings_scale), dtype=hidden_states.dtype
+        )
 
         for i in range(len(self.h)):
             layer = self.h[i]
@@ -272,10 +286,10 @@ class JAISLMHeadModel(nn.Module):
         if hasattr(config, "width_scale"):
             self.output_logits_scale = config.width_scale
         else:
-            self.output_logits_scale = (config.mup_output_alpha *
-                                        config.mup_width_scale)
-        self.logits_processor = LogitsProcessor(vocab_size=config.vocab_size,
-                                                scale=self.output_logits_scale)
+            self.output_logits_scale = config.mup_output_alpha * config.mup_width_scale
+        self.logits_processor = LogitsProcessor(
+            vocab_size=config.vocab_size, scale=self.output_logits_scale
+        )
         self.sampler = Sampler()
 
     def forward(
@@ -285,14 +299,15 @@ class JAISLMHeadModel(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.transformer(input_ids, positions, kv_caches,
-                                         attn_metadata)
+        hidden_states = self.transformer(input_ids, positions, kv_caches, attn_metadata)
         return hidden_states
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
-        logits = self.logits_processor(self.lm_head_weight, hidden_states,
-                                       sampling_metadata)
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
+        logits = self.logits_processor(
+            self.lm_head_weight, hidden_states, sampling_metadata
+        )
         return logits
 
     def sample(
@@ -312,7 +327,8 @@ class JAISLMHeadModel(nn.Module):
     ):
         params_dict = dict(self.named_parameters(remove_duplicate=False))
         for name, loaded_weight in hf_model_weights_iterator(
-                model_name_or_path, cache_dir, load_format, revision):
+            model_name_or_path, cache_dir, load_format, revision
+        ):
             if "lm_head.weight" in name:
                 # GPT-2 ties the weights of the embedding layer and the final
                 # linear layer.
@@ -335,6 +351,5 @@ class JAISLMHeadModel(nn.Module):
                 if not name.endswith(".weight"):
                     continue
                 loaded_weight = loaded_weight.t()
-            weight_loader = getattr(param, "weight_loader",
-                                    default_weight_loader)
+            weight_loader = getattr(param, "weight_loader", default_weight_loader)
             weight_loader(param, loaded_weight)

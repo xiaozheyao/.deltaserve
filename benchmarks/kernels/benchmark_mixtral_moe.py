@@ -6,17 +6,32 @@ import torch
 import torch.nn.functional as F
 import triton
 
-from vllm.model_executor.layers.fused_moe import (fused_moe,
-                                                  get_config_file_name)
+from vllm.model_executor.layers.fused_moe import fused_moe, get_config_file_name
 
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 
 
 def main():
     method = fused_moe
     for bs in [
-            1, 2, 4, 8, 16, 24, 32, 48, 64, 96, 128, 256, 512, 1024, 1536,
-            2048, 3072, 4096
+        1,
+        2,
+        4,
+        8,
+        16,
+        24,
+        32,
+        48,
+        64,
+        96,
+        128,
+        256,
+        512,
+        1024,
+        1536,
+        2048,
+        3072,
+        4096,
     ]:
         run_grid(bs, method=method)
 
@@ -50,23 +65,25 @@ def run_grid(bs, method):
             for block_size_k in [64, 128, 256]:
                 for group_size_m in [1, 16, 32, 64]:
                     for num_warps in [4, 8]:
-                        configs.append({
-                            "BLOCK_SIZE_M": block_size_m,
-                            "BLOCK_SIZE_N": block_size_n,
-                            "BLOCK_SIZE_K": block_size_k,
-                            "GROUP_SIZE_M": group_size_m,
-                            "num_warps": num_warps,
-                            "num_stages": 4,
-                        })
+                        configs.append(
+                            {
+                                "BLOCK_SIZE_M": block_size_m,
+                                "BLOCK_SIZE_N": block_size_n,
+                                "BLOCK_SIZE_K": block_size_k,
+                                "GROUP_SIZE_M": group_size_m,
+                                "num_warps": num_warps,
+                                "num_stages": 4,
+                            }
+                        )
 
     best_config = None
     best_time_us = 1e20
 
     for config in configs:
-        print(f'{tp_size=} {bs=}')
-        print(f'{config}')
+        print(f"{tp_size=} {bs=}")
+        print(f"{config}")
         # warmup
-        print('warming up')
+        print("warming up")
         try:
             for _ in range(num_warmup_trials):
                 run_timing(
@@ -84,7 +101,7 @@ def run_grid(bs, method):
             continue
 
         # trial
-        print('benchmarking')
+        print("benchmarking")
         for _ in range(num_trials):
             kernel_dur_ms = run_timing(
                 num_calls=num_calls,
@@ -105,16 +122,19 @@ def run_grid(bs, method):
                 best_config = config
                 best_time_us = kernel_dur_us
 
-            print(f'{kernel_dur_us=:.1f} {model_dur_ms=:.1f}'
-                  f' {bs=} {tp_size=} {top_k=} {num_total_experts=} '
-                  f'{d_model=} {model_intermediate_size=} {num_layers=}')
+            print(
+                f"{kernel_dur_us=:.1f} {model_dur_ms=:.1f}"
+                f" {bs=} {tp_size=} {top_k=} {num_total_experts=} "
+                f"{d_model=} {model_intermediate_size=} {num_layers=}"
+            )
 
     print("best_time_us", best_time_us)
     print("best_config", best_config)
 
     # holds Dict[str, Dict[str, int]]
-    filename = get_config_file_name(num_total_experts,
-                                    model_intermediate_size // tp_size)
+    filename = get_config_file_name(
+        num_total_experts, model_intermediate_size // tp_size
+    )
     print(f"writing config to file {filename}")
     existing_content = {}
     if os.path.exists(filename):
@@ -126,9 +146,17 @@ def run_grid(bs, method):
         f.write("\n")
 
 
-def run_timing(num_calls: int, bs: int, d_model: int, num_total_experts: int,
-               top_k: int, tp_size: int, model_intermediate_size: int, method,
-               config) -> float:
+def run_timing(
+    num_calls: int,
+    bs: int,
+    d_model: int,
+    num_total_experts: int,
+    top_k: int,
+    tp_size: int,
+    model_intermediate_size: int,
+    method,
+    config,
+) -> float:
     shard_intermediate_size = model_intermediate_size // tp_size
 
     hidden_states = torch.rand(
@@ -149,12 +177,14 @@ def run_timing(num_calls: int, bs: int, d_model: int, num_total_experts: int,
         dtype=hidden_states.dtype,
     )
 
-    gating_output = F.softmax(torch.rand(
-        (num_calls, bs, num_total_experts),
-        device=hidden_states.device,
-        dtype=torch.float32,
-    ),
-                              dim=-1)
+    gating_output = F.softmax(
+        torch.rand(
+            (num_calls, bs, num_total_experts),
+            device=hidden_states.device,
+            dtype=torch.float32,
+        ),
+        dim=-1,
+    )
 
     start_event = torch.cuda.Event(enable_timing=True)
     end_event = torch.cuda.Event(enable_timing=True)
