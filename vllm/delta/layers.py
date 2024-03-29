@@ -431,8 +431,21 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 1,
                 self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 dtype=torch.int32,
-            )
-            * 3
+            ),
+            torch.zeros(
+                max_deltas,
+                1,
+                1,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
+                dtype=torch.int32,
+            ),
+            torch.zeros(
+                max_deltas,
+                1,
+                1,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
+                dtype=torch.int32,
+            ),
         )
         self.scales_stacked = (
             torch.zeros(
@@ -442,12 +455,37 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.base_layer.weight.shape[0],
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
+            ),
+            torch.zeros(
+                max_deltas,
+                1,
+                1,
+                self.base_layer.weight.shape[0],
+                dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device,
+            ),
+            torch.zeros(
+                max_deltas,
+                1,
+                1,
+                self.base_layer.weight.shape[0],
+                dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device,
             )
-            * 3
         )
-        self.g_idx = torch.tensor(
-            [i // TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
-            dtype=torch.int32,
+        self.g_idx = (
+            torch.tensor(
+                [i // TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
+                dtype=torch.int32,
+            ),
+            torch.tensor(
+                [i // TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
+                dtype=torch.int32,
+            ),
+            torch.tensor(
+                [i // TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
+                dtype=torch.int32,
+            )
         )
 
     def set_delta(
@@ -465,42 +503,47 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.qweight_stacked[0][
                     index, 0, : qweight[0].shape[0], : qweight[0].shape[1]
                 ].copy_(qweight[0], non_blocking=True)
+            
             if qweight[1] is not None:
                 self.qweight_stacked[1][
-                    index, 0, : qweight[1].shape[1], : qweight[1].shape[0]
-                ].copy_(qweight[1].T, non_blocking=True)
+                    index, 0, : qweight[1].shape[0], : qweight[1].shape[1]
+                ].copy_(qweight[1], non_blocking=True)
+            
             if qweight[2] is not None:
                 self.qweight_stacked[2][
-                    index, 0, : qweight[2].shape[1], : qweight[2].shape[0]
-                ].copy_(qweight[2].T, non_blocking=True)
+                    index, 0, : qweight[2].shape[0], : qweight[2].shape[1]
+                ].copy_(qweight[2], non_blocking=True)
 
             if qzeros[0] is not None:
                 self.qzeros_stacked[0][
-                    index, 0, : qzeros[0].shape[1], : qzeros[0].shape[0]
-                ].copy_(qzeros[0].T, non_blocking=True)
+                    index, 0, : qzeros[0].shape[0], : qzeros[0].shape[1]
+                ].copy_(qzeros[0], non_blocking=True)
             if qzeros[1] is not None:
                 self.qzeros_stacked[1][
-                    index, 0, : qzeros[1].shape[1], : qzeros[1].shape[0]
-                ].copy_(qzeros[1].T, non_blocking=True)
+                    index, 0, : qzeros[1].shape[0], : qzeros[1].shape[1]
+                ].copy_(qzeros[1], non_blocking=True)
             if qzeros[2] is not None:
                 self.qzeros_stacked[2][
-                    index, 0, : qzeros[2].shape[1], : qzeros[2].shape[0]
-                ].copy_(qzeros[2].T, non_blocking=True)
+                    index, 0, : qzeros[2].shape[0], : qzeros[2].shape[1]
+                ].copy_(qzeros[2], non_blocking=True)
             if scales[0] is not None:
                 self.scales_stacked[0][
-                    index, 0, : scales[0].shape[1], : scales[0].shape[0]
-                ].copy_(scales[0].T, non_blocking=True)
+                    index, 0, : scales[0].shape[0], : scales[0].shape[1]
+                ].copy_(scales[0], non_blocking=True)
             if scales[1] is not None:
                 self.scales_stacked[1][
-                    index, 0, : scales[1].shape[1], : scales[1].shape[0]
-                ].copy_(scales[1].T, non_blocking=True)
+                    index, 0, : scales[1].shape[0], : scales[1].shape[1]
+                ].copy_(scales[1], non_blocking=True)
             if scales[2] is not None:
                 self.scales_stacked[2][
-                    index, 0, : scales[2].shape[1], : scales[2].shape[0]
-                ].copy_(scales[2].T, non_blocking=True)
+                    index, 0, : scales[2].shape[0], : scales[2].shape[1]
+                ].copy_(scales[2], non_blocking=True)
             if g_idx[0] is not None:
-                self.g_idx = g_idx[0]
-
+                self.g_idx[0] = g_idx[0]
+            if g_idx[1] is not None:
+                self.g_idx[1] = g_idx[1]
+            if g_idx[2] is not None:
+                self.g_idx[2] = g_idx[2]
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:

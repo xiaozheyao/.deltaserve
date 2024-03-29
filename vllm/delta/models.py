@@ -285,9 +285,6 @@ class DeltaModelManager:
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:
-                print(
-                    f"{module_name}: {module_delta.qweight[0].shape if module_delta.is_packed else module_delta.qweight.shape}"
-                )
                 module.set_delta(
                     index,
                     module_delta.qweight,
