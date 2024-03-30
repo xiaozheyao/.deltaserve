@@ -465,12 +465,14 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.tp_size = get_tensor_model_parallel_world_size()
         tp_rank = get_tensor_model_parallel_rank()
         self.q_proj_shard_size = self.base_layer.num_heads * self.base_layer.head_size
+        
         self.kv_proj_shard_size = (
             self.base_layer.num_kv_heads * self.base_layer.head_size
         )
         self.q_shard_id = tp_rank
-        self.pack_factor = delta_config.pack_factor
         self.kv_shard_id = tp_rank // self.base_layer.num_kv_head_replicas
+        
+        self.pack_factor = delta_config.pack_factor
         # (without considering pack factor)
         # infeatures: self.base_layer.weight.shape[1]
         # outfeatures: q shards, kv shards, kv shards
@@ -580,7 +582,18 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.packed_indices: Optional[torch.Tensor] = None
         self.standard_indices: Optional[torch.Tensor] = None
         self.indices_len: Optional[List[int]] = None
-
+        
+    def reset_delta(self, index: int):
+        self.qweight_stacked[0][index] = 0
+        self.qweight_stacked[1][index] = 0
+        self.qweight_stacked[2][index] = 0
+        self.qzeros_stacked[0][index] = 0
+        self.qzeros_stacked[1][index] = 0
+        self.qzeros_stacked[2][index] = 0
+        self.scales_stacked[0][index] = 0
+        self.scales_stacked[1][index] = 0
+        self.scales_stacked[2][index] = 0
+        
     def set_delta(
         self,
         index: int,
@@ -589,9 +602,11 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         scales: List[torch.Tensor],
         g_idx: List[torch.Tensor],
     ):
-        logger.info(f"setting delta")
+        self.reset_delta(index)
         if self.tp_size > 1:
-            pass
+            logger.info(f"self.tp_rank: {self.q_shard_id}")
+            logger.info(f"base_layer.weight.shape: {self.base_layer.weight.shape}")
+            exit(0)
         else:
             if qweight[0] is not None:
                 self.qweight_stacked[0][

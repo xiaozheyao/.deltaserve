@@ -155,10 +155,6 @@ class DeltaModel:
         torch.nn.init.normal_ = skip
         transformers.modeling_utils._init_weights = False
 
-        lossless_compressor = LosslessCompressor(compress_config.lossless, device_id=0)
-        metadata = None
-        tensors = {}
-        # TODO(xiaozhe): this should be specified by each model
         ignore_modules = [
             "lm_head",
             "model.embed_tokens",
@@ -166,24 +162,37 @@ class DeltaModel:
             "input_layernorm",
             "post_attention_layernorm",
         ]
-        with safe_open(os.path.join(path_or_name, model_tensor_filename), "numpy") as f:
-            metadata = f.metadata()
-            keys = f.keys()
-            for key in keys:
-                tensors[key] = f.get_tensor(key)
-        tensor_dtypes = json.loads(metadata["dtype"])
-        tensor_shapes = json.loads(metadata["shape"])
+        tensors = {}
+        if compress_config.lossless != "none":
+            lossless_compressor = LosslessCompressor(compress_config.lossless, device_id=0)
+            metadata = None
+            # TODO(xiaozhe): this should be specified by each model
+            with safe_open(os.path.join(path_or_name, model_tensor_filename), "numpy") as f:
+                metadata = f.metadata()
+                keys = f.keys()
+                for key in keys:
+                    tensors[key] = f.get_tensor(key)
+            tensor_dtypes = json.loads(metadata["dtype"])
+            tensor_shapes = json.loads(metadata["shape"])
 
-        with cp.cuda.Device(0):
-            for key in tensors.keys():
-                tensors[key] = cp.array(tensors[key], copy=False)
-        tensors = lossless_compressor.decompress_state_dict(
-            tensors,
-            tensor_shapes,
-            tensor_dtypes,
-            use_bfloat16=False,
-            target_device="cuda:0",
-        )
+            with cp.cuda.Device(0):
+                for key in tensors.keys():
+                    tensors[key] = cp.array(tensors[key], copy=False)
+            tensors = lossless_compressor.decompress_state_dict(
+                tensors,
+                tensor_shapes,
+                tensor_dtypes,
+                use_bfloat16=False,
+                target_device="cuda:0",
+            )
+            del tensor_dtypes, tensor_shapes
+            del lossless_compressor
+        else:
+            logger.info("Lossless Compression Disabled")
+            with safe_open(os.path.join(path_or_name, model_tensor_filename), "torch") as f:
+                keys = f.keys()
+                for key in keys:
+                    tensors[key] = f.get_tensor(key)
         modules = {}
         module_names = set(
             [
@@ -201,8 +210,7 @@ class DeltaModel:
                 g_idx=tensors[module + ".g_idx"],
                 compress_config=compress_config,
             )
-        del tensor_dtypes, tensor_shapes, tensors
-        del lossless_compressor
+        del tensors
         return cls(id, modules)
 
 

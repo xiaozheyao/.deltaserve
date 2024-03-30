@@ -839,7 +839,6 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
         logger.info(f"self.lora_a_stacked[0].shape: {self.lora_a_stacked[0].shape}")
         # (1,1, 64, 2048)
         logger.info(f"self.lora_b_stacked[0].shape: {self.lora_b_stacked[0].shape}")
-        exit()
         _apply_lora_packed_nslice(
             x,
             self.lora_a_stacked,
