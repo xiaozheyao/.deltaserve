@@ -347,7 +347,6 @@ class ColumnParallelLinearWithLoRA(BaseLayerWithLoRA):
         lora_config: LoRAConfig,
         model_config: Optional[PretrainedConfig] = None,
     ) -> None:
-
         self.lora_a_stacked = torch.zeros(
             max_loras,
             1,
@@ -538,8 +537,6 @@ class MergedColumnParallelLinearWithLoRA(ColumnParallelLinearWithLoRA):
             lora_b = lora_b[0][:, start_idx:end_idx], lora_b[1][:, start_idx:end_idx]
 
         if lora_a[0] is not None:
-            print(f"lora_a[0].shape: {lora_a[0].shape}")
-            print(f"self.lora_a_stacked[0].shape: {self.lora_a_stacked[0].shape}")
             self.lora_a_stacked[0][
                 index, 0, : lora_a[0].shape[1], : lora_a[0].shape[0]
             ].copy_(lora_a[0].T, non_blocking=True)
@@ -806,7 +803,6 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
                     index, 0, : lora_b_v.shape[1], : lora_b_v.shape[0]
                 ].copy_(lora_b_v.T, non_blocking=True)
         else:
-
             if lora_b[0] is not None:
                 self.lora_b_stacked[0][
                     index, 0, : lora_b[0].shape[1], : lora_b[0].shape[0]
@@ -839,6 +835,8 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
+        # (2, 2560)
+        logger.info(f"output shape: {output.shape}")
         _apply_lora_packed_nslice(
             x,
             self.lora_a_stacked,

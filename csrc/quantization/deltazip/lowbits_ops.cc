@@ -7,14 +7,12 @@
 #include <cstdio>
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
-
 #include "exllama/config.h"
 
 #include "exllama/cuda/q_matrix.cuh"
 #include "exllama/cuda/q_gemm.cuh"
 
 #include "exllama/cpp/util.h"
-
 // Some decluttering macros
 #define TORCH_CHECK_DTYPE(__x, __dtype) TORCH_CHECK((__x).dtype() == torch::__dtype, #__x " is incorrect datatype, must be " #__dtype)
 #define TORCH_CHECK_DTYPE_OPT(__x, __dtype) TORCH_CHECK((__x).device().is_meta() || (__x).dtype() == torch::__dtype, #__x " is incorrect datatype, must be " #__dtype)

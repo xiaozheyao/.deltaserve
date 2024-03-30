@@ -9,7 +9,7 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-from .layers import BaseLayerWithDelta, from_layer, from_layer_sampler, DeltaMapping
+from .layers import BaseLayerWithDelta, from_layer, from_layer_logits_processor, DeltaMapping
 from .utils import replace_submodule
 from .compressor import LosslessCompressor
 
@@ -378,12 +378,17 @@ class DeltaModelManager:
         for module_name, module in self.model.named_modules():
             if not self._match_target_modules(module_name):
                 continue
-
+            parts = module_name.split(".")[-1]
+            packed_moduled_list = self.packed_modules_mapping.get(parts, [])
             new_module = replace_submodule(
                 self.model,
                 module_name,
                 from_layer(
-                    module, self.delta_slots, self.delta_config, self.model.config
+                    module, 
+                    self.delta_slots, 
+                    self.delta_config,
+                    packed_moduled_list,
+                    self.model.config
                 ),
             )
             # (yard1): TODO make this more robust
@@ -392,7 +397,7 @@ class DeltaModelManager:
                 new_module = replace_submodule(
                     self.model,
                     "sampler",
-                    from_layer_sampler(
+                    from_layer_logits_processor(
                         sampler_module,
                         module,
                         self.delta_slots,

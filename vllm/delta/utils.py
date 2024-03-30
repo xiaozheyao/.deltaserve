@@ -48,6 +48,7 @@ def ext_make_q_matrix(w: dict, temp_dq, key: str = None):
         w["q_scale_max"] /= 256
         w["q_perm"] = w["q_perm"].short()
         w["q_invperm"] = w["q_invperm"].short()
+        
         return make_q_matrix(
             w["q_weight"],
             w["q_perm"],
@@ -64,7 +65,6 @@ def ext_make_q_matrix(w: dict, temp_dq, key: str = None):
     elif "qweight" in w:
         if w["scales"].dtype == torch.float:
             w["scales"] = w["scales"].half()
-
         # GPTQ with g_idx (act_order)
         if "g_idx" in w and not (w["g_idx"] == 0).all().item():
             w["q_perm"] = torch.empty(

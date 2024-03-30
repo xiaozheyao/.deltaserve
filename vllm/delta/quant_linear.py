@@ -28,35 +28,18 @@ class QuantLinear(nn.Module):
         self.bits = bits
         self.group_size = infeatures
         self.maxq = 2**self.bits - 1
-
-        self.register_buffer(
-            "qweight",
-            torch.zeros((infeatures // 32 * self.bits, outfeatures), dtype=torch.int32),
-        )
-        self.register_buffer(
-            "qzeros", torch.zeros((1, outfeatures // 32 * self.bits), dtype=torch.int32)
-        )
-        self.register_buffer(
-            "scales", torch.zeros((1, outfeatures), dtype=torch.float16)
-        )
-        self.register_buffer(
-            "g_idx",
-            torch.tensor(
-                [i // infeatures for i in range(infeatures)], dtype=torch.int32
-            ),
-        )
-        if bias:
-            self.register_buffer(
-                "bias", torch.zeros((outfeatures), dtype=torch.float16)
-            )
-        else:
-            self.bias = None
+        
+        self.qweight = None
+        self.qzeros = None
+        self.scales = None
+        self.g_idx = None
+        
         if self.bits == 4:
             self.padding = -outfeatures % 32
 
     def post_init(self, temp_dq):
         if self.bits == 4:
-            assert self.qweight.device.type == "cuda"
+            assert self.qweight.device.type == "cuda", f"qweight must be on cuda devices, Found {self.qweight.device.type}"
             assert self.qweight.device.index is not None
             self.q_tensors = {
                 "qweight": self.qweight,
@@ -91,8 +74,6 @@ class QuantLinear(nn.Module):
     def from_tensors(cls, qweight, qzeros, scales, g_idx, bias):
         # TODO(xiaozhe): debug only, fix later
         bits = 4
-        # qweight.shape[0] = infeatures // 32 * bits
-        # infeatures = qweight.shape[0] * 32 // bits
         infeatures = qweight.shape[0] * 32 // bits
         outfeatures = qweight.shape[1]
         obj = cls(bits, infeatures, outfeatures, bias)

@@ -67,7 +67,7 @@ class CompressionConfig(PushToHubMixin):
 @dataclass
 class DeltaConfig:
     max_deltas: int = 1
-    max_bitwidth: int = 2
+    max_bitwidth: int = 4
     delta_dtype: Optional[torch.dtype] = torch.int32
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0

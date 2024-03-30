@@ -3,7 +3,7 @@ import torch
 import torch.nn as nn
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
-from typing import Tuple, Optional, List, Any
+from typing import Tuple, Optional, List, Any, Set, Type
 from transformers.configuration_utils import PretrainedConfig
 from vllm.model_executor.layers.sampler import Sampler
 from vllm.model_executor.layers.linear import (
@@ -16,6 +16,7 @@ from vllm.model_executor.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding,
     ParallelLMHead,
 )
+from vllm.model_executor.layers.logits_processor import LogitsProcessor
 from vllm.model_executor.parallel_utils.communication_op import (
     tensor_model_parallel_all_gather,
     tensor_model_parallel_all_reduce,
@@ -28,7 +29,8 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-
+from .deltazip import add_delta_slice
+import inspect
 logger = init_logger(__name__)
 
 TEST_BITS = 2
@@ -38,29 +40,34 @@ if TYPE_CHECKING:
     pass
 
 
-def _apply_delta(
-    x: torch.Tensor, quant_linears: List[QuantLinear], base_output: torch.Tensor
+def _apply_delta_packed_nslice(
+    x: torch.Tensor,
+    qweight_stacked: Tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+    qzeros_stacked: Tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+    scales_stacked: Tuple[torch.Tensor, torch.Tensor, torch.Tensor],
+    g_idx_stacked: List[torch.Tensor],
+    indices: torch.Tensor,
+    output: torch.Tensor,
+    output_slices: Tuple[int, ...]
 ):
-    """Applies multiple delta to the input tensor"""
-    # todo(xiaozhe): checkout when quant_linear
-    # and x are on different devices
+    org_output = output
     x = x.view(-1, x.shape[-1])
-    base_output = base_output.view(-1, base_output.shape[-1])
-    outputs = []
-    for ql in quant_linears:
-        if ql:
-            # for qkv packed proj, ql is a list of 3 QuantLinear
-            # we need to merge them in this case
-            if isinstance(ql, list):
-                outputs.append(torch.cat([ql[i](x) for i in range(3)], dim=-1))
-            else:
-                outputs.append(ql(x))
-        else:
-            # todo(xiaozhe): This is a hack to make sure the profile runs smoothly, later we should remove this
-            # and update the profile to handle this case
-            outputs.append(torch.zeros_like(base_output))
-    output = torch.stack(outputs, dim=0)
-    return (output + base_output).view_as(base_output)
+    output = output.view(-1, output.shape[-1])
+    indices = indices.view(-1)
+    offset_left = 0
+    for slice_idx in range(len(output_slices)):
+        add_delta_slice(
+            output, x,
+            qweight_stacked[slice_idx],
+            qzeros_stacked[slice_idx],
+            scales_stacked[slice_idx],
+            g_idx_stacked[slice_idx],
+            indices,
+            1.0,
+            offset_left,
+            output_slices[slice_idx])
+        offset_left += output_slices[slice_idx]
+    return output.view_as(org_output)
 
 
 @dataclass
@@ -147,6 +154,16 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.base_layer(x)
 
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        delta_config: DeltaConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is VocabParallelEmbedding
+
 
 class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
 
@@ -191,11 +208,12 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
             1,
             scale_and_zero_size,
             self.output_size_per_partition,
-            dtype=delta_config.delta_dtype,
+            dtype=torch.float16,
             device=self.base_layer.weight.device,
         )
         self.g_idx = torch.tensor(
-            [i // self.quant_config.group_size for i in range(self.input_size)],
+            [i //
+                self.quant_config.group_size for i in range(self.input_size)],
             dtype=torch.int32,
         )
 
@@ -260,6 +278,19 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     def linear_weights(self):
         return self.base_layer.linear_weights
 
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        delta_config: DeltaConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is ColumnParallelLinear or (
+            type(source_layer) is MergedColumnParallelLinear
+            and len(packed_modules_list) == 1
+        )
+
 
 class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     """ColumnParallelLinear layer that is composed of 2 sublayers (slices)
@@ -274,7 +305,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         super().__init__(base_layer)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # print(f"MergedColumnParallelLinearWithDelta")
         return self.base_layer(x)
 
     def reset_delta(self, index: int):
@@ -377,6 +407,16 @@ class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         output = _apply_delta(x, self.qls, output)
         return output
 
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        delta_config: DeltaConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is QKVParallelLinear and len(packed_modules_list) == 1
+
 
 class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
@@ -452,41 +492,52 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 max_deltas,
                 1,
                 1,
-                self.base_layer.weight.shape[0],
-                dtype=delta_config.delta_dtype,
+                self.base_layer.weight.shape[1],
+                dtype=torch.float16,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
                 1,
                 1,
-                self.base_layer.weight.shape[0],
-                dtype=delta_config.delta_dtype,
+                self.base_layer.weight.shape[1],
+                dtype=torch.float16,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
                 1,
                 1,
-                self.base_layer.weight.shape[0],
-                dtype=delta_config.delta_dtype,
+                self.base_layer.weight.shape[1],
+                dtype=torch.float16,
                 device=self.base_layer.weight.device,
             )
         )
-        self.g_idx = (
+        self.g_idx_stacked = [
             torch.tensor(
-                [i // TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
+                [i //
+                    TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
                 dtype=torch.int32,
             ),
             torch.tensor(
-                [i // TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
+                [i //
+                    TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
                 dtype=torch.int32,
             ),
             torch.tensor(
-                [i // TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
+                [i //
+                    TEST_GROUPSIZE for i in range(self.base_layer.weight.shape[1])],
                 dtype=torch.int32,
             )
+        ]
+        self.output_slices = (
+            self.q_proj_shard_size,
+            self.kv_proj_shard_size,
+            self.kv_proj_shard_size,
         )
+        self.packed_indices: Optional[torch.Tensor] = None
+        self.standard_indices: Optional[torch.Tensor] = None
+        self.indices_len: Optional[List[int]] = None
 
     def set_delta(
         self,
@@ -503,12 +554,12 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.qweight_stacked[0][
                     index, 0, : qweight[0].shape[0], : qweight[0].shape[1]
                 ].copy_(qweight[0], non_blocking=True)
-            
+
             if qweight[1] is not None:
                 self.qweight_stacked[1][
                     index, 0, : qweight[1].shape[0], : qweight[1].shape[1]
                 ].copy_(qweight[1], non_blocking=True)
-            
+
             if qweight[2] is not None:
                 self.qweight_stacked[2][
                     index, 0, : qweight[2].shape[0], : qweight[2].shape[1]
@@ -526,6 +577,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.qzeros_stacked[2][
                     index, 0, : qzeros[2].shape[0], : qzeros[2].shape[1]
                 ].copy_(qzeros[2], non_blocking=True)
+
             if scales[0] is not None:
                 self.scales_stacked[0][
                     index, 0, : scales[0].shape[0], : scales[0].shape[1]
@@ -538,20 +590,44 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.scales_stacked[2][
                     index, 0, : scales[2].shape[0], : scales[2].shape[1]
                 ].copy_(scales[2], non_blocking=True)
+
             if g_idx[0] is not None:
-                self.g_idx[0] = g_idx[0]
+                self.g_idx_stacked[0] = g_idx[0]
             if g_idx[1] is not None:
-                self.g_idx[1] = g_idx[1]
+                self.g_idx_stacked[1] = g_idx[1]
             if g_idx[2] is not None:
-                self.g_idx[2] = g_idx[2]
+                self.g_idx_stacked[2] = g_idx[2]
+
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        # output = _apply_delta(x, , output)
+        logger.info(f"output shape: {output.shape}")
+        # TODO(xiaozhe): fix the bug
+        # self.indices = torch.zeros_like(self.indices)
+        _apply_delta_packed_nslice(
+            x,
+            self.qweight_stacked,
+            self.qzeros_stacked,
+            self.scales_stacked,
+            self.g_idx_stacked,
+            self.indices[: self.indices_len[0]],
+            output,
+            self.output_slices,
+        )
         return output
+
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        delta_config: DeltaConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is QKVParallelLinear and len(packed_modules_list) == 3
 
 
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
@@ -589,7 +665,8 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x
         )
-        output = _apply_delta(x, self.qls, output)
+        # TODO(xiaozhe): apply delta here
+        # output = _apply_delta(x, self.qls, output)
         return output
 
     def forward(self, input_):
@@ -610,12 +687,21 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     def weight(self):
         return self.base_layer.weight
 
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        delta_config: DeltaConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is RowParallelLinear
 
-class SamplerWithDelta(BaseLayerWithDelta):
+class LogitsProcessorWithDelta(BaseLayerWithDelta):
 
     def __init__(
         self,
-        base_layer: Sampler,
+        base_layer: LogitsProcessor,
         hidden_size: int,
         dtype: torch.dtype,
         device: torch.device,
@@ -627,12 +713,16 @@ class SamplerWithDelta(BaseLayerWithDelta):
         self.device = device
 
     @property
-    def logits_as_hidden_states(self):
-        return self.base_layer.logits_as_hidden_states
+    def logits_as_input(self):
+        return self.base_layer.logits_as_input
 
     @property
     def vocab_size(self):
         return self.base_layer.vocab_size
+
+    @property
+    def scale(self):
+        return self.base_layer.scale
 
     @property
     def org_vocab_size(self):
@@ -648,7 +738,14 @@ class SamplerWithDelta(BaseLayerWithDelta):
         delta_config: DeltaConfig,
         model_config: Optional[PretrainedConfig] = None,
     ) -> None:
-        self.qls = [None] * max_deltas
+        # Keep this in sync with csrc/punica/bgmv/bgmv_config.h
+        pass
+        self.indices = None
+        self.indices_padded = None
+        self.indices_len = None
+
+    def reset_delta(self, index: int):
+        pass
 
     def set_delta(
         self,
@@ -657,23 +754,29 @@ class SamplerWithDelta(BaseLayerWithDelta):
         qzeros: torch.Tensor,
         scales: torch.Tensor,
         g_idx: torch.Tensor,
+        embeddings_tensor: Optional[torch.Tensor],
     ):
-        self.qls[index] = QuantLinear.from_tensors(
-            qweight,
-            qzeros,
-            scales,
-            g_idx,
-            bias=None,
-        )
+        pass
+
+    def set_mapping(
+        self,
+        base_indices: torch.Tensor,
+        sampler_indices: torch.Tensor,
+        sampler_indices_padded: torch.Tensor,
+        embeddings_indices: torch.Tensor,
+        indices_len: List[int],
+    ):
+        self.indices = sampler_indices
+        self.indices_padded = sampler_indices_padded
+        self.indices_len = indices_len
 
     def _get_logits(
         self,
         hidden_states: torch.Tensor,
         embedding: torch.Tensor,
         embedding_bias: Optional[torch.Tensor] = None,
-    ) -> torch.Tensor:
+    ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
-        # for simplicity, we don't consider the delta here yet
         logits = torch.matmul(hidden_states, embedding.t())
         if embedding_bias is not None:
             logits += embedding_bias
@@ -681,44 +784,55 @@ class SamplerWithDelta(BaseLayerWithDelta):
         if logits is None:
             return None
 
-        # Remove paddings in vocab (if any).
-        logits = logits[:, : self.base_layer.vocab_size]
         return logits
 
     def forward(self, *args, **kwargs):
         return type(self.base_layer).forward(self, *args, **kwargs)
 
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        delta_config: DeltaConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        # Special handling for the LogitsProcessor.
+        return False
+
+_all_delta_classes: Set[Type[BaseLayerWithDelta]] = {
+    cls
+    for cls in globals().values()
+    if inspect.isclass(cls)
+    and issubclass(cls, BaseLayerWithDelta)
+    and cls is not BaseLayerWithDelta
+}
 
 def from_layer(
     layer: nn.Module,
     max_deltas: int,
     delta_config: DeltaConfig,
+    packed_modules_list: List,
     model_config: Optional[PretrainedConfig] = None,
-) -> BaseLayerWithDelta:
-    supported_layer_types = {
-        VocabParallelEmbedding: VocabParallelEmbeddingWithDelta,
-        ColumnParallelLinear: ColumnParallelLinearWithDelta,
-        QKVParallelLinear: MergedQKVParallelLinearWithDelta,
-        MergedColumnParallelLinear: MergedColumnParallelLinearWithDelta,
-        RowParallelLinear: RowParallelLinearWithDelta,
-    }
-    for src_layer_type, delta_layer_type in supported_layer_types.items():
-        if type(layer) is src_layer_type:  # pylint: disable=unidiomatic-typecheck
-            ret = delta_layer_type(layer)
+) -> nn.Module:
+    for delta_cls in _all_delta_classes:
+        if delta_cls.can_replace_layer(
+            layer, delta_config, packed_modules_list, model_config
+        ):
+            ret = delta_cls(layer)
             ret.create_delta_weights(max_deltas, delta_config, model_config)
             return ret
     return layer
 
-
-def from_layer_sampler(
-    layer: Sampler,
+def from_layer_logits_processor(
+    layer: LogitsProcessor,
     lm_head: ParallelLMHead,
-    max_loras: int,
-    lora_config: DeltaConfig,
+    max_deltas: int,
+    delta_config: DeltaConfig,
     model_config: Optional[PretrainedConfig] = None,
-) -> SamplerWithDelta:
-    ret = SamplerWithDelta(
+) -> LogitsProcessorWithDelta:
+    ret = LogitsProcessorWithDelta(
         layer, lm_head.embedding_dim, lm_head.weight.dtype, lm_head.weight.device
     )
-    # ret.create_lora_weights(max_loras, lora_config, model_config)
+    ret.create_lora_weights(max_deltas, delta_config, model_config)
     return ret
