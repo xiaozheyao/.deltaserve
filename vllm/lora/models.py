@@ -349,11 +349,7 @@ class LoRAModelManager:
         for module_name, module in self.modules.items():
             module_lora = lora_model.get_lora(module_name)
             if module_lora:
-
                 module_lora.optimize()
-                logger.info(
-                    f"{module_name} has lora packed? {module_lora.is_packed} after optimize?"
-                )
                 module.set_lora(
                     index,
                     module_lora.lora_a,

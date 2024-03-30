@@ -140,7 +140,6 @@ def add_lora_slice(
         import vllm._punica_C as punica_kernels
     except ImportError as e:
         _raise_import_error(e)
-
     r = wb_t_all.size(-1)
     if buffer is None:
         # We set the buffer to be float32 by default to avoid

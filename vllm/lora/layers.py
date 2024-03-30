@@ -101,6 +101,7 @@ def _apply_lora_packed_nslice(
     org_output = output
     x = x.view(-1, x.shape[-1])
     output = output.view(-1, output.shape[-1])
+    logger.info(f"output shape {output.shape}")
     indices = indices.view(-1)
     offset_left = 0
     for slice_idx in range(len(output_slices)):
@@ -767,10 +768,7 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
         lora_b: List[torch.Tensor],
         embeddings_tensor: Optional[torch.Tensor],
     ):
-        logger.info(f"setting qkv lora weights")
-        logger.info(f"type of lora_a: {type(lora_a)}")
         self.reset_lora(index)
-
         if self.tp_size > 1:
             if lora_b[0] is not None:
                 lora_b_q = lora_b[0][
@@ -835,8 +833,13 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        # (2, 2560)
-        logger.info(f"output shape: {output.shape}")
+        logger.info(f"input shape {x.shape}")
+        # (2048, 2560)
+        logger.info(f"output.shape: {output.shape}")
+        logger.info(f"self.lora_a_stacked[0].shape: {self.lora_a_stacked[0].shape}")
+        # (1,1, 64, 2048)
+        logger.info(f"self.lora_b_stacked[0].shape: {self.lora_b_stacked[0].shape}")
+        exit()
         _apply_lora_packed_nslice(
             x,
             self.lora_a_stacked,

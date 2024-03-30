@@ -97,4 +97,4 @@ def add_delta_slice(
     """
     ql = QuantLinear.from_tensors(qweight[0][0], qzeros[0][0], scales[0][0], g_idx, bias=None)
     output = ql(x)
-    y += output
+    y[:,y_offset:y_offset+y_slice_size] += output
