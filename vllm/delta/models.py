@@ -9,7 +9,12 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-from .layers import BaseLayerWithDelta, from_layer, from_layer_logits_processor, DeltaMapping
+from .layers import (
+    BaseLayerWithDelta,
+    from_layer,
+    from_layer_logits_processor,
+    DeltaMapping,
+)
 from .utils import replace_submodule
 from .compressor import LosslessCompressor
 
@@ -384,11 +389,11 @@ class DeltaModelManager:
                 self.model,
                 module_name,
                 from_layer(
-                    module, 
-                    self.delta_slots, 
+                    module,
+                    self.delta_slots,
                     self.delta_config,
                     packed_moduled_list,
-                    self.model.config
+                    self.model.config,
                 ),
             )
             # (yard1): TODO make this more robust

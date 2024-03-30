@@ -48,7 +48,7 @@ def ext_make_q_matrix(w: dict, temp_dq, key: str = None):
         w["q_scale_max"] /= 256
         w["q_perm"] = w["q_perm"].short()
         w["q_invperm"] = w["q_invperm"].short()
-        
+
         return make_q_matrix(
             w["q_weight"],
             w["q_perm"],

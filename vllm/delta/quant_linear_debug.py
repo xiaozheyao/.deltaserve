@@ -29,10 +29,8 @@ class QuantLinear(nn.Module):
         self.bias = bias
         if self.bits == 4:
             self.padding = -outfeatures % 32
-        self.wf = torch.tensor(
-                list(range(0, 32, bits)), dtype=torch.int32
-        ).unsqueeze(0)
-        
+        self.wf = torch.tensor(list(range(0, 32, bits)), dtype=torch.int32).unsqueeze(0)
+
     def forward(self, x):
         out_shape = x.shape[:-1] + (self.outfeatures,)
         x = x.reshape(-1, x.shape[-1])
@@ -55,10 +53,10 @@ class QuantLinear(nn.Module):
                 self.wf.unsqueeze(-1),
             ).to(torch.int16 if self.bits == 8 else torch.int8)
             torch.bitwise_and(weight, (2**self.bits) - 1, out=weight)
-        
+
         elif self.bits == 3:
             raise NotImplementedError("3 bits are not supported.")
-        
+
         weight = weight.reshape(weight.shape[0] * weight.shape[1], weight.shape[2])
         num_itr = self.g_idx.shape[0] // x.shape[-1]
         if num_itr == 1:

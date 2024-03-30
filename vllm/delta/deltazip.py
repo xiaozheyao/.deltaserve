@@ -74,11 +74,12 @@ from .quant_linear_debug import QuantLinear
 #         y_offset,
 #     )
 
+
 def add_delta_slice(
     y: torch.Tensor,
     x: torch.Tensor,
     qweight: torch.Tensor,
-    qzeros:torch.Tensor,
+    qzeros: torch.Tensor,
     scales: torch.Tensor,
     g_idx: torch.Tensor,
     indices: torch.LongTensor,
@@ -95,6 +96,8 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    ql = QuantLinear.from_tensors(qweight[0][0], qzeros[0][0], scales[0][0], g_idx, bias=None)
+    ql = QuantLinear.from_tensors(
+        qweight[0][0], qzeros[0][0], scales[0][0], g_idx, bias=None
+    )
     output = ql(x)
-    y[:,y_offset:y_offset+y_slice_size] += output
+    y[:, y_offset : y_offset + y_slice_size] += output

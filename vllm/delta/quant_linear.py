@@ -28,18 +28,20 @@ class QuantLinear(nn.Module):
         self.bits = bits
         self.group_size = infeatures
         self.maxq = 2**self.bits - 1
-        
+
         self.qweight = None
         self.qzeros = None
         self.scales = None
         self.g_idx = None
-        
+
         if self.bits == 4:
             self.padding = -outfeatures % 32
 
     def post_init(self, temp_dq):
         if self.bits == 4:
-            assert self.qweight.device.type == "cuda", f"qweight must be on cuda devices, Found {self.qweight.device.type}"
+            assert (
+                self.qweight.device.type == "cuda"
+            ), f"qweight must be on cuda devices, Found {self.qweight.device.type}"
             assert self.qweight.device.index is not None
             self.q_tensors = {
                 "qweight": self.qweight,
