@@ -22,6 +22,8 @@ from vllm.model_executor.parallel_utils.communication_op import (
     tensor_model_parallel_all_reduce,
     tensor_model_parallel_gather,
 )
+from vllm.model_executor.parallel_utils.utils import split_tensor_along_last_dim
+
 from .quant_linear import QuantLinear
 from .config import DeltaConfig
 from vllm.logger import init_logger
@@ -219,7 +221,10 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.tp_size = get_tensor_model_parallel_world_size()
 
     def reset_delta(self, index: int):
-        pass
+        self.qweight_stacked[index] = 0
+        self.qzeros_stacked[index] = 0
+        self.scales_stacked[index] = 0
+        
 
     def create_delta_weights(
         self,
@@ -228,11 +233,35 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         delta_config: DeltaConfig,
         model_config: Optional[PretrainedConfig] = None,
     ) -> None:
-        pass
-        # (without considering pack factor)
-        # infeatures: self.base_layer.weight.shape[1]
-        # outfeatures: q shards, kv shards, kv shards
-
+        self.qweight_stacked = torch.zeros(
+            max_deltas,
+            1,
+            self.base_layer.weight.shape[1] // delta_config.pack_factor,
+            self.base_layer.weight.shape[0],
+            dtype=delta_config.delta_dtype,
+            device=self.base_layer.weight.device,
+        )
+        self.qzero_stacked = torch.zeros(
+            max_deltas,
+            1,
+            1,
+            self.base_layer.weight.shape[0] // delta_config.pack_factor,
+            dtype=torch.int32,
+        )
+        self.scales_stacked = torch.zeros(
+            max_deltas,
+            1,
+            1,
+            self.base_layer.weight.shape[0],
+            dtype=torch.float16,
+            device=self.base_layer.weight.device,
+        )
+        self.g_idx_stacked = torch.tensor([i // self.base_layer.weight.shape[1] for i in range(self.base_layer.weight.shape[1])], dtype=torch.int32)
+        
+        self.indices: Optional[torch.Tensor] = None
+        self.indices_len: Optional[List[int]] = None
+        self.output_dim = self.base_layer.weight.shape[0]
+        
     def set_delta(
         self,
         index: int,
@@ -242,7 +271,12 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         g_idx: torch.Tensor,
     ):
         self.reset_delta(index)
-        pass
+        if self.tp_size > 1:
+            pass
+        self.qweight_stacked[index, 0, :, :].copy_(qweight, non_blocking=True)
+        self.qzero_stacked[index, 0, :, :].copy_(qzeros, non_blocking=True)
+        self.scales_stacked[index, 0, :, :].copy_(scales, non_blocking=True)
+        self.g_idx_stacked = g_idx
 
     def set_mapping(
         self,
@@ -261,6 +295,15 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         # (note): this is not actually used.
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
+        )
+        _apply_delta(
+            x,
+            self.qweight_stacked,
+            self.qzero_stacked,
+            self.scales_stacked,
+            self.g_idx_stacked,
+            self.indices[: self.indices_len[0]],
+            output,
         )
         return output
 
@@ -930,7 +973,19 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         return output
 
     def forward(self, input_):
-        output_ = self.apply_weights(input_)
+        if self.base_layer.input_is_parallel:
+            input_parallel = input_
+        else:
+            tp_rank = get_tensor_model_parallel_rank()
+            splitted_input = split_tensor_along_last_dim(
+                input_, num_partitions=self.base_layer.tp_size
+            )
+            input_parallel = splitted_input[tp_rank].contiguous()
+        output_parallel = self.apply_weights(input_parallel)
+        if self.base_layer.reduce_results and self.base_layer.tp_size > 1:
+            output_ = tensor_model_parallel_all_reduce(output_parallel)
+        else:
+            output_ = output_parallel
         if not self.base_layer.skip_bias_add:
             output = (
                 output_ + self.base_layer.bias
@@ -942,7 +997,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             output = output_
             output_bias = self.base_layer.bias
         return output, output_bias
-
+    
     @property
     def weight(self):
         return self.base_layer.weight
