@@ -413,18 +413,23 @@ class DeltaModelManager:
             )
             # (yard1): TODO make this more robust
             if "lm_head" in module_name:
-                sampler_module = self.model.get_submodule("sampler")
+                logits_processor_module = self.model.get_submodule("logits_processor")
+                
+                print(f"logits_processor_module: {logits_processor_module}")
                 new_module = replace_submodule(
                     self.model,
-                    "sampler",
+                    "logits_processor",
                     from_layer_logits_processor(
-                        sampler_module,
+                        logits_processor_module,
                         module,
                         self.delta_slots,
                         self.delta_config,
                         self.model.config,
                     ),
                 )
+            if "embed_tokens" in module_name:
+                embed_token_module = self.model.get_submodule(module_name)
+                print(f"embed_token_module: {embed_token_module}")
             self.register_module(module_name, new_module)
             self._register_packed_modules(module_name)
             new_module.set_mapping(

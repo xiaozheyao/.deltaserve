@@ -49,6 +49,7 @@ def _apply_delta(
     g_idx_stacked: torch.Tensor,
     indices: torch.Tensor,
     output: torch.Tensor,
+    debug: bool = False
 ):
     org_output = output
     x = x.view(-1, x.shape[-1])
@@ -63,6 +64,7 @@ def _apply_delta(
         g_idx_stacked,
         indices,
         1.0,
+        debug,
     )
     return output.view_as(org_output)
 
@@ -296,7 +298,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        _apply_delta(
+        output = _apply_delta(
             x,
             self.qweight_stacked,
             self.qzero_stacked,
@@ -434,7 +436,19 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     ):
         self.reset_delta(index)
         if self.tp_size > 1:
-            pass
+            tp_rank = get_tensor_model_parallel_rank()
+            shard_size = self.output_dim
+            start_idx = tp_rank * shard_size
+            end_idx = (tp_rank + 1) * shard_size
+            if qweight[0] is not None:
+                qweight[0] = qweight[0][:, start_idx:end_idx]
+                qzeros[0] = qzeros[0][:, start_idx:end_idx]
+                scales[0] = scales[0][:, start_idx:end_idx]
+            if qweight[1] is not None:
+                qweight[1] = qweight[1][:, start_idx:end_idx]
+                qzeros[1] = qzeros[1][:, start_idx:end_idx]
+                scales[1] = scales[1][:, start_idx:end_idx]
+            
         if qweight[0] is not None:
             self.qweight_stacked[0][
                 index, 0, : qweight[0].shape[0], : qweight[0].shape[1]
@@ -490,59 +504,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             and len(packed_modules_list) == 2
         )
 
-
-class QKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
-    def __init__(self, base_layer: QKVParallelLinear) -> None:
-        super().__init__(base_layer)
-        self.tp_size = get_tensor_model_parallel_world_size()
-        self.q_proj_total_size = (
-            self.base_layer.total_num_heads * self.base_layer.head_size
-        )
-        self.q_proj_shard_size = self.base_layer.num_heads * self.base_layer.head_size
-        self.kv_proj_shard_size = (
-            self.base_layer.num_kv_heads * self.base_layer.head_size
-        )
-        self.kv_proj_total_size = (
-            self.base_layer.total_num_kv_heads * self.base_layer.head_size
-        )
-
-    def create_delta_weights(
-        self,
-        max_deltas: int,
-        delta_config: DeltaConfig,
-        model_config: Optional[PretrainedConfig] = None,
-    ) -> None:
-        pass
-
-    def set_delta(
-        self,
-        index: int,
-        qweight: torch.Tensor,
-        qzeros: torch.Tensor,
-        scales: torch.Tensor,
-        g_idx: torch.Tensor,
-    ):
-        pass
-
-    def apply_weights(self, x: torch.Tensor, bias: Any | None) -> torch.Tensor:
-        # (note): this is not actually used
-        output = self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x, bias
-        )
-        # output = _apply_delta(x, self.qls, output)
-        return output
-
-    @classmethod
-    def can_replace_layer(
-        cls,
-        source_layer: nn.Module,
-        delta_config: DeltaConfig,
-        packed_modules_list: List,
-        model_config: Optional[PretrainedConfig],
-    ) -> bool:
-        return type(source_layer) is QKVParallelLinear and len(packed_modules_list) == 1
-
-
 class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
         super().__init__(base_layer)
@@ -564,9 +525,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.kv_shard_id = tp_rank // self.base_layer.num_kv_head_replicas
 
         self.pack_factor = delta_config.pack_factor
-        # (without considering pack factor)
-        # infeatures: self.base_layer.weight.shape[1]
-        # outfeatures: q shards, kv shards, kv shards
         self.qweight_stacked = (
             torch.zeros(
                 max_deltas,
@@ -961,7 +919,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x
         )
-        output = _apply_delta(
+        _apply_delta(
             x,
             self.qweight_stacked,
             self.qzeros_stacked,

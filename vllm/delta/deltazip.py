@@ -12,6 +12,7 @@ def add_delta(
     g_idx: torch.Tensor,
     indices: torch.LongTensor,
     layer_idx: int,
+    debug: bool = False,
 ):
     """
     semantics:
@@ -20,10 +21,16 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
+    
     ql = QuantLinear.from_tensors(
         qweight[0][0], qzeros[0][0], scales[0][0], g_idx, bias=None
     )
     output = ql(x)
+    if debug:
+        print(f"qweight.shape: {qweight.shape}, qzeros.shape: {qzeros.shape}")
+        print(f"y.max: {y.max()}, output.max: {output.max()}")
+        print(f"y.min: {y.min()}, output.min: {output.min()}")
+        
     y += output
 
 
@@ -49,6 +56,7 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
+    
     ql = QuantLinear.from_tensors(
         qweight[0][0], qzeros[0][0], scales[0][0], g_idx, bias=None
     )
