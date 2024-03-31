@@ -85,8 +85,8 @@ class ModelRunner:
         # lora config & delta config cannot be non-None at the same time
         # TODO(xiaozhe): enable both lora and delta at the same time
         assert (lora_config is None) or (
-            delta_config
-            is None), "LoRA and Delta cannot be enabled at the same time"
+            delta_config is None
+        ), "LoRA and Delta cannot be enabled at the same time"
         self.lora_config = lora_config
         self.delta_config = delta_config
         self.is_driver_worker = is_driver_worker

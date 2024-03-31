@@ -154,7 +154,7 @@ class DeltaModel:
         torch.nn.init.uniform_ = skip
         torch.nn.init.normal_ = skip
         transformers.modeling_utils._init_weights = False
-        
+
         # TODO(xiaozhe): this should be specified by each model
         ignore_modules = [
             "lm_head",
@@ -163,12 +163,16 @@ class DeltaModel:
             "input_layernorm",
             "post_attention_layernorm",
         ]
-        
+
         tensors = {}
         if compress_config.lossless != "none":
-            lossless_compressor = LosslessCompressor(compress_config.lossless, device_id=0)
+            lossless_compressor = LosslessCompressor(
+                compress_config.lossless, device_id=0
+            )
             metadata = None
-            with safe_open(os.path.join(path_or_name, model_tensor_filename), "numpy") as f:
+            with safe_open(
+                os.path.join(path_or_name, model_tensor_filename), "numpy"
+            ) as f:
                 metadata = f.metadata()
                 keys = f.keys()
                 for key in keys:
@@ -190,7 +194,9 @@ class DeltaModel:
             del lossless_compressor
         else:
             logger.info("Lossless Compression Disabled")
-            with safe_open(os.path.join(path_or_name, model_tensor_filename), "torch") as f:
+            with safe_open(
+                os.path.join(path_or_name, model_tensor_filename), "torch"
+            ) as f:
                 keys = f.keys()
                 for key in keys:
                     tensors[key] = f.get_tensor(key)
