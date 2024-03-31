@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod, abstractproperty
-from typing import Any, List, Optional, Set, Type
+from typing import Any, List, Optional, Set, Type, Dict
 import torch
 
 from .layers import DeltaMapping
@@ -76,10 +76,14 @@ class WorkerDeltaManager(AbstractWorkerManager):
         vocab_size: int,
         delta_config: DeltaConfig,
         device: torch.device,
+        embedding_modules: Dict[str, str],
+        embedding_padding_modules: List[str],
         delta_model_cls: Type[DeltaModel] = DeltaModel,
     ):
         self._delta_manager: Optional[DeltaModelManager] = None
         self._delta_model_cls = delta_model_cls
+        self.embedding_modules = embedding_modules
+        self.embedding_padding_modules = embedding_padding_modules
         super().__init__(
             max_num_seqs, max_num_batched_tokens, vocab_size, delta_config, device
         )
@@ -88,8 +92,17 @@ class WorkerDeltaManager(AbstractWorkerManager):
     def is_enabled(self) -> bool:
         return True
 
-    def create_delta_manager(self, model) -> Any:
-        raise NotImplementedError
+    def create_delta_manager(self, model: torch.nn.Module) -> Any:
+        delta_manager = create_delta_manager(
+            model,
+            delta_manager_cls=self._delta_manager_cls,
+            max_num_seqs=self.max_num_seqs,
+            vocab_size=self.vocab_size,
+            delta_config=self.delta_config,
+            max_num_batched_tokens=self.max_num_batched_tokens,
+        )
+        self._delta_manager: DeltaModelManager = delta_manager
+        return delta_manager.model
 
     def set_active_deltas(
         self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping

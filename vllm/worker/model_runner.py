@@ -84,9 +84,9 @@ class ModelRunner:
         self.scheduler_config = scheduler_config
         # lora config & delta config cannot be non-None at the same time
         # TODO(xiaozhe): enable both lora and delta at the same time
-        # assert (lora_config is None) or (
-        #     delta_config
-        #     is None), "LoRA and Delta cannot be enabled at the same time"
+        assert (lora_config is None) or (
+            delta_config
+            is None), "LoRA and Delta cannot be enabled at the same time"
         self.lora_config = lora_config
         self.delta_config = delta_config
         self.is_driver_worker = is_driver_worker
@@ -187,6 +187,8 @@ class ModelRunner:
                 self.vocab_size,
                 self.delta_config,
                 self.device,
+                self.model.embedding_modules,
+                self.model.embedding_padding_modules,
             )
             self.model = self.delta_manager.create_delta_manager(self.model)
 

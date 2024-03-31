@@ -101,7 +101,6 @@ def _apply_lora_packed_nslice(
     org_output = output
     x = x.view(-1, x.shape[-1])
     output = output.view(-1, output.shape[-1])
-    logger.info(f"output shape {output.shape}")
     indices = indices.view(-1)
     offset_left = 0
     for slice_idx in range(len(output_slices)):
@@ -195,7 +194,6 @@ class VocabParallelEmbeddingWithLoRA(BaseLayerWithLoRA):
         lora_config: LoRAConfig,
         model_config: Optional[PretrainedConfig] = None,
     ) -> None:
-
         lora_vocab_start_idx = self.base_layer.org_vocab_size
         weights_idx = None
         if self.base_layer.vocab_end_index > lora_vocab_start_idx:
@@ -833,12 +831,6 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        logger.info(f"input shape {x.shape}")
-        # (2048, 2560)
-        logger.info(f"output.shape: {output.shape}")
-        logger.info(f"self.lora_a_stacked[0].shape: {self.lora_a_stacked[0].shape}")
-        # (1,1, 64, 2048)
-        logger.info(f"self.lora_b_stacked[0].shape: {self.lora_b_stacked[0].shape}")
         _apply_lora_packed_nslice(
             x,
             self.lora_a_stacked,

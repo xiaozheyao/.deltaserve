@@ -281,7 +281,6 @@ class Worker:
 
     def print_debug_info(self):
         import ray
-
         logger.info(f"ray.get_gpu_ids()={ray.get_gpu_ids()}")
         logger.info(f"torch.cuda.current_device()={torch.cuda.current_device()}")
 

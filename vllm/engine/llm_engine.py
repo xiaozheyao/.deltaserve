@@ -165,12 +165,10 @@ class LLMEngine:
         # Initialize the cluster and specify the executor class.
         if device_config.device_type == "neuron":
             from vllm.executor.neuron_executor import NeuronExecutor
-
             executor_class = NeuronExecutor
         elif parallel_config.worker_use_ray:
             initialize_ray_cluster(parallel_config)
             from vllm.executor.ray_gpu_executor import RayGPUExecutor
-
             executor_class = RayGPUExecutor
         else:
             assert (
