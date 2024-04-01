@@ -9,7 +9,7 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-from .layers_debug import (
+from .layers import (
     BaseLayerWithDelta,
     from_layer,
     from_layer_logits_processor,
@@ -414,7 +414,7 @@ class DeltaModelManager:
             # (yard1): TODO make this more robust
             if "lm_head" in module_name:
                 logits_processor_module = self.model.get_submodule("logits_processor")
-                
+
                 print(f"logits_processor_module: {logits_processor_module}")
                 new_module = replace_submodule(
                     self.model,

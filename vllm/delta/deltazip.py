@@ -21,7 +21,7 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    
+
     ql = QuantLinear.from_tensors(
         qweight[0][0], qzeros[0][0], scales[0][0], g_idx, bias=None
     )
@@ -30,7 +30,7 @@ def add_delta(
         print(f"qweight.shape: {qweight.shape}, qzeros.shape: {qzeros.shape}")
         print(f"y.max: {y.max()}, output.max: {output.max()}")
         print(f"y.min: {y.min()}, output.min: {output.min()}")
-        
+
     y += output
 
 
@@ -56,7 +56,7 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    
+
     ql = QuantLinear.from_tensors(
         qweight[0][0], qzeros[0][0], scales[0][0], g_idx, bias=None
     )
