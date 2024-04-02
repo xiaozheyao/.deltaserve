@@ -1,4 +1,3 @@
-import torch
 import torch.nn as nn
 from vllm.delta.utils import (
     ext_gemm_half_q_half,
@@ -11,7 +10,6 @@ logger = init_logger(__name__)
 
 
 class QuantLinear(nn.Module):
-
     def __init__(
         self,
         bits: int,
@@ -33,7 +31,7 @@ class QuantLinear(nn.Module):
         self.qzeros = None
         self.scales = None
         self.g_idx = None
-
+        self.bias = bias
         if self.bits == 4:
             self.padding = -outfeatures % 32
 
@@ -63,17 +61,20 @@ class QuantLinear(nn.Module):
     def scratch_space_fixed(self, max_input_len=2048, max_batch_size=8):
         return self.temp_dq_size() + self.temp_fwd_size(max_input_len, max_batch_size)
 
-    def forward(self, x):
+    def forward(self, x, y_slice):
         if self.bits == 4:
             output = ext_gemm_half_q_half(x, self.q_handle, self.outfeatures, False)
             if self.bias:
                 output.add_(self.bias)
+            print(f"y_slice.shape: {y_slice.shape}, output.shape: {output.shape}")
+            print(output)
+            y_slice += output
             return output
         else:
             raise NotImplementedError("Only 4 bits are supported.")
 
     @classmethod
-    def from_tensors(cls, qweight, qzeros, scales, g_idx, bias):
+    def from_tensors(cls, qweight, qzeros, scales, g_idx, bias, temp_dq):
         # TODO(xiaozhe): debug only, fix later
         bits = 4
         infeatures = qweight.shape[0] * 32 // bits
@@ -86,8 +87,8 @@ class QuantLinear(nn.Module):
         if bias:
             obj.bias = bias
         # TODO(xiaozhe): here we need the post_init function
-        device_tensor = ExLlamaV2DeviceTensors(
-            obj.qweight.device.index, obj.scratch_space_fixed()
-        )
-        obj.post_init(temp_dq=device_tensor)
+        # device_tensor = ExLlamaV2DeviceTensors(
+        #     obj.qweight.device.index, obj.scratch_space_fixed()
+        # )
+        obj.post_init(temp_dq=temp_dq)
         return obj

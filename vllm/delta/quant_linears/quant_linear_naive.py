@@ -34,7 +34,6 @@ class QuantLinear(nn.Module):
     def forward(self, x):
         out_shape = x.shape[:-1] + (self.outfeatures,)
         x = x.reshape(-1, x.shape[-1])
-        # forget about the quant kernel - for finetuned models we have to restore, at least for now
         if self.wf.device != self.qzeros.device:
             self.wf = self.wf.to(self.qzeros.device)
 

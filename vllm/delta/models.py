@@ -15,17 +15,27 @@ from .layers import (
     from_layer_logits_processor,
     DeltaMapping,
 )
-from .utils import replace_submodule
-from .compressor import LosslessCompressor
+from .utils import (
+    replace_submodule,
+    calculate_fixed_scratch_size,
+    ExLlamaV2DeviceTensors,
+)
 
+from .compressor import LosslessCompressor
 import transformers
 from transformers import AutoConfig
 from vllm.logger import init_logger
 from vllm.utils import LRUCache, in_wsl
-
+from enum import Enum
 from safetensors import safe_open
 
 logger = init_logger(__name__)
+
+
+# enum kernels
+class QuantKernel(Enum):
+    EXLLAMA = "exllama"
+
 
 _GLOBAL_DELTA_ID = 0
 
@@ -252,10 +262,7 @@ class DeltaModelManager:
         self.embeddings_indices = torch.empty(
             2, self.max_num_batched_tokens, dtype=torch.long, device="cuda"
         )
-
         self.offset = []
-        # todo(xiaozhe): figure out if we want to pre-define the length
-        # below are dummpy for now
         self.indices_len = []
         self.model = model
         if hasattr(self.model, "supported_delta_modules"):
@@ -272,6 +279,11 @@ class DeltaModelManager:
         self._last_mapping = None
         self._create_delta_modules()
         self.model.delta_manager = self
+        self.current_kernel = QuantKernel.EXLLAMA
+
+        if self.current_kernel == QuantKernel.EXLLAMA:
+            # global variables for exllama
+            self.fixed_bytes = {}
 
     @property
     def capacity(self) -> int:
@@ -302,6 +314,21 @@ class DeltaModelManager:
         self._active_deltas[delta_id] = None
         delta_model = self._registered_deltas[delta_id]
         self.delta_index_to_id[index] = delta_model.id
+
+        for module_name, module in self.modules.items():
+            module_delta = delta_model.get_delta(module_name)
+            if module_delta:
+                self.fixed_bytes[module_delta.qweight.device] = (
+                    calculate_fixed_scratch_size(module_delta.qwight.shape, bits=4)
+                )
+
+        if self.current_kernel == QuantKernel.EXLLAMA:
+            device_tensors = {}
+            for device, scratch_bytes in self.fixed_bytes.items():
+                device_tensors[device] = ExLlamaV2DeviceTensors(
+                    device.index, scratch_bytes
+                )
+
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:
@@ -311,6 +338,11 @@ class DeltaModelManager:
                     module_delta.qzeros,
                     module_delta.scales,
                     module_delta.g_idx,
+                    device_tensor=(
+                        device_tensors[module_delta.qweight.device]
+                        if self.current_kernel == QuantKernel.EXLLAMA
+                        else None
+                    ),
                 )
             else:
                 module.reset_delta(index)
@@ -398,6 +430,9 @@ class DeltaModelManager:
         for module_name, module in self.model.named_modules():
             if not self._match_target_modules(module_name):
                 continue
+        for module_name, module in self.model.named_modules():
+            if not self._match_target_modules(module_name):
+                continue
             parts = module_name.split(".")[-1]
             packed_moduled_list = self.packed_modules_mapping.get(parts, [])
             new_module = replace_submodule(
@@ -414,8 +449,6 @@ class DeltaModelManager:
             # (yard1): TODO make this more robust
             if "lm_head" in module_name:
                 logits_processor_module = self.model.get_submodule("logits_processor")
-
-                print(f"logits_processor_module: {logits_processor_module}")
                 new_module = replace_submodule(
                     self.model,
                     "logits_processor",
@@ -427,9 +460,9 @@ class DeltaModelManager:
                         self.model.config,
                     ),
                 )
-            if "embed_tokens" in module_name:
-                embed_token_module = self.model.get_submodule(module_name)
-                print(f"embed_token_module: {embed_token_module}")
+            # if "embed_tokens" in module_name:
+            #     embed_token_module = self.model.get_submodule(module_name)
+            #     print(f"embed_token_module: {embed_token_module}")
             self.register_module(module_name, new_module)
             self._register_packed_modules(module_name)
             new_module.set_mapping(
