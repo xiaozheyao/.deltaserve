@@ -154,42 +154,6 @@ def replace_submodule(
     return new_module
 
 
-def deltazip_post_init(
-    model, use_act_order: bool, max_input_length: Optional[int] = None
-):
-    """
-    The max_input_length argument is specific to the exllama backend, that requires to initialize a buffer temp_state.
-    """
-    ## exllamav2
-    fixed_bytes = {}
-    model_uses_exllamav2 = False
-
-    for _, submodule in model.named_modules():
-        if hasattr(submodule, "QUANT_TYPE"):
-            model_uses_exllamav2 = True
-            device = submodule.qweight.device
-            scratch_fixed = submodule.scratch_space_fixed()
-            fixed_bytes[device] = max(scratch_fixed, fixed_bytes.get(device, 0))
-
-    if model_uses_exllamav2:
-        from deltazip.nn_modules.exllama_utils import ExLlamaV2DeviceTensors
-
-        device_tensors = {}
-        for device, scratch_bytes in fixed_bytes.items():
-            device_tensors[device] = ExLlamaV2DeviceTensors(device.index, scratch_bytes)
-
-        # have persistent buffers, otherwise we will get OOM
-        model.device_tensors = device_tensors
-
-        for _, submodule in model.named_modules():
-            if hasattr(submodule, "QUANT_TYPE"):
-                device = submodule.qweight.device
-                submodule.post_init(temp_dq=model.device_tensors[device])
-    torch.cuda.empty_cache()
-
-    return model
-
-
 def find_layers(module, layers=None, name=""):
     if not layers:
         layers = [transformers.pytorch_utils.Conv1D, nn.Conv2d, nn.Linear]

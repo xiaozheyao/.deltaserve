@@ -5,6 +5,12 @@ from dataclasses import dataclass, field, fields
 from transformers.utils.hub import PushToHubMixin
 from os.path import join
 from fractions import Fraction
+from enum import Enum
+
+
+class QuantKernel(Enum):
+    EXLLAMA = "exllama"
+    TRITON = "triton"
 
 
 @dataclass
@@ -15,7 +21,8 @@ class CompressionConfig(PushToHubMixin):
     prunen: int = field(default=0)
     prunem: int = field(default=0)
     group_size: int = field(default=-1)
-    group_rows: int = field(default=-1)  # deprecated, for backward compatibility
+    # deprecated, for backward compatibility
+    group_rows: int = field(default=-1)
     block_size: int = field(default=128)
     damp_percent: float = field(default=0.01)
     desc_act: bool = field(default=True)
@@ -72,6 +79,7 @@ class DeltaConfig:
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0
     pack_factor: Fraction = field(default=Fraction(32, 1))
+    kernel: QuantKernel = QuantKernel.TRITON
 
     def __post_init__(self):
         if self.max_cpu_deltas is None:
@@ -81,3 +89,7 @@ class DeltaConfig:
         if self.max_bitwidth not in [2, 4, 8]:
             raise ValueError("max_bitwidth must be 2, 4 or 8")
         self.pack_factor = Fraction(32, self.max_bitwidth)
+        if self.kernel not in QuantKernel:
+            raise ValueError(
+                f"kernel must be one of {list(QuantKernel.__members__.keys())}"
+            )

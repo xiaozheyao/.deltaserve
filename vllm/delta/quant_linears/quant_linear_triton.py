@@ -1,3 +1,4 @@
+import math
 import torch
 import triton
 import torch.nn as nn
@@ -544,3 +545,42 @@ class QuantLinear(nn.Module):
         if bias:
             obj.bias = bias
         return obj
+
+
+def warmup_triton_kernels(max_bits, kn_values, max_seqlen=512):
+    from tqdm import tqdm
+    logger.warning("We should warm up the kernel here ")
+    # print("Warming up Triton kernels")
+    # print(kn_values)
+    # with torch.inference_mode():
+    #     for kn_value in kn_values:
+    #         # randomly generate qweight, qzeros,etc
+    #         infeatures = kn_value[0]
+    #         outfeatures = kn_value[1]
+    #         # below magic numbers are sampled from vicuna model
+    #         qweight = torch.randint(
+    #             -2147483390, 2147462329,
+    #             size=(infeatures // 32 * max_bits, outfeatures),
+    #             dtype=torch.int32,
+    #             device="cuda",
+    #         )
+    #         qzeros = torch.randint(
+    #             -64235,1426149397,
+    #             size=(1, outfeatures // 32 * max_bits),
+    #             dtype=torch.int32,
+    #             device="cuda",
+    #         )
+    #         scales = torch.zeros((1, outfeatures), dtype=torch.float16, device="cuda")
+    #         g_idx = torch.zeros(
+    #             [i // infeatures for i in range(infeatures)],
+    #             dtype=torch.int32,
+    #             device="cuda",
+    #         )
+    #         bias = torch.zeros((outfeatures,), dtype=torch.float16, device="cuda")
+    #         maxq = 2**max_bits - 1
+    #         for m in tqdm(range(0, math.ceil(math.log2(max_seqlen)) + 1)):
+    #             m = 2**m
+    #             a = torch.randn(m, infeatures, dtype=torch.float16, device="cuda")
+    #             quant_matmul_inference_only_248(
+    #                 a, qweight, scales, qzeros, g_idx, max_bits, maxq
+    #             )

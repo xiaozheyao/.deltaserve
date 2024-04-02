@@ -26,18 +26,10 @@ import transformers
 from transformers import AutoConfig
 from vllm.logger import init_logger
 from vllm.utils import LRUCache, in_wsl
-from enum import Enum
 from safetensors import safe_open
+from .config import QuantKernel
 
 logger = init_logger(__name__)
-
-
-# enum kernels
-class QuantKernel(Enum):
-    EXLLAMA = "exllama"
-    TRITON = "triton"
-
-
 _GLOBAL_DELTA_ID = 0
 
 
@@ -280,11 +272,20 @@ class DeltaModelManager:
         self._last_mapping = None
         self._create_delta_modules()
         self.model.delta_manager = self
-        self.current_kernel = QuantKernel.TRITON
+        self.current_kernel = delta_config.kernel
 
         if self.current_kernel == QuantKernel.EXLLAMA:
             # global variables for exllama
             self.fixed_bytes = {}
+        if self.current_kernel == QuantKernel.TRITON:
+            from .quant_linears.quant_linear_triton import warmup_triton_kernels
+
+            kn_values = set()
+            for module_name, module in self.modules.items():
+                if self._match_target_modules(module_name):
+                    if hasattr(module.base_layer, "weight"):
+                        kn_values.add(module.base_layer.weight.shape)
+            warmup_triton_kernels(self.delta_config.max_bitwidth, kn_values)
 
     @property
     def capacity(self) -> int:
