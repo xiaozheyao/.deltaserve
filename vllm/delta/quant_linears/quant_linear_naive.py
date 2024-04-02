@@ -80,7 +80,7 @@ class QuantLinear(nn.Module):
         return out
 
     @classmethod
-    def from_tensors(cls, qweight, qzeros, scales, g_idx, bias):
+    def from_tensors(cls, qweight, qzeros, scales, g_idx, bias, device_tensor):
         bits = 4
         infeatures = qweight.shape[0] * 32 // bits
         outfeatures = qweight.shape[1]
@@ -89,6 +89,4 @@ class QuantLinear(nn.Module):
         obj.qzeros = qzeros.to(qweight.device)
         obj.scales = scales.to(qweight.device)
         obj.g_idx = g_idx.to(qweight.device)
-        if bias:
-            obj.bias = bias
         return obj

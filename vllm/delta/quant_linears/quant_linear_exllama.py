@@ -74,7 +74,7 @@ class QuantLinear(nn.Module):
             raise NotImplementedError("Only 4 bits are supported.")
 
     @classmethod
-    def from_tensors(cls, qweight, qzeros, scales, g_idx, bias, temp_dq):
+    def from_tensors(cls, qweight, qzeros, scales, g_idx, bias, device_tensor):
         # TODO(xiaozhe): debug only, fix later
         bits = 4
         infeatures = qweight.shape[0] * 32 // bits
@@ -84,11 +84,6 @@ class QuantLinear(nn.Module):
         obj.qzeros = qzeros
         obj.scales = scales
         obj.g_idx = g_idx
-        if bias:
-            obj.bias = bias
         # TODO(xiaozhe): here we need the post_init function
-        # device_tensor = ExLlamaV2DeviceTensors(
-        #     obj.qweight.device.index, obj.scratch_space_fixed()
-        # )
-        obj.post_init(temp_dq=temp_dq)
+        obj.post_init(temp_dq=device_tensor)
         return obj

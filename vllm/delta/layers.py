@@ -29,11 +29,9 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .utils import _apply_delta, _apply_delta_packed_nslice
-
+from .deltazip import apply_delta, apply_delta_packed_nslice
 
 logger = init_logger(__name__)
-
 
 if TYPE_CHECKING:
     pass
@@ -55,11 +53,10 @@ class DeltaMapping:
 
 
 class BaseLayerWithDelta(nn.Module):
-
     def create_delta_weights(
         self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig
     ) -> None:
-        """Initializes lora matrices."""
+        """Initializes delta matrices."""
         ...
 
     def reset_delta(self, index: int):
@@ -95,6 +92,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def __init__(self, base_layer: VocabParallelEmbedding) -> None:
         super().__init__()
         self.base_layer = base_layer
+        self.device_tensor = None
 
     def reset_delta(self, index: int):
         pass
@@ -144,6 +142,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         super().__init__()
         self.base_layer = base_layer
         self.tp_size = get_tensor_model_parallel_world_size()
+        self.device_tensor = None
 
     def reset_delta(self, index: int):
         self.qweight_stacked[index] = 0
@@ -229,7 +228,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = _apply_delta(
+        output = apply_delta(
             x,
             self.qweight_stacked,
             self.qzero_stacked,
@@ -281,6 +280,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
         super().__init__(base_layer)
+        self.device_tensor = None
 
     def create_delta_weights(
         self,
@@ -418,17 +418,18 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = _apply_delta_packed_nslice(
-            x,
-            self.qweight_stacked,
-            self.qzeros_stacked,
-            self.scales_stacked,
-            self.g_idx,
-            self.indices[: self.indices_len[0]],
-            output,
-            (self.output_dim, self.output_dim),
-            self.device_tensor,
-        )
+        if self.device_tensor:
+            output = apply_delta_packed_nslice(
+                x,
+                self.qweight_stacked,
+                self.qzeros_stacked,
+                self.scales_stacked,
+                self.g_idx,
+                self.indices[: self.indices_len[0]],
+                output,
+                (self.output_dim, self.output_dim),
+                self.device_tensor,
+            )
         return output
 
     @classmethod
@@ -448,6 +449,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
         super().__init__(base_layer)
+        self.device_tensor = None
 
     def create_delta_weights(
         self,
@@ -764,7 +766,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             self.base_layer.linear_weights, x, bias
         )
         if self.device_tensor:
-            output = _apply_delta_packed_nslice(
+            output = apply_delta_packed_nslice(
                 x,
                 self.qweight_stacked,
                 self.qzeros_stacked,
@@ -792,6 +794,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
+        self.device_tensor = None
 
     def set_mapping(
         self,
@@ -888,18 +891,18 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x
         )
-        # TODO(xiaozhe): this is buggy
-        output = _apply_delta(
-            x,
-            self.qweight_stacked,
-            self.qzeros_stacked,
-            self.scales_stacked,
-            self.g_idx_stacked,
-            self.indices[: self.indices_len[0]],
-            output,
-            # debug=True,
-            self.device_tensor,
-        )
+        if self.device_tensor:
+            output = apply_delta(
+                x,
+                self.qweight_stacked,
+                self.qzeros_stacked,
+                self.scales_stacked,
+                self.g_idx_stacked,
+                self.indices[: self.indices_len[0]],
+                output,
+                # debug=True,
+                self.device_tensor,
+            )
         return output
 
     def forward(self, input_):
@@ -957,6 +960,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         self.hidden_size = hidden_size
         self.dtype = dtype
         self.device = device
+        self.device_tensor = None
 
     @property
     def logits_as_input(self):

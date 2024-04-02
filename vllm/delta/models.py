@@ -35,6 +35,7 @@ logger = init_logger(__name__)
 # enum kernels
 class QuantKernel(Enum):
     EXLLAMA = "exllama"
+    TRITON = "triton"
 
 
 _GLOBAL_DELTA_ID = 0
@@ -279,7 +280,7 @@ class DeltaModelManager:
         self._last_mapping = None
         self._create_delta_modules()
         self.model.delta_manager = self
-        self.current_kernel = QuantKernel.EXLLAMA
+        self.current_kernel = QuantKernel.TRITON
 
         if self.current_kernel == QuantKernel.EXLLAMA:
             # global variables for exllama
@@ -315,23 +316,42 @@ class DeltaModelManager:
         delta_model = self._registered_deltas[delta_id]
         self.delta_index_to_id[index] = delta_model.id
 
-        for module_name, module in self.modules.items():
-            module_delta = delta_model.get_delta(module_name)
-            if module_delta:
-                self.fixed_bytes[module_delta.qweight.device] = (
-                    calculate_fixed_scratch_size(module_delta.qwight.shape, bits=4)
-                )
+        """
+        Only for Exllama
+        """
+        if self.current_kernel == QuantKernel.EXLLAMA:
+            for module_name, module in self.modules.items():
+                module_delta = delta_model.get_delta(module_name)
+                if module_delta:
+                    if type(module_delta.qweight) == list:
+                        # packed module
+                        qweight_shape = module_delta.qweight[0].shape
+                        qweight_device = module_delta.qweight[0].device
+                    else:
+                        # unpacked
+                        qweight_shape = module_delta.qweight.shape
+                        qweight_device = module_delta.qweight.device
+                    # TODO(xiaozhe): set cuda correctly
+                    self.fixed_bytes[0] = max(
+                        calculate_fixed_scratch_size(qweight_shape, bits=4),
+                        self.fixed_bytes.get(0, 0),
+                    )
+            print(f"fixed bytes: {self.fixed_bytes}")
 
         if self.current_kernel == QuantKernel.EXLLAMA:
             device_tensors = {}
             for device, scratch_bytes in self.fixed_bytes.items():
-                device_tensors[device] = ExLlamaV2DeviceTensors(
-                    device.index, scratch_bytes
-                )
+                device_tensors[device] = ExLlamaV2DeviceTensors(0, scratch_bytes)
 
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:
+                if type(module_delta.qweight) == list:
+                    # packed module
+                    qweight_device = module_delta.qweight[0].device
+                else:
+                    # unpacked
+                    qweight_device = module_delta.qweight.device
                 module.set_delta(
                     index,
                     module_delta.qweight,
@@ -339,9 +359,9 @@ class DeltaModelManager:
                     module_delta.scales,
                     module_delta.g_idx,
                     device_tensor=(
-                        device_tensors[module_delta.qweight.device]
+                        device_tensors[0]
                         if self.current_kernel == QuantKernel.EXLLAMA
-                        else None
+                        else True
                     ),
                 )
             else:
