@@ -1,1 +1,1 @@
-python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --enable-delta --delta-modules vicuna-7b=.idea/models/vicuna-7b-4b0.75s-decompressed
+python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --enable-delta --delta-modules vicuna-7b-1=.idea/models/vicuna-7b-4b0.75s-decom-1 vicuna-7b-2=.idea/models/vicuna-7b-4b0.75s-decom-2 vicuna-7b-3=.idea/models/vicuna-7b-4b0.75s-decom-3 --max-deltas 1

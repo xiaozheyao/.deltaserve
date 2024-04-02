@@ -330,7 +330,9 @@ class OpenAIServingCompletion(OpenAIServing):
         choices = []
         num_prompt_tokens = 0
         num_generated_tokens = 0
+        metrics = []
         for final_res in final_res_batch:
+            metrics.append(final_res.metrics)
             assert final_res is not None
             prompt_token_ids = final_res.prompt_token_ids
             prompt_logprobs = final_res.prompt_logprobs
@@ -385,4 +387,5 @@ class OpenAIServingCompletion(OpenAIServing):
             model=model_name,
             choices=choices,
             usage=usage,
+            metrics=metrics,
         )

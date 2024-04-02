@@ -2,6 +2,8 @@ import time
 from typing import List, Optional, Union
 
 from vllm.lora.request import LoRARequest
+from vllm.delta.request import DeltaRequest
+
 from vllm.sequence import (
     PromptLogprobs,
     RequestMetrics,
@@ -39,6 +41,7 @@ class CompletionOutput:
         finish_reason: Optional[str] = None,
         stop_reason: Union[int, str, None] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ) -> None:
         self.index = index
         self.text = text
@@ -48,6 +51,7 @@ class CompletionOutput:
         self.finish_reason = finish_reason
         self.stop_reason = stop_reason
         self.lora_request = lora_request
+        self.delta_request = delta_request
 
     def finished(self) -> bool:
         return self.finish_reason is not None
@@ -60,7 +64,9 @@ class CompletionOutput:
             f"cumulative_logprob={self.cumulative_logprob}, "
             f"logprobs={self.logprobs}, "
             f"finish_reason={self.finish_reason}, "
-            f"stop_reason={self.stop_reason})"
+            f"stop_reason={self.stop_reason}), "
+            f"lora_request={self.lora_request}, "
+            f"delta_request={self.delta_request})"
         )
 
 
@@ -88,6 +94,7 @@ class RequestOutput:
         finished: bool,
         metrics: Optional[RequestMetrics] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ) -> None:
         self.request_id = request_id
         self.prompt = prompt
@@ -97,6 +104,7 @@ class RequestOutput:
         self.finished = finished
         self.metrics = metrics
         self.lora_request = lora_request
+        self.delta_request = delta_request
 
     @classmethod
     def from_seq_group(cls, seq_group: SequenceGroup) -> "RequestOutput":

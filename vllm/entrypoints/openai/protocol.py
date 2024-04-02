@@ -6,8 +6,9 @@ from typing import Dict, List, Literal, Optional, Union
 import torch
 from pydantic import BaseModel, Field, model_validator
 
-from vllm.sampling_params import SamplingParams
 from vllm.utils import random_uuid
+from vllm.sequence import RequestMetrics
+from vllm.sampling_params import SamplingParams
 
 
 class ErrorResponse(BaseModel):
@@ -360,6 +361,7 @@ class CompletionResponse(BaseModel):
     model: str
     choices: List[CompletionResponseChoice]
     usage: UsageInfo
+    metrics: List[RequestMetrics] = []
 
 
 class CompletionResponseStreamChoice(BaseModel):
