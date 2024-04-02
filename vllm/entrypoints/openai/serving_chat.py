@@ -16,7 +16,7 @@ from vllm.entrypoints.openai.protocol import (
     ErrorResponse,
     UsageInfo,
 )
-from vllm.entrypoints.openai.serving_engine import LoRA, OpenAIServing
+from vllm.entrypoints.openai.serving_engine import LoRA, Delta, OpenAIServing
 from vllm.logger import init_logger
 from vllm.model_executor.guided_decoding import get_guided_decoding_logits_processor
 from vllm.outputs import RequestOutput
@@ -33,11 +33,16 @@ class OpenAIServingChat(OpenAIServing):
         served_model: str,
         response_role: str,
         lora_modules: Optional[List[LoRA]] = None,
+        delta_modules: Optional[List[Delta]] = None,
         chat_template=None,
     ):
         super().__init__(
-            engine=engine, served_model=served_model, lora_modules=lora_modules
+            engine=engine,
+            served_model=served_model,
+            lora_modules=lora_modules,
+            delta_modules=delta_modules,
         )
+        logger.info(f"delta modules: {delta_modules}")
         self.response_role = response_role
         self._load_chat_template(chat_template)
 
@@ -72,6 +77,7 @@ class OpenAIServingChat(OpenAIServing):
             token_ids = self._validate_prompt_and_tokenize(request, prompt=prompt)
             sampling_params = request.to_sampling_params()
             lora_request = self._maybe_get_lora(request)
+            delta_request = self._maybe_get_delta(request)
             guided_decode_logits_processor = await get_guided_decoding_logits_processor(
                 request, await self.engine.get_tokenizer()
             )
@@ -81,9 +87,8 @@ class OpenAIServingChat(OpenAIServing):
                 sampling_params.logits_processors.append(guided_decode_logits_processor)
         except ValueError as e:
             return self.create_error_response(str(e))
-
         result_generator = self.engine.generate(
-            prompt, sampling_params, request_id, token_ids, lora_request
+            prompt, sampling_params, request_id, token_ids, lora_request, delta_request
         )
         # Streaming response
         if request.stream:

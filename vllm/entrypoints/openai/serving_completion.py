@@ -14,7 +14,7 @@ from vllm.entrypoints.openai.protocol import (
     LogProbs,
     UsageInfo,
 )
-from vllm.entrypoints.openai.serving_engine import LoRA, OpenAIServing
+from vllm.entrypoints.openai.serving_engine import LoRA, OpenAIServing, Delta
 from vllm.logger import init_logger
 from vllm.model_executor.guided_decoding import get_guided_decoding_logits_processor
 from vllm.outputs import RequestOutput
@@ -96,9 +96,13 @@ class OpenAIServingCompletion(OpenAIServing):
         engine: AsyncLLMEngine,
         served_model: str,
         lora_modules: Optional[List[LoRA]] = None,
+        delta_modules: Optional[List[Delta]] = None,
     ):
         super().__init__(
-            engine=engine, served_model=served_model, lora_modules=lora_modules
+            engine=engine,
+            served_model=served_model,
+            lora_modules=lora_modules,
+            delta_modules=delta_modules,
         )
 
     async def create_completion(self, request: CompletionRequest, raw_request: Request):
@@ -128,6 +132,7 @@ class OpenAIServingCompletion(OpenAIServing):
         try:
             sampling_params = request.to_sampling_params()
             lora_request = self._maybe_get_lora(request)
+            delta_request = self._maybe_get_delta(request)
             guided_decode_logit_processor = await get_guided_decoding_logits_processor(
                 request, await self.engine.get_tokenizer()
             )
@@ -154,6 +159,7 @@ class OpenAIServingCompletion(OpenAIServing):
                         f"{request_id}-{i}",
                         prompt_token_ids=input_ids,
                         lora_request=lora_request,
+                        delta_request=delta_request,
                     )
                 )
         except ValueError as e:

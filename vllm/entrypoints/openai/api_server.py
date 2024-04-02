@@ -151,10 +151,15 @@ if __name__ == "__main__":
     engine_args = AsyncEngineArgs.from_cli_args(args)
     engine = AsyncLLMEngine.from_engine_args(engine_args)
     openai_serving_chat = OpenAIServingChat(
-        engine, served_model, args.response_role, args.lora_modules, args.chat_template
+        engine,
+        served_model,
+        args.response_role,
+        args.lora_modules,
+        args.delta_modules,
+        args.chat_template,
     )
     openai_serving_completion = OpenAIServingCompletion(
-        engine, served_model, args.lora_modules
+        engine, served_model, args.lora_modules, args.delta_modules
     )
 
     app.root_path = args.root_path

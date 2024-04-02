@@ -16,6 +16,7 @@ from vllm.entrypoints.openai.protocol import (
 )
 from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
+from vllm.delta.request import DeltaRequest
 from vllm.sequence import Logprob
 from vllm.transformers_utils.tokenizer import get_tokenizer
 
@@ -28,6 +29,12 @@ class LoRA:
     local_path: str
 
 
+@dataclass
+class Delta:
+    name: str
+    local_path: str
+
+
 class OpenAIServing:
 
     def __init__(
@@ -35,11 +42,14 @@ class OpenAIServing:
         engine: AsyncLLMEngine,
         served_model: str,
         lora_modules=Optional[List[LoRA]],
+        delta_modules=Optional[List[Delta]],
     ):
         self.engine = engine
         self.served_model = served_model
         if lora_modules is None:
             self.lora_requests = []
+        if delta_modules is None:
+            self.delta_requests = []
         else:
             self.lora_requests = [
                 LoRARequest(
@@ -48,6 +58,14 @@ class OpenAIServing:
                     lora_local_path=lora.local_path,
                 )
                 for i, lora in enumerate(lora_modules, start=1)
+            ]
+            self.delta_requests = [
+                DeltaRequest(
+                    delta_name=delta.name,
+                    delta_int_id=i,
+                    delta_local_path=delta.local_path,
+                )
+                for i, delta in enumerate(delta_modules, start=1)
             ]
 
         self.max_model_len = 0
@@ -103,7 +121,17 @@ class OpenAIServing:
             )
             for lora in self.lora_requests
         ]
+        delta_cards = [
+            ModelCard(
+                id=delta.delta_name,
+                root=self.served_model,
+                permission=[ModelPermission()],
+            )
+            for delta in self.delta_requests
+        ]
         model_cards.extend(lora_cards)
+        model_cards.extend(delta_cards)
+        print(model_cards)
         return ModelList(data=model_cards)
 
     def _create_logprobs(
@@ -169,8 +197,13 @@ class OpenAIServing:
             return
         if request.model in [lora.lora_name for lora in self.lora_requests]:
             return
+        logger.info(
+            f"Delta Models: {[delta.delta_name for delta in self.delta_requests]}"
+        )
+        if request.model in [delta.delta_name for delta in self.delta_requests]:
+            return
         return self.create_error_response(
-            message=f"The model `{request.model}` does not exist.",
+            message=f"The model [{request.model}] does not exist. Expected one of {self.served_model}, {[lora.lora_name for lora in self.lora_requests]}, {[delta.delta_name for delta in self.delta_requests]}",
             err_type="NotFoundError",
             status_code=HTTPStatus.NOT_FOUND,
         )
@@ -181,7 +214,15 @@ class OpenAIServing:
         for lora in self.lora_requests:
             if request.model == lora.lora_name:
                 return lora
-        # if _check_model has been called earlier, this will be unreachable
+
+        return None
+
+    def _maybe_get_delta(self, request) -> Optional[DeltaRequest]:
+        if request.model == self.served_model:
+            return
+        for delta in self.delta_requests:
+            if request.model == delta.delta_name:
+                return delta
         raise ValueError("The model `{request.model}` does not exist.")
 
     def _validate_prompt_and_tokenize(

@@ -380,6 +380,34 @@ class EngineArgs:
                 "Defaults to max_num_seqs."
             ),
         )
+        # Delta related configs
+        parser.add_argument(
+            "--enable-delta",
+            action="store_true",
+            help="If True, enable handling of Delta models.",
+        )
+        parser.add_argument(
+            "--max-deltas",
+            type=int,
+            default=EngineArgs.max_deltas,
+            help="Max number of Delta models in a single batch.",
+        )
+        parser.add_argument(
+            "--max-cpu-deltas",
+            type=int,
+            default=EngineArgs.max_cpu_deltas,
+            help=(
+                "Maximum number of Delta models to store in CPU memory. "
+                "Must be >= than max_num_seqs. "
+                "Defaults to max_num_seqs."
+            ),
+        )
+        parser.add_argument(
+            "--max-delta-bitwidth",
+            type=int,
+            default=DeltaConfig.max_bitwidth,
+            help="Max bitwidth for Delta models.",
+        )
         parser.add_argument(
             "--device",
             type=str,

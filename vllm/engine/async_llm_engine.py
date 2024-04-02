@@ -26,6 +26,7 @@ from vllm.lora.request import LoRARequest
 from vllm.outputs import RequestOutput
 from vllm.sampling_params import SamplingParams
 from vllm.sequence import MultiModalData
+from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
 ENGINE_ITERATION_TIMEOUT_S = int(
@@ -236,11 +237,15 @@ class _AsyncLLMEngine(LLMEngine):
         prompt: Optional[str],
         prompt_token_ids: Optional[List[int]] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
     ):
         if prompt_token_ids is None:
             assert prompt is not None
             prompt_token_ids = await self.tokenizer.encode_async(
-                request_id=request_id, prompt=prompt, lora_request=lora_request
+                request_id=request_id,
+                prompt=prompt,
+                lora_request=lora_request,
+                delta_request=delta_request,
             )
         return prompt_token_ids
 
@@ -252,11 +257,16 @@ class _AsyncLLMEngine(LLMEngine):
         prompt_token_ids: Optional[List[int]] = None,
         arrival_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
     ) -> None:
         if lora_request is not None and not self.lora_config:
             raise ValueError(
                 f"Got lora_request {lora_request} but LoRA is " "not enabled!"
+            )
+        if delta_request is not None and not self.delta_config:
+            raise ValueError(
+                f"Got delta_request {delta_request} but Delta is " "not enabled!"
             )
         if arrival_time is None:
             arrival_time = time.time()
@@ -265,6 +275,7 @@ class _AsyncLLMEngine(LLMEngine):
             prompt=prompt,
             prompt_token_ids=prompt_token_ids,
             lora_request=lora_request,
+            delta_request=delta_request,
         )
 
         return self.add_request(
@@ -274,6 +285,7 @@ class _AsyncLLMEngine(LLMEngine):
             sampling_params=sampling_params,
             arrival_time=arrival_time,
             lora_request=lora_request,
+            delta_request=delta_request,
             multi_modal_data=multi_modal_data,
         )
 
@@ -515,6 +527,7 @@ class AsyncLLMEngine:
         prompt_token_ids: Optional[List[int]] = None,
         arrival_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
     ) -> AsyncStream:
         if self.log_requests:
@@ -530,7 +543,8 @@ class AsyncLLMEngine:
                 f"prompt: {shortened_prompt!r}, "
                 f"sampling_params: {sampling_params}, "
                 f"prompt_token_ids: {shortened_token_ids}, "
-                f"lora_request: {lora_request}."
+                f"lora_request: {lora_request}, "
+                f"delta_request: {delta_request}."
             )
 
         if not self.is_running:
@@ -553,6 +567,7 @@ class AsyncLLMEngine:
                 prompt=prompt,
                 prompt_token_ids=prompt_token_ids,
                 lora_request=lora_request,
+                delta_request=delta_request,
             )
         else:
             prompt_token_ids = await self.engine.encode_request_async(
@@ -560,6 +575,7 @@ class AsyncLLMEngine:
                 prompt=prompt,
                 prompt_token_ids=prompt_token_ids,
                 lora_request=lora_request,
+                delta_request=delta_request,
             )
 
         stream = self._request_tracker.add_request(
@@ -569,6 +585,7 @@ class AsyncLLMEngine:
             prompt_token_ids=prompt_token_ids,
             arrival_time=arrival_time,
             lora_request=lora_request,
+            delta_request=delta_request,
             multi_modal_data=multi_modal_data,
         )
 
@@ -581,6 +598,7 @@ class AsyncLLMEngine:
         request_id: str,
         prompt_token_ids: Optional[List[int]] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
     ) -> AsyncIterator[RequestOutput]:
         """Generate outputs for a request.
@@ -597,6 +615,7 @@ class AsyncLLMEngine:
             prompt_token_ids: The token IDs of the prompt. If None, we
                 use the tokenizer to convert the prompts to token IDs.
             lora_request: LoRA request to use for generation, if any.
+            delta_request: Delta request to sue for generation, if any.
             multi_modal_data: Multi modal data per request.
 
         Yields:
@@ -657,6 +676,7 @@ class AsyncLLMEngine:
                 prompt_token_ids=prompt_token_ids,
                 arrival_time=arrival_time,
                 lora_request=lora_request,
+                delta_request=delta_request,
                 multi_modal_data=multi_modal_data,
             )
 

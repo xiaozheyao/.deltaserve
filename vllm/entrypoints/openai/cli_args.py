@@ -9,7 +9,7 @@ import json
 import ssl
 
 from vllm.engine.arg_utils import AsyncEngineArgs
-from vllm.entrypoints.openai.serving_engine import LoRA
+from vllm.entrypoints.openai.serving_engine import LoRA, Delta
 
 
 class LoRAParserAction(argparse.Action):
@@ -20,6 +20,16 @@ class LoRAParserAction(argparse.Action):
             name, path = item.split("=")
             lora_list.append(LoRA(name, path))
         setattr(namespace, self.dest, lora_list)
+
+
+class DeltaParserAction(argparse.Action):
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        delta_list = []
+        for item in values:
+            name, path = item.split("=")
+            delta_list.append(Delta(name, path))
+        setattr(namespace, self.dest, delta_list)
 
 
 def make_arg_parser():
@@ -65,10 +75,19 @@ def make_arg_parser():
     parser.add_argument(
         "--lora-modules",
         type=str,
-        default=None,
+        default=[],
         nargs="+",
         action=LoRAParserAction,
         help="LoRA module configurations in the format name=path. "
+        "Multiple modules can be specified.",
+    )
+    parser.add_argument(
+        "--delta-modules",
+        type=str,
+        default=[],
+        nargs="+",
+        action=DeltaParserAction,
+        help="Delta module configurations in the format name=path. "
         "Multiple modules can be specified.",
     )
     parser.add_argument(

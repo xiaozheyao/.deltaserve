@@ -549,6 +549,7 @@ class QuantLinear(nn.Module):
 
 def warmup_triton_kernels(max_bits, kn_values, max_seqlen=512):
     from tqdm import tqdm
+
     logger.warning("We should warm up the kernel here ")
     # print("Warming up Triton kernels")
     # print(kn_values)
