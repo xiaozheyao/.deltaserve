@@ -2,12 +2,19 @@ import torch
 import cupy as cp
 from typing import Dict
 from torch.utils.dlpack import to_dlpack, from_dlpack
-from kvikio.nvcomp import LZ4Manager
-from kvikio.nvcomp import SnappyManager
-from kvikio.nvcomp import BitcompManager
-from kvikio.nvcomp import GdeflateManager
-from kvikio.nvcomp import CascadedManager
 
+try:
+    from kvikio.nvcomp import LZ4Manager
+    from kvikio.nvcomp import SnappyManager
+    from kvikio.nvcomp import BitcompManager
+    from kvikio.nvcomp import GdeflateManager
+    from kvikio.nvcomp import CascadedManager
+except ImportError:
+    raise ImportError(
+        "Please install kvikio to use the LosslessCompressor class. "
+        "You can install it with `pip install kvikio`."
+    )
+    
 dtype_maps = {
     "int8": torch.int8,
     "fp16": torch.float16,
@@ -24,7 +31,6 @@ cp_dtype_maps = {
 
 
 class LosslessCompressor:
-
     def __init__(self, algorithm: str = "gdeflate", device_id: int = 0) -> None:
         if algorithm == "gdeflate":
             self.comp_manager = GdeflateManager(device_id=device_id)

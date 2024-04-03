@@ -21,7 +21,7 @@ from .utils import (
     ExLlamaV2DeviceTensors,
 )
 
-from .compressor import LosslessCompressor
+# from .compressor import LosslessCompressor
 import transformers
 from transformers import AutoConfig
 from vllm.logger import init_logger
@@ -169,9 +169,9 @@ class DeltaModel:
 
         tensors = {}
         if compress_config.lossless != "none":
-            lossless_compressor = LosslessCompressor(
-                compress_config.lossless, device_id=0
-            )
+            # lossless_compressor = LosslessCompressor(
+            #     compress_config.lossless, device_id=0
+            # )
             metadata = None
             with safe_open(
                 os.path.join(path_or_name, model_tensor_filename), "numpy"

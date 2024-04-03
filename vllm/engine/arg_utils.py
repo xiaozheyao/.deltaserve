@@ -58,10 +58,10 @@ class EngineArgs:
     max_lora_rank: int = 64
     lora_extra_vocab_size: int = 256
     lora_dtype = "auto"
-    max_cpu_loras: Optional[int] = None
+    max_cpu_loras: Optional[int] = 32
     enable_delta: bool = False
     max_deltas: int = 1
-    max_cpu_deltas: Optional[int] = None
+    max_cpu_deltas: Optional[int] = 32
     device: str = "auto"
     ray_workers_use_nsight: bool = False
     # Related to Vision-language models such as llava
