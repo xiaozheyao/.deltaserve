@@ -13,7 +13,7 @@ from vllm.executor.executor_base import ExecutorAsyncBase, ExecutorBase
 from vllm.executor.utils import check_block_size_valid
 from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
-from vllm.sequence import SamplerOutput, SequenceGroupMetadata
+from vllm.sequence import SamplerOutput, SequenceGroupMetadata, SequenceGroup
 from vllm.utils import get_distributed_init_method, get_ip, get_open_port, make_async
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
@@ -121,12 +121,14 @@ class GPUExecutor(ExecutorBase):
         blocks_to_swap_in: Dict[int, int],
         blocks_to_swap_out: Dict[int, int],
         blocks_to_copy: Dict[int, List[int]],
+        sequence_groups: List[SequenceGroup],
     ) -> SamplerOutput:
         output = self.driver_worker.execute_model(
             seq_group_metadata_list=seq_group_metadata_list,
             blocks_to_swap_in=blocks_to_swap_in,
             blocks_to_swap_out=blocks_to_swap_out,
             blocks_to_copy=blocks_to_copy,
+            sequence_groups=sequence_groups,
         )
         return output
 

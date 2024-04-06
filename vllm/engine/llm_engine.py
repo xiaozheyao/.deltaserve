@@ -707,13 +707,15 @@ class LLMEngine:
             >>>         break
         """
         seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule()
-
+        for so in scheduler_outputs.scheduled_seq_groups:
+            so.set_loading_time(time.time())
         if not scheduler_outputs.is_empty():
             output = self.model_executor.execute_model(
                 seq_group_metadata_list,
                 scheduler_outputs.blocks_to_swap_in,
                 scheduler_outputs.blocks_to_swap_out,
                 scheduler_outputs.blocks_to_copy,
+                scheduler_outputs.scheduled_seq_groups,
             )
         else:
             output = []

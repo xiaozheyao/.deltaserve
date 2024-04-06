@@ -24,7 +24,7 @@ from vllm.model_executor.parallel_utils.custom_all_reduce import init_custom_ar
 from vllm.model_executor.parallel_utils.parallel_state import (
     ensure_model_parallel_initialized,
 )
-from vllm.sequence import SamplerOutput, SequenceGroupMetadata
+from vllm.sequence import SamplerOutput, SequenceGroupMetadata, SequenceGroup
 from vllm.worker.cache_engine import CacheEngine
 from vllm.worker.model_runner import ModelRunner
 from vllm.delta.config import DeltaConfig
@@ -215,6 +215,7 @@ class Worker:
         blocks_to_swap_in: Optional[Dict[int, int]] = None,
         blocks_to_swap_out: Optional[Dict[int, int]] = None,
         blocks_to_copy: Optional[Dict[int, List[int]]] = None,
+        sequence_groups: Optional[List[SequenceGroup]] = None,
     ) -> Optional[SamplerOutput]:
         if self.is_driver_worker:
             assert seq_group_metadata_list is not None
@@ -243,7 +244,7 @@ class Worker:
             return {}
 
         output = self.model_runner.execute_model(
-            seq_group_metadata_list, self.gpu_cache
+            seq_group_metadata_list, self.gpu_cache, sequence_groups
         )
         return output
 

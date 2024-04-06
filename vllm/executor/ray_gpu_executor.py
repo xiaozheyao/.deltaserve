@@ -19,7 +19,7 @@ from vllm.executor.executor_base import ExecutorAsyncBase, ExecutorBase
 from vllm.executor.utils import check_block_size_valid
 from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
-from vllm.sequence import SamplerOutput, SequenceGroupMetadata
+from vllm.sequence import SamplerOutput, SequenceGroupMetadata, SequenceGroup
 from vllm.utils import (
     set_cuda_visible_devices,
     get_ip,
@@ -281,6 +281,7 @@ class RayGPUExecutor(ExecutorBase):
         blocks_to_swap_in: Dict[int, int],
         blocks_to_swap_out: Dict[int, int],
         blocks_to_copy: Dict[int, List[int]],
+        sequence_groups: List[SequenceGroup],
     ) -> SamplerOutput:
         all_outputs = self._run_workers(
             "execute_model",
@@ -289,6 +290,7 @@ class RayGPUExecutor(ExecutorBase):
                 "blocks_to_swap_in": blocks_to_swap_in,
                 "blocks_to_swap_out": blocks_to_swap_out,
                 "blocks_to_copy": blocks_to_copy,
+                "sequence_groups": sequence_groups,
             },
             use_ray_compiled_dag=USE_RAY_COMPILED_DAG,
         )

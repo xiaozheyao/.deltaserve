@@ -16,7 +16,6 @@ from .models import (
 
 logger = init_logger(__name__)
 
-
 class AbstractWorkerManager(ABC):
     """Abstract class for managing LoRA/Delta models on the worker side."""
 
@@ -34,7 +33,8 @@ class AbstractWorkerManager(ABC):
         self.device = device
         self.delta_config = delta_config
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def is_enabled(self) -> bool: ...
 
     @abstractmethod
@@ -125,7 +125,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
         deltas_to_remove = deltas_that_exist - new_deltas
         for delta_id in deltas_to_remove:
             self.remove_delta(delta_id)
-
+        
         for delta_id in deltas_to_add:
             self.add_delta(deltas_map[delta_id])
 
@@ -135,6 +135,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
                 delta_request.delta_local_path,
                 id=delta_request.delta_int_id,
             )
+            # TODO(xiaozhe): track loading time here
         except Exception as e:
             logger.error(
                 f"Failed to load delta model from {delta_request.delta_local_path}: {e}"
@@ -146,9 +147,9 @@ class WorkerDeltaManager(AbstractWorkerManager):
         if delta_request.delta_int_id in self.list_deltas():
             return False
         raise NotImplementedError
-        return self._delta_manager.add_delta(
-            self._delta_manager.create_dummy_delta(delta_request.delta_int_id)
-        )
+        # return self._delta_manager.add_delta(
+        #     self._delta_manager.create_dummy_delta(delta_request.delta_int_id)
+        # )
 
     def add_delta(self, delta_request: DeltaRequest) -> bool:
         if delta_request.delta_int_id in self.list_deltas():

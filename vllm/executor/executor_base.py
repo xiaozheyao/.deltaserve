@@ -12,7 +12,7 @@ from vllm.config import (
 )
 from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
-from vllm.sequence import SamplerOutput, SequenceGroupMetadata
+from vllm.sequence import SamplerOutput, SequenceGroupMetadata, SequenceGroup
 
 
 class ExecutorBase(ABC):
@@ -43,6 +43,7 @@ class ExecutorBase(ABC):
         blocks_to_swap_in: Dict[int, int],
         blocks_to_swap_out: Dict[int, int],
         blocks_to_copy: Dict[int, List[int]],
+        sequence_groups: List[SequenceGroup],
     ) -> SamplerOutput:
         """Executes one model step on the given sequences."""
         raise NotImplementedError
@@ -87,6 +88,7 @@ class ExecutorAsyncBase(ExecutorBase):
         blocks_to_swap_in: Dict[int, int],
         blocks_to_swap_out: Dict[int, int],
         blocks_to_copy: Dict[int, List[int]],
+        sequence_groups: List[SequenceGroup],
     ) -> SamplerOutput:
         """Executes one model step on the given sequences."""
         raise NotImplementedError
