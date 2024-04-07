@@ -29,7 +29,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .deltazip import apply_delta, apply_delta_packed_nslice,apply_delta_embed
+from .deltazip import apply_delta, apply_delta_packed_nslice, apply_delta_embed, apply_delta_uncompressed
 
 ASYNC_COPY = False
 logger = init_logger(__name__)
@@ -96,7 +96,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
 
     def reset_delta(self, index: int):
         pass
-    
+
     def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
         self.delta_weights = torch.zeros(
             max_deltas,
@@ -105,7 +105,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
             dtype=delta_config.delta_dtype,
             device=self.base_layer.weight.device,
         )
-    
+
     def set_delta(
         self,
         index: int,
@@ -129,10 +129,10 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         indices = self.indices[: self.indices_len[0]]
         base_output = self.base_layer(x)
-        base_output = apply_delta_embed(x, self.delta_weights, indices, base_output)
+        base_output = apply_delta_embed(
+            x, self.delta_weights, indices, base_output)
         return base_output
-        
-    
+
     @classmethod
     def can_replace_layer(
         cls,
@@ -211,9 +211,12 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         if self.tp_size > 1:
             pass
-        self.qweight_stacked[index, 0, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
-        self.qzero_stacked[index, 0, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
-        self.scales_stacked[index, 0, :, :].copy_(scales, non_blocking=ASYNC_COPY)
+        self.qweight_stacked[index, 0, :, :].copy_(
+            qweight, non_blocking=ASYNC_COPY)
+        self.qzero_stacked[index, 0, :, :].copy_(
+            qzeros, non_blocking=ASYNC_COPY)
+        self.scales_stacked[index, 0, :, :].copy_(
+            scales, non_blocking=ASYNC_COPY)
         self.g_idx_stacked = g_idx
 
     def set_mapping(
@@ -385,13 +388,13 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             if qweight[0] is not None:
                 qweight[0] = qweight[0][:, start_idx:end_idx]
                 qzeros[0] = qzeros[0][
-                    :, start_idx // self.pack_factor : end_idx // self.pack_factor
+                    :, start_idx // self.pack_factor: end_idx // self.pack_factor
                 ]
                 scales[0] = scales[0][:, start_idx:end_idx]
             if qweight[1] is not None:
                 qweight[1] = qweight[1][:, start_idx:end_idx]
                 qzeros[1] = qzeros[1][
-                    :, start_idx // self.pack_factor : end_idx // self.pack_factor
+                    :, start_idx // self.pack_factor: end_idx // self.pack_factor
                 ]
                 scales[1] = scales[1][:, start_idx:end_idx]
 
@@ -610,7 +613,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 qweight_q = qweight[0][
                     :,
                     self.q_proj_shard_size
-                    * self.q_shard_id : self.q_proj_shard_size
+                    * self.q_shard_id: self.q_proj_shard_size
                     * (self.q_shard_id + 1),
                 ]
                 self.qweight_stacked[0][
@@ -621,7 +624,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     :,
                     self.q_proj_shard_size
                     * self.q_shard_id
-                    // self.pack_factor : self.q_proj_shard_size
+                    // self.pack_factor: self.q_proj_shard_size
                     * (self.q_shard_id + 1)
                     // self.pack_factor,
                 ]
@@ -637,7 +640,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 scales_q = scales[0][
                     :,
                     self.q_proj_shard_size
-                    * self.q_shard_id : self.q_proj_shard_size
+                    * self.q_shard_id: self.q_proj_shard_size
                     * (self.q_shard_id + 1),
                 ]
 
@@ -650,7 +653,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 qweight_kv = qweight[1][
                     :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id : self.kv_proj_shard_size
+                    * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
                 self.qweight_stacked[1][
@@ -661,7 +664,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     :,
                     self.kv_proj_shard_size
                     // self.pack_factor
-                    * self.kv_shard_id : self.kv_proj_shard_size
+                    * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
@@ -673,7 +676,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 scales_q = scales[1][
                     :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id : self.kv_proj_shard_size
+                    * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
                 self.scales_stacked[1][
@@ -686,7 +689,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 qweight_kv = qweight[2][
                     :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id : self.kv_proj_shard_size
+                    * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
                 self.qweight_stacked[2][
@@ -697,7 +700,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     :,
                     self.kv_proj_shard_size
                     // self.pack_factor
-                    * self.kv_shard_id : self.kv_proj_shard_size
+                    * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
@@ -708,7 +711,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 scales_q = scales[2][
                     :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id : self.kv_proj_shard_size
+                    * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
                 self.scales_stacked[2][
@@ -877,10 +880,10 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             start_idx = tensor_model_parallel_rank * shard_size
             end_idx = (tensor_model_parallel_rank + 1) * shard_size
             qweight = qweight[
-                start_idx // self.pack_factor : end_idx // self.pack_factor, :
+                start_idx // self.pack_factor: end_idx // self.pack_factor, :
             ]
             qzeros = qzeros[
-                start_idx // self.pack_factor : end_idx // self.pack_factor, :
+                start_idx // self.pack_factor: end_idx // self.pack_factor, :
             ]
             scales = scales[start_idx:end_idx, :]
 
@@ -994,10 +997,28 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         delta_config: DeltaConfig,
         model_config: Optional[PretrainedConfig] = None,
     ) -> None:
-        pass
+        self.weight_stacked = torch.zeros(
+            (
+                max_deltas,
+                self.base_layer.vocab_size,
+                self.hidden_size,
+            ),
+            dtype=self.dtype,
+            device=self.device,
+        )
+        self.embeddings_tensors = torch.full(
+            (max_deltas, 0, self.hidden_size),
+            fill_value=float("-inf"),
+            dtype=self.dtype,
+            device=self.device
+        )
+        self.indices = None
+        self.indices_padded = None
+        self.indices_len = None
 
     def reset_delta(self, index: int):
-        pass
+        self.weight_stacked[index] = 0
+        self.embeddings_tensors[index] = float("-inf")
 
     def set_delta(
         self,
@@ -1006,8 +1027,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         device_tensor: Any,
     ):
         self.device_tensor = device_tensor
-        print("setting delta for LogitsProcessorWithDelta")
-        pass
+        self.weight_stacked[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
         self,
@@ -1034,7 +1054,37 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         logits = tensor_model_parallel_gather(logits)
         if logits is None:
             return None
+        delta_logits = torch.empty(
+            self.embeddings_tensors.shape[0] + 1,
+            self.embeddings_tensors.shape[1],
+            hidden_states.shape[0],
+            dtype=self.embeddings_tensors.dtype,
+            device=self.embeddings_tensors.device,
+        )
+        torch.matmul(self.embeddings_tensors,
+                     hidden_states.T, out=delta_logits[:-1])
+        delta_logits[-1] = float("-inf")
+        delta_logits = delta_logits.mT
+        delta_logits = (
+            delta_logits.reshape(
+                delta_logits.shape[0] *
+                delta_logits.shape[1], delta_logits.shape[2]
+            ).index_select(0, self.indices_padded[: self.indices_len[2]])
+            .nan_to_num_(nan=float("-inf"), posinf=float("inf"), neginf=float("-inf"))
+        )
+        logits[
+            :,
+            self.base_layer.org_vocab_size: self.base_layer.org_vocab_size
+            + delta_logits.shape[1],
+        ] = delta_logits
 
+        logits = logits[:, : self.base_layer.vocab_size]
+        apply_delta_uncompressed(
+            hidden_states,
+            self.weight_stacked,
+            self.indices[: self.indices_len[1]],
+            logits,
+        )
         return logits
 
     def forward(self, *args, **kwargs):

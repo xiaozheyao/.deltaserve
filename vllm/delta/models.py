@@ -489,7 +489,6 @@ class DeltaModelManager:
                     self.model.config,
                 ),
             )
-            # (yard1): TODO make this more robust
             if "lm_head" in module_name:
                 logits_processor_module = self.model.get_submodule("logits_processor")
                 new_module = replace_submodule(
