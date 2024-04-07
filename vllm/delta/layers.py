@@ -29,7 +29,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .deltazip import apply_delta, apply_delta_packed_nslice
+from .deltazip import apply_delta, apply_delta_packed_nslice,apply_delta_embed
 
 ASYNC_COPY = False
 logger = init_logger(__name__)
@@ -96,19 +96,23 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
 
     def reset_delta(self, index: int):
         pass
-
+    
+    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
+        self.delta_weights = torch.zeros(
+            max_deltas,
+            self.base_layer.weight.shape[0],
+            self.base_layer.weight.shape[1],
+            dtype=delta_config.delta_dtype,
+            device=self.base_layer.weight.device,
+        )
+    
     def set_delta(
         self,
         index: int,
-        qweight: torch.Tensor,
-        qzeros: torch.Tensor,
-        scales: torch.Tensor,
-        g_idx: torch.Tensor,
+        weight: torch.Tensor,
         device_tensor: Any,
     ):
-        self.device_tensor = device_tensor
-        self.reset_delta(index)
-        print("setting delta for VocabParallelEmbeddingWithDelta")
+        self.delta_weights[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
         self,
@@ -123,8 +127,12 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.indices_len = indices_len
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        return self.base_layer.forward(x)
-
+        indices = self.indices[: self.indices_len[0]]
+        base_output = self.base_layer(x)
+        base_output = apply_delta_embed(x, self.delta_weights, indices, base_output)
+        return base_output
+        
+    
     @classmethod
     def can_replace_layer(
         cls,
@@ -994,11 +1002,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
     def set_delta(
         self,
         index: int,
-        qweight: torch.Tensor,
-        qzeros: torch.Tensor,
-        scales: torch.Tensor,
-        g_idx: torch.Tensor,
-        embeddings_tensor: Optional[torch.Tensor],
+        weight: torch.Tensor,
         device_tensor: Any,
     ):
         self.device_tensor = device_tensor

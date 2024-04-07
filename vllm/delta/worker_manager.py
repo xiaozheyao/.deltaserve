@@ -143,13 +143,10 @@ class WorkerDeltaManager(AbstractWorkerManager):
 
     def _load_delta(self, delta_request: DeltaRequest) -> DeltaModel:
         try:
-            logger.info("from ckpt starts")
             delta = self._delta_model_cls.from_checkpoint(
                 delta_request.delta_local_path,
                 id=delta_request.delta_int_id,
             )
-            logger.info("from ckpt ends")
-            exit(0)
             # TODO(xiaozhe): track loading time here
         except Exception as e:
             logger.error(
@@ -216,12 +213,12 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
-            delta = self._load_delta(delta_request)
             start = time.time()
+            delta = self._load_delta(delta_request)
             loaded = self._delta_manager.add_delta(delta)
             end = time.time()
             logger.info(
-                f"Time to load delta {delta_request.delta_int_id}: {end - start:.2f}s"
+                f"Time to load delta {delta_request.delta_int_id}: {end - start:.4f}s"
             )
 
         else:

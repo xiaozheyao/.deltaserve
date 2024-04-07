@@ -186,6 +186,7 @@ class DeltaModel:
             with cp.cuda.Device(0):
                 for key in tensors.keys():
                     tensors[key] = cp.array(tensors[key], copy=False)
+            
             tensors = lossless_compressor.decompress_state_dict(
                 tensors,
                 tensor_shapes,
@@ -219,6 +220,19 @@ class DeltaModel:
                 scales=tensors[module + ".scales"],
                 g_idx=tensors[module + ".g_idx"],
                 compress_config=compress_config,
+            )
+        # now handling remaining modules
+        remaining_module_names = set(
+            [
+                x.rsplit(".", 1)[0]
+                for x in tensors.keys()
+                if any([y in x for y in ignore_modules])
+            ]
+        )
+        for module in remaining_module_names:
+            modules[module] = DeltaLayerWeights(
+                module_name=module,
+                weight = tensors[module+".weight"]
             )
         del tensors
         return cls(id, modules)
@@ -347,24 +361,35 @@ class DeltaModelManager:
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:
-                if type(module_delta.qweight) == list:
-                    # packed module
-                    qweight_device = module_delta.qweight[0].device
+                if module_delta._compressed:
+                    if type(module_delta.qweight) == list:
+                        # packed module
+                        qweight_device = module_delta.qweight[0].device
+                    else:
+                        # unpacked
+                        qweight_device = module_delta.qweight.device
+                    module.set_delta(
+                        index,
+                        module_delta.qweight,
+                        module_delta.qzeros,
+                        module_delta.scales,
+                        module_delta.g_idx,
+                        device_tensor=(
+                            device_tensors[0]
+                            if self.current_kernel == QuantKernel.EXLLAMA
+                            else True
+                        ),
+                    )
                 else:
-                    # unpacked
-                    qweight_device = module_delta.qweight.device
-                module.set_delta(
-                    index,
-                    module_delta.qweight,
-                    module_delta.qzeros,
-                    module_delta.scales,
-                    module_delta.g_idx,
-                    device_tensor=(
-                        device_tensors[0]
-                        if self.current_kernel == QuantKernel.EXLLAMA
-                        else True
-                    ),
-                )
+                    module.set_delta(
+                        index,
+                        module_delta.weight,
+                        device_tensor=(
+                            device_tensors[0]
+                            if self.current_kernel == QuantKernel.EXLLAMA
+                            else True
+                        ),
+                    )
             else:
                 module.reset_delta(index)
         return True
@@ -448,9 +473,6 @@ class DeltaModelManager:
         self._active_deltas.clear()
 
     def _create_delta_modules(self):
-        for module_name, module in self.model.named_modules():
-            if not self._match_target_modules(module_name):
-                continue
         for module_name, module in self.model.named_modules():
             if not self._match_target_modules(module_name):
                 continue

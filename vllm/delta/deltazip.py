@@ -1,6 +1,6 @@
 import torch
 from typing import Optional, Tuple, List, Any
-
+import torch.nn.functional as F
 # from .quant_linears.quant_linear_naive import QuantLinear
 # from .quant_linears.quant_linear_exllama import QuantLinear
 from .quant_linears.quant_linear_triton import QuantLinear
@@ -150,3 +150,33 @@ def apply_delta_packed_nslice(
         )
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
+
+def apply_delta_embed(
+    x: torch.Tensor,
+    delta_weights: List,
+    indices: torch.Tensor,
+    base_output: torch.Tensor,
+):
+    """
+    Applies delta to each input.
+    This method applies all deltas to each input. It uses the
+    indices vector to determine which delta yields the
+    correct output. An index of -1 means no delta should be
+    applied. This method adds the final delta results to the
+    output.
+
+    This method is used for layers that are composed of multiple sublayers
+    (slices) packed together.
+
+    Input shapes:
+        x:                 (batch_size, hidden_dim)
+        delta_weights:     list of delta weights
+        indices:           (batch_size)
+    """
+    outputs = torch.zeros((len(delta_weights), base_output.shape[0], base_output.shape[1]), device=base_output.device)
+    for i, delta in enumerate(delta_weights):
+        if delta is not None:
+            outputs[i] = F.embedding(x, delta)
+    for i in range(len(delta_weights)):
+        base_output[indices == i] += outputs[i][indices == i]
+    return base_output
