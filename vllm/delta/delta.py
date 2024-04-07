@@ -76,6 +76,5 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
 
 
 class DeltaZipWeight:
-
     def __init__(self, qweight) -> None:
         self.qweight = qweight

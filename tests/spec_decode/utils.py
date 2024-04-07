@@ -155,7 +155,6 @@ def create_seq_group_metadata_from_prompts(
     continuations: Optional[List[List[int]]] = None,
     seq_ids: Optional[List[int]] = None,
 ) -> List[SequenceGroupMetadata]:
-
     if continuations is None:
         continuations = [[] for _ in prompts]
 

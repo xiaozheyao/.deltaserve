@@ -52,7 +52,6 @@ from vllm.sequence import SamplerOutput
 
 
 class Starcoder2Attention(nn.Module):
-
     def __init__(
         self, config: Starcoder2Config, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -128,7 +127,6 @@ class Starcoder2Attention(nn.Module):
 
 
 class Starcoder2MLP(nn.Module):
-
     def __init__(
         self, config: Starcoder2Config, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -156,7 +154,6 @@ class Starcoder2MLP(nn.Module):
 
 
 class Starcoder2DecoderLayer(nn.Module):
-
     def __init__(
         self, config: Starcoder2Config, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -197,7 +194,6 @@ class Starcoder2DecoderLayer(nn.Module):
 
 
 class Starcoder2Model(nn.Module):
-
     def __init__(
         self, config: Starcoder2Config, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -234,7 +230,6 @@ class Starcoder2Model(nn.Module):
 
 
 class Starcoder2ForCausalLM(nn.Module):
-
     def __init__(
         self, config: Starcoder2Config, linear_method: Optional[LinearMethodBase] = None
     ):

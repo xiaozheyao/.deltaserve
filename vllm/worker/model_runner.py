@@ -67,7 +67,6 @@ _BATCH_SIZES_TO_CAPTURE = [1, 2, 4] + [_BATCH_SIZE_ALIGNMENT * i for i in range(
 
 
 class ModelRunner:
-
     def __init__(
         self,
         model_config: ModelConfig,
@@ -1115,7 +1114,6 @@ class ModelRunner:
 
 
 class CUDAGraphRunner:
-
     def __init__(self, model: nn.Module):
         self.model = model
         self.graph = None

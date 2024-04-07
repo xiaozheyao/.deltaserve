@@ -120,10 +120,11 @@ class SpecDecodeWorker:
         scorer cache is divided evenly between the proposer and scorer model KV,
         such that the number of blocks is equal in both KV caches.
         """
-        num_gpu_blocks, num_cpu_blocks = (
-            self.scorer_worker.profile_num_available_blocks(
-                block_size, gpu_memory_utilization, cpu_swap_space, cache_dtype
-            )
+        (
+            num_gpu_blocks,
+            num_cpu_blocks,
+        ) = self.scorer_worker.profile_num_available_blocks(
+            block_size, gpu_memory_utilization, cpu_swap_space, cache_dtype
         )
 
         scorer_cache_block_size_bytes = self.scorer_worker.get_cache_block_size_bytes(

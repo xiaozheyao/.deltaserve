@@ -75,7 +75,6 @@ pytestmark = pytest.mark.asyncio
 
 @ray.remote(num_gpus=1)
 class ServerRunner:
-
     def __init__(self, args):
         env = os.environ.copy()
         env["PYTHONUNBUFFERED"] = "1"

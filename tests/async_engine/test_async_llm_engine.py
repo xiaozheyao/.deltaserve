@@ -13,7 +13,6 @@ class RequestOutput:
 
 
 class MockEngine:
-
     def __init__(self):
         self.step_calls = 0
         self.add_request_calls = 0
@@ -50,7 +49,6 @@ class MockEngine:
 
 
 class MockAsyncLLMEngine(AsyncLLMEngine):
-
     def _init_engine(self, *args, **kwargs):
         return MockEngine()
 

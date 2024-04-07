@@ -61,7 +61,6 @@ from vllm.sequence import SamplerOutput
 
 
 class DeepseekMLP(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -99,7 +98,6 @@ class DeepseekMLP(nn.Module):
 
 
 class DeepseekMoE(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -189,7 +187,6 @@ class DeepseekMoE(nn.Module):
 
 
 class DeepseekAttention(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -266,7 +263,6 @@ class DeepseekAttention(nn.Module):
 
 
 class DeepseekDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -333,7 +329,6 @@ class DeepseekDecoderLayer(nn.Module):
 
 
 class DeepseekModel(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -374,7 +369,6 @@ class DeepseekModel(nn.Module):
 
 
 class DeepseekForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,

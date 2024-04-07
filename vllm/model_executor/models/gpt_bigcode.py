@@ -47,7 +47,6 @@ from vllm.sequence import SamplerOutput
 
 
 class GPTBigCodeAttention(nn.Module):
-
     def __init__(
         self,
         config: GPTBigCodeConfig,
@@ -113,7 +112,6 @@ class GPTBigCodeAttention(nn.Module):
 
 
 class GPTBigMLP(nn.Module):
-
     def __init__(
         self,
         intermediate_size: int,
@@ -147,7 +145,6 @@ class GPTBigMLP(nn.Module):
 
 
 class GPTBigCodeBlock(nn.Module):
-
     def __init__(
         self,
         config: GPTBigCodeConfig,
@@ -187,7 +184,6 @@ class GPTBigCodeBlock(nn.Module):
 
 
 class GPTBigCodeModel(nn.Module):
-
     def __init__(
         self,
         config: GPTBigCodeConfig,
@@ -229,7 +225,6 @@ class GPTBigCodeModel(nn.Module):
 
 
 class GPTBigCodeForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: GPTBigCodeConfig,

@@ -17,7 +17,6 @@ logger = init_logger(__name__)
 
 
 class NeuronExecutor(ExecutorBase):
-
     def __init__(
         self,
         model_config: ModelConfig,

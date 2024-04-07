@@ -1,4 +1,5 @@
-from abc import ABC, abstractmethod, abstractproperty
+import time
+from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Set, Type, Dict
 import torch
 
@@ -6,7 +7,6 @@ from .layers import DeltaMapping
 from .request import DeltaRequest
 from .config import DeltaConfig
 from vllm.logger import init_logger
-
 from .models import (
     DeltaModel,
     DeltaModelManager,
@@ -15,6 +15,7 @@ from .models import (
 )
 
 logger = init_logger(__name__)
+
 
 class AbstractWorkerManager(ABC):
     """Abstract class for managing LoRA/Delta models on the worker side."""
@@ -35,33 +36,41 @@ class AbstractWorkerManager(ABC):
 
     @property
     @abstractmethod
-    def is_enabled(self) -> bool: ...
+    def is_enabled(self) -> bool:
+        ...
 
     @abstractmethod
     def create_delta_manager(
         self,
         model: torch.nn.Module,
-    ) -> Any: ...
+    ) -> Any:
+        ...
 
     @abstractmethod
     def set_active_deltas(
         self, lora_requests: List[DeltaRequest], lora_mapping: DeltaMapping
-    ) -> None: ...
+    ) -> None:
+        ...
 
     @abstractmethod
-    def add_delta(self, delta_request: DeltaRequest) -> bool: ...
+    def add_delta(self, delta_request: DeltaRequest) -> bool:
+        ...
 
     @abstractmethod
-    def add_dummy_delta(self, delta_request: DeltaRequest) -> bool: ...
+    def add_dummy_delta(self, delta_request: DeltaRequest) -> bool:
+        ...
 
     @abstractmethod
-    def remove_delta(self, delta_id: int) -> bool: ...
+    def remove_delta(self, delta_id: int) -> bool:
+        ...
 
     @abstractmethod
-    def remove_all_deltas(self) -> bool: ...
+    def remove_all_deltas(self) -> bool:
+        ...
 
     @abstractmethod
-    def list_deltas(self) -> Set[int]: ...
+    def list_deltas(self) -> Set[int]:
+        ...
 
 
 class WorkerDeltaManager(AbstractWorkerManager):
@@ -125,16 +134,22 @@ class WorkerDeltaManager(AbstractWorkerManager):
         deltas_to_remove = deltas_that_exist - new_deltas
         for delta_id in deltas_to_remove:
             self.remove_delta(delta_id)
-        
+
         for delta_id in deltas_to_add:
+            start = time.time()
             self.add_delta(deltas_map[delta_id])
+            end = time.time()
+            logger.info(f"Time to load delta {delta_id}: {end - start:.2f}s")
 
     def _load_delta(self, delta_request: DeltaRequest) -> DeltaModel:
         try:
+            logger.info("from ckpt starts")
             delta = self._delta_model_cls.from_checkpoint(
                 delta_request.delta_local_path,
                 id=delta_request.delta_int_id,
             )
+            logger.info("from ckpt ends")
+            exit(0)
             # TODO(xiaozhe): track loading time here
         except Exception as e:
             logger.error(
@@ -202,7 +217,13 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
             delta = self._load_delta(delta_request)
+            start = time.time()
             loaded = self._delta_manager.add_delta(delta)
+            end = time.time()
+            logger.info(
+                f"Time to load delta {delta_request.delta_int_id}: {end - start:.2f}s"
+            )
+
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
         self._delta_manager.activate_delta(delta_request.delta_int_id)

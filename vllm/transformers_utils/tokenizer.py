@@ -27,7 +27,6 @@ def get_cached_tokenizer(
     tokenizer_all_special_tokens = set(tokenizer.all_special_tokens)
 
     class CachedTokenizer(tokenizer.__class__):
-
         @property
         def all_special_ids(self):
             return tokenizer_all_special_ids

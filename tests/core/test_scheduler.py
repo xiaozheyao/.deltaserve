@@ -188,7 +188,6 @@ def test_scheduler_max_seqs():
 
 
 def test_scheduler_delay_factor():
-
     block_size = 4
     scheduler_config = SchedulerConfig(100, 64, 16, delay_factor=0.5)
     cache_config = CacheConfig(block_size, 1.0, 1, "auto")

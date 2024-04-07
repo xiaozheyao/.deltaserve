@@ -79,7 +79,6 @@ def _get_alibi_slopes(total_num_heads: int) -> torch.Tensor:
 
 
 class BaiChuanMLP(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -188,7 +187,6 @@ class BaiChuanAttention(nn.Module):
 
 
 class BaiChuanDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -246,7 +244,6 @@ class BaiChuanDecoderLayer(nn.Module):
 
 
 class BaiChuanModel(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,

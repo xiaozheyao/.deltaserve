@@ -185,7 +185,6 @@ def _can_actually_p2p(idx_a, idx_b):
 
 
 class CustomAllreduce:
-
     # max_size: max supported allreduce size
     def __init__(self, rank, world_size, full_nvlink, max_size=8192 * 1024) -> None:
         # buffers memory are owned by this Python class and passed to C++

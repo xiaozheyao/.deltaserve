@@ -6,7 +6,6 @@ from vllm.lora.lora import LoRALayerWeights, PackedLoRALayerWeights
 
 
 class DummyLoRAManager:
-
     def __init__(self):
         super().__init__()
         self._loras = {}

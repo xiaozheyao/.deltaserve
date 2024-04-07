@@ -80,7 +80,7 @@ class RequestMetrics:
     Attributes:
         arrival_time: The time when the request arrived.
         first_scheduled_time: The time when the request was first scheduled.
-        loading_time: The time to load the model/lora/delta, if needed.
+        loading_time: The time to load the model/lora/delta from disk, if needed.
         first_token_time: The time when the first token was generated.
         time_in_queue: The time the request spent in the queue.
         finished_time: The time when the request was finished.
@@ -418,7 +418,7 @@ class SequenceGroup:
 
     def set_loading_time(self, time: Optional[float]) -> None:
         self.metrics.loading_time = time
-    
+
     def set_finished_time(self, time: Optional[float]) -> None:
         """Sets the finished time for Request level timings."""
         self.metrics.finished_time = time

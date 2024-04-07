@@ -179,18 +179,20 @@ def sample(
     # do an argmax+gather to combine the results.
     n_splits = get_num_triton_sampler_splits(probs.shape[1])
     if n_splits > 1:
-        (sampled_tokens, sampled_logprobs, sampled_modified_probs) = (
-            _multi_split_sample(
-                probs,
-                seeds,
-                n_splits,
-                sampled_tokens_size,
-                sampled_logprobs_size,
-                sample_indices,
-                logprobs=logprobs,
-                modify_greedy_probs=modify_greedy_probs,
-                save_logprobs=save_logprobs,
-            )
+        (
+            sampled_tokens,
+            sampled_logprobs,
+            sampled_modified_probs,
+        ) = _multi_split_sample(
+            probs,
+            seeds,
+            n_splits,
+            sampled_tokens_size,
+            sampled_logprobs_size,
+            sample_indices,
+            logprobs=logprobs,
+            modify_greedy_probs=modify_greedy_probs,
+            save_logprobs=save_logprobs,
         )
     else:
         sampled_tokens = torch.empty(

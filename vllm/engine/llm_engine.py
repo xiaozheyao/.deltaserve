@@ -446,7 +446,6 @@ class LLMEngine:
     def _process_sequence_group_outputs(
         self, seq_group: SequenceGroup, outputs: SequenceGroupOutput
     ) -> None:
-
         # Process prompt logprobs
         prompt_logprobs = outputs.prompt_logprobs
         if prompt_logprobs is not None:
@@ -707,8 +706,6 @@ class LLMEngine:
             >>>         break
         """
         seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule()
-        for so in scheduler_outputs.scheduled_seq_groups:
-            so.set_loading_time(time.time())
         if not scheduler_outputs.is_empty():
             output = self.model_executor.execute_model(
                 seq_group_metadata_list,

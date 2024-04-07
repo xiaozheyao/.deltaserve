@@ -35,7 +35,6 @@ logger = init_logger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: fastapi.FastAPI):
-
     async def _force_log():
         while True:
             await asyncio.sleep(10)

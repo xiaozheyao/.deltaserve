@@ -220,7 +220,6 @@ def test_same_output_for_multi_step():
     set_random_seed(seed)
 
     for _ in multi_step_output:
-
         execute_model_data = create_execute_model_data(
             create_seq_group_metadata_from_prompts(
                 prompts,

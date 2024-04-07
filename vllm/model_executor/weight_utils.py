@@ -37,7 +37,6 @@ temp_dir = (
 
 
 class Disabledtqdm(tqdm):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs, disable=True)
 

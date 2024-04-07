@@ -71,7 +71,6 @@ def _get_alibi_slopes(total_num_heads: int) -> torch.Tensor:
 
 
 class BloomAttention(nn.Module):
-
     def __init__(
         self,
         config: BloomConfig,
@@ -129,7 +128,6 @@ class BloomAttention(nn.Module):
 
 
 class BloomMLP(nn.Module):
-
     def __init__(
         self,
         config: BloomConfig,
@@ -158,7 +156,6 @@ class BloomMLP(nn.Module):
 
 
 class BloomBlock(nn.Module):
-
     def __init__(
         self,
         config: BloomConfig,
@@ -215,7 +212,6 @@ class BloomBlock(nn.Module):
 
 
 class BloomModel(nn.Module):
-
     def __init__(
         self,
         config: BloomConfig,
@@ -263,7 +259,6 @@ class BloomModel(nn.Module):
 
 
 class BloomForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: BloomConfig,

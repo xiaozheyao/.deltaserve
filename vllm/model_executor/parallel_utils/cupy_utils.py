@@ -21,7 +21,8 @@ except ImportError as e:
     cupy = e
     nccl = None
 
-    class NCCLBackend: ...
+    class NCCLBackend:
+        ...
 
 
 _OP_MAPPING = {

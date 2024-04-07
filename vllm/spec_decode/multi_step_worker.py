@@ -253,9 +253,11 @@ class DraftModelTop1Proposer(SpeculativeProposer):
         """
 
         # Split speculative- and non-speculative- sequences.
-        (proposal_lens, nonzero_proposal_len_seqs, nonzero_proposal_len_indices) = (
-            self._split_by_max_model_len(seq_group_metadata_list, max_proposal_len)
-        )
+        (
+            proposal_lens,
+            nonzero_proposal_len_seqs,
+            nonzero_proposal_len_indices,
+        ) = self._split_by_max_model_len(seq_group_metadata_list, max_proposal_len)
 
         if nonzero_proposal_len_seqs:
             # Speculate tokens using the draft worker for the speculative

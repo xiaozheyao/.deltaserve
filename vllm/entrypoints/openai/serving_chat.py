@@ -26,7 +26,6 @@ logger = init_logger(__name__)
 
 
 class OpenAIServingChat(OpenAIServing):
-
     def __init__(
         self,
         engine: AsyncLLMEngine,
@@ -116,7 +115,6 @@ class OpenAIServingChat(OpenAIServing):
         result_generator: AsyncIterator[RequestOutput],
         request_id: str,
     ) -> Union[ErrorResponse, AsyncGenerator[str, None]]:
-
         model_name = request.model
         created_time = int(time.time())
         chunk_object_type = "chat.completion.chunk"
@@ -270,7 +268,6 @@ class OpenAIServingChat(OpenAIServing):
         result_generator: AsyncIterator[RequestOutput],
         request_id: str,
     ) -> Union[ErrorResponse, ChatCompletionResponse]:
-
         model_name = request.model
         created_time = int(time.time())
         final_res: RequestOutput = None

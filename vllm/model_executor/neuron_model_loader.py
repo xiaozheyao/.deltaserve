@@ -43,7 +43,6 @@ _NEURON_SUPPORTED_MODELS = {
 
 
 class NeuronCasualLM(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,

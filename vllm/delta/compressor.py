@@ -14,7 +14,7 @@ except ImportError:
         "Please install kvikio to use the LosslessCompressor class. "
         "You can install it with `pip install kvikio`."
     )
-    
+
 dtype_maps = {
     "int8": torch.int8,
     "fp16": torch.float16,

@@ -45,7 +45,6 @@ class Device(enum.Enum):
 
 
 class Counter:
-
     def __init__(self, start: int = 0) -> None:
         self.counter = start
 
@@ -59,7 +58,6 @@ class Counter:
 
 
 class LRUCache(Generic[T]):
-
     def __init__(self, capacity: int):
         self.cache = OrderedDict[Hashable, T]()
         self.capacity = capacity
@@ -350,7 +348,6 @@ def print_warning_once(msg: str) -> None:
 
 @lru_cache(maxsize=None)
 def is_pin_memory_available() -> bool:
-
     if in_wsl():
         # Pinning memory in WSL is not supported.
         # https://docs.nvidia.com/cuda/wsl-user-guide/index.html#known-limitations-for-linux-cuda-applications
@@ -366,7 +363,6 @@ def is_pin_memory_available() -> bool:
 
 
 class CudaMemoryProfiler:
-
     def __init__(self, device=None):
         self.device = device
 

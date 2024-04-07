@@ -26,7 +26,6 @@ from transformers import PreTrainedTokenizerBase
 
 
 class BaseLogitsProcessor:
-
     def adapt_tokenizer(self, tokenizer: PreTrainedTokenizerBase):
         """Adapt vLLM's tokenizer to use to compile the FSM.
 
@@ -99,7 +98,6 @@ class BaseLogitsProcessor:
 
 
 class RegexLogitsProcessor(BaseLogitsProcessor):
-
     def __init__(self, regex_string: str, tokenizer: PreTrainedTokenizerBase):
         """Compile the FSM that drives the regex-structured generation.
 
@@ -117,7 +115,6 @@ class RegexLogitsProcessor(BaseLogitsProcessor):
 
 
 class JSONLogitsProcessor(RegexLogitsProcessor):
-
     def __init__(
         self,
         schema: Union[str, Dict, BaseModel],
@@ -156,7 +153,6 @@ class JSONLogitsProcessor(RegexLogitsProcessor):
 
 
 class CFGLogitsProcessor(BaseLogitsProcessor):
-
     def __init__(self, cfg: str, tokenizer: PreTrainedTokenizerBase):
         """Compile the FSM that drives the context free grammar generation.
 

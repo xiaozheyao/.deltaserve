@@ -172,7 +172,6 @@ class MixtralMoE(nn.Module):
 
 
 class MixtralAttention(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -251,7 +250,6 @@ class MixtralAttention(nn.Module):
 
 
 class MixtralDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: MixtralConfig,
@@ -309,7 +307,6 @@ class MixtralDecoderLayer(nn.Module):
 
 
 class MixtralModel(nn.Module):
-
     def __init__(
         self,
         config: MixtralConfig,

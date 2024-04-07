@@ -32,7 +32,6 @@ _KEYS_TO_MODIFY_MAPPING = {
 
 # TODO(xwjiang): Run benchmark and decide if TP.
 class LlavaMultiModalProjector(nn.Module):
-
     def __init__(
         self, vision_hidden_size: int, text_hidden_size: int, projector_hidden_act: str
     ):
@@ -61,7 +60,6 @@ def _merge_vision_embeddings(
 
 
 class LlavaForConditionalGeneration(nn.Module):
-
     def __init__(
         self,
         config: "LlavaConfig",

@@ -73,7 +73,6 @@ async def test_tokenizer_group_ray_pool_env_var_propagation(tokenizer_group_type
     env_var = "MY_ENV_VAR"
 
     class EnvVarCheckerTokenizerGroup(TokenizerGroup):
-
         def ping(self):
             assert os.environ.get(env_var) == "1"
             return super().ping()

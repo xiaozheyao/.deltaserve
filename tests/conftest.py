@@ -112,7 +112,6 @@ _VISION_LANGUAGE_MODELS = {
 
 
 class HfRunner:
-
     def __init__(
         self,
         model_name: str,
@@ -256,7 +255,6 @@ def hf_runner():
 
 
 class VllmRunner:
-
     def __init__(
         self,
         model_name: str,

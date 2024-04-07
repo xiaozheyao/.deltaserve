@@ -72,7 +72,6 @@ class GPTQConfig(QuantizationConfig):
 
 
 class ExllamaState(Enum):
-
     UNUSED = enum.auto()
     UNINITIALIZED = enum.auto()
     READY = enum.auto()

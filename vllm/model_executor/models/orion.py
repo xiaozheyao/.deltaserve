@@ -37,7 +37,6 @@ from vllm.sequence import SamplerOutput
 
 
 class OrionMLP(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -70,7 +69,6 @@ class OrionMLP(nn.Module):
 
 
 class OrionAttention(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -146,7 +144,6 @@ class OrionAttention(nn.Module):
 
 
 class OrionDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -207,7 +204,6 @@ class OrionDecoderLayer(nn.Module):
 
 
 class OrionModel(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -252,7 +248,6 @@ class OrionModel(nn.Module):
 
 
 class OrionForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,

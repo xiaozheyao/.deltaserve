@@ -52,7 +52,6 @@ def test_auto_prefix_caching(
     max_num_seqs: int,
     concurrent_lora_int_ids: List[Optional[int]],
 ):
-
     tokenizer = TokenizerGroup(
         tokenizer_id="facebook/opt-125m",
         enable_lora=False,

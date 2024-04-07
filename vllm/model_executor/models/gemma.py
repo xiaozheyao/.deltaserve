@@ -46,7 +46,6 @@ from vllm.sequence import SamplerOutput
 
 
 class GemmaMLP(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -73,7 +72,6 @@ class GemmaMLP(nn.Module):
 
 
 class GemmaAttention(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -148,7 +146,6 @@ class GemmaAttention(nn.Module):
 
 
 class GemmaDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: GemmaConfig,
@@ -203,7 +200,6 @@ class GemmaDecoderLayer(nn.Module):
 
 
 class GemmaModel(nn.Module):
-
     def __init__(
         self,
         config: GemmaConfig,

@@ -33,7 +33,6 @@ from vllm.sequence import SamplerOutput
 
 
 class InternLM2MLP(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -66,7 +65,6 @@ class InternLM2MLP(nn.Module):
 
 
 class InternLM2Attention(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -142,7 +140,6 @@ class InternLM2Attention(nn.Module):
 
 
 class InternLMDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -199,7 +196,6 @@ class InternLMDecoderLayer(nn.Module):
 
 
 class InternLM2Model(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -244,7 +240,6 @@ class InternLM2Model(nn.Module):
 
 
 class InternLM2ForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,

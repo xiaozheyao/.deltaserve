@@ -57,7 +57,6 @@ from vllm.sequence import SamplerOutput
 
 
 class LlamaMLP(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -90,7 +89,6 @@ class LlamaMLP(nn.Module):
 
 
 class LlamaAttention(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -172,7 +170,6 @@ class LlamaAttention(nn.Module):
 
 
 class LlamaDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: LlamaConfig,
@@ -236,7 +233,6 @@ class LlamaDecoderLayer(nn.Module):
 
 
 class LlamaModel(nn.Module):
-
     def __init__(
         self,
         config: LlamaConfig,

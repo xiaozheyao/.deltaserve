@@ -44,7 +44,6 @@ def _get_alibi_slopes(
 
 
 class MPTAttention(nn.Module):
-
     def __init__(
         self,
         config: MPTConfig,
@@ -136,7 +135,6 @@ class MPTAttention(nn.Module):
 
 
 class MPTMLP(nn.Module):
-
     def __init__(
         self,
         config: MPTConfig,
@@ -169,7 +167,6 @@ class MPTMLP(nn.Module):
 
 
 class MPTBlock(nn.Module):
-
     def __init__(
         self,
         config: MPTConfig,
@@ -204,7 +201,6 @@ class MPTBlock(nn.Module):
 
 
 class MPTModel(nn.Module):
-
     def __init__(
         self,
         config: MPTConfig,
@@ -249,7 +245,6 @@ class MPTModel(nn.Module):
 
 
 class MPTForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: MPTConfig,

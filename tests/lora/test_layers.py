@@ -172,7 +172,6 @@ def create_random_inputs(
 @pytest.mark.parametrize("num_loras", [1, 2, 4, 8])
 @pytest.mark.parametrize("device", CUDA_DEVICES)
 def test_embeddings(dist_init, num_loras, device) -> None:
-
     torch.set_default_device(device)
     max_loras = 8
     lora_config = LoRAConfig(
@@ -263,7 +262,6 @@ def test_embeddings(dist_init, num_loras, device) -> None:
 @pytest.mark.parametrize("num_loras", [1, 2, 4, 8])
 @pytest.mark.parametrize("device", CUDA_DEVICES)
 def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
-
     torch.set_default_device(device)
     max_loras = 8
     lora_config = LoRAConfig(
@@ -338,9 +336,9 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
             *mapping_info,
         )
 
-        expanded_embedding.weight[512 : 512 + (embeddings_tensor_len * max_loras)] = (
-            torch.cat(embeddings_tensors)
-        )
+        expanded_embedding.weight[
+            512 : 512 + (embeddings_tensor_len * max_loras)
+        ] = torch.cat(embeddings_tensors)
 
         lora_result = lora_embedding(torch.cat(original_inputs))
 
@@ -394,7 +392,6 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
 @pytest.mark.parametrize("num_loras", [1, 2, 4, 8])
 @pytest.mark.parametrize("device", CUDA_DEVICES)
 def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
-
     torch.set_default_device(device)
     max_loras = 8
     lora_config = LoRAConfig(
@@ -523,7 +520,6 @@ def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
 @pytest.mark.parametrize("orientation", ["row", "column"])
 @pytest.mark.parametrize("device", CUDA_DEVICES)
 def test_linear_parallel(dist_init, num_loras, orientation, device) -> None:
-
     torch.set_default_device(device)
     max_loras = 8
     lora_config = LoRAConfig(
@@ -621,7 +617,6 @@ def test_linear_parallel(dist_init, num_loras, orientation, device) -> None:
 @pytest.mark.parametrize("repeats", [1, 2, 3])
 @pytest.mark.parametrize("device", CUDA_DEVICES)
 def test_column_parallel_packed(dist_init, num_loras, repeats, device) -> None:
-
     torch.set_default_device(device)
     max_loras = 8
     lora_config = LoRAConfig(

@@ -86,7 +86,6 @@ async def get_guided_decoding_logits_processor(
 def _get_guide_and_mode(
     request: Union[CompletionRequest, ChatCompletionRequest]
 ) -> Tuple[str, GuidedDecodingMode]:
-
     if request.guided_json:
         json = request.guided_json
         if isinstance(json, dict):

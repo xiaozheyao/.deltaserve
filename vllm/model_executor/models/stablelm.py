@@ -52,7 +52,6 @@ from vllm.sequence import SamplerOutput
 
 
 class StablelmMLP(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ) -> None:
@@ -79,7 +78,6 @@ class StablelmMLP(nn.Module):
 
 
 class StablelmAttention(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ) -> None:
@@ -160,7 +158,6 @@ class StablelmAttention(nn.Module):
 
 
 class StablelmDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -201,7 +198,6 @@ class StablelmDecoderLayer(nn.Module):
 
 
 class StableLMEpochModel(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ) -> None:
@@ -240,7 +236,6 @@ class StableLMEpochModel(nn.Module):
 
 
 class StablelmForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,

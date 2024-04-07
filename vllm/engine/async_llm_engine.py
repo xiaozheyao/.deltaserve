@@ -457,9 +457,10 @@ class AsyncLLMEngine:
 
         Returns True if there are in-progress requests."""
 
-        new_requests, finished_requests = (
-            self._request_tracker.get_new_and_finished_requests()
-        )
+        (
+            new_requests,
+            finished_requests,
+        ) = self._request_tracker.get_new_and_finished_requests()
 
         for new_request in new_requests:
             # Add the request into the vLLM engine's waiting queue.

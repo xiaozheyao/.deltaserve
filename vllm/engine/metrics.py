@@ -24,7 +24,6 @@ disable_created_metrics()
 
 # begin-metrics-definitions
 class Metrics:
-
     def __init__(self, labelnames: List[str]):
         # Unregister any existing vLLM collectors
         for collector in list(REGISTRY._collector_to_names):

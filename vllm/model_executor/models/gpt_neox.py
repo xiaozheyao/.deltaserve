@@ -49,7 +49,6 @@ from vllm.sequence import SamplerOutput
 
 
 class GPTNeoXAttention(nn.Module):
-
     def __init__(
         self,
         config: GPTNeoXConfig,
@@ -107,7 +106,6 @@ class GPTNeoXAttention(nn.Module):
 
 
 class GPTNeoXMLP(nn.Module):
-
     def __init__(
         self,
         config: GPTNeoXConfig,
@@ -135,7 +133,6 @@ class GPTNeoXMLP(nn.Module):
 
 
 class GPTNeoXLayer(nn.Module):
-
     def __init__(
         self,
         config: GPTNeoXConfig,
@@ -185,7 +182,6 @@ class GPTNeoXLayer(nn.Module):
 
 
 class GPTNeoXModel(nn.Module):
-
     def __init__(
         self,
         config: GPTNeoXConfig,
@@ -229,7 +225,6 @@ class GPTNeoXModel(nn.Module):
 
 
 class GPTNeoXForCausalLM(nn.Module):
-
     def __init__(
         self,
         config,

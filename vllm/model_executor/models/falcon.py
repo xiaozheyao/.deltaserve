@@ -80,7 +80,6 @@ def _get_alibi_slopes(total_num_heads: int) -> torch.Tensor:
 
 
 class FalconAttention(nn.Module):
-
     def __init__(
         self,
         config: FalconConfig,
@@ -205,7 +204,6 @@ class FalconAttention(nn.Module):
 
 
 class FalconMLP(nn.Module):
-
     def __init__(
         self,
         config: FalconConfig,
@@ -246,7 +244,6 @@ class FalconMLP(nn.Module):
 
 
 class FalconDecoderLayer(nn.Module):
-
     def __init__(
         self,
         config: FalconConfig,
@@ -328,7 +325,6 @@ class FalconDecoderLayer(nn.Module):
 
 
 class FalconModel(nn.Module):
-
     def __init__(
         self,
         config: FalconConfig,
@@ -378,7 +374,6 @@ class FalconModel(nn.Module):
 
 
 class FalconForCausalLM(nn.Module):
-
     def __init__(
         self,
         config: FalconConfig,

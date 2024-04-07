@@ -12,7 +12,6 @@ from vllm.worker.model_runner import ModelRunner
 
 
 class MockLogitsProcessor(LogitsProcessor):
-
     def __init__(self, vocab_size: int, scale: float, fake_logits: torch.Tensor):
         super().__init__(vocab_size=vocab_size, scale=scale)
         self.fake_logits = fake_logits.clone()

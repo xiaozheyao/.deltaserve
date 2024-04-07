@@ -624,7 +624,6 @@ GPU Topology:
 
 
 def pretty_str(envinfo):
-
     def replace_nones(dct, replacement="Could not collect"):
         for key in dct.keys():
             if dct[key] is not None:

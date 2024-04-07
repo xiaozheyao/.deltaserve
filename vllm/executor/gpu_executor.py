@@ -22,7 +22,6 @@ logger = init_logger(__name__)
 
 
 class GPUExecutor(ExecutorBase):
-
     def __init__(
         self,
         model_config: ModelConfig,
@@ -87,13 +86,14 @@ class GPUExecutor(ExecutorBase):
             by adjusting the `gpu_memory_utilization` parameter.
         """
         # Get the maximum number of blocks that can be allocated on GPU and CPU.
-        num_gpu_blocks, num_cpu_blocks = (
-            self.driver_worker.profile_num_available_blocks(
-                block_size=self.cache_config.block_size,
-                gpu_memory_utilization=self.cache_config.gpu_memory_utilization,
-                cpu_swap_space=self.cache_config.swap_space_bytes,
-                cache_dtype=self.cache_config.cache_dtype,
-            )
+        (
+            num_gpu_blocks,
+            num_cpu_blocks,
+        ) = self.driver_worker.profile_num_available_blocks(
+            block_size=self.cache_config.block_size,
+            gpu_memory_utilization=self.cache_config.gpu_memory_utilization,
+            cpu_swap_space=self.cache_config.swap_space_bytes,
+            cache_dtype=self.cache_config.cache_dtype,
         )
 
         logger.info(
@@ -161,7 +161,6 @@ class GPUExecutor(ExecutorBase):
 
 
 class GPUExecutorAsync(GPUExecutor, ExecutorAsyncBase):
-
     async def execute_model_async(
         self,
         seq_group_metadata_list: List[SequenceGroupMetadata],

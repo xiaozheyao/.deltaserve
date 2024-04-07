@@ -711,7 +711,6 @@ if triton.__version__ >= "2.1.0":
         max_input_len,
         alibi_slopes=None,
     ):
-
         cap = torch.cuda.get_device_capability()
         BLOCK = 128 if cap[0] >= 8 else 64
         # shape constraints

@@ -49,13 +49,11 @@ from vllm.transformers_utils.configs import JAISConfig
 
 
 class SwiGLUActivation(nn.Module):
-
     def forward(self, x1: torch.Tensor, x2: torch.Tensor) -> torch.Tensor:
         return x1 * nn.functional.silu(x2)
 
 
 def _get_alibi_slopes(n):
-
     def get_slopes_power_of_2(n):
         start = 2 ** (-(2 ** -(math.log2(n) - 3)))
         ratio = start
@@ -72,7 +70,6 @@ def _get_alibi_slopes(n):
 
 
 class JAISAttention(nn.Module):
-
     def __init__(
         self,
         config: JAISConfig,
@@ -130,7 +127,6 @@ class JAISAttention(nn.Module):
 
 
 class JAISMLP(nn.Module):
-
     def __init__(
         self,
         intermediate_size: int,
@@ -179,7 +175,6 @@ class JAISMLP(nn.Module):
 
 
 class JAISBlock(nn.Module):
-
     def __init__(
         self,
         config: JAISConfig,
@@ -219,7 +214,6 @@ class JAISBlock(nn.Module):
 
 
 class JAISModel(nn.Module):
-
     def __init__(
         self,
         config: JAISConfig,
@@ -272,7 +266,6 @@ class JAISModel(nn.Module):
 
 
 class JAISLMHeadModel(nn.Module):
-
     def __init__(
         self,
         config: JAISConfig,

@@ -135,7 +135,6 @@ class LoRAMapping:
 
 
 class BaseLayerWithLoRA(nn.Module):
-
     def create_lora_weights(
         self,
         max_loras: int,
@@ -183,7 +182,6 @@ class BaseLayerWithLoRA(nn.Module):
 
 
 class VocabParallelEmbeddingWithLoRA(BaseLayerWithLoRA):
-
     def __init__(self, base_layer: VocabParallelEmbedding) -> None:
         super().__init__()
         self.base_layer = base_layer
@@ -334,7 +332,6 @@ class VocabParallelEmbeddingWithLoRA(BaseLayerWithLoRA):
 
 
 class ColumnParallelLinearWithLoRA(BaseLayerWithLoRA):
-
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
@@ -614,7 +611,6 @@ class QKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
         lora_b: torch.Tensor,
         embeddings_tensor: Optional[torch.Tensor],
     ):
-
         if self.tp_size > 1:
             tp_rank = get_tensor_model_parallel_rank()
             self.q_shard_id = tp_rank
@@ -853,7 +849,6 @@ class MergedQKVParallelLinearWithLora(ColumnParallelLinearWithLoRA):
 
 
 class RowParallelLinearWithLoRA(BaseLayerWithLoRA):
-
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
@@ -898,7 +893,6 @@ class RowParallelLinearWithLoRA(BaseLayerWithLoRA):
         lora_b: torch.Tensor,
         embeddings_tensor: Optional[torch.Tensor],
     ):
-
         self.reset_lora(index)
         if self.base_layer.tp_size > 1:
             tensor_model_parallel_rank = get_tensor_model_parallel_rank()
@@ -996,7 +990,6 @@ class RowParallelLinearWithLoRA(BaseLayerWithLoRA):
 
 
 class LogitsProcessorWithLoRA(BaseLayerWithLoRA):
-
     def __init__(
         self,
         base_layer: LogitsProcessor,

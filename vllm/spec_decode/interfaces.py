@@ -53,7 +53,6 @@ class SpeculativeScores:
 
 
 class SpeculativeProposer(ABC):
-
     @abstractmethod
     def get_proposals(
         self,
@@ -67,7 +66,6 @@ class SpeculativeProposer(ABC):
 
 
 class SpeculativeScorer(ABC):
-
     @abstractmethod
     def score_proposals(
         self,

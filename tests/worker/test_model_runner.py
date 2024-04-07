@@ -158,9 +158,14 @@ def test_prepare_decode_cuda_graph(batch_size):
             )
         )
 
-    input_tokens, input_positions, attn_metadata, _, _, _ = (
-        model_runner._prepare_decode(seq_group_metadata_list)
-    )
+    (
+        input_tokens,
+        input_positions,
+        attn_metadata,
+        _,
+        _,
+        _,
+    ) = model_runner._prepare_decode(seq_group_metadata_list)
 
     expected_bs = _get_graph_batch_size(len(seq_group_metadata_list))
     # Verify input metadata is correct for prompts.

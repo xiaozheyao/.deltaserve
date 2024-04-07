@@ -68,7 +68,6 @@ from vllm.sequence import SamplerOutput
 
 
 class SwiGLU(nn.Module):
-
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         x, gate = x.chunk(2, dim=-1)
         return F.silu(gate) * x
@@ -249,7 +248,6 @@ class OlmoBlock(nn.Module):
 
 
 class OlmoModel(nn.Module):
-
     def __init__(
         self, config: OLMoConfig, linear_method: Optional[LinearMethodBase] = None
     ):

@@ -38,7 +38,6 @@ from vllm.sequence import SamplerOutput
 
 
 class QWenMLP(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -71,7 +70,6 @@ class QWenMLP(nn.Module):
 
 
 class QWenAttention(nn.Module):
-
     def __init__(
         self,
         hidden_size: int,
@@ -128,7 +126,6 @@ class QWenAttention(nn.Module):
 
 
 class QWenBlock(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -184,7 +181,6 @@ class QWenBlock(nn.Module):
 
 
 class QWenModel(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,
@@ -226,7 +222,6 @@ class QWenModel(nn.Module):
 
 
 class QWenLMHeadModel(nn.Module):
-
     def __init__(
         self,
         config: PretrainedConfig,

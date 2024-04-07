@@ -133,7 +133,6 @@ def test_correctly_calls_target_model(k: int, batch_size: int):
     for prompt, prev_generated, draft_tokens in zip(
         prompts, prev_output_tokens, proposal_token_ids.tolist()
     ):
-
         for i in range(len(draft_tokens) + 1):
             expected_seen_contexts.append(prompt + prev_generated + draft_tokens[:i])
 

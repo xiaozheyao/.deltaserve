@@ -84,7 +84,6 @@ class AsyncMetricsCollector:
     def maybe_collect_rejsample_metrics(
         self, k: int
     ) -> Optional[SpecDecodeWorkerMetrics]:
-
         # If a copy was initiated in the previous call, collect and return.
         if self._in_flight_copy is not None:
             ready_event = self._in_flight_copy

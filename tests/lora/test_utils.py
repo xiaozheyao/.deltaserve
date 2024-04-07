@@ -71,7 +71,6 @@ def test_replace_submodule():
 
 
 class TestLRUCache(LRUCache):
-
     def _on_remove(self, key, value):
         if not hasattr(self, "_remove_counter"):
             self._remove_counter = 0

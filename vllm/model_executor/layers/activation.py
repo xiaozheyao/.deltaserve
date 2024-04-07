@@ -73,7 +73,6 @@ class GeluAndMul(nn.Module):
 
 
 class NewGELU(nn.Module):
-
     def _forward(self, x: torch.Tensor) -> torch.Tensor:
         """PyTorch-native implementation equivalent to forward()."""
         c = math.sqrt(2.0 / math.pi)
@@ -86,7 +85,6 @@ class NewGELU(nn.Module):
 
 
 class FastGELU(nn.Module):
-
     def _forward(self, x: torch.Tensor) -> torch.Tensor:
         """PyTorch-native implementation equivalent to forward()."""
         return 0.5 * x * (1.0 + torch.tanh(x * 0.7978845608 * (1.0 + 0.044715 * x * x)))

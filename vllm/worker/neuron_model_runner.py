@@ -21,7 +21,6 @@ KVCache = Tuple[torch.Tensor, torch.Tensor]
 
 
 class NeuronModelRunner:
-
     def __init__(
         self,
         model_config: ModelConfig,
@@ -256,9 +255,12 @@ class NeuronModelRunner:
         is_prompt = seq_group_metadata_list[0].is_prompt
         # Prepare input tensors.
         if is_prompt:
-            (input_tokens, input_positions, input_block_ids, prompt_lens) = (
-                self._prepare_prompt(seq_group_metadata_list)
-            )
+            (
+                input_tokens,
+                input_positions,
+                input_block_ids,
+                prompt_lens,
+            ) = self._prepare_prompt(seq_group_metadata_list)
         else:
             (input_tokens, input_positions, input_block_ids) = self._prepare_decode(
                 seq_group_metadata_list
@@ -273,9 +275,12 @@ class NeuronModelRunner:
         self,
         seq_group_metadata_list: Optional[List[SequenceGroupMetadata]],
     ) -> Optional[SamplerOutput]:
-        (input_tokens, input_positions, input_block_ids, sampling_metadata) = (
-            self.prepare_input_tensors(seq_group_metadata_list)
-        )
+        (
+            input_tokens,
+            input_positions,
+            input_block_ids,
+            sampling_metadata,
+        ) = self.prepare_input_tensors(seq_group_metadata_list)
 
         hidden_states = self.model(
             input_ids=input_tokens,

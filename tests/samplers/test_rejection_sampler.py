@@ -240,13 +240,14 @@ def test_rejection_sampling_approximates_target_distribution(
     distance_wrt_target = []
 
     for num_samples in sample_sizes:
-        (reference_vs_rejsample_dist, target_vs_rejsample_dist) = (
-            helper.run_and_compare_distributions(
-                draft_probs,
-                target_probs,
-                reference_probs,
-                num_samples,
-            )
+        (
+            reference_vs_rejsample_dist,
+            target_vs_rejsample_dist,
+        ) = helper.run_and_compare_distributions(
+            draft_probs,
+            target_probs,
+            reference_probs,
+            num_samples,
         )
 
         distance_wrt_reference.append(reference_vs_rejsample_dist)

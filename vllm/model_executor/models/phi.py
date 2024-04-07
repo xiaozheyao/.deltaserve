@@ -68,7 +68,6 @@ from vllm.sequence import SamplerOutput
 
 
 class PhiAttention(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -131,7 +130,6 @@ class PhiAttention(nn.Module):
 
 
 class PhiMLP(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -161,7 +159,6 @@ class PhiMLP(nn.Module):
 
 
 class PhiLayer(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -193,7 +190,6 @@ class PhiLayer(nn.Module):
 
 
 class PhiModel(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ):
@@ -233,7 +229,6 @@ class PhiModel(nn.Module):
 
 
 class PhiForCausalLM(nn.Module):
-
     def __init__(
         self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
     ):

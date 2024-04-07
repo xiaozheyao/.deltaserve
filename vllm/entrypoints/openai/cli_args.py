@@ -13,7 +13,6 @@ from vllm.entrypoints.openai.serving_engine import LoRA, Delta
 
 
 class LoRAParserAction(argparse.Action):
-
     def __call__(self, parser, namespace, values, option_string=None):
         lora_list = []
         for item in values:
@@ -23,7 +22,6 @@ class LoRAParserAction(argparse.Action):
 
 
 class DeltaParserAction(argparse.Action):
-
     def __call__(self, parser, namespace, values, option_string=None):
         delta_list = []
         for item in values:

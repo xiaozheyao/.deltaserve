@@ -596,7 +596,6 @@ class LoRAModelManager:
 
 
 class LoRALRUCache(LRUCache[LoRAModel]):
-
     def __init__(self, capacity: int, deactivate_lora_fn: Callable[[Hashable], None]):
         super().__init__(capacity)
         self.deactivate_lora_fn = deactivate_lora_fn

@@ -45,7 +45,6 @@ USE_RAY_COMPILED_DAG = bool(os.getenv("VLLM_USE_RAY_COMPILED_DAG", 0))
 
 
 class RayGPUExecutor(ExecutorBase):
-
     def __init__(
         self,
         model_config: ModelConfig,
@@ -433,7 +432,6 @@ class RayGPUExecutor(ExecutorBase):
 
 
 class RayGPUExecutorAsync(RayGPUExecutor, ExecutorAsyncBase):
-
     async def _run_workers_async(
         self,
         method: str,

@@ -14,7 +14,6 @@ from vllm.worker.model_runner import ModelRunner
 
 
 class MockLogitsSampler(Sampler):
-
     def __init__(self, fake_logits: torch.Tensor):
         super().__init__()
         self.fake_logits = fake_logits
@@ -374,7 +373,6 @@ def test_sampler_min_tokens_penalty(seed: int, device: str):
         for logits_idx, (should_penalize, sampling_params) in enumerate(
             zip(expected_penalization, sampling_params_per_seq)
         ):
-
             tokens_to_check = [sampling_params.eos_token_id]
             if sampling_params.stop_token_ids:
                 tokens_to_check.extend(sampling_params.stop_token_ids)
