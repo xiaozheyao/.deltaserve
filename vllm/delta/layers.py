@@ -620,7 +620,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.qweight_stacked[0][
                     index, 0, : qweight_q.shape[0], : qweight_q.shape[1]
                 ].copy_(qweight_q, non_blocking=ASYNC_COPY)
-                print(self.qweight_stacked[0].device)
                 qzeros_q = qzeros[0][
                     :,
                     self.q_proj_shard_size
