@@ -7,7 +7,7 @@ bits = int(os.environ.get("BITS", "4"))
 print(f"Benchmarking with tensor parallel size={tp_size} and bitwidth={bits}")
 
 llm = LLM(
-    model="meta-llama/Llama-2-13b-hf",
+    model="meta-llama/Llama-2-7b-hf",
     enable_delta=True,
     tensor_parallel_size=tp_size,
     enforce_eager=True,
@@ -21,7 +21,7 @@ sampling_params = SamplingParams(
     temperature=0,
     max_tokens=32,
 )
-delta_path = f".idea/models/vicuna-13b-{bits}b0.75s-decompressed-{tp_size}"
+delta_path = f".idea/models/vicuna-7b-4b0.75s-decom-{tp_size}"
 
 prompts = [
     "USER: Who is Alan Turing?\nASSISTANT:",
