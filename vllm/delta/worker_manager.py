@@ -221,6 +221,5 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         self._delta_manager.activate_delta(delta_request.delta_int_id)
         end = time.time()
         logger.info(f"CPU -> GPU time: {end - start}")
-        exit(0)
         # torch.cuda.nvtx.range_pop()
         return loaded
