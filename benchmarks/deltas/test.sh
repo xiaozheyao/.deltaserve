@@ -1,0 +1,1 @@
+TP_SIZE=1 /pub/scratch/xiayao/mamba/envs/triteia/bin/python benchmarks/deltas/benchmark_7b.py && TP_SIZE=2 /pub/scratch/xiayao/mamba/envs/triteia/bin/python benchmarks/deltas/benchmark_7b.py

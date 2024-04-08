@@ -617,10 +617,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * self.q_shard_id: self.q_proj_shard_size
                     * (self.q_shard_id + 1),
                 ]
-                # logger.info(f"Copying {qweight_q.nbytes/1024} kbytes from {qweight_q.device} to {self.qweight_stacked[0].device}")
-                self.qweight_stacked[0][
-                    index, 0, : qweight_q.shape[0], : qweight_q.shape[1]
-                ].copy_(qweight_q, non_blocking=ASYNC_COPY)
+
                 qzeros_q = qzeros[0][
                     :,
                     self.q_proj_shard_size
@@ -629,11 +626,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.q_shard_id + 1)
                     // self.pack_factor,
                 ]
-
-                self.qzeros_stacked[0][
-                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
-                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
-
                 scales_q = scales[0][
                     :,
                     self.q_proj_shard_size
@@ -641,6 +633,13 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.q_shard_id + 1),
                 ]
 
+                # logger.info(f"Copying {qweight_q.nbytes/1024} kbytes from {qweight_q.device} to {self.qweight_stacked[0].device}")
+                self.qweight_stacked[0][
+                    index, 0, : qweight_q.shape[0], : qweight_q.shape[1]
+                ].copy_(qweight_q, non_blocking=ASYNC_COPY)
+                self.qzeros_stacked[0][
+                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
+                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
                 self.scales_stacked[0][
                     index, 0, : scales_q.shape[0], : scales_q.shape[1]
                 ].copy_(scales_q, non_blocking=ASYNC_COPY)
@@ -653,9 +652,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
-                self.qweight_stacked[1][
-                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
-                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
 
                 qzeros_q = qzeros[1][
                     :,
@@ -665,17 +661,19 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
-
-                self.qzeros_stacked[1][
-                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
-                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
-
                 scales_q = scales[1][
                     :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
+
+                self.qweight_stacked[1][
+                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
+                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
+                self.qzeros_stacked[1][
+                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
+                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
                 self.scales_stacked[1][
                     index, 0, : scales_q.shape[0], : scales_q.shape[1]
                 ].copy_(scales_q, non_blocking=ASYNC_COPY)
@@ -689,10 +687,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
-                self.qweight_stacked[2][
-                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
-                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
-
                 qzeros_q = qzeros[2][
                     :,
                     self.kv_proj_shard_size
@@ -701,20 +695,21 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
-                self.qzeros_stacked[2][
-                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
-                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
-
                 scales_q = scales[2][
                     :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id: self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
+                self.qweight_stacked[2][
+                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
+                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
+                self.qzeros_stacked[2][
+                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
+                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
                 self.scales_stacked[2][
                     index, 0, : scales_q.shape[0], : scales_q.shape[1]
                 ].copy_(scales_q, non_blocking=ASYNC_COPY)
-
                 self.g_idx_stacked[2] = g_idx[2]
         else:
             if qweight[0] is not None:

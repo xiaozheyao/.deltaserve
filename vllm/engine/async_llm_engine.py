@@ -225,6 +225,7 @@ class _AsyncLLMEngine(LLMEngine):
                 scheduler_outputs.blocks_to_swap_in,
                 scheduler_outputs.blocks_to_swap_out,
                 scheduler_outputs.blocks_to_copy,
+                scheduler_outputs.scheduled_seq_groups,
             )
         else:
             output = []

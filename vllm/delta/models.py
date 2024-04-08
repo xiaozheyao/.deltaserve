@@ -205,9 +205,7 @@ class DeltaModel:
                 keys = f.keys()
                 for key in keys:
                     tensors[key] = f.get_tensor(key)
-        end = timer()
-        total_bytes = total_bytes_count(tensors)
-        logger.info(f"Disk -> CPU: Loaded {total_bytes/1024/1024} MiB in {end - start:.4f} seconds")
+        
         modules = {}
         module_names = set(
             [
@@ -238,6 +236,9 @@ class DeltaModel:
                 module_name=module,
                 weight = tensors[module+".weight"].pin_memory(),
             )
+        end = timer()
+        total_bytes = total_bytes_count(tensors)
+        logger.info(f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds")
         del tensors
         return cls(id, modules)
 

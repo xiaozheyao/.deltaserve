@@ -207,7 +207,6 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             self.add_delta(delta)
 
     def add_delta(self, delta_request: DeltaRequest) -> bool:
-        global LOG_TIME
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
@@ -215,16 +214,20 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             loaded = self._delta_manager.add_delta(delta)
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
-        # torch.cuda.nvtx.range_push("cpu -> gpu starts")
-        torch.cuda.synchronize(self.device)
+        self._activate_delta(delta_request=delta_request)
+        return loaded
+
+    def _activate_delta(self, delta_request: DeltaRequest):
+        global LOG_TIME
         if not LOG_TIME:
-            logger.info(f"[{time.time()}] starts to load delta cpu -> gpu")
+            logger.info(f"[{time.time()}] activating delta")
+        torch.cuda.synchronize()
         start = timer()
+        torch.cuda.nvtx.range_push("activating delta")
         self._delta_manager.activate_delta(delta_request.delta_int_id)
-        torch.cuda.synchronize(self.device)
+        torch.cuda.synchronize()
+        torch.cuda.nvtx.range_pop()
         end = timer()
         if not LOG_TIME:
             logger.info(f"[{time.time()}] CPU -> GPU time: {end - start:.4f}")
             LOG_TIME = True
-        # torch.cuda.nvtx.range_pop()
-        return loaded
