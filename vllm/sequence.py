@@ -416,8 +416,9 @@ class SequenceGroup:
             self.metrics.first_scheduled_time = time
             self.metrics.time_in_queue = time - self.metrics.arrival_time
 
-    def set_loading_time(self, time: Optional[float]) -> None:
-        self.metrics.loading_time = time
+    def maybe_set_loading_time(self, time: Optional[float]) -> None:
+        if self.metrics.loading_time is None:
+            self.metrics.loading_time = time
 
     def set_finished_time(self, time: Optional[float]) -> None:
         """Sets the finished time for Request level timings."""

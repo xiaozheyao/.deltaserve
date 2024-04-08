@@ -136,11 +136,8 @@ class WorkerDeltaManager(AbstractWorkerManager):
             self.remove_delta(delta_id)
 
         for delta_id in deltas_to_add:
-            start = time.time()
             self.add_delta(deltas_map[delta_id])
-            end = time.time()
-            logger.info(f"Time to load delta {delta_id}: {end - start:.2f}s")
-
+            
     def _load_delta(self, delta_request: DeltaRequest) -> DeltaModel:
         try:
             delta = self._delta_model_cls.from_checkpoint(
@@ -218,9 +215,8 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             loaded = self._delta_manager.add_delta(delta)
             end = time.time()
             logger.info(
-                f"Time to load delta {delta_request.delta_int_id}: {end - start:.4f}s"
+                f"[{time.time()}] Time to load delta {delta_request.delta_int_id}: {end - start:.4f}s"
             )
-
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
         self._delta_manager.activate_delta(delta_request.delta_int_id)

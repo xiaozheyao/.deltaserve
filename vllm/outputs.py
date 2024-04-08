@@ -82,6 +82,7 @@ class RequestOutput:
         finished: Whether the whole request is finished.
         metrics: Metrics associated with the request.
         lora_request: The LoRA request that was used to generate the output.
+        delta_request: The Delta request that was used to generate the output.
     """
 
     def __init__(
@@ -157,6 +158,7 @@ class RequestOutput:
             finished,
             seq_group.metrics,
             lora_request=seq_group.lora_request,
+            delta_request=seq_group.delta_request,
         )
 
     def __repr__(self) -> str:
@@ -168,5 +170,6 @@ class RequestOutput:
             f"outputs={self.outputs}, "
             f"finished={self.finished}, "
             f"metrics={self.metrics}, "
-            f"lora_request={self.lora_request})"
+            f"lora_request={self.lora_request}, "
+            f"delta_request={self.delta_request})"
         )

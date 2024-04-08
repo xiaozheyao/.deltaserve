@@ -31,7 +31,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
 )
 from .deltazip import apply_delta, apply_delta_packed_nslice, apply_delta_embed, apply_delta_uncompressed
 
-ASYNC_COPY = False
+ASYNC_COPY = True
 logger = init_logger(__name__)
 
 if TYPE_CHECKING:

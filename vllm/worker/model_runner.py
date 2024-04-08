@@ -830,9 +830,11 @@ class ModelRunner:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
             self.set_active_deltas(delta_requests, delta_mapping)
+        
         if sequence_groups:
             for sequence_group in sequence_groups:
-                sequence_group.set_loading_time(time.time())
+                sequence_group.maybe_set_loading_time(time.time())
+        
         # Execute the model.
         if attn_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]
