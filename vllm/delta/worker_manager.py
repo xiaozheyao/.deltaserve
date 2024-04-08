@@ -207,6 +207,7 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             self.add_delta(delta)
 
     def add_delta(self, delta_request: DeltaRequest) -> bool:
+        global LOG_TIME
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
