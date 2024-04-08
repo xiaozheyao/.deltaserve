@@ -189,9 +189,6 @@ def apply_delta_embed(
     applied. This method adds the final delta results to the
     output.
 
-    This method is used for layers that are composed of multiple sublayers
-    (slices) packed together.
-
     Input shapes:
         x:                 (batch_size, hidden_dim)
         delta_weights:     list of delta weights
@@ -203,4 +200,3 @@ def apply_delta_embed(
             outputs[i] = F.embedding(x, delta)
     for i in range(len(delta_weights)):
         base_output[indices == i] += outputs[i][indices == i]
-    return base_output

@@ -100,8 +100,8 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
         self.delta_weights = torch.zeros(
             max_deltas,
-            self.base_layer.weight.shape[0],
-            self.base_layer.weight.shape[1],
+            self.base_layer.org_vocab_size,
+            self.base_layer.embedding_dim,
             dtype=delta_config.delta_dtype,
             device=self.base_layer.weight.device,
         )
@@ -129,7 +129,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         indices = self.indices[: self.indices_len[0]]
         base_output = self.base_layer(x)
-        base_output = apply_delta_embed(
+        apply_delta_embed(
             x, self.delta_weights, indices, base_output)
         return base_output
 
