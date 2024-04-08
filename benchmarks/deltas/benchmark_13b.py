@@ -4,6 +4,7 @@ from vllm.delta.request import DeltaRequest
 
 tp_size = int(os.environ.get("TP_SIZE", "1"))
 bits = int(os.environ.get("BITS", "4"))
+print(f"Benchmarking with tensor parallel size={tp_size} and bitwidth={bits}")
 
 llm = LLM(
     model="meta-llama/Llama-2-13b-hf",
