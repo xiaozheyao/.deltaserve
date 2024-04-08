@@ -15,7 +15,7 @@ from .models import (
 )
 
 logger = init_logger(__name__)
-
+LOG_TIME = False
 
 class AbstractWorkerManager(ABC):
     """Abstract class for managing LoRA/Delta models on the worker side."""
@@ -220,6 +220,8 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         start = time.time()
         self._delta_manager.activate_delta(delta_request.delta_int_id)
         end = time.time()
-        logger.info(f"CPU -> GPU time: {end - start}")
+        if not LOG_TIME:
+            logger.info(f"CPU -> GPU time: {end - start}")
+            LOG_TIME = True
         # torch.cuda.nvtx.range_pop()
         return loaded
