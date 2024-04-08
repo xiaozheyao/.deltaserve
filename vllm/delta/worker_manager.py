@@ -224,7 +224,7 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         torch.cuda.synchronize(self.device)
         end = timer()
         if not LOG_TIME:
-            logger.info(f"CPU -> GPU time: {end - start:.4f}")
+            logger.info(f"[{time.time()}] CPU -> GPU time: {end - start:.4f}")
             LOG_TIME = True
         # torch.cuda.nvtx.range_pop()
         return loaded
