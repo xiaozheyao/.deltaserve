@@ -137,7 +137,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
 
         for delta_id in deltas_to_add:
             self.add_delta(deltas_map[delta_id])
-            
+
     def _load_delta(self, delta_request: DeltaRequest) -> DeltaModel:
         try:
             delta = self._delta_model_cls.from_checkpoint(
@@ -210,14 +210,17 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
-            start = time.time()
+            torch.cuda.nvtx.range_push("disk -> cpu starts")
             delta = self._load_delta(delta_request)
+            torch.cuda.nvtx.range_pop()
             loaded = self._delta_manager.add_delta(delta)
-            end = time.time()
-            logger.info(
-                f"[{time.time()}] Time to load delta {delta_request.delta_int_id}: {end - start:.4f}s"
-            )
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
+        # torch.cuda.nvtx.range_push("cpu -> gpu starts")
+        start = time.time()
         self._delta_manager.activate_delta(delta_request.delta_int_id)
+        end = time.time()
+        logger.info(f"CPU -> GPU time: {end - start}")
+        exit(0)
+        # torch.cuda.nvtx.range_pop()
         return loaded
