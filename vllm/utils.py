@@ -20,6 +20,7 @@ from typing import (
     Tuple,
     TypeVar,
     Union,
+    Dict,
 )
 
 import psutil
@@ -435,3 +436,10 @@ def maybe_expand_dim(
     if tensor.ndim < target_dims:
         tensor = tensor.view(-1, *([size] * (target_dims - tensor.ndim)))
     return tensor
+
+def total_bytes_count(tensors: Dict[str, torch.Tensor]):
+    total_bytes = 0
+    for _, value in tensors.items():
+        total_bytes += value.nbytes
+        
+    return total_bytes

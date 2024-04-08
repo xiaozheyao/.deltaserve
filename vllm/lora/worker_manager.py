@@ -1,5 +1,5 @@
 import logging
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 from typing import Any, Dict, List, Optional, Set, Type
 
 import torch
@@ -36,7 +36,8 @@ class AbstractWorkerLoRAManager(ABC):
         self.device = device
         self.lora_config = lora_config
 
-    @abstractproperty
+    @property
+    @abstractmethod
     def is_enabled(self) -> bool:
         ...
 

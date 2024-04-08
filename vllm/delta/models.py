@@ -20,12 +20,12 @@ from .utils import (
     calculate_fixed_scratch_size,
     ExLlamaV2DeviceTensors,
 )
-
+from timeit import default_timer as timer
 # from .compressor import LosslessCompressor
 import transformers
 from transformers import AutoConfig
 from vllm.logger import init_logger
-from vllm.utils import LRUCache, in_wsl
+from vllm.utils import LRUCache, in_wsl, total_bytes_count
 from safetensors import safe_open
 from .config import QuantKernel
 
@@ -168,6 +168,7 @@ class DeltaModel:
         ]
 
         tensors = {}
+        start = timer()
         if compress_config.lossless != "none":
             # lossless_compressor = LosslessCompressor(
             #     compress_config.lossless, device_id=0
@@ -204,6 +205,9 @@ class DeltaModel:
                 keys = f.keys()
                 for key in keys:
                     tensors[key] = f.get_tensor(key)
+        end = timer()
+        total_bytes = total_bytes_count(tensors)
+        logger.info(f"Disk -> CPU: Loaded {total_bytes/1024/1024} MiB in {end - start:.4f} seconds")
         modules = {}
         module_names = set(
             [
@@ -215,10 +219,10 @@ class DeltaModel:
         for module in module_names:
             modules[module] = DeltaLayerWeights(
                 module_name=module,
-                qweight=tensors[module + ".qweight"],
-                qzeros=tensors[module + ".qzeros"],
-                scales=tensors[module + ".scales"],
-                g_idx=tensors[module + ".g_idx"],
+                qweight=tensors[module + ".qweight"].pin_memory(),
+                qzeros=tensors[module + ".qzeros"].pin_memory(),
+                scales=tensors[module + ".scales"].pin_memory(),
+                g_idx=tensors[module + ".g_idx"].pin_memory(),
                 compress_config=compress_config,
             )
         # now handling remaining modules
@@ -232,7 +236,7 @@ class DeltaModel:
         for module in remaining_module_names:
             modules[module] = DeltaLayerWeights(
                 module_name=module,
-                weight = tensors[module+".weight"]
+                weight = tensors[module+".weight"].pin_memory(),
             )
         del tensors
         return cls(id, modules)

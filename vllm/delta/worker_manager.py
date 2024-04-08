@@ -1,8 +1,8 @@
-import time
+from timeit import default_timer as timer
 from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Set, Type, Dict
 import torch
-
+import time
 from .layers import DeltaMapping
 from .request import DeltaRequest
 from .config import DeltaConfig
@@ -211,22 +211,20 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
-            start = time.time()
             delta = self._load_delta(delta_request)
             loaded = self._delta_manager.add_delta(delta)
-            end = time.time()
-            if not LOG_TIME:
-                logger.info(f"Disk -> CPU time: {end - start}")
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
-        torch.cuda.synchronize()
         # torch.cuda.nvtx.range_push("cpu -> gpu starts")
-        start = time.time()
-        self._delta_manager.activate_delta(delta_request.delta_int_id)
-        torch.cuda.synchronize()
-        end = time.time()
+        torch.cuda.synchronize(self.device)
         if not LOG_TIME:
-            logger.info(f"CPU -> GPU time: {end - start}")
+            logger.info(f"[{time.time()}] starts to load delta cpu -> gpu")
+        start = timer()
+        self._delta_manager.activate_delta(delta_request.delta_int_id)
+        torch.cuda.synchronize(self.device)
+        end = timer()
+        if not LOG_TIME:
+            logger.info(f"CPU -> GPU time: {end - start:.4f}")
             LOG_TIME = True
         # torch.cuda.nvtx.range_pop()
         return loaded

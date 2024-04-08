@@ -15,6 +15,7 @@ class DeltaLayerWeights:
         g_idx: Optional[torch.Tensor] = None,
         compress_config: Optional[CompressionConfig] = None,
         weight: Optional[torch.Tensor] = None,
+        
     ) -> None:
         if weight is not None:
             self._compressed = False
