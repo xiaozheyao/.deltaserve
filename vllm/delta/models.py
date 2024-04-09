@@ -26,12 +26,15 @@ import transformers
 from transformers import AutoConfig
 from vllm.logger import init_logger
 from vllm.utils import LRUCache, in_wsl, total_bytes_count
+from vllm.model_executor.parallel_utils.parallel_state import (
+    get_tensor_model_parallel_rank,
+    get_tensor_model_parallel_world_size,
+)
 from safetensors import safe_open
 from .config import QuantKernel
 
 logger = init_logger(__name__)
 _GLOBAL_DELTA_ID = 0
-
 
 def convert_mapping(
     mapping: DeltaMapping,
@@ -141,15 +144,16 @@ class DeltaModel:
         trust_remote_code: bool = False,
     ) -> "DeltaModel":
         pin_memory = str(device) == "cpu" and not in_wsl()
+        # get tp rank here
+        tp_size = get_tensor_model_parallel_world_size()
+        tp_rank = get_tensor_model_parallel_rank()
         logger.debug(f"Loading DeltaModel from {path_or_name}")
         config = AutoConfig.from_pretrained(
             path_or_name, trust_remote=trust_remote_code
         )
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
-
-        model_tensor_filename = "deltazip-compressed.safetensors"
-
+        model_tensor_filenames = ["deltazip-compressed-remain.safetensors", f"rank.{tp_rank}.safetensors"]
         def skip(*args, **kwargs):
             pass
 
@@ -173,9 +177,10 @@ class DeltaModel:
             # lossless_compressor = LosslessCompressor(
             #     compress_config.lossless, device_id=0
             # )
+            # TODO(xiaozhe): fix this later...
             metadata = None
             with safe_open(
-                os.path.join(path_or_name, model_tensor_filename), "numpy"
+                os.path.join(path_or_name, model_tensor_filenames), "numpy"
             ) as f:
                 metadata = f.metadata()
                 keys = f.keys()
@@ -198,14 +203,16 @@ class DeltaModel:
             del tensor_dtypes, tensor_shapes
             del lossless_compressor
         else:
+            
             logger.info("Lossless Compression Disabled")
-            with safe_open(
-                os.path.join(path_or_name, model_tensor_filename), "torch"
-            ) as f:
-                keys = f.keys()
-                for key in keys:
-                    tensors[key] = f.get_tensor(key)
-        
+            for mtf in model_tensor_filenames:
+                with safe_open(
+                    os.path.join(path_or_name, mtf), "torch"
+                ) as f:
+                    keys = f.keys()
+                    for key in keys:
+                        tensors[key] = f.get_tensor(key)
+
         modules = {}
         module_names = set(
             [
@@ -214,26 +221,17 @@ class DeltaModel:
                 if all([y not in x for y in ignore_modules])
             ]
         )
+        
         for module in module_names:
-            if "q_proj" in module or "k_proj" in module or "v_proj" in module:
-                # TODO(xiaozhe): change qkv proj now
-                modules[module] = DeltaLayerWeights(
-                    module_name=module,
-                    qweight=tensors[module + ".qweight"].T.pin_memory(),
-                    qzeros=tensors[module + ".qzeros"].pin_memory(),
-                    scales=tensors[module + ".scales"].pin_memory(),
-                    g_idx=tensors[module + ".g_idx"].pin_memory(),
-                    compress_config=compress_config,
-                )
-            else:
-                modules[module] = DeltaLayerWeights(
-                    module_name=module,
-                    qweight=tensors[module + ".qweight"].pin_memory(),
-                    qzeros=tensors[module + ".qzeros"].pin_memory(),
-                    scales=tensors[module + ".scales"].pin_memory(),
-                    g_idx=tensors[module + ".g_idx"].pin_memory(),
-                    compress_config=compress_config,
-                )
+            modules[module] = DeltaLayerWeights(
+                module_name=module,
+                qweight=tensors[module + ".qweight"].pin_memory(),
+                qzeros=tensors[module + ".qzeros"].pin_memory(),
+                scales=tensors[module + ".scales"].pin_memory(),
+                g_idx=tensors[module + ".g_idx"].pin_memory(),
+                compress_config=compress_config,
+            )
+
         # now handling remaining modules
         remaining_module_names = set(
             [
