@@ -9,7 +9,7 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-from .layers import (
+from .layers_debug import (
     BaseLayerWithDelta,
     from_layer,
     from_layer_logits_processor,
@@ -215,14 +215,25 @@ class DeltaModel:
             ]
         )
         for module in module_names:
-            modules[module] = DeltaLayerWeights(
-                module_name=module,
-                qweight=tensors[module + ".qweight"].pin_memory(),
-                qzeros=tensors[module + ".qzeros"].pin_memory(),
-                scales=tensors[module + ".scales"].pin_memory(),
-                g_idx=tensors[module + ".g_idx"].pin_memory(),
-                compress_config=compress_config,
-            )
+            if "q_proj" in module or "k_proj" in module or "v_proj" in module:
+                # TODO(xiaozhe): change qkv proj now
+                modules[module] = DeltaLayerWeights(
+                    module_name=module,
+                    qweight=tensors[module + ".qweight"].T.pin_memory(),
+                    qzeros=tensors[module + ".qzeros"].pin_memory(),
+                    scales=tensors[module + ".scales"].pin_memory(),
+                    g_idx=tensors[module + ".g_idx"].pin_memory(),
+                    compress_config=compress_config,
+                )
+            else:
+                modules[module] = DeltaLayerWeights(
+                    module_name=module,
+                    qweight=tensors[module + ".qweight"].pin_memory(),
+                    qzeros=tensors[module + ".qzeros"].pin_memory(),
+                    scales=tensors[module + ".scales"].pin_memory(),
+                    g_idx=tensors[module + ".g_idx"].pin_memory(),
+                    compress_config=compress_config,
+                )
         # now handling remaining modules
         remaining_module_names = set(
             [

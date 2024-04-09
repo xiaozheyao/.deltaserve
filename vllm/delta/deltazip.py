@@ -49,6 +49,7 @@ def add_delta_slice(
     *,
     buffer: Optional[torch.Tensor] = None,
     device_tensor: any,
+    transposed_qweight: bool = False,
 ):
     """
     semantics:
@@ -59,7 +60,7 @@ def add_delta_slice(
     """
 
     ql = QuantLinear.from_tensors(
-        qweight[0][0],
+        qweight[0][0].T if transposed_qweight else qweight[0][0],
         qzeros[0][0],
         scales[0][0],
         g_idx,
@@ -108,6 +109,7 @@ def apply_delta_packed_nslice(
     output: torch.Tensor,
     output_slices: Tuple[int, ...],
     device_tensor: Any,
+    transposed_qweight: bool = False,
 ):
     """
     Applies delta to each input.
@@ -146,6 +148,7 @@ def apply_delta_packed_nslice(
             offset_left,
             output_slices[slice_idx],
             device_tensor=device_tensor,
+            transposed_qweight=transposed_qweight,
         )
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
