@@ -7,7 +7,8 @@ from safetensors.torch import save_file
 transpose_modules = True
 
 def main(args):
-    chunking_modules = ["self_attn.q_proj.qweight", "self_attn.k_proj.qweight", "self_attn.v_proj.qweight", "mlp.gate_proj.qweight", "mlp.up_proj.qweight"]
+    column_chunking_modules = ["self_attn.q_proj.qweight", "self_attn.k_proj.qweight", "self_attn.v_proj.qweight", "mlp.gate_proj.qweight", "mlp.up_proj.qweight"]
+    row_chunking_modules = ["self_attn.o_proj.qweight", "mlp.down_proj.qweight"]
     with open(os.path.join(args.input, "compress_config.json"), "r") as fp:
         compress_config = json.load(fp)
     pack_factor = Fraction(32, compress_config['bits'])
@@ -18,7 +19,7 @@ def main(args):
             tensors[key] = f.get_tensor(key)
     chunked_keys = []
     for key in tensors.keys():
-        if any([module in key for module in chunking_modules]):
+        if any([module in key for module in column_chunking_modules]):
             for i in range(args.tp_size):
                 shard_size = tensors[key].shape[1] // args.tp_size
                 rank_tensors[i][key] = tensors[key][:, i * shard_size: (i+1)*shard_size]
@@ -27,6 +28,13 @@ def main(args):
                     rank_tensors[i][key] = rank_tensors[i][key].transpose(0, 1)
                 rank_tensors[i][key] = rank_tensors[i][key].contiguous()
             chunked_keys.append(key)
+        if any([module in key for module in row_chunking_modules]):
+            for i in range(args.tp_size):
+                shard_size = tensors[key].shape[0] // args.tp_size
+                rank_tensors[i][key] = tensors[key][i * shard_size: (i+1)*shard_size, :]
+                rank_tensors[i][key] = rank_tensors[i][key].contiguous()
+            chunked_keys.append(key)
+
     for key in chunked_keys:
         del tensors[key]
     print(f"Chunking Finished, saving to {args.input}/rank.[rank_id].safetensors")
