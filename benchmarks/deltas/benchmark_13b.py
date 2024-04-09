@@ -21,7 +21,7 @@ sampling_params = SamplingParams(
     temperature=0,
     max_tokens=32,
 )
-delta_path = f".idea/models/vicuna-13b-{bits}b0.75s-decompressed-{tp_size}"
+delta_path = f".idea/models/vicuna-13b-4b0.75s-decompressed-1_optimize-io_tp-{tp_size}"
 
 prompts = [
     "USER: Who is Alan Turing?\nASSISTANT:",
