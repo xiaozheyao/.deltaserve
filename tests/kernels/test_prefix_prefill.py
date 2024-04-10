@@ -12,9 +12,7 @@ NUM_HEADS = [64]
 NUM_QUERIES_PER_KV = [1, 8, 64]
 HEAD_SIZES = [128]
 DTYPES = [torch.float16]
-CUDA_DEVICES = [
-    f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)
-]
+CUDA_DEVICES = [f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)]
 
 
 @pytest.mark.parametrize("num_heads", NUM_HEADS)
@@ -62,38 +60,27 @@ def test_contexted_kv_attention(
     kv.uniform_(-1e-3, 1e-3)
     key, value = kv.unbind(dim=1)
 
-    k_cache = torch.zeros(cache_size,
-                          block_size,
-                          num_kv_heads,
-                          head_size,
-                          dtype=dtype)
-    v_cache = torch.zeros(cache_size,
-                          block_size,
-                          num_kv_heads,
-                          head_size,
-                          dtype=dtype)
+    k_cache = torch.zeros(cache_size, block_size, num_kv_heads, head_size, dtype=dtype)
+    v_cache = torch.zeros(cache_size, block_size, num_kv_heads, head_size, dtype=dtype)
     k = torch.zeros(sum(subquery_lens), num_kv_heads, head_size, dtype=dtype)
     v = torch.zeros(sum(subquery_lens), num_kv_heads, head_size, dtype=dtype)
     values = torch.arange(0, cache_size, dtype=torch.long)
     values = values[torch.randperm(cache_size)]
-    block_table = values[:BS * max_block_per_request].view(
-        BS, max_block_per_request)
+    block_table = values[: BS * max_block_per_request].view(BS, max_block_per_request)
     b_seq_len = torch.tensor(seq_lens, dtype=torch.long)
     b_ctx_len = torch.tensor(ctx_lens, dtype=torch.long)
-    b_start_loc = torch.cumsum(torch.tensor([0] + subquery_lens[:-1],
-                                            dtype=torch.long),
-                               dim=0)
+    b_start_loc = torch.cumsum(
+        torch.tensor([0] + subquery_lens[:-1], dtype=torch.long), dim=0
+    )
     max_input_len = MAX_SEQ_LEN
     # copy kv to cache
-    b_seq_start_loc = torch.cumsum(torch.tensor([0] + seq_lens[:-1],
-                                                dtype=torch.long),
-                                   dim=0)
+    b_seq_start_loc = torch.cumsum(
+        torch.tensor([0] + seq_lens[:-1], dtype=torch.long), dim=0
+    )
     for i in range(BS):
         for j in range(subquery_lens[i]):
-            k[b_start_loc[i] + j].copy_(key[b_seq_start_loc[i] + b_ctx_len[i] +
-                                            j])
-            v[b_start_loc[i] + j].copy_(value[b_seq_start_loc[i] +
-                                              b_ctx_len[i] + j])
+            k[b_start_loc[i] + j].copy_(key[b_seq_start_loc[i] + b_ctx_len[i] + j])
+            v[b_start_loc[i] + j].copy_(value[b_seq_start_loc[i] + b_ctx_len[i] + j])
         cur_ctx = 0
         block_id = 0
         while cur_ctx < b_ctx_len[i]:
@@ -104,22 +91,28 @@ def test_contexted_kv_attention(
                 end_loc = start_loc + block_size
             start_slot = block_table[i, block_id] * block_size
             end_slot = start_slot + end_loc - start_loc
-            k_cache.view(-1, num_kv_heads,
-                         head_size)[start_slot:end_slot].copy_(
-                             key[start_loc:end_loc])
-            v_cache.view(-1, num_kv_heads,
-                         head_size)[start_slot:end_slot].copy_(
-                             value[start_loc:end_loc])
+            k_cache.view(-1, num_kv_heads, head_size)[start_slot:end_slot].copy_(
+                key[start_loc:end_loc]
+            )
+            v_cache.view(-1, num_kv_heads, head_size)[start_slot:end_slot].copy_(
+                value[start_loc:end_loc]
+            )
             cur_ctx += block_size
             block_id += 1
     # transpose K_cache[num_blocks, block_size, num_kv_heads, head_size]
     # to K_cache[num_blocks, num_kv_heads, head_size/8, block_size, 8]
-    k_cache = (k_cache.view(-1, block_size, num_kv_heads, head_size // 8,
-                            8).permute(0, 2, 3, 1, 4).contiguous())
+    k_cache = (
+        k_cache.view(-1, block_size, num_kv_heads, head_size // 8, 8)
+        .permute(0, 2, 3, 1, 4)
+        .contiguous()
+    )
     # transpose V_cache[num_blocks, block_size, num_kv_heads, head_size]
     # to V_cache[num_blocks, num_kv_heads, head_size, block_size]
-    v_cache = (v_cache.view(-1, block_size, num_kv_heads,
-                            head_size).permute(0, 2, 3, 1).contiguous())
+    v_cache = (
+        v_cache.view(-1, block_size, num_kv_heads, head_size)
+        .permute(0, 2, 3, 1)
+        .contiguous()
+    )
 
     # Warm up the Triton kernel by calling it once before actually measuring
     # generation time
@@ -165,19 +158,22 @@ def test_contexted_kv_attention(
         # heads.
         #
         # see also: vllm/model_executor/layers/attention.py
-        query = query.view(query.shape[0], num_kv_heads, num_queries_per_kv,
-                           query.shape[-1])
-        key = key[:, :, None, :].expand(key.shape[0], num_kv_heads,
-                                        num_queries_per_kv, key.shape[-1])
-        value = value[:, :,
-                      None, :].expand(value.shape[0], num_kv_heads,
-                                      num_queries_per_kv, value.shape[-1])
+        query = query.view(
+            query.shape[0], num_kv_heads, num_queries_per_kv, query.shape[-1]
+        )
+        key = key[:, :, None, :].expand(
+            key.shape[0], num_kv_heads, num_queries_per_kv, key.shape[-1]
+        )
+        value = value[:, :, None, :].expand(
+            value.shape[0], num_kv_heads, num_queries_per_kv, value.shape[-1]
+        )
     query = query.unsqueeze(0)
     key = key.unsqueeze(0)
     value = value.unsqueeze(0)
 
     attn_bias = BlockDiagonalCausalFromBottomRightMask.from_seqlens(
-        subquery_lens, seq_lens)
+        subquery_lens, seq_lens
+    )
     output_ref = xops.memory_efficient_attention_forward(
         query,
         key,

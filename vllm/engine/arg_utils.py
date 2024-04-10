@@ -76,8 +76,7 @@ class EngineArgs:
             self.tokenizer = self.model
 
     @staticmethod
-    def add_cli_args(
-            parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    def add_cli_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         """Shared CLI arguments for vLLM engine."""
 
         # NOTE: If you update any of the arguments below, please also
@@ -162,9 +161,7 @@ class EngineArgs:
             "--dtype",
             type=str,
             default=EngineArgs.dtype,
-            choices=[
-                "auto", "half", "float16", "bfloat16", "float", "float32"
-            ],
+            choices=["auto", "half", "float16", "bfloat16", "float", "float32"],
             help="data type for model weights and activations. "
             'The "auto" option will use FP16 precision '
             "for FP32 and FP16 models, and BF16 precision "
@@ -235,10 +232,9 @@ class EngineArgs:
             help="Enables automatic prefix caching",
         )
 
-        parser.add_argument("--seed",
-                            type=int,
-                            default=EngineArgs.seed,
-                            help="random seed")
+        parser.add_argument(
+            "--seed", type=int, default=EngineArgs.seed, help="random seed"
+        )
         parser.add_argument(
             "--swap-space",
             type=int,
@@ -257,8 +253,7 @@ class EngineArgs:
             "--max-num-batched-tokens",
             type=int,
             default=EngineArgs.max_num_batched_tokens,
-            help="maximum number of batched tokens per "
-            "iteration",
+            help="maximum number of batched tokens per " "iteration",
         )
         parser.add_argument(
             "--max-num-seqs",
@@ -270,8 +265,10 @@ class EngineArgs:
             "--max-logprobs",
             type=int,
             default=EngineArgs.max_logprobs,
-            help=("max number of log probs to return logprobs is specified in"
-                  " SamplingParams"),
+            help=(
+                "max number of log probs to return logprobs is specified in"
+                " SamplingParams"
+            ),
         )
         parser.add_argument(
             "--disable-log-stats",
@@ -360,25 +357,28 @@ class EngineArgs:
             "--lora-extra-vocab-size",
             type=int,
             default=EngineArgs.lora_extra_vocab_size,
-            help=("Maximum size of extra vocabulary that can be "
-                  "present in a LoRA adapter (added to the base "
-                  "model vocabulary)."),
+            help=(
+                "Maximum size of extra vocabulary that can be "
+                "present in a LoRA adapter (added to the base "
+                "model vocabulary)."
+            ),
         )
         parser.add_argument(
             "--lora-dtype",
             type=str,
             default=EngineArgs.lora_dtype,
             choices=["auto", "float16", "bfloat16", "float32"],
-            help=("Data type for LoRA. If auto, will default to "
-                  "base model dtype."),
+            help=("Data type for LoRA. If auto, will default to " "base model dtype."),
         )
         parser.add_argument(
             "--max-cpu-loras",
             type=int,
             default=EngineArgs.max_cpu_loras,
-            help=("Maximum number of LoRAs to store in CPU memory. "
-                  "Must be >= than max_num_seqs. "
-                  "Defaults to max_num_seqs."),
+            help=(
+                "Maximum number of LoRAs to store in CPU memory. "
+                "Must be >= than max_num_seqs. "
+                "Defaults to max_num_seqs."
+            ),
         )
         # Delta related configs
         parser.add_argument(
@@ -396,9 +396,11 @@ class EngineArgs:
             "--max-cpu-deltas",
             type=int,
             default=EngineArgs.max_cpu_deltas,
-            help=("Maximum number of Delta models to store in CPU memory. "
-                  "Must be >= than max_num_seqs. "
-                  "Defaults to max_num_seqs."),
+            help=(
+                "Maximum number of Delta models to store in CPU memory. "
+                "Must be >= than max_num_seqs. "
+                "Defaults to max_num_seqs."
+            ),
         )
         parser.add_argument(
             "--max-delta-bitwidth",
@@ -418,11 +420,11 @@ class EngineArgs:
             "--image-input-type",
             type=str,
             default=None,
-            choices=[
-                t.name.lower() for t in VisionLanguageConfig.ImageInputType
-            ],
-            help=("The image input type passed into vLLM. "
-                  'Should be one of "pixel_values" or "image_features".'),
+            choices=[t.name.lower() for t in VisionLanguageConfig.ImageInputType],
+            help=(
+                "The image input type passed into vLLM. "
+                'Should be one of "pixel_values" or "image_features".'
+            ),
         )
         parser.add_argument(
             "--image-token-id",
@@ -434,8 +436,10 @@ class EngineArgs:
             "--image-input-shape",
             type=str,
             default=None,
-            help=("The biggest image input shape (worst for memory footprint) "
-                  "given an input type. Only used for vLLM's profile_run."),
+            help=(
+                "The biggest image input shape (worst for memory footprint) "
+                "given an input type. Only used for vLLM's profile_run."
+            ),
         )
         parser.add_argument(
             "--image-feature-size",
@@ -463,14 +467,14 @@ class EngineArgs:
     def create_engine_configs(
         self,
     ) -> Tuple[
-            ModelConfig,
-            CacheConfig,
-            ParallelConfig,
-            SchedulerConfig,
-            DeviceConfig,
-            Optional[LoRAConfig],
-            Optional[DeltaConfig],
-            Optional[VisionLanguageConfig],
+        ModelConfig,
+        CacheConfig,
+        ParallelConfig,
+        SchedulerConfig,
+        DeviceConfig,
+        Optional[LoRAConfig],
+        Optional[DeltaConfig],
+        Optional[VisionLanguageConfig],
     ]:
         device_config = DeviceConfig(self.device)
         model_config = ModelConfig(
@@ -518,24 +522,36 @@ class EngineArgs:
             model_config.max_model_len,
             self.scheduler_delay_factor,
         )
-        lora_config = (LoRAConfig(
-            max_lora_rank=self.max_lora_rank,
-            max_loras=self.max_loras,
-            lora_extra_vocab_size=self.lora_extra_vocab_size,
-            lora_dtype=self.lora_dtype,
-            max_cpu_loras=(self.max_cpu_loras if self.max_cpu_loras
-                           and self.max_cpu_loras > 0 else None),
-        ) if self.enable_lora else None)
+        lora_config = (
+            LoRAConfig(
+                max_lora_rank=self.max_lora_rank,
+                max_loras=self.max_loras,
+                lora_extra_vocab_size=self.lora_extra_vocab_size,
+                lora_dtype=self.lora_dtype,
+                max_cpu_loras=(
+                    self.max_cpu_loras
+                    if self.max_cpu_loras and self.max_cpu_loras > 0
+                    else None
+                ),
+            )
+            if self.enable_lora
+            else None
+        )
 
         if self.image_input_type:
-            if (not self.image_token_id or not self.image_input_shape
-                    or not self.image_feature_size):
+            if (
+                not self.image_token_id
+                or not self.image_input_shape
+                or not self.image_feature_size
+            ):
                 raise ValueError(
                     "Specify `image_token_id`, `image_input_shape` and "
-                    "`image_feature_size` together with `image_input_type`.")
+                    "`image_feature_size` together with `image_input_type`."
+                )
             vision_language_config = VisionLanguageConfig(
-                image_input_type=VisionLanguageConfig.
-                get_image_input_enum_type(self.image_input_type),
+                image_input_type=VisionLanguageConfig.get_image_input_enum_type(
+                    self.image_input_type
+                ),
                 image_token_id=self.image_token_id,
                 image_input_shape=str_to_int_tuple(self.image_input_shape),
                 image_feature_size=self.image_feature_size,
@@ -545,8 +561,7 @@ class EngineArgs:
 
         delta_config = DeltaConfig(
             max_deltas=self.max_deltas,
-            max_cpu_deltas=self.max_cpu_deltas
-            if self.max_cpu_deltas else None,
+            max_cpu_deltas=self.max_cpu_deltas if self.max_cpu_deltas else None,
         )
         return (
             model_config,
@@ -569,8 +584,7 @@ class AsyncEngineArgs(EngineArgs):
     max_log_len: Optional[int] = None
 
     @staticmethod
-    def add_cli_args(
-            parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
+    def add_cli_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:
         parser = EngineArgs.add_cli_args(parser)
         parser.add_argument(
             "--engine-use-ray",

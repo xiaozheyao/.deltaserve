@@ -37,40 +37,33 @@ class AbstractWorkerManager(ABC):
 
     @property
     @abstractmethod
-    def is_enabled(self) -> bool:
-        ...
+    def is_enabled(self) -> bool: ...
 
     @abstractmethod
     def create_delta_manager(
         self,
         model: torch.nn.Module,
-    ) -> Any:
-        ...
+    ) -> Any: ...
 
     @abstractmethod
-    def set_active_deltas(self, lora_requests: List[DeltaRequest],
-                          lora_mapping: DeltaMapping) -> None:
-        ...
+    def set_active_deltas(
+        self, lora_requests: List[DeltaRequest], lora_mapping: DeltaMapping
+    ) -> None: ...
 
     @abstractmethod
-    def add_delta(self, delta_request: DeltaRequest) -> bool:
-        ...
+    def add_delta(self, delta_request: DeltaRequest) -> bool: ...
 
     @abstractmethod
-    def add_dummy_delta(self, delta_request: DeltaRequest) -> bool:
-        ...
+    def add_dummy_delta(self, delta_request: DeltaRequest) -> bool: ...
 
     @abstractmethod
-    def remove_delta(self, delta_id: int) -> bool:
-        ...
+    def remove_delta(self, delta_id: int) -> bool: ...
 
     @abstractmethod
-    def remove_all_deltas(self) -> bool:
-        ...
+    def remove_all_deltas(self) -> bool: ...
 
     @abstractmethod
-    def list_deltas(self) -> Set[int]:
-        ...
+    def list_deltas(self) -> Set[int]: ...
 
 
 class WorkerDeltaManager(AbstractWorkerManager):
@@ -93,8 +86,9 @@ class WorkerDeltaManager(AbstractWorkerManager):
         self._delta_model_cls = delta_model_cls
         self.embedding_modules = embedding_modules
         self.embedding_padding_modules = embedding_padding_modules
-        super().__init__(max_num_seqs, max_num_batched_tokens, vocab_size,
-                         delta_config, device)
+        super().__init__(
+            max_num_seqs, max_num_batched_tokens, vocab_size, delta_config, device
+        )
 
     @property
     def is_enabled(self) -> bool:
@@ -112,21 +106,22 @@ class WorkerDeltaManager(AbstractWorkerManager):
         self._delta_manager: DeltaModelManager = delta_manager
         return delta_manager.model
 
-    def set_active_deltas(self, delta_requests: List[DeltaRequest],
-                          delta_mapping: DeltaMapping) -> None:
+    def set_active_deltas(
+        self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping
+    ) -> None:
         self._apply_deltas(delta_requests)
         self._delta_manager.set_delta_mapping(delta_mapping)
 
     def _apply_deltas(self, delta_requests: List[DeltaRequest]) -> None:
         deltas_that_exist = self.list_deltas()
         deltas_map = {
-            delta_request.delta_id: delta_request
-            for delta_request in delta_requests
+            delta_request.delta_id: delta_request for delta_request in delta_requests
         }
         if len(deltas_map) > self._delta_manager.delta_slots:
             raise RuntimeError(
                 f"Number of requested deltas ({len(deltas_map)}) is greater than the number of GPU delta slots "
-                f"({self._delta_manager.delta_slots}).")
+                f"({self._delta_manager.delta_slots})."
+            )
         new_deltas = set(deltas_map)
         deltas_to_add = new_deltas - deltas_that_exist
         deltas_to_remove = deltas_that_exist - new_deltas
@@ -199,7 +194,8 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         if len(delta_maps) > self._delta_manager.delta_slots:
             raise RuntimeError(
                 f"Number of requested deltas ({len(delta_maps)}) is greater than the number of GPU delta slots "
-                f"({self._delta_manager.delta_slots}).")
+                f"({self._delta_manager.delta_slots})."
+            )
         for delta in delta_maps.values():
             self.add_delta(delta)
 

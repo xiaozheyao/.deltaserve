@@ -35,7 +35,8 @@ from vllm.model_executor.layers.logits_processor import LogitsProcessor
 from vllm.model_executor.layers.sampler import Sampler
 from vllm.model_executor.layers.vocab_parallel_embedding import VocabParallelEmbedding
 from vllm.model_executor.parallel_utils.parallel_state import (
-    get_tensor_model_parallel_world_size, )
+    get_tensor_model_parallel_world_size,
+)
 from vllm.model_executor.sampling_metadata import SamplingMetadata
 from vllm.model_executor.weight_utils import (
     default_weight_loader,
@@ -54,8 +55,7 @@ class GPT2Attention(nn.Module):
         super().__init__()
         self.hidden_size = config.hidden_size
         total_num_heads = config.num_attention_heads
-        tensor_model_parallel_world_size = get_tensor_model_parallel_world_size(
-        )
+        tensor_model_parallel_world_size = get_tensor_model_parallel_world_size()
         assert total_num_heads % tensor_model_parallel_world_size == 0
         self.num_heads = total_num_heads // tensor_model_parallel_world_size
         self.head_dim = self.hidden_size // total_num_heads
@@ -112,8 +112,9 @@ class GPT2MLP(nn.Module):
             linear_method=linear_method,
         )
         quant_config = getattr(linear_method, "quant_config", None)
-        self.act = get_act_fn(config.activation_function, quant_config,
-                              intermediate_size)
+        self.act = get_act_fn(
+            config.activation_function, quant_config, intermediate_size
+        )
 
     def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
         hidden_states, _ = self.c_fc(hidden_states)
@@ -177,10 +178,9 @@ class GPT2Model(nn.Module):
         self.embed_dim = config.hidden_size
         self.wte = VocabParallelEmbedding(config.vocab_size, self.embed_dim)
         self.wpe = nn.Embedding(config.max_position_embeddings, self.embed_dim)
-        self.h = nn.ModuleList([
-            GPT2Block(config, linear_method)
-            for _ in range(config.num_hidden_layers)
-        ])
+        self.h = nn.ModuleList(
+            [GPT2Block(config, linear_method) for _ in range(config.num_hidden_layers)]
+        )
         self.ln_f = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_epsilon)
 
     def forward(
@@ -224,14 +224,15 @@ class GPT2LMHeadModel(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.transformer(input_ids, positions, kv_caches,
-                                         attn_metadata)
+        hidden_states = self.transformer(input_ids, positions, kv_caches, attn_metadata)
         return hidden_states
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
-        logits = self.logits_processor(self.lm_head_weight, hidden_states,
-                                       sampling_metadata)
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
+        logits = self.logits_processor(
+            self.lm_head_weight, hidden_states, sampling_metadata
+        )
         return logits
 
     def sample(
@@ -251,7 +252,8 @@ class GPT2LMHeadModel(nn.Module):
     ):
         params_dict = dict(self.named_parameters(remove_duplicate=False))
         for name, loaded_weight in hf_model_weights_iterator(
-                model_name_or_path, cache_dir, load_format, revision):
+            model_name_or_path, cache_dir, load_format, revision
+        ):
             if "lm_head.weight" in name:
                 # GPT-2 ties the weights of the embedding layer and the final
                 # linear layer.
@@ -272,6 +274,5 @@ class GPT2LMHeadModel(nn.Module):
                 if not name.endswith(".weight"):
                     continue
                 loaded_weight = loaded_weight.t()
-            weight_loader = getattr(param, "weight_loader",
-                                    default_weight_loader)
+            weight_loader = getattr(param, "weight_loader", default_weight_loader)
             weight_loader(param, loaded_weight)

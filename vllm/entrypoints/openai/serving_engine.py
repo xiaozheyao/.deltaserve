@@ -56,14 +56,16 @@ class OpenAIServing:
                     lora_name=lora.name,
                     lora_int_id=i,
                     lora_local_path=lora.local_path,
-                ) for i, lora in enumerate(lora_modules, start=1)
+                )
+                for i, lora in enumerate(lora_modules, start=1)
             ]
             self.delta_requests = [
                 DeltaRequest(
                     delta_name=delta.name,
                     delta_int_id=i,
                     delta_local_path=delta.local_path,
-                ) for i, delta in enumerate(delta_modules, start=1)
+                )
+                for i, delta in enumerate(delta_modules, start=1)
             ]
 
         self.max_model_len = 0
@@ -99,7 +101,8 @@ class OpenAIServing:
                 f" does not match the model's vocabulary size "
                 f"{engine_model_config.get_vocab_size()}. This might "
                 f"cause an error in decoding. Please change config.json "
-                "to match the tokenizer's vocabulary size.")
+                "to match the tokenizer's vocabulary size."
+            )
 
     async def show_available_models(self) -> ModelList:
         """Show available models. Right now we only have one model."""
@@ -115,14 +118,16 @@ class OpenAIServing:
                 id=lora.lora_name,
                 root=self.served_model,
                 permission=[ModelPermission()],
-            ) for lora in self.lora_requests
+            )
+            for lora in self.lora_requests
         ]
         delta_cards = [
             ModelCard(
                 id=delta.delta_name,
                 root=self.served_model,
                 permission=[ModelPermission()],
-            ) for delta in self.delta_requests
+            )
+            for delta in self.delta_requests
         ]
         model_cards.extend(lora_cards)
         model_cards.extend(delta_cards)
@@ -153,15 +158,15 @@ class OpenAIServing:
             if len(logprobs.text_offset) == 0:
                 logprobs.text_offset.append(initial_text_offset)
             else:
-                logprobs.text_offset.append(logprobs.text_offset[-1] +
-                                            last_token_len)
+                logprobs.text_offset.append(logprobs.text_offset[-1] + last_token_len)
             last_token_len = len(token)
 
             if num_output_top_logprobs:
-                logprobs.top_logprobs.append({
-                    p.decoded_token: p.logprob
-                    for i, p in step_top_logprobs.items()
-                } if step_top_logprobs else None)
+                logprobs.top_logprobs.append(
+                    {p.decoded_token: p.logprob for i, p in step_top_logprobs.items()}
+                    if step_top_logprobs
+                    else None
+                )
         return logprobs
 
     def create_error_response(
@@ -170,9 +175,7 @@ class OpenAIServing:
         err_type: str = "BadRequestError",
         status_code: HTTPStatus = HTTPStatus.BAD_REQUEST,
     ) -> ErrorResponse:
-        return ErrorResponse(message=message,
-                             type=err_type,
-                             code=status_code.value)
+        return ErrorResponse(message=message, type=err_type, code=status_code.value)
 
     def create_streaming_error_response(
         self,
@@ -180,12 +183,13 @@ class OpenAIServing:
         err_type: str = "BadRequestError",
         status_code: HTTPStatus = HTTPStatus.BAD_REQUEST,
     ) -> str:
-        json_str = json.dumps({
-            "error":
-            self.create_error_response(message=message,
-                                       err_type=err_type,
-                                       status_code=status_code).model_dump()
-        })
+        json_str = json.dumps(
+            {
+                "error": self.create_error_response(
+                    message=message, err_type=err_type, status_code=status_code
+                ).model_dump()
+            }
+        )
         return json_str
 
     async def _check_model(self, request) -> Optional[ErrorResponse]:
@@ -196,13 +200,10 @@ class OpenAIServing:
         logger.info(
             f"Delta Models: {[delta.delta_name for delta in self.delta_requests]}"
         )
-        if request.model in [
-                delta.delta_name for delta in self.delta_requests
-        ]:
+        if request.model in [delta.delta_name for delta in self.delta_requests]:
             return
         return self.create_error_response(
-            message=
-            f"The model [{request.model}] does not exist. Expected one of {self.served_model}, {[lora.lora_name for lora in self.lora_requests]}, {[delta.delta_name for delta in self.delta_requests]}",
+            message=f"The model [{request.model}] does not exist. Expected one of {self.served_model}, {[lora.lora_name for lora in self.lora_requests]}, {[delta.delta_name for delta in self.delta_requests]}",
             err_type="NotFoundError",
             status_code=HTTPStatus.NOT_FOUND,
         )
@@ -233,11 +234,11 @@ class OpenAIServing:
         if not (prompt or prompt_ids):
             raise ValueError("Either prompt or prompt_ids should be provided.")
         if prompt and prompt_ids:
-            raise ValueError(
-                "Only one of prompt or prompt_ids should be provided.")
+            raise ValueError("Only one of prompt or prompt_ids should be provided.")
 
-        input_ids = (prompt_ids if prompt_ids is not None else
-                     self.tokenizer(prompt).input_ids)
+        input_ids = (
+            prompt_ids if prompt_ids is not None else self.tokenizer(prompt).input_ids
+        )
         token_num = len(input_ids)
 
         if request.max_tokens is None:
@@ -250,6 +251,7 @@ class OpenAIServing:
                 f"{request.max_tokens + token_num} tokens "
                 f"({token_num} in the messages, "
                 f"{request.max_tokens} in the completion). "
-                f"Please reduce the length of the messages or completion.", )
+                f"Please reduce the length of the messages or completion.",
+            )
         else:
             return input_ids

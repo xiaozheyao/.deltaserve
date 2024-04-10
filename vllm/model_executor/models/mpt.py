@@ -34,7 +34,7 @@ def _get_alibi_slopes(
     total_num_heads: int,
     alibi_bias_max: int,
 ) -> torch.Tensor:
-    next_power_of_2 = 2**math.ceil(math.log2(total_num_heads))
+    next_power_of_2 = 2 ** math.ceil(math.log2(total_num_heads))
     m = torch.arange(1, next_power_of_2 + 1, dtype=torch.float32)
     m = m.mul(alibi_bias_max / next_power_of_2)
     slopes = 1.0 / torch.pow(2, m)
@@ -102,8 +102,7 @@ class MPTAttention(nn.Module):
         tp_rank = get_tensor_model_parallel_rank()
         head_start = tp_rank * self.num_heads
         head_end = (tp_rank + 1) * self.num_heads
-        alibi_slopes = _get_alibi_slopes(self.total_num_heads,
-                                         self.alibi_bias_max)
+        alibi_slopes = _get_alibi_slopes(self.total_num_heads, self.alibi_bias_max)
         alibi_slopes = alibi_slopes[head_start:head_end].tolist()
 
         self.head_dim = self.d_model // self.total_num_heads
@@ -220,12 +219,12 @@ class MPTModel(nn.Module):
             config.d_model,
         )
         self.blocks = nn.ModuleList(
-            [MPTBlock(config, linear_method) for _ in range(config.n_layers)])
+            [MPTBlock(config, linear_method) for _ in range(config.n_layers)]
+        )
         self.norm_f = nn.LayerNorm(config.d_model)
         if config.no_bias:
             for module in self.modules():
-                if hasattr(module, "bias") and isinstance(
-                        module.bias, nn.Parameter):
+                if hasattr(module, "bias") and isinstance(module.bias, nn.Parameter):
                     # Remove the bias term in Linear and LayerNorm.
                     module.register_parameter("bias", None)
 
@@ -273,14 +272,15 @@ class MPTForCausalLM(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.transformer(input_ids, positions, kv_caches,
-                                         attn_metadata)
+        hidden_states = self.transformer(input_ids, positions, kv_caches, attn_metadata)
         return hidden_states
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
-        logits = self.logits_processor(self.lm_head_weight, hidden_states,
-                                       sampling_metadata)
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
+        logits = self.logits_processor(
+            self.lm_head_weight, hidden_states, sampling_metadata
+        )
         return logits
 
     def sample(
@@ -300,11 +300,11 @@ class MPTForCausalLM(nn.Module):
     ):
         params_dict = dict(self.named_parameters(remove_duplicate=False))
         for name, loaded_weight in hf_model_weights_iterator(
-                model_name_or_path, cache_dir, load_format, revision):
+            model_name_or_path, cache_dir, load_format, revision
+        ):
             # Skip loading extra bias for GPTQ models.
             if name.endswith(".bias") and name not in params_dict:
                 continue
             param = params_dict[name]
-            weight_loader = getattr(param, "weight_loader",
-                                    default_weight_loader)
+            weight_loader = getattr(param, "weight_loader", default_weight_loader)
             weight_loader(param, loaded_weight)

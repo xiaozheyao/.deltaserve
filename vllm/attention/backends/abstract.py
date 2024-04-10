@@ -53,10 +53,7 @@ class AttentionMetadata:
         """Similar to dataclasses.asdict, but avoids deepcopying."""
         # Note that if we add dataclasses as fields, they will need
         # similar handling.
-        return {
-            field.name: getattr(self, field.name)
-            for field in fields(self)
-        }
+        return {field.name: getattr(self, field.name) for field in fields(self)}
 
 
 class AttentionImpl(ABC):

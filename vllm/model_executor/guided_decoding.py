@@ -56,8 +56,8 @@ global_thread_pool = None  # used for generating logits processor fsm
 
 
 async def get_guided_decoding_logits_processor(
-        request: Union[CompletionRequest, ChatCompletionRequest],
-        tokenizer) -> Union[JSONLogitsProcessor, RegexLogitsProcessor]:
+    request: Union[CompletionRequest, ChatCompletionRequest], tokenizer
+) -> Union[JSONLogitsProcessor, RegexLogitsProcessor]:
     """
     Given an OpenAI-compatible request, check for guided decoding parameters
     and get the necessary logits processor for the given guide.
@@ -70,13 +70,12 @@ async def get_guided_decoding_logits_processor(
         return None
 
     if global_thread_pool is None:
-        global_thread_pool = concurrent.futures.ThreadPoolExecutor(
-            max_workers=2)
+        global_thread_pool = concurrent.futures.ThreadPoolExecutor(max_workers=2)
     loop = asyncio.get_running_loop()
 
-    result = await loop.run_in_executor(global_thread_pool,
-                                        _get_cached_logits_processor, guide,
-                                        tokenizer, mode)
+    result = await loop.run_in_executor(
+        global_thread_pool, _get_cached_logits_processor, guide, tokenizer, mode
+    )
 
     logits_processor = copy(result)
     # reset logits processor's internal state
@@ -101,24 +100,24 @@ def _get_guide_and_mode(
         return request.guided_regex, GuidedDecodingMode.REGEX
     elif request.guided_choice:
         # choice just uses regex
-        choices = [
-            regex_escape(str(choice)) for choice in request.guided_choice
-        ]
+        choices = [regex_escape(str(choice)) for choice in request.guided_choice]
         choices_regex = "(" + "|".join(choices) + ")"
         return choices_regex, GuidedDecodingMode.CHOICE
     elif request.guided_grammar:
         return request.guided_grammar, GuidedDecodingMode.GRAMMAR
-    elif (request.response_format is not None
-          and request.response_format.type == "json_object"):
+    elif (
+        request.response_format is not None
+        and request.response_format.type == "json_object"
+    ):
         return JSON_GRAMMAR, GuidedDecodingMode.GRAMMAR
     else:
         return None, None
 
 
 @lru_cache(maxsize=32)
-def _get_cached_logits_processor(guide: str,
-                                 tokenizer: PreTrainedTokenizerBase,
-                                 mode: GuidedDecodingMode):
+def _get_cached_logits_processor(
+    guide: str, tokenizer: PreTrainedTokenizerBase, mode: GuidedDecodingMode
+):
     if mode == GuidedDecodingMode.JSON:
         return JSONLogitsProcessor(guide, tokenizer)
     elif mode == GuidedDecodingMode.REGEX or mode == GuidedDecodingMode.CHOICE:

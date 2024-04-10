@@ -51,8 +51,7 @@ class NeuronCasualLM(nn.Module):
         super().__init__()
         self.config = config
         self.model = None
-        self.logits_processor = LogitsProcessor(config.vocab_size,
-                                                logits_as_input=True)
+        self.logits_processor = LogitsProcessor(config.vocab_size, logits_as_input=True)
         self.sampler = Sampler()
 
     def forward(
@@ -61,13 +60,12 @@ class NeuronCasualLM(nn.Module):
         positions: torch.Tensor,
         input_block_ids: torch.Tensor,
     ) -> torch.Tensor:
-        logits = self.model(input_ids,
-                            cache_ids=positions,
-                            start_ids=input_block_ids)
+        logits = self.model(input_ids, cache_ids=positions, start_ids=input_block_ids)
         return logits
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
         logits = self.logits_processor(None, hidden_states, sampling_metadata)
         return logits
 
@@ -82,24 +80,24 @@ class NeuronCasualLM(nn.Module):
     def load_weights(self, model_name_or_path: str, **kwargs):
         arch = _get_model_architecture(self.config)
         neuronx_module_path, neuronx_model_cls, hf_model_cls = _NEURON_SUPPORTED_MODELS[
-            arch]
+            arch
+        ]
         neuronx_module = importlib.import_module(neuronx_module_path)
         neuronx_model_cls = getattr(neuronx_module, neuronx_model_cls)
 
         split_model_dir = f"{model_name_or_path}-split"
-        if os.path.isdir(os.path.join(model_name_or_path,
-                                      "pytorch_model.bin")):
+        if os.path.isdir(os.path.join(model_name_or_path, "pytorch_model.bin")):
             split_model_dir = model_name_or_path
         elif not os.path.exists(f"{model_name_or_path}-split"):
             hf_model_cls = getattr(transformers, hf_model_cls)
             from transformers_neuronx.module import save_pretrained_split
 
-            hf_model = hf_model_cls.from_pretrained(model_name_or_path,
-                                                    low_cpu_mem_usage=True)
+            hf_model = hf_model_cls.from_pretrained(
+                model_name_or_path, low_cpu_mem_usage=True
+            )
             save_pretrained_split(hf_model, f"{model_name_or_path}-split")
 
-        self.model = neuronx_model_cls.from_pretrained(split_model_dir,
-                                                       **kwargs)
+        self.model = neuronx_model_cls.from_pretrained(split_model_dir, **kwargs)
         self.model.to_neuron()
 
 
@@ -111,7 +109,8 @@ def _get_model_architecture(config: PretrainedConfig) -> Type[nn.Module]:
     raise ValueError(
         f"Model architectures {architectures} are not supported on Neuron "
         f"for now. Supported architectures: "
-        f"{list(_NEURON_SUPPORTED_MODELS.keys())}")
+        f"{list(_NEURON_SUPPORTED_MODELS.keys())}"
+    )
 
 
 def get_neuron_model(
@@ -125,9 +124,9 @@ def get_neuron_model(
     model = NeuronCasualLM(model_config.hf_config)
 
     continuous_batching_config = ContinuousBatchingConfig(
-        batch_size_for_shared_caches=scheduler_config.max_num_seqs)
-    neuron_config = NeuronConfig(
-        continuous_batching=continuous_batching_config)
+        batch_size_for_shared_caches=scheduler_config.max_num_seqs
+    )
+    neuron_config = NeuronConfig(continuous_batching=continuous_batching_config)
 
     # Load the weights from the cached or downloaded files.
     model.load_weights(

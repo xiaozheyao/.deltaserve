@@ -37,22 +37,28 @@ def test_parse_fine_tuned_lora_name():
 
 def test_replace_submodule():
     model = nn.Sequential(
-        OrderedDict([
-            ("dense1", nn.Linear(764, 100)),
-            ("act1", nn.ReLU()),
-            ("dense2", nn.Linear(100, 50)),
-            (
-                "seq1",
-                nn.Sequential(
-                    OrderedDict([
-                        ("dense1", nn.Linear(100, 10)),
-                        ("dense2", nn.Linear(10, 50)),
-                    ])),
-            ),
-            ("act2", nn.ReLU()),
-            ("output", nn.Linear(50, 10)),
-            ("outact", nn.Sigmoid()),
-        ]))
+        OrderedDict(
+            [
+                ("dense1", nn.Linear(764, 100)),
+                ("act1", nn.ReLU()),
+                ("dense2", nn.Linear(100, 50)),
+                (
+                    "seq1",
+                    nn.Sequential(
+                        OrderedDict(
+                            [
+                                ("dense1", nn.Linear(100, 10)),
+                                ("dense2", nn.Linear(10, 50)),
+                            ]
+                        )
+                    ),
+                ),
+                ("act2", nn.ReLU()),
+                ("output", nn.Linear(50, 10)),
+                ("outact", nn.Sigmoid()),
+            ]
+        )
+    )
 
     sigmoid = nn.Sigmoid()
 

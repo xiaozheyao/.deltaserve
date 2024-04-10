@@ -40,14 +40,12 @@ TOLERANCES = {
     torch.float32: (5e-3, 5e-3),
     torch.bfloat16: (3e-2, 2e-2),
 }
-CUDA_DEVICES = [
-    f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)
-]
+CUDA_DEVICES = [f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)]
 
 
-def get_random_id_to_index(num_loras: int,
-                           num_slots: int,
-                           log: bool = True) -> List[Optional[int]]:
+def get_random_id_to_index(
+    num_loras: int, num_slots: int, log: bool = True
+) -> List[Optional[int]]:
     """Creates a random lora_id_to_index mapping.
 
     Args:
@@ -60,7 +58,8 @@ def get_random_id_to_index(num_loras: int,
     if num_loras > num_slots:
         raise ValueError(
             f"num_loras is higher than num_slots: {num_loras} > {num_slots}. "
-            "num_loras must be less than or equal to num_slots.")
+            "num_loras must be less than or equal to num_slots."
+        )
 
     slots: List[Optional[int]] = [None] * num_slots
     random_slot_selections = (torch.randperm(num_slots)[:num_loras]).tolist()
@@ -114,13 +113,13 @@ def populate_loras(
                     weight=layer_weights,
                     generate_embeddings_tensor=generate_embeddings_tensor,
                 )
-                sublora.lora_b = sublora.lora_b[:, (sublora_len *
-                                                    i):(sublora_len * (i + 1))]
+                sublora.lora_b = sublora.lora_b[
+                    :, (sublora_len * i) : (sublora_len * (i + 1))
+                ]
                 sublora.optimize()
                 subloras.append(sublora)
 
-            lora = PackedLoRALayerWeights.pack(
-                subloras) if repeats > 1 else subloras[0]
+            lora = PackedLoRALayerWeights.pack(subloras) if repeats > 1 else subloras[0]
 
             layer.set_lora(
                 slot_idx,
@@ -158,11 +157,9 @@ def create_random_inputs(
     inputs, index_mapping, prompt_mapping = [], [], []
     for _ in range(num_inputs):
         if input_type == torch.int:
-            inputs.append(
-                torch.randint(low=int(low), high=int(high), size=input_size))
+            inputs.append(torch.randint(low=int(low), high=int(high), size=input_size))
         else:
-            inputs.append(
-                torch.rand(size=input_size, dtype=input_type) * high + low)
+            inputs.append(torch.rand(size=input_size, dtype=input_type) * high + low)
 
         lora_id = random.choice(active_lora_ids)
         index_mapping += [lora_id] * input_size[0]
@@ -177,9 +174,9 @@ def create_random_inputs(
 def test_embeddings(dist_init, num_loras, device) -> None:
     torch.set_default_device(device)
     max_loras = 8
-    lora_config = LoRAConfig(max_loras=max_loras,
-                             max_lora_rank=8,
-                             lora_dtype=torch.float16)
+    lora_config = LoRAConfig(
+        max_loras=max_loras, max_lora_rank=8, lora_dtype=torch.float16
+    )
 
     def create_random_embedding_layer():
         embedding = VocabParallelEmbedding(512, 256)
@@ -205,13 +202,14 @@ def test_embeddings(dist_init, num_loras, device) -> None:
         inputs, index_mapping, prompt_mapping = create_random_inputs(
             active_lora_ids=list(lora_dict.keys()),
             num_inputs=num_loras * 3,
-            input_size=(200, ),
+            input_size=(200,),
             input_range=(1, 512),
         )
         lora_mapping = LoRAMapping(index_mapping, prompt_mapping)
 
-        mapping_info = convert_mapping(lora_mapping, id_to_index, max_loras,
-                                       512, lora_config.lora_extra_vocab_size)
+        mapping_info = convert_mapping(
+            lora_mapping, id_to_index, max_loras, 512, lora_config.lora_extra_vocab_size
+        )
         lora_embedding.set_mapping(*mapping_info)
 
         lora_result = lora_embedding(torch.cat(inputs))
@@ -229,10 +227,7 @@ def test_embeddings(dist_init, num_loras, device) -> None:
         expected_result = torch.cat(expected_results)
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
         # Check that resetting the lora weights succeeds
 
@@ -242,23 +237,23 @@ def test_embeddings(dist_init, num_loras, device) -> None:
         inputs, index_mapping, prompt_mapping = create_random_inputs(
             active_lora_ids=[0],
             num_inputs=num_loras * 3,
-            input_size=(200, ),
+            input_size=(200,),
             input_range=(1, 512),
         )
         lora_mapping = LoRAMapping(index_mapping, prompt_mapping)
 
-        mapping_info = convert_mapping(lora_mapping, id_to_index, max_loras,
-                                       512, lora_config.lora_extra_vocab_size)
-        lora_embedding.set_mapping(*mapping_info, )
+        mapping_info = convert_mapping(
+            lora_mapping, id_to_index, max_loras, 512, lora_config.lora_extra_vocab_size
+        )
+        lora_embedding.set_mapping(
+            *mapping_info,
+        )
 
         lora_result = lora_embedding(torch.cat(inputs))
         expected_result = embedding(torch.cat(inputs))
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
 
 @torch.inference_mode()
@@ -269,9 +264,9 @@ def test_embeddings(dist_init, num_loras, device) -> None:
 def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
     torch.set_default_device(device)
     max_loras = 8
-    lora_config = LoRAConfig(max_loras=max_loras,
-                             max_lora_rank=8,
-                             lora_dtype=torch.float16)
+    lora_config = LoRAConfig(
+        max_loras=max_loras, max_lora_rank=8, lora_dtype=torch.float16
+    )
 
     def create_random_embedding_layer():
         embedding = VocabParallelEmbedding(512, 256)
@@ -286,8 +281,7 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
         expanded_embedding.weight.data[:512, :] = embedding_data
         # We need to deepcopy the embedding as it will be modified
         # in place
-        lora_embedding = VocabParallelEmbeddingWithLoRA(
-            deepcopy(expanded_embedding))
+        lora_embedding = VocabParallelEmbeddingWithLoRA(deepcopy(expanded_embedding))
         lora_embedding.create_lora_weights(max_loras, lora_config)
 
         return expanded_embedding, lora_embedding
@@ -300,8 +294,7 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
         lora_dict, _ = populate_loras(
             id_to_index,
             layer=lora_embedding,
-            layer_weights=torch.zeros(
-                (256, 512 + lora_config.lora_extra_vocab_size)),
+            layer_weights=torch.zeros((256, 512 + lora_config.lora_extra_vocab_size)),
             generate_embeddings_tensor=256,
         )
 
@@ -318,7 +311,7 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
         inputs, index_mapping, prompt_mapping = create_random_inputs(
             active_lora_ids=list(lora_dict.keys()),
             num_inputs=num_loras * 3,
-            input_size=(200, ),
+            input_size=(200,),
             input_range=(1, 512),
         )
         lora_mapping = LoRAMapping(index_mapping, prompt_mapping)
@@ -327,27 +320,32 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
 
         # Force some of the inputs to be in the extended embeddings range
         # to guarantee that their behavior is tested.
-        for input_, original_input_, lora_id in zip(inputs, original_inputs,
-                                                    prompt_mapping):
+        for input_, original_input_, lora_id in zip(
+            inputs, original_inputs, prompt_mapping
+        ):
             embedding_id = lora_id - 1
             input_[-1] = 512 + (embedding_id * embeddings_tensor_len)
             original_input_[-1] = 512
             input_[-2] = 512 + ((embedding_id + 1) * embeddings_tensor_len - 1)
             original_input_[-2] = 512 + embeddings_tensor_len - 1
 
-        mapping_info = convert_mapping(lora_mapping, id_to_index, max_loras,
-                                       512, lora_config.lora_extra_vocab_size)
-        lora_embedding.set_mapping(*mapping_info, )
+        mapping_info = convert_mapping(
+            lora_mapping, id_to_index, max_loras, 512, lora_config.lora_extra_vocab_size
+        )
+        lora_embedding.set_mapping(
+            *mapping_info,
+        )
 
-        expanded_embedding.weight[512:512 +
-                                  (embeddings_tensor_len * max_loras)] = (
-                                      torch.cat(embeddings_tensors))
+        expanded_embedding.weight[512 : 512 + (embeddings_tensor_len * max_loras)] = (
+            torch.cat(embeddings_tensors)
+        )
 
         lora_result = lora_embedding(torch.cat(original_inputs))
 
         expected_results = []
-        for input_, original_input_, lora_id in zip(inputs, original_inputs,
-                                                    prompt_mapping):
+        for input_, original_input_, lora_id in zip(
+            inputs, original_inputs, prompt_mapping
+        ):
             lora = lora_dict[lora_id]
             result = expanded_embedding(input_)
             after_a = F.embedding(
@@ -359,10 +357,7 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
         expected_result = torch.cat(expected_results)
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
         # Check that resetting the lora weights succeeds
 
@@ -372,25 +367,25 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
         inputs, index_mapping, prompt_mapping = create_random_inputs(
             active_lora_ids=[0],
             num_inputs=num_loras * 3,
-            input_size=(200, ),
+            input_size=(200,),
             input_range=(1, 512),
         )
         lora_mapping = LoRAMapping(index_mapping, prompt_mapping)
 
         original_inputs = deepcopy(inputs)
 
-        mapping_info = convert_mapping(lora_mapping, id_to_index, max_loras,
-                                       512, lora_config.lora_extra_vocab_size)
-        lora_embedding.set_mapping(*mapping_info, )
+        mapping_info = convert_mapping(
+            lora_mapping, id_to_index, max_loras, 512, lora_config.lora_extra_vocab_size
+        )
+        lora_embedding.set_mapping(
+            *mapping_info,
+        )
 
         lora_result = lora_embedding(torch.cat(original_inputs))
         expected_result = expanded_embedding(torch.cat(inputs))
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
 
 @torch.inference_mode()
@@ -399,19 +394,20 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
 def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
     torch.set_default_device(device)
     max_loras = 8
-    lora_config = LoRAConfig(max_loras=max_loras,
-                             max_lora_rank=8,
-                             lora_dtype=torch.float16)
+    lora_config = LoRAConfig(
+        max_loras=max_loras, max_lora_rank=8, lora_dtype=torch.float16
+    )
 
     def _pretest():
-        linear = ParallelLMHead(32000 + lora_config.lora_extra_vocab_size,
-                                1024, 32000)
+        linear = ParallelLMHead(32000 + lora_config.lora_extra_vocab_size, 1024, 32000)
         linear.weight.data = torch.rand_like(linear.weight.data)
         linear.weight.data[:, 32000:] = 0
         logits_processor = LogitsProcessor(
-            32000 + lora_config.lora_extra_vocab_size, 32000)
+            32000 + lora_config.lora_extra_vocab_size, 32000
+        )
         lora_logits_processor = LogitsProcessorWithLoRA(
-            logits_processor, 1024, linear.weight.dtype, linear.weight.device)
+            logits_processor, 1024, linear.weight.dtype, linear.weight.device
+        )
         lora_logits_processor.create_lora_weights(max_loras, lora_config)
 
         return linear, logits_processor, lora_logits_processor
@@ -449,7 +445,9 @@ def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
             32000,
             lora_config.lora_extra_vocab_size,
         )
-        lora_logits_processor.set_mapping(*mapping_info, )
+        lora_logits_processor.set_mapping(
+            *mapping_info,
+        )
 
         lora_result = lora_logits_processor._get_logits(
             hidden_states=torch.cat(inputs),
@@ -459,18 +457,19 @@ def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
 
         original_weight = linear.weight.clone()
 
-        linear.weight[logits_processor.
-                      org_vocab_size:logits_processor.org_vocab_size +
-                      embeddings_tensor_len] = embeddings_tensor
+        linear.weight[
+            logits_processor.org_vocab_size : logits_processor.org_vocab_size
+            + embeddings_tensor_len
+        ] = embeddings_tensor
 
         logits_processor.org_vocab_size = 32000 + lora_config.lora_extra_vocab_size
         expected_results = []
         for input_, lora_id in zip(inputs, prompt_mapping):
             lora = lora_dict[lora_id]
-            result = logits_processor._get_logits(hidden_states=input_,
-                                                  embedding=linear.weight,
-                                                  embedding_bias=None)
-            result[:, 32000 + embeddings_tensor_len:] = float("-inf")
+            result = logits_processor._get_logits(
+                hidden_states=input_, embedding=linear.weight, embedding_bias=None
+            )
+            result[:, 32000 + embeddings_tensor_len :] = float("-inf")
             result += input_ @ lora.lora_a @ lora.lora_b * lora.scaling
             expected_results.append(result)
         expected_result = torch.cat(expected_results)
@@ -497,7 +496,9 @@ def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
             32000,
             lora_config.lora_extra_vocab_size,
         )
-        lora_logits_processor.set_mapping(*mapping_info, )
+        lora_logits_processor.set_mapping(
+            *mapping_info,
+        )
 
         lora_result = lora_logits_processor._get_logits(
             hidden_states=torch.cat(inputs),
@@ -511,10 +512,7 @@ def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
         )
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
 
 @torch.inference_mode()
@@ -524,9 +522,9 @@ def test_lm_head_logits_processor(dist_init, num_loras, device) -> None:
 def test_linear_parallel(dist_init, num_loras, orientation, device) -> None:
     torch.set_default_device(device)
     max_loras = 8
-    lora_config = LoRAConfig(max_loras=max_loras,
-                             max_lora_rank=8,
-                             lora_dtype=torch.float16)
+    lora_config = LoRAConfig(
+        max_loras=max_loras, max_lora_rank=8, lora_dtype=torch.float16
+    )
 
     def create_random_linear_parallel_layer():
         if orientation == "row":
@@ -569,7 +567,9 @@ def test_linear_parallel(dist_init, num_loras, orientation, device) -> None:
             512,
             lora_config.lora_extra_vocab_size,
         )
-        lora_linear.set_mapping(*mapping_info, )
+        lora_linear.set_mapping(
+            *mapping_info,
+        )
 
         lora_result = lora_linear(torch.cat(inputs))[0]
 
@@ -582,10 +582,7 @@ def test_linear_parallel(dist_init, num_loras, orientation, device) -> None:
         expected_result = torch.cat(expected_results)
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
         # Check that resetting the lora weights succeeds
 
@@ -601,18 +598,18 @@ def test_linear_parallel(dist_init, num_loras, orientation, device) -> None:
         )
         lora_mapping = LoRAMapping(index_mapping, prompt_mapping)
 
-        mapping_info = convert_mapping(lora_mapping, id_to_index, max_loras,
-                                       512, lora_config.lora_extra_vocab_size)
-        lora_linear.set_mapping(*mapping_info, )
+        mapping_info = convert_mapping(
+            lora_mapping, id_to_index, max_loras, 512, lora_config.lora_extra_vocab_size
+        )
+        lora_linear.set_mapping(
+            *mapping_info,
+        )
 
         lora_result = lora_linear(torch.cat(inputs))[0]
         expected_result = linear(torch.cat(inputs))[0]
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
 
 @torch.inference_mode()
@@ -622,14 +619,13 @@ def test_linear_parallel(dist_init, num_loras, orientation, device) -> None:
 def test_column_parallel_packed(dist_init, num_loras, repeats, device) -> None:
     torch.set_default_device(device)
     max_loras = 8
-    lora_config = LoRAConfig(max_loras=max_loras,
-                             max_lora_rank=8,
-                             lora_dtype=torch.float16)
+    lora_config = LoRAConfig(
+        max_loras=max_loras, max_lora_rank=8, lora_dtype=torch.float16
+    )
 
     def create_column_parallel_packed_layer():
         if repeats == 2:
-            linear = MergedColumnParallelLinear(4096, [4096] * repeats,
-                                                bias=False)
+            linear = MergedColumnParallelLinear(4096, [4096] * repeats, bias=False)
             linear.weight.data = torch.rand_like(linear.weight.data)
             lora_linear = MergedColumnParallelLinearWithLoRA(linear)
         elif repeats == 3:
@@ -647,9 +643,9 @@ def test_column_parallel_packed(dist_init, num_loras, repeats, device) -> None:
             num_key_value_heads = 32
             num_attention_heads = 32
 
-        lora_linear.create_lora_weights(max_loras,
-                                        lora_config,
-                                        model_config=FakeConfig())
+        lora_linear.create_lora_weights(
+            max_loras, lora_config, model_config=FakeConfig()
+        )
 
         return linear, lora_linear
 
@@ -692,17 +688,14 @@ def test_column_parallel_packed(dist_init, num_loras, repeats, device) -> None:
             result = linear(input_)[0]
             subloras = sublora_dict[lora_id]
             for i, sublora in enumerate(subloras):
-                result[:, sublora.lora_b.shape[1] * i:sublora.lora_b.shape[1] *
-                       (i + 1)] += (input_ @ sublora.lora_a @ sublora.lora_b *
-                                    sublora.scaling)
+                result[
+                    :, sublora.lora_b.shape[1] * i : sublora.lora_b.shape[1] * (i + 1)
+                ] += (input_ @ sublora.lora_a @ sublora.lora_b * sublora.scaling)
             expected_results.append(result)
         expected_result = torch.cat(expected_results)
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)
 
         for slot_idx in range(max_loras):
             lora_linear.reset_lora(slot_idx)
@@ -729,7 +722,4 @@ def test_column_parallel_packed(dist_init, num_loras, repeats, device) -> None:
         expected_result = linear(torch.cat(inputs))[0]
 
         rtol, atol = TOLERANCES[lora_result.dtype]
-        assert torch.allclose(lora_result,
-                              expected_result,
-                              rtol=rtol,
-                              atol=atol)
+        assert torch.allclose(lora_result, expected_result, rtol=rtol, atol=atol)

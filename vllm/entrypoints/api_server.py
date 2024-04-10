@@ -52,9 +52,7 @@ async def generate(request: Request) -> Response:
     async def stream_results() -> AsyncGenerator[bytes, None]:
         async for request_output in results_generator:
             prompt = request_output.prompt
-            text_outputs = [
-                prompt + output.text for output in request_output.outputs
-            ]
+            text_outputs = [prompt + output.text for output in request_output.outputs]
             ret = {"text": text_outputs}
             yield (json.dumps(ret) + "\0").encode("utf-8")
 
@@ -83,10 +81,9 @@ if __name__ == "__main__":
     parser.add_argument("--port", type=int, default=8000)
     parser.add_argument("--ssl-keyfile", type=str, default=None)
     parser.add_argument("--ssl-certfile", type=str, default=None)
-    parser.add_argument("--ssl-ca-certs",
-                        type=str,
-                        default=None,
-                        help="The CA certificates file")
+    parser.add_argument(
+        "--ssl-ca-certs", type=str, default=None, help="The CA certificates file"
+    )
     parser.add_argument(
         "--ssl-cert-reqs",
         type=int,

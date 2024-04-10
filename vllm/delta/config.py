@@ -41,23 +41,18 @@ class CompressionConfig(PushToHubMixin):
                 f"only support quantize to {fields_info[0].metadata['choices']} bits."
             )
         if self.group_size != -1 and self.group_size <= 0:
-            raise ValueError(
-                "unless equal to -1, group_size must greater then 0.")
+            raise ValueError("unless equal to -1, group_size must greater then 0.")
         if not (0 < self.damp_percent < 1):
             raise ValueError("damp_percent must between 0 and 1.")
         self.pack_factor = Fraction(32, self.bits)
 
     def save_pretrained(self, save_dir: str, **kwargs):
-        with open(join(save_dir, "compress_config.json"),
-                  "w",
-                  encoding="utf-8") as f:
+        with open(join(save_dir, "compress_config.json"), "w", encoding="utf-8") as f:
             json.dump(self.to_dict(), f, indent=2)
 
     @classmethod
     def from_pretrained(cls, save_dir: str):
-        with open(join(save_dir, "compress_config.json"),
-                  "r",
-                  encoding="utf-8") as f:
+        with open(join(save_dir, "compress_config.json"), "r", encoding="utf-8") as f:
             return cls(**json.load(f))
 
     def to_dict(self):

@@ -22,7 +22,8 @@ from vllm.model_executor.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding,
 )
 from vllm.model_executor.parallel_utils.parallel_state import (
-    get_tensor_model_parallel_world_size, )
+    get_tensor_model_parallel_world_size,
+)
 from vllm.model_executor.sampling_metadata import SamplingMetadata
 from vllm.model_executor.weight_utils import (
     default_weight_loader,
@@ -47,13 +48,14 @@ class InternLM2MLP(nn.Module):
             bias=False,
             linear_method=linear_method,
         )
-        self.w2 = RowParallelLinear(intermediate_size,
-                                    hidden_size,
-                                    bias=False,
-                                    linear_method=linear_method)
+        self.w2 = RowParallelLinear(
+            intermediate_size, hidden_size, bias=False, linear_method=linear_method
+        )
         if hidden_act != "silu":
-            raise ValueError(f"Unsupported activation: {hidden_act}. "
-                             "Only silu is supported for now.")
+            raise ValueError(
+                f"Unsupported activation: {hidden_act}. "
+                "Only silu is supported for now."
+            )
         self.act_fn = SiluAndMul()
 
     def forward(self, x):
@@ -120,10 +122,9 @@ class InternLM2Attention(nn.Module):
             base=rope_theta,
             rope_scaling=rope_scaling,
         )
-        self.attn = Attention(self.num_heads,
-                              self.head_dim,
-                              self.scaling,
-                              num_kv_heads=self.num_kv_heads)
+        self.attn = Attention(
+            self.num_heads, self.head_dim, self.scaling, num_kv_heads=self.num_kv_heads
+        )
 
     def forward(
         self,
@@ -151,8 +152,7 @@ class InternLMDecoderLayer(nn.Module):
         self.hidden_size = config.hidden_size
         rope_theta = getattr(config, "rope_theta", 10000)
         rope_scaling = getattr(config, "rope_scaling", None)
-        max_position_embeddings = getattr(config, "max_position_embeddings",
-                                          8192)
+        max_position_embeddings = getattr(config, "max_position_embeddings", 8192)
         self.attention = InternLM2Attention(
             hidden_size=self.hidden_size,
             num_heads=config.num_attention_heads,
@@ -168,8 +168,7 @@ class InternLMDecoderLayer(nn.Module):
             hidden_act=config.hidden_act,
             linear_method=linear_method,
         )
-        self.attention_norm = RMSNorm(config.hidden_size,
-                                      eps=config.rms_norm_eps)
+        self.attention_norm = RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
         self.ffn_norm = RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
     def forward(
@@ -185,8 +184,7 @@ class InternLMDecoderLayer(nn.Module):
             residual = hidden_states
             hidden_states = self.attention_norm(hidden_states)
         else:
-            hidden_states, residual = self.attention_norm(
-                hidden_states, residual)
+            hidden_states, residual = self.attention_norm(hidden_states, residual)
         hidden_states = self.attention(
             positions=positions,
             hidden_states=hidden_states,
@@ -215,10 +213,12 @@ class InternLM2Model(nn.Module):
             config.vocab_size,
             config.hidden_size,
         )
-        self.layers = nn.ModuleList([
-            InternLMDecoderLayer(config, linear_method)
-            for _ in range(config.num_hidden_layers)
-        ])
+        self.layers = nn.ModuleList(
+            [
+                InternLMDecoderLayer(config, linear_method)
+                for _ in range(config.num_hidden_layers)
+            ]
+        )
         self.norm = RMSNorm(config.hidden_size, eps=config.rms_norm_eps)
 
     def forward(
@@ -265,14 +265,15 @@ class InternLM2ForCausalLM(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.model(input_ids, positions, kv_caches,
-                                   attn_metadata)
+        hidden_states = self.model(input_ids, positions, kv_caches, attn_metadata)
         return hidden_states
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
-        logits = self.logits_processor(self.output.weight, hidden_states,
-                                       sampling_metadata)
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
+        logits = self.logits_processor(
+            self.output.weight, hidden_states, sampling_metadata
+        )
         return logits
 
     def sample(
@@ -297,7 +298,8 @@ class InternLM2ForCausalLM(nn.Module):
         ]
         params_dict = dict(self.named_parameters())
         for name, loaded_weight in hf_model_weights_iterator(
-                model_name_or_path, cache_dir, load_format, revision):
+            model_name_or_path, cache_dir, load_format, revision
+        ):
             if "rotary_emb.inv_freq" in name:
                 continue
             for param_name, weight_name, shard_id in stacked_params_mapping:
@@ -320,11 +322,10 @@ class InternLM2ForCausalLM(nn.Module):
                     config = self.config
                     kv_groups = config.num_attention_heads // config.num_key_value_heads
                     head_dim = config.hidden_size // config.num_attention_heads
-                    loaded_weight = loaded_weight.view(-1, 2 + kv_groups,
-                                                       head_dim,
-                                                       loaded_weight.shape[-1])
-                    wq, wk, wv = torch.split(loaded_weight, [kv_groups, 1, 1],
-                                             dim=1)
+                    loaded_weight = loaded_weight.view(
+                        -1, 2 + kv_groups, head_dim, loaded_weight.shape[-1]
+                    )
+                    wq, wk, wv = torch.split(loaded_weight, [kv_groups, 1, 1], dim=1)
                     wq = wq.reshape(-1, wq.shape[-1])
                     wk = wk.reshape(-1, wk.shape[-1])
                     wv = wv.reshape(-1, wv.shape[-1])
@@ -333,6 +334,7 @@ class InternLM2ForCausalLM(nn.Module):
                     weight_loader(param, wk, "k")
                     weight_loader(param, wv, "v")
                 else:
-                    weight_loader = getattr(param, "weight_loader",
-                                            default_weight_loader)
+                    weight_loader = getattr(
+                        param, "weight_loader", default_weight_loader
+                    )
                     weight_loader(param, loaded_weight)

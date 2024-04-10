@@ -15,12 +15,10 @@ from vllm import LLM, SamplingParams
 def test_duplicated_ignored_sequence_group():
     """https://github.com/vllm-project/vllm/issues/1655"""
 
-    sampling_params = SamplingParams(temperature=0.01,
-                                     top_p=0.1,
-                                     max_tokens=256)
-    llm = LLM(model="facebook/opt-125m",
-              max_num_batched_tokens=4096,
-              tensor_parallel_size=1)
+    sampling_params = SamplingParams(temperature=0.01, top_p=0.1, max_tokens=256)
+    llm = LLM(
+        model="facebook/opt-125m", max_num_batched_tokens=4096, tensor_parallel_size=1
+    )
     prompts = ["This is a short prompt", "This is a very long prompt " * 1000]
     outputs = llm.generate(prompts, sampling_params=sampling_params)
 
@@ -28,12 +26,10 @@ def test_duplicated_ignored_sequence_group():
 
 
 def test_max_tokens_none():
-    sampling_params = SamplingParams(temperature=0.01,
-                                     top_p=0.1,
-                                     max_tokens=None)
-    llm = LLM(model="facebook/opt-125m",
-              max_num_batched_tokens=4096,
-              tensor_parallel_size=1)
+    sampling_params = SamplingParams(temperature=0.01, top_p=0.1, max_tokens=None)
+    llm = LLM(
+        model="facebook/opt-125m", max_num_batched_tokens=4096, tensor_parallel_size=1
+    )
     prompts = ["Just say hello!"]
     outputs = llm.generate(prompts, sampling_params=sampling_params)
 

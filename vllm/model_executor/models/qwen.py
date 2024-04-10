@@ -27,7 +27,8 @@ from vllm.model_executor.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding,
 )
 from vllm.model_executor.parallel_utils.parallel_state import (
-    get_tensor_model_parallel_world_size, )
+    get_tensor_model_parallel_world_size,
+)
 from vllm.model_executor.sampling_metadata import SamplingMetadata
 from vllm.model_executor.weight_utils import (
     default_weight_loader,
@@ -52,13 +53,14 @@ class QWenMLP(nn.Module):
             bias=False,
             linear_method=linear_method,
         )
-        self.c_proj = RowParallelLinear(intermediate_size,
-                                        hidden_size,
-                                        bias=False,
-                                        linear_method=linear_method)
+        self.c_proj = RowParallelLinear(
+            intermediate_size, hidden_size, bias=False, linear_method=linear_method
+        )
         if hidden_act != "silu":
-            raise ValueError(f"Unsupported activation: {hidden_act}. "
-                             "Only silu is supported for now.")
+            raise ValueError(
+                f"Unsupported activation: {hidden_act}. "
+                "Only silu is supported for now."
+            )
         self.act_fn = SiluAndMul()
 
     def forward(self, x):
@@ -81,8 +83,7 @@ class QWenAttention(nn.Module):
     ):
         super().__init__()
         self.hidden_size = hidden_size
-        tensor_model_parallel_world_size = get_tensor_model_parallel_world_size(
-        )
+        tensor_model_parallel_world_size = get_tensor_model_parallel_world_size()
         self.total_num_heads = num_heads
         assert self.total_num_heads % tensor_model_parallel_world_size == 0
         self.num_heads = self.total_num_heads // tensor_model_parallel_world_size
@@ -197,10 +198,9 @@ class QWenModel(nn.Module):
             config.vocab_size,
             config.hidden_size,
         )
-        self.h = nn.ModuleList([
-            QWenBlock(config, linear_method)
-            for _ in range(config.num_hidden_layers)
-        ])
+        self.h = nn.ModuleList(
+            [QWenBlock(config, linear_method) for _ in range(config.num_hidden_layers)]
+        )
         self.ln_f = RMSNorm(config.hidden_size, eps=config.layer_norm_epsilon)
 
     def forward(
@@ -247,14 +247,15 @@ class QWenLMHeadModel(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.transformer(input_ids, positions, kv_caches,
-                                         attn_metadata)
+        hidden_states = self.transformer(input_ids, positions, kv_caches, attn_metadata)
         return hidden_states
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
-        logits = self.logits_processor(self.lm_head.weight, hidden_states,
-                                       sampling_metadata)
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
+        logits = self.logits_processor(
+            self.lm_head.weight, hidden_states, sampling_metadata
+        )
         return logits
 
     def sample(
@@ -279,7 +280,8 @@ class QWenLMHeadModel(nn.Module):
         ]
         params_dict = dict(self.named_parameters())
         for name, loaded_weight in hf_model_weights_iterator(
-                model_name_or_path, cache_dir, load_format, revision):
+            model_name_or_path, cache_dir, load_format, revision
+        ):
             if "rotary_emb.inv_freq" in name:
                 continue
             for param_name, weight_name, shard_id in stacked_params_mapping:
@@ -298,6 +300,5 @@ class QWenLMHeadModel(nn.Module):
                 if name.endswith(".bias") and name not in params_dict:
                     continue
                 param = params_dict[name]
-                weight_loader = getattr(param, "weight_loader",
-                                        default_weight_loader)
+                weight_loader = getattr(param, "weight_loader", default_weight_loader)
                 weight_loader(param, loaded_weight)

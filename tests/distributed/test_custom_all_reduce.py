@@ -8,7 +8,8 @@ import torch.distributed as dist
 
 from vllm.model_executor.parallel_utils import custom_all_reduce as custom_ar
 from vllm.model_executor.parallel_utils.communication_op import (
-    tensor_model_parallel_all_reduce, )
+    tensor_model_parallel_all_reduce,
+)
 from vllm.test_utils import (
     init_test_distributed_environment,
     multi_process_tensor_parallel,
@@ -25,22 +26,19 @@ def graph_allreduce(world_size, rank, distributed_init_port):
     del os.environ["CUDA_VISIBLE_DEVICES"]
     device = torch.device(f"cuda:{rank}")
     torch.cuda.set_device(device)
-    init_test_distributed_environment(1, world_size, rank,
-                                      distributed_init_port)
+    init_test_distributed_environment(1, world_size, rank, distributed_init_port)
 
     custom_ar.init_custom_ar()
     for sz in test_sizes:
         for dtype in [torch.float32, torch.float16, torch.bfloat16]:
             with custom_ar.capture():
                 # use integers so result matches NCCL exactly
-                inp1 = torch.randint(1,
-                                     16, (sz, ),
-                                     dtype=dtype,
-                                     device=torch.cuda.current_device())
-                inp2 = torch.randint(1,
-                                     16, (sz, ),
-                                     dtype=dtype,
-                                     device=torch.cuda.current_device())
+                inp1 = torch.randint(
+                    1, 16, (sz,), dtype=dtype, device=torch.cuda.current_device()
+                )
+                inp2 = torch.randint(
+                    1, 16, (sz,), dtype=dtype, device=torch.cuda.current_device()
+                )
                 torch.cuda.synchronize()
                 graph = torch.cuda.CUDAGraph()
                 with torch.cuda.graph(graph):
@@ -60,8 +58,7 @@ def eager_allreduce(world_size, rank, distributed_init_port):
     del os.environ["CUDA_VISIBLE_DEVICES"]
     device = torch.device(f"cuda:{rank}")
     torch.cuda.set_device(device)
-    init_test_distributed_environment(1, world_size, rank,
-                                      distributed_init_port)
+    init_test_distributed_environment(1, world_size, rank, distributed_init_port)
 
     sz = 1024
     custom_ar.init_custom_ar()
@@ -75,8 +72,9 @@ def eager_allreduce(world_size, rank, distributed_init_port):
     assert torch.allclose(out, inp * world_size)
 
 
-@pytest.mark.skipif(torch.cuda.device_count() < 2,
-                    reason="Need at least 2 GPUs to run the test.")
+@pytest.mark.skipif(
+    torch.cuda.device_count() < 2, reason="Need at least 2 GPUs to run the test."
+)
 @pytest.mark.parametrize("tensor_parallel_size", [2])
 @pytest.mark.parametrize("test_target", [eager_allreduce, graph_allreduce])
 def test_multi_process_tensor_parallel(tensor_parallel_size, test_target):

@@ -41,7 +41,8 @@ from vllm.model_executor.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding,
 )
 from vllm.model_executor.parallel_utils.parallel_state import (
-    get_tensor_model_parallel_world_size, )
+    get_tensor_model_parallel_world_size,
+)
 from vllm.model_executor.sampling_metadata import SamplingMetadata
 from vllm.model_executor.weight_utils import (
     default_weight_loader,
@@ -52,9 +53,9 @@ from vllm.sequence import SamplerOutput
 
 class StablelmMLP(nn.Module):
 
-    def __init__(self,
-                 config: PretrainedConfig,
-                 linear_method: Optional[LinearMethodBase] = None) -> None:
+    def __init__(
+        self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
+    ) -> None:
         super().__init__()
         self.config = config
         self.hidden_size = config.hidden_size
@@ -65,9 +66,9 @@ class StablelmMLP(nn.Module):
             bias=False,
             linear_method=linear_method,
         )
-        self.down_proj = RowParallelLinear(config.intermediate_size,
-                                           config.hidden_size,
-                                           bias=False)
+        self.down_proj = RowParallelLinear(
+            config.intermediate_size, config.hidden_size, bias=False
+        )
         self.act_fn = SiluAndMul()
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -79,9 +80,9 @@ class StablelmMLP(nn.Module):
 
 class StablelmAttention(nn.Module):
 
-    def __init__(self,
-                 config: PretrainedConfig,
-                 linear_method: Optional[LinearMethodBase] = None) -> None:
+    def __init__(
+        self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
+    ) -> None:
         super().__init__()
         self.config = config
         self.hidden_size = config.hidden_size
@@ -98,21 +99,23 @@ class StablelmAttention(nn.Module):
             # Number of KV heads is less than TP size, so we replicate
             # the KV heads across multiple tensor parallel GPUs.
             assert tp_size % self.total_num_key_value_heads == 0
-        self.num_key_value_heads = max(
-            1, self.total_num_key_value_heads // tp_size)
+        self.num_key_value_heads = max(1, self.total_num_key_value_heads // tp_size)
         self.head_dim = self.hidden_size // self.total_num_heads
         self.max_position_embeddings = config.max_position_embeddings
-        rope_pct = getattr(config, "rope_pct",
-                           getattr(config, "partial_rotary_factor", 1))
+        rope_pct = getattr(
+            config, "rope_pct", getattr(config, "partial_rotary_factor", 1)
+        )
         self.rotary_ndims = int(self.head_dim * rope_pct)
         self.scaling = self.head_dim**-0.5
         self.q_size = self.num_heads * self.head_dim
         self.kv_size = self.num_key_value_heads * self.head_dim
         self.qkv_bias = getattr(config, "use_qkv_bias", False)
         if (self.head_dim * self.num_heads * tp_size) != self.hidden_size:
-            raise ValueError(f"hidden_size must be divisible by num_heads "
-                             f"(got `hidden_size`: {self.hidden_size}"
-                             f" and `num_heads`: {self.num_heads}).")
+            raise ValueError(
+                f"hidden_size must be divisible by num_heads "
+                f"(got `hidden_size`: {self.hidden_size}"
+                f" and `num_heads`: {self.num_heads})."
+            )
 
         self.qkv_proj = QKVParallelLinear(
             self.hidden_size,
@@ -166,11 +169,9 @@ class StablelmDecoderLayer(nn.Module):
         super().__init__()
         self.self_attn = StablelmAttention(config)
         self.mlp = StablelmMLP(config, linear_method)
-        norm_eps = getattr(config, "norm_eps",
-                           getattr(config, "layer_norm_eps", 1e-05))
+        norm_eps = getattr(config, "norm_eps", getattr(config, "layer_norm_eps", 1e-05))
         self.input_layernorm = nn.LayerNorm(config.hidden_size, eps=norm_eps)
-        self.post_attention_layernorm = nn.LayerNorm(config.hidden_size,
-                                                     eps=norm_eps)
+        self.post_attention_layernorm = nn.LayerNorm(config.hidden_size, eps=norm_eps)
 
     def forward(
         self,
@@ -201,20 +202,21 @@ class StablelmDecoderLayer(nn.Module):
 
 class StableLMEpochModel(nn.Module):
 
-    def __init__(self,
-                 config: PretrainedConfig,
-                 linear_method: Optional[LinearMethodBase] = None) -> None:
+    def __init__(
+        self, config: PretrainedConfig, linear_method: Optional[LinearMethodBase] = None
+    ) -> None:
         super().__init__()
         self.embed_tokens = VocabParallelEmbedding(
             config.vocab_size,
             config.hidden_size,
         )
-        self.layers = nn.ModuleList([
-            StablelmDecoderLayer(config, linear_method)
-            for _ in range(config.num_hidden_layers)
-        ])
-        norm_eps = getattr(config, "norm_eps",
-                           getattr(config, "layer_norm_eps", 1e-05))
+        self.layers = nn.ModuleList(
+            [
+                StablelmDecoderLayer(config, linear_method)
+                for _ in range(config.num_hidden_layers)
+            ]
+        )
+        norm_eps = getattr(config, "norm_eps", getattr(config, "layer_norm_eps", 1e-05))
         self.norm = nn.LayerNorm(config.hidden_size, eps=norm_eps)
 
     def forward(
@@ -259,14 +261,15 @@ class StablelmForCausalLM(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.model(input_ids, positions, kv_caches,
-                                   attn_metadata)
+        hidden_states = self.model(input_ids, positions, kv_caches, attn_metadata)
         return hidden_states
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
-        logits = self.logits_processor(self.lm_head.weight, hidden_states,
-                                       sampling_metadata)
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
+        logits = self.logits_processor(
+            self.lm_head.weight, hidden_states, sampling_metadata
+        )
         return logits
 
     def sample(
@@ -294,7 +297,8 @@ class StablelmForCausalLM(nn.Module):
         ]
         params_dict = dict(self.named_parameters())
         for name, loaded_weight in hf_model_weights_iterator(
-                model_name_or_path, cache_dir, load_format, revision):
+            model_name_or_path, cache_dir, load_format, revision
+        ):
             if "rotary_emb.inv_freq" in name:
                 continue
             if "rotary_emb.cos_cached" in name or "rotary_emb.sin_cached" in name:
@@ -317,6 +321,5 @@ class StablelmForCausalLM(nn.Module):
                 if name.endswith(".bias") and name not in params_dict:
                     continue
                 param = params_dict[name]
-                weight_loader = getattr(param, "weight_loader",
-                                        default_weight_loader)
+                weight_loader = getattr(param, "weight_loader", default_weight_loader)
                 weight_loader(param, loaded_weight)

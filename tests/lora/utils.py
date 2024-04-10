@@ -28,18 +28,17 @@ class DummyLoRAManager:
             module_name,
             rank=rank,
             lora_alpha=1,
-            lora_a=torch.rand([weight.shape[1], rank],
-                              dtype=weight.dtype,
-                              device="cuda"),
-            lora_b=torch.rand([rank, weight.shape[0]],
-                              dtype=weight.dtype,
-                              device="cuda"),
+            lora_a=torch.rand(
+                [weight.shape[1], rank], dtype=weight.dtype, device="cuda"
+            ),
+            lora_b=torch.rand(
+                [rank, weight.shape[0]], dtype=weight.dtype, device="cuda"
+            ),
         )
         if generate_embeddings_tensor:
-            lora.embeddings_tensor = torch.rand(5,
-                                                generate_embeddings_tensor,
-                                                dtype=weight.dtype,
-                                                device="cuda")
+            lora.embeddings_tensor = torch.rand(
+                5, generate_embeddings_tensor, dtype=weight.dtype, device="cuda"
+            )
         self.set_module_lora(module_name, lora)
 
         return lora

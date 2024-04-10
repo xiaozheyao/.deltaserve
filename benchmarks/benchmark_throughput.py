@@ -26,8 +26,10 @@ def sample_requests(
     # Filter out the conversations with less than 2 turns.
     dataset = [data for data in dataset if len(data["conversations"]) >= 2]
     # Only keep the first two turns of each conversation.
-    dataset = [(data["conversations"][0]["value"],
-                data["conversations"][1]["value"]) for data in dataset]
+    dataset = [
+        (data["conversations"][0]["value"], data["conversations"][1]["value"])
+        for data in dataset
+    ]
 
     # Tokenize the prompts and completions.
     prompts = [prompt for prompt, _ in dataset]
@@ -129,7 +131,8 @@ def run_hf(
 ) -> float:
     assert not use_beam_search
     llm = AutoModelForCausalLM.from_pretrained(
-        model, torch_dtype=torch.float16, trust_remote_code=trust_remote_code)
+        model, torch_dtype=torch.float16, trust_remote_code=trust_remote_code
+    )
     if llm.config.model_type == "llama":
         # To enable padding in the HF backend.
         tokenizer.pad_token = tokenizer.eos_token
@@ -149,14 +152,15 @@ def run_hf(
         if len(batch) < max_batch_size and i != len(requests) - 1:
             # Check if we can add more requests to the batch.
             _, next_prompt_len, next_output_len = requests[i + 1]
-            if (max(max_prompt_len, next_prompt_len) +
-                    max(max_output_len, next_output_len)) <= 2048:
+            if (
+                max(max_prompt_len, next_prompt_len)
+                + max(max_output_len, next_output_len)
+            ) <= 2048:
                 # We can add more requests to the batch.
                 continue
 
         # Generate the sequences.
-        input_ids = tokenizer(batch, return_tensors="pt",
-                              padding=True).input_ids
+        input_ids = tokenizer(batch, return_tensors="pt", padding=True).input_ids
         llm_outputs = llm.generate(
             input_ids=input_ids.cuda(),
             do_sample=not use_beam_search,
@@ -201,15 +205,18 @@ def main(args: argparse.Namespace):
 
     # Sample the requests.
     tokenizer = AutoTokenizer.from_pretrained(
-        args.tokenizer, trust_remote_code=args.trust_remote_code)
+        args.tokenizer, trust_remote_code=args.trust_remote_code
+    )
     if args.dataset is None:
         # Synthesize a prompt with the given input length.
         prompt = "hi" * (args.input_len - 1)
-        requests = [(prompt, args.input_len, args.output_len)
-                    for _ in range(args.num_prompts)]
+        requests = [
+            (prompt, args.input_len, args.output_len) for _ in range(args.num_prompts)
+        ]
     else:
-        requests = sample_requests(args.dataset, args.num_prompts, tokenizer,
-                                   args.output_len)
+        requests = sample_requests(
+            args.dataset, args.num_prompts, tokenizer, args.output_len
+        )
 
     if args.backend == "vllm":
         elapsed_time = run_vllm(
@@ -242,26 +249,28 @@ def main(args: argparse.Namespace):
             args.trust_remote_code,
         )
     elif args.backend == "mii":
-        elapsed_time = run_mii(requests, args.model, args.tensor_parallel_size,
-                               args.output_len)
+        elapsed_time = run_mii(
+            requests, args.model, args.tensor_parallel_size, args.output_len
+        )
     else:
         raise ValueError(f"Unknown backend: {args.backend}")
-    total_num_tokens = sum(prompt_len + output_len
-                           for _, prompt_len, output_len in requests)
-    print(f"Throughput: {len(requests) / elapsed_time:.2f} requests/s, "
-          f"{total_num_tokens / elapsed_time:.2f} tokens/s")
+    total_num_tokens = sum(
+        prompt_len + output_len for _, prompt_len, output_len in requests
+    )
+    print(
+        f"Throughput: {len(requests) / elapsed_time:.2f} requests/s, "
+        f"{total_num_tokens / elapsed_time:.2f} tokens/s"
+    )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Benchmark the throughput.")
-    parser.add_argument("--backend",
-                        type=str,
-                        choices=["vllm", "hf", "mii"],
-                        default="vllm")
-    parser.add_argument("--dataset",
-                        type=str,
-                        default=None,
-                        help="Path to the dataset.")
+    parser.add_argument(
+        "--backend", type=str, choices=["vllm", "hf", "mii"], default="vllm"
+    )
+    parser.add_argument(
+        "--dataset", type=str, default=None, help="Path to the dataset."
+    )
     parser.add_argument(
         "--input-len",
         type=int,
@@ -284,15 +293,13 @@ if __name__ == "__main__":
         default=None,
     )
     parser.add_argument("--tensor-parallel-size", "-tp", type=int, default=1)
-    parser.add_argument("--n",
-                        type=int,
-                        default=1,
-                        help="Number of generated sequences per prompt.")
+    parser.add_argument(
+        "--n", type=int, default=1, help="Number of generated sequences per prompt."
+    )
     parser.add_argument("--use-beam-search", action="store_true")
-    parser.add_argument("--num-prompts",
-                        type=int,
-                        default=1000,
-                        help="Number of prompts to process.")
+    parser.add_argument(
+        "--num-prompts", type=int, default=1000, help="Number of prompts to process."
+    )
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument(
         "--hf-max-batch-size",
@@ -330,16 +337,15 @@ if __name__ == "__main__":
         "the model executor, which can range from 0 to 1."
         "If unspecified, will use the default value of 0.9.",
     )
-    parser.add_argument("--enforce-eager",
-                        action="store_true",
-                        help="enforce eager execution")
+    parser.add_argument(
+        "--enforce-eager", action="store_true", help="enforce eager execution"
+    )
     parser.add_argument(
         "--kv-cache-dtype",
         type=str,
         choices=["auto", "fp8_e5m2"],
         default="auto",
-        help=
-        'Data type for kv cache storage. If "auto", will use model data type.',
+        help='Data type for kv cache storage. If "auto", will use model data type.',
     )
     parser.add_argument(
         "--device",
@@ -382,6 +388,7 @@ if __name__ == "__main__":
         if args.hf_max_batch_size is not None:
             raise ValueError("HF max batch size is only for HF backend.")
         if args.tokenizer != args.model:
-            raise ValueError("Tokenizer must be the same as the model for MII "
-                             "backend.")
+            raise ValueError(
+                "Tokenizer must be the same as the model for MII " "backend."
+            )
     main(args)

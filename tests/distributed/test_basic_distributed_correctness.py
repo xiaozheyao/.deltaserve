@@ -12,8 +12,9 @@ MODELS = [
 ]
 
 
-@pytest.mark.skipif(torch.cuda.device_count() < 2,
-                    reason="Need at least 2 GPUs to run the test.")
+@pytest.mark.skipif(
+    torch.cuda.device_count() < 2, reason="Need at least 2 GPUs to run the test."
+)
 @pytest.mark.parametrize("model", MODELS)
 @pytest.mark.parametrize("dtype", ["half"])
 @pytest.mark.parametrize("max_tokens", [5])
@@ -39,5 +40,6 @@ def test_models(
         assert (
             hf_output_str == vllm_output_str
         ), f"Test{i}:\nHF: {hf_output_str!r}\nvLLM: {vllm_output_str!r}"
-        assert (hf_output_ids == vllm_output_ids
-                ), f"Test{i}:\nHF: {hf_output_ids}\nvLLM: {vllm_output_ids}"
+        assert (
+            hf_output_ids == vllm_output_ids
+        ), f"Test{i}:\nHF: {hf_output_ids}\nvLLM: {vllm_output_ids}"

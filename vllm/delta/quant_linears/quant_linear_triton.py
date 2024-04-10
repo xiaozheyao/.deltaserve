@@ -140,8 +140,9 @@ def quant_matmul_248_kernel(
     a_mask = offs_am[:, None] < M
     # b_ptrs is set up such that it repeats elements along the K axis 8 times
     b_ptrs = b_ptr + (
-        (offs_k[:, None] // infearure_per_bits) * stride_bk +
-        offs_bn[None, :] * stride_bn)  # (BLOCK_SIZE_K, BLOCK_SIZE_N)
+        (offs_k[:, None] // infearure_per_bits) * stride_bk
+        + offs_bn[None, :] * stride_bn
+    )  # (BLOCK_SIZE_K, BLOCK_SIZE_N)
     g_ptrs = g_ptr + offs_k
     # shifter is used to extract the N bits of each element in the 32-bit word from B
     scales_ptrs = scales_ptr + offs_bn[None, :]
@@ -156,17 +157,16 @@ def quant_matmul_248_kernel(
 
         # Fetch scales and zeros; these are per-outfeature and thus reused in the inner loop
         scales = tl.load(
-            scales_ptrs +
-            g_idx[:, None] * stride_scales)  # (BLOCK_SIZE_K, BLOCK_SIZE_N,)
+            scales_ptrs + g_idx[:, None] * stride_scales
+        )  # (BLOCK_SIZE_K, BLOCK_SIZE_N,)
         zeros = tl.load(
-            zeros_ptrs +
-            g_idx[:, None] * stride_zeros)  # (BLOCK_SIZE_K, BLOCK_SIZE_N,)
+            zeros_ptrs + g_idx[:, None] * stride_zeros
+        )  # (BLOCK_SIZE_K, BLOCK_SIZE_N,)
 
         zeros = (zeros >> zeros_shifter[None, :]) & maxq
         zeros = zeros + 1
 
-        a = tl.load(a_ptrs, mask=a_mask,
-                    other=0.0)  # (BLOCK_SIZE_M, BLOCK_SIZE_K)
+        a = tl.load(a_ptrs, mask=a_mask, other=0.0)  # (BLOCK_SIZE_M, BLOCK_SIZE_K)
         b = tl.load(b_ptrs)  # (BLOCK_SIZE_K, BLOCK_SIZE_N), but repeated
 
         # Now we need to unpack b (which is N-bit values) into 32-bit values
@@ -178,8 +178,7 @@ def quant_matmul_248_kernel(
         b_ptrs += (BLOCK_SIZE_K // infearure_per_bits) * stride_bk
         g_ptrs += BLOCK_SIZE_K
 
-    c_ptrs = c_ptr + stride_cm * offs_am[:,
-                                         None] + stride_cn * offs_bn[None, :]
+    c_ptrs = c_ptr + stride_cm * offs_am[:, None] + stride_cn * offs_bn[None, :]
     c_mask = (offs_am[:, None] < M) & (offs_bn[None, :] < N)
     tl.store(c_ptrs, accumulator, mask=c_mask)
 
@@ -307,15 +306,19 @@ def transpose_quant_matmul_248_kernel(
     a_mask = offs_am[:, None] < M
     # b_ptrs is set up such that it repeats elements along the K axis 8 times
     b_ptrs = b_ptr + (
-        (offs_bk[:, None] // infearure_per_bits) * stride_bk +
-        offs_n[None, :] * stride_bn)  # (BLOCK_SIZE_K, BLOCK_SIZE_N)
+        (offs_bk[:, None] // infearure_per_bits) * stride_bk
+        + offs_n[None, :] * stride_bn
+    )  # (BLOCK_SIZE_K, BLOCK_SIZE_N)
     g_ptrs = g_ptr + offs_bk
     g_idx = tl.load(g_ptrs)
 
     # shifter is used to extract the N bits of each element in the 32-bit word from B
     scales_ptrs = scales_ptr + offs_n[None, :] + g_idx[:, None] * stride_scales
-    zeros_ptrs = (zeros_ptr + (offs_n[None, :] // infearure_per_bits) +
-                  g_idx[:, None] * stride_zeros)
+    zeros_ptrs = (
+        zeros_ptr
+        + (offs_n[None, :] // infearure_per_bits)
+        + g_idx[:, None] * stride_zeros
+    )
 
     shifter = (offs_bk % infearure_per_bits) * bits
     zeros_shifter = (offs_n % infearure_per_bits) * bits
@@ -329,8 +332,7 @@ def transpose_quant_matmul_248_kernel(
         zeros = (zeros >> zeros_shifter[None, :]) & maxq
         zeros = zeros + 1
 
-        a = tl.load(a_ptrs, mask=a_mask,
-                    other=0.0)  # (BLOCK_SIZE_M, BLOCK_SIZE_N)
+        a = tl.load(a_ptrs, mask=a_mask, other=0.0)  # (BLOCK_SIZE_M, BLOCK_SIZE_N)
         b = tl.load(b_ptrs)  # (BLOCK_SIZE_K, BLOCK_SIZE_N), but repeated
 
         # Now we need to unpack b (which is N-bit values) into 32-bit values
@@ -344,8 +346,7 @@ def transpose_quant_matmul_248_kernel(
         scales_ptrs += BLOCK_SIZE_N
         zeros_ptrs += BLOCK_SIZE_N // infearure_per_bits
 
-    c_ptrs = c_ptr + stride_cm * offs_am[:,
-                                         None] + stride_cn * offs_bk[None, :]
+    c_ptrs = c_ptr + stride_cm * offs_am[:, None] + stride_cn * offs_bk[None, :]
     c_mask = (offs_am[:, None] < M) & (offs_bk[None, :] < K)
     tl.store(c_ptrs, accumulator, mask=c_mask)
 
@@ -357,12 +358,13 @@ def silu(x):
 
 def quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits, maxq):
     with torch.cuda.device(input.device):
-        output = torch.empty((input.shape[0], qweight.shape[1]),
-                             device=input.device,
-                             dtype=input.dtype)
-        grid = lambda META: (triton.cdiv(
-            input.shape[0], META["BLOCK_SIZE_M"]) * triton.cdiv(
-                qweight.shape[1], META["BLOCK_SIZE_N"]), )
+        output = torch.empty(
+            (input.shape[0], qweight.shape[1]), device=input.device, dtype=input.dtype
+        )
+        grid = lambda META: (
+            triton.cdiv(input.shape[0], META["BLOCK_SIZE_M"])
+            * triton.cdiv(qweight.shape[1], META["BLOCK_SIZE_N"]),
+        )
         quant_matmul_248_kernel[grid](
             input,
             qweight,
@@ -387,15 +389,16 @@ def quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits, maxq):
         return output
 
 
-def transpose_quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits,
-                               maxq):
+def transpose_quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits, maxq):
     with torch.cuda.device(input.device):
         output_dim = (qweight.shape[0] * 32) // bits
-        output = torch.empty((input.shape[0], output_dim),
-                             device=input.device,
-                             dtype=input.dtype)
-        grid = lambda META: (triton.cdiv(input.shape[0], META["BLOCK_SIZE_M"])
-                             * triton.cdiv(output_dim, META["BLOCK_SIZE_K"]), )
+        output = torch.empty(
+            (input.shape[0], output_dim), device=input.device, dtype=input.dtype
+        )
+        grid = lambda META: (
+            triton.cdiv(input.shape[0], META["BLOCK_SIZE_M"])
+            * triton.cdiv(output_dim, META["BLOCK_SIZE_K"]),
+        )
         transpose_quant_matmul_248_kernel[grid](
             input,
             qweight,
@@ -425,8 +428,7 @@ class QuantLinearFunction(torch.autograd.Function):
     @staticmethod
     @custom_fwd
     def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
-        output = quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits,
-                                  maxq)
+        output = quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits, maxq)
         ctx.save_for_backward(qweight, scales, qzeros, g_idx)
         ctx.bits, ctx.maxq = bits, maxq
         return output
@@ -439,21 +441,21 @@ class QuantLinearFunction(torch.autograd.Function):
         grad_input = None
 
         if ctx.needs_input_grad[0]:
-            grad_input = transpose_quant_matmul_248(grad_output, qweight,
-                                                    scales, qzeros, g_idx,
-                                                    bits, maxq)
+            grad_input = transpose_quant_matmul_248(
+                grad_output, qweight, scales, qzeros, g_idx, bits, maxq
+            )
         return grad_input, None, None, None, None, None, None
 
 
-def quant_matmul_inference_only_248(input, qweight, scales, qzeros, g_idx,
-                                    bits, maxq):
+def quant_matmul_inference_only_248(input, qweight, scales, qzeros, g_idx, bits, maxq):
     with torch.cuda.device(input.device):
-        output = torch.empty((input.shape[0], qweight.shape[1]),
-                             device=input.device,
-                             dtype=torch.float16)
-        grid = lambda META: (triton.cdiv(
-            input.shape[0], META["BLOCK_SIZE_M"]) * triton.cdiv(
-                qweight.shape[1], META["BLOCK_SIZE_N"]), )
+        output = torch.empty(
+            (input.shape[0], qweight.shape[1]), device=input.device, dtype=torch.float16
+        )
+        grid = lambda META: (
+            triton.cdiv(input.shape[0], META["BLOCK_SIZE_M"])
+            * triton.cdiv(qweight.shape[1], META["BLOCK_SIZE_N"]),
+        )
         quant_matmul_248_kernel[grid](
             input,
             qweight,
@@ -483,8 +485,7 @@ class QuantLinearInferenceOnlyFunction(torch.autograd.Function):
     @staticmethod
     @custom_fwd(cast_inputs=torch.float16)
     def forward(ctx, input, qweight, scales, qzeros, g_idx, bits, maxq):
-        output = quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits,
-                                  maxq)
+        output = quant_matmul_248(input, qweight, scales, qzeros, g_idx, bits, maxq)
         return output
 
 
@@ -516,11 +517,10 @@ class QuantLinear(nn.Module):
         self.bias = bias
         if self.bits == 4:
             self.padding = -outfeatures % 32
-        self.wf = torch.tensor(list(range(0, 32, bits)),
-                               dtype=torch.int32).unsqueeze(0)
+        self.wf = torch.tensor(list(range(0, 32, bits)), dtype=torch.int32).unsqueeze(0)
 
     def forward(self, x):
-        out_shape = x.shape[:-1] + (self.outfeatures, )
+        out_shape = x.shape[:-1] + (self.outfeatures,)
         quant_linear_fn = QuantLinearInferenceOnlyFunction
         out = quant_linear_fn.apply(
             x.reshape(-1, x.shape[-1]),

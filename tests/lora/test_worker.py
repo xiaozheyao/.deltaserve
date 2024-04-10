@@ -34,8 +34,7 @@ def test_worker_apply_lora(sql_lora_files):
         device_config=DeviceConfig("cuda"),
         local_rank=0,
         rank=0,
-        lora_config=LoRAConfig(max_lora_rank=8, max_cpu_loras=32,
-                               max_loras=32),
+        lora_config=LoRAConfig(max_lora_rank=8, max_cpu_loras=32, max_loras=32),
         distributed_init_method=f"file://{tempfile.mkstemp()[1]}",
     )
     worker.init_device()
@@ -51,18 +50,15 @@ def test_worker_apply_lora(sql_lora_files):
 
     worker.model_runner.set_active_loras(lora_requests, LoRAMapping([], []))
     assert worker.list_loras() == {
-        lora_request.lora_int_id
-        for lora_request in lora_requests
+        lora_request.lora_int_id for lora_request in lora_requests
     }
 
     for i in range(32):
         random.seed(i)
-        iter_lora_requests = random.choices(lora_requests,
-                                            k=random.randint(1, n_loras))
+        iter_lora_requests = random.choices(lora_requests, k=random.randint(1, n_loras))
         random.shuffle(iter_lora_requests)
-        iter_lora_requests = iter_lora_requests[:-random.randint(0, n_loras)]
-        worker.model_runner.set_active_loras(iter_lora_requests,
-                                             LoRAMapping([], []))
+        iter_lora_requests = iter_lora_requests[: -random.randint(0, n_loras)]
+        worker.model_runner.set_active_loras(iter_lora_requests, LoRAMapping([], []))
         assert worker.list_loras().issuperset(
-            {lora_request.lora_int_id
-             for lora_request in iter_lora_requests})
+            {lora_request.lora_int_id for lora_request in iter_lora_requests}
+        )

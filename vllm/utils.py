@@ -86,9 +86,7 @@ class LRUCache(Generic[T]):
     def touch(self, key: Hashable) -> None:
         self.cache.move_to_end(key)
 
-    def get(self,
-            key: Hashable,
-            default_value: Optional[T] = None) -> Optional[T]:
+    def get(self, key: Hashable, default_value: Optional[T] = None) -> Optional[T]:
         if key in self.cache:
             value = self.cache[key]
             self.cache.move_to_end(key)
@@ -147,8 +145,7 @@ def get_max_shared_memory_bytes(gpu: int = 0) -> int:
     # the Neuron-X backend does not have the `cuda_utils` module.
     from vllm._C import cuda_utils
 
-    max_shared_mem = cuda_utils.get_max_shared_memory_per_block_device_attribute(
-        gpu)
+    max_shared_mem = cuda_utils.get_max_shared_memory_per_block_device_attribute(gpu)
     # value 0 will cause MAX_SEQ_LEN become negative and test_attention.py
     # will fail
     assert max_shared_mem > 0, "max_shared_mem can not be zero"
@@ -246,14 +243,16 @@ def get_nvcc_cuda_version() -> Optional[Version]:
     if not cuda_home:
         cuda_home = "/usr/local/cuda"
         if os.path.isfile(cuda_home + "/bin/nvcc"):
-            logger.info(f"CUDA_HOME is not found in the environment. "
-                        f"Using {cuda_home} as CUDA_HOME.")
+            logger.info(
+                f"CUDA_HOME is not found in the environment. "
+                f"Using {cuda_home} as CUDA_HOME."
+            )
         else:
-            logger.warning(
-                f"Not found nvcc in {cuda_home}. Skip cuda version check!")
+            logger.warning(f"Not found nvcc in {cuda_home}. Skip cuda version check!")
             return None
-    nvcc_output = subprocess.check_output([cuda_home + "/bin/nvcc", "-V"],
-                                          universal_newlines=True)
+    nvcc_output = subprocess.check_output(
+        [cuda_home + "/bin/nvcc", "-V"], universal_newlines=True
+    )
     output = nvcc_output.split()
     release_idx = output.index("release") + 1
     nvcc_cuda_version = parse(output[release_idx].split(",")[0])
@@ -320,31 +319,27 @@ def create_kv_caches_with_random(
     key_cache_shape = (num_blocks, num_heads, head_size // x, block_size, x)
     key_caches = []
     for _ in range(num_layers):
-        key_cache = torch.empty(size=key_cache_shape,
-                                dtype=torch_dtype,
-                                device=device)
+        key_cache = torch.empty(size=key_cache_shape, dtype=torch_dtype, device=device)
         if cache_dtype == "fp8_e5m2":
             _generate_random_fp8_e5m2(key_cache, -scale, scale)
         elif torch_dtype in [torch.half, torch.bfloat16, torch.float]:
             key_cache.uniform_(-scale, scale)
         else:
-            raise ValueError(
-                f"Does not support key cache of type {cache_dtype}")
+            raise ValueError(f"Does not support key cache of type {cache_dtype}")
         key_caches.append(key_cache)
 
     value_cache_shape = (num_blocks, num_heads, head_size, block_size)
     value_caches = []
     for _ in range(num_layers):
-        value_cache = torch.empty(size=value_cache_shape,
-                                  dtype=torch_dtype,
-                                  device=device)
+        value_cache = torch.empty(
+            size=value_cache_shape, dtype=torch_dtype, device=device
+        )
         if cache_dtype == "fp8_e5m2":
             _generate_random_fp8_e5m2(value_cache, -scale, scale)
         elif torch_dtype in [torch.half, torch.bfloat16, torch.float]:
             value_cache.uniform_(-scale, scale)
         else:
-            raise ValueError(
-                f"Does not support value cache of type {cache_dtype}")
+            raise ValueError(f"Does not support value cache of type {cache_dtype}")
         value_caches.append(value_cache)
     return key_caches, value_caches
 
@@ -359,8 +354,10 @@ def is_pin_memory_available() -> bool:
     if in_wsl():
         # Pinning memory in WSL is not supported.
         # https://docs.nvidia.com/cuda/wsl-user-guide/index.html#known-limitations-for-linux-cuda-applications
-        print_warning_once("Using 'pin_memory=False' as WSL is detected. "
-                           "This may slow down the performance.")
+        print_warning_once(
+            "Using 'pin_memory=False' as WSL is detected. "
+            "This may slow down the performance."
+        )
         return False
     elif is_neuron():
         print_warning_once("Pin memory is not supported on Neuron.")
@@ -399,7 +396,8 @@ def str_to_int_tuple(s: str) -> Tuple[int]:
     except ValueError as e:
         raise ValueError(
             "String must be a series of integers separated by commas "
-            f"(e.g., 1, 2, 3). Given input: {s}") from e
+            f"(e.g., 1, 2, 3). Given input: {s}"
+        ) from e
 
 
 def pad_to_max_length(x: List[int], max_len: int, pad: int) -> List[int]:
@@ -434,9 +432,9 @@ def async_tensor_h2d(
     return t.to(device=target_device, non_blocking=True)
 
 
-def maybe_expand_dim(tensor: torch.Tensor,
-                     target_dims: int,
-                     size: int = 1) -> torch.Tensor:
+def maybe_expand_dim(
+    tensor: torch.Tensor, target_dims: int, size: int = 1
+) -> torch.Tensor:
     """Expand the tensor to the target_dims."""
     if tensor.ndim < target_dims:
         tensor = tensor.view(-1, *([size] * (target_dims - tensor.ndim)))

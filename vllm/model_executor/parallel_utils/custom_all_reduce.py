@@ -49,14 +49,16 @@ def init_custom_ar() -> None:
         logger.warn(
             "Custom allreduce is disabled because your platform lacks GPU P2P"
             " capability or P2P test failed. To silence this warning, specify"
-            " disable_custom_all_reduce=True explicitly.")
+            " disable_custom_all_reduce=True explicitly."
+        )
         return
     full_nvlink = _is_full_nvlink(rank, world_size)
     if world_size > 2 and not full_nvlink:
         logger.warn(
             "Custom allreduce is disabled because it's not supported on more"
             " than two PCIe-only GPUs. To silence this warning, specify"
-            " disable_custom_all_reduce=True explicitly.")
+            " disable_custom_all_reduce=True explicitly."
+        )
         return
     _CA_HANDLE = CustomAllreduce(rank, world_size, full_nvlink)
 
@@ -140,7 +142,8 @@ def _is_full_nvlink(rank, world_size):
             except pynvml.NVMLError as error:
                 logger.info(
                     f'NVLink detection failed with message "{str(error)}". '
-                    "This is normal if your machine has no NVLink equipped")
+                    "This is normal if your machine has no NVLink equipped"
+                )
                 return False
     return True
 
@@ -153,7 +156,8 @@ def _can_p2p(rank: int, world_size: int) -> bool:
         logger.warn(
             "Cannot test GPU P2P because not all GPUs are visible to the "
             "current process. This might be the case if 'CUDA_VISIBLE_DEVICES'"
-            " is set.")
+            " is set."
+        )
         return False
     for i in range(world_size):
         if i == rank:
@@ -182,18 +186,14 @@ def _can_actually_p2p(idx_a, idx_b):
 
 class CustomAllreduce:
     # max_size: max supported allreduce size
-    def __init__(self,
-                 rank,
-                 world_size,
-                 full_nvlink,
-                 max_size=8192 * 1024) -> None:
+    def __init__(self, rank, world_size, full_nvlink, max_size=8192 * 1024) -> None:
         # buffers memory are owned by this Python class and passed to C++
         # meta data composes of two parts: meta data for synchronization
         # (256 bytes) and a temporary buffer for storing intermediate
         # allreduce results.
-        self.meta = torch.zeros(custom_ar.meta_size() + max_size,
-                                dtype=torch.uint8,
-                                device="cuda")
+        self.meta = torch.zeros(
+            custom_ar.meta_size() + max_size, dtype=torch.uint8, device="cuda"
+        )
         # This is a pre-registered IPC buffer. In eager mode, input tensors
         # are first copied into this buffer before allreduce is performed
         self.buffer = torch.empty(max_size, dtype=torch.uint8, device="cuda")
@@ -202,16 +202,14 @@ class CustomAllreduce:
         # 8*world_size bytes where world_size is at most 8. Allocating 8MB
         # is enough for 131072 such tuples. The largest model I've seen only
         # needs less than 10000 of registered tuples.
-        self.rank_data = torch.empty(8 * 1024 * 1024,
-                                     dtype=torch.uint8,
-                                     device="cuda")
+        self.rank_data = torch.empty(8 * 1024 * 1024, dtype=torch.uint8, device="cuda")
         self.max_size = max_size
         self.world_size = world_size
         handles, offsets = self._get_ipc_meta(self.meta)
         self.full_nvlink = full_nvlink
-        self._ptr = custom_ar.init_custom_ar(self.meta, self.rank_data,
-                                             handles, offsets, rank,
-                                             self.full_nvlink)
+        self._ptr = custom_ar.init_custom_ar(
+            self.meta, self.rank_data, handles, offsets, rank, self.full_nvlink
+        )
         self.register_buffer(self.buffer)
 
     def _get_ipc_meta(self, inp: torch.Tensor):
@@ -244,8 +242,9 @@ class CustomAllreduce:
         custom_ar.register_graph_buffers(self._ptr, handles, offsets)
 
     def should_custom_ar(self, inp: torch.Tensor):
-        return custom_ar.should_custom_ar(inp, self.max_size, self.world_size,
-                                          self.full_nvlink)
+        return custom_ar.should_custom_ar(
+            inp, self.max_size, self.world_size, self.full_nvlink
+        )
 
     # all reduce, assuming inp tensor is IPC registered with register_buffer,
     # or, in the context of cuda graphs, register_graph_buffers

@@ -39,7 +39,8 @@ from vllm.model_executor.layers.rotary_embedding import get_rope
 from vllm.model_executor.layers.sampler import Sampler
 from vllm.model_executor.layers.vocab_parallel_embedding import VocabParallelEmbedding
 from vllm.model_executor.parallel_utils.communication_op import (
-    tensor_model_parallel_all_reduce, )
+    tensor_model_parallel_all_reduce,
+)
 from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
@@ -56,24 +57,24 @@ FalconConfig = Union[HF_FalconConfig, RWConfig]
 
 
 def _get_alibi_slopes(total_num_heads: int) -> torch.Tensor:
-    closest_power_of_2 = 2**math.floor(math.log2(total_num_heads))
-    base = torch.tensor(2**(-(2**-(math.log2(closest_power_of_2) - 3))),
-                        dtype=torch.float32)
+    closest_power_of_2 = 2 ** math.floor(math.log2(total_num_heads))
+    base = torch.tensor(
+        2 ** (-(2 ** -(math.log2(closest_power_of_2) - 3))), dtype=torch.float32
+    )
     powers = torch.arange(1, 1 + closest_power_of_2, dtype=torch.int32)
     slopes = torch.pow(base, powers)
 
     if closest_power_of_2 != total_num_heads:
         extra_base = torch.tensor(
-            2**(-(2**-(math.log2(2 * closest_power_of_2) - 3))),
-            dtype=torch.float32)
-        num_remaining_heads = min(closest_power_of_2,
-                                  total_num_heads - closest_power_of_2)
-        extra_powers = torch.arange(1,
-                                    1 + 2 * num_remaining_heads,
-                                    2,
-                                    dtype=torch.int32)
-        slopes = torch.cat(
-            [slopes, torch.pow(extra_base, extra_powers)], dim=0)
+            2 ** (-(2 ** -(math.log2(2 * closest_power_of_2) - 3))), dtype=torch.float32
+        )
+        num_remaining_heads = min(
+            closest_power_of_2, total_num_heads - closest_power_of_2
+        )
+        extra_powers = torch.arange(
+            1, 1 + 2 * num_remaining_heads, 2, dtype=torch.int32
+        )
+        slopes = torch.cat([slopes, torch.pow(extra_base, extra_powers)], dim=0)
 
     return slopes
 
@@ -129,8 +130,9 @@ class FalconAttention(nn.Module):
 
         # Layer-wise attention scaling
         self.inv_norm_factor = 1.0 / math.sqrt(self.head_dim)
-        self.reduce_row_parallel_results = not (config.new_decoder_architecture
-                                                or config.parallel_attn)
+        self.reduce_row_parallel_results = not (
+            config.new_decoder_architecture or config.parallel_attn
+        )
         self.dense = RowParallelLinear(
             self.hidden_size,
             self.hidden_size,
@@ -142,13 +144,13 @@ class FalconAttention(nn.Module):
 
         self.use_rotary = config.rotary
         self.use_alibi = config.alibi
-        assert not (self.use_rotary and
-                    self.use_alibi), "Rotary and alibi are mutually exclusive."
+        assert not (
+            self.use_rotary and self.use_alibi
+        ), "Rotary and alibi are mutually exclusive."
 
         if self.use_rotary:
             rope_theta = getattr(config, "rope_theta", 10000)
-            max_position_embeddings = getattr(config,
-                                              "max_position_embeddings", 8192)
+            max_position_embeddings = getattr(config, "max_position_embeddings", 8192)
             self.rotary_emb = get_rope(
                 self.head_dim,
                 rotary_dim=self.head_dim,
@@ -165,8 +167,9 @@ class FalconAttention(nn.Module):
             tp_rank = get_tensor_model_parallel_rank()
             head_start = tp_rank * self.num_heads
             head_end = (tp_rank + 1) * self.num_heads
-            alibi_slopes = (_get_alibi_slopes(self.total_num_heads) *
-                            self.inv_norm_factor)
+            alibi_slopes = (
+                _get_alibi_slopes(self.total_num_heads) * self.inv_norm_factor
+            )
             alibi_slopes = alibi_slopes[head_start:head_end].tolist()
             self.attn = Attention(
                 self.num_heads,
@@ -220,8 +223,9 @@ class FalconMLP(nn.Module):
         )
         quant_config = getattr(linear_method, "quant_config", None)
         self.act = get_act_fn("gelu", quant_config, 4 * hidden_size)
-        self.reduce_row_parallel_results = not (config.new_decoder_architecture
-                                                or config.parallel_attn)
+        self.reduce_row_parallel_results = not (
+            config.new_decoder_architecture or config.parallel_attn
+        )
         self.dense_4h_to_h = RowParallelLinear(
             4 * hidden_size,
             hidden_size,
@@ -257,19 +261,19 @@ class FalconDecoderLayer(nn.Module):
 
         if config.new_decoder_architecture:
             # The layer norm before self-attention
-            self.ln_attn = LayerNorm(hidden_size,
-                                     eps=config.layer_norm_epsilon)
+            self.ln_attn = LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
             # The layer norm before the MLP
             self.ln_mlp = LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
         else:
-            self.input_layernorm = LayerNorm(hidden_size,
-                                             eps=config.layer_norm_epsilon)
+            self.input_layernorm = LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
             if not config.parallel_attn:
                 self.post_attention_layernorm = LayerNorm(
-                    hidden_size, eps=config.layer_norm_epsilon)
+                    hidden_size, eps=config.layer_norm_epsilon
+                )
 
-        self.reduce_row_parallel_results = not (config.new_decoder_architecture
-                                                or config.parallel_attn)
+        self.reduce_row_parallel_results = not (
+            config.new_decoder_architecture or config.parallel_attn
+        )
 
     def forward(
         self,
@@ -343,10 +347,12 @@ class FalconModel(nn.Module):
         )
 
         # Transformer blocks
-        self.h = nn.ModuleList([
-            FalconDecoderLayer(config, linear_method)
-            for _ in range(config.num_hidden_layers)
-        ])
+        self.h = nn.ModuleList(
+            [
+                FalconDecoderLayer(config, linear_method)
+                for _ in range(config.num_hidden_layers)
+            ]
+        )
 
         # Final Layer Norm
         self.ln_f = LayerNorm(self.embed_dim, eps=config.layer_norm_epsilon)
@@ -401,10 +407,12 @@ class FalconForCausalLM(nn.Module):
         )
         return hidden_states
 
-    def compute_logits(self, hidden_states: torch.Tensor,
-                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
-        logits = self.logits_processor(self.lm_head_weight, hidden_states,
-                                       sampling_metadata)
+    def compute_logits(
+        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
+    ) -> torch.Tensor:
+        logits = self.logits_processor(
+            self.lm_head_weight, hidden_states, sampling_metadata
+        )
         return logits
 
     def sample(
@@ -432,7 +440,8 @@ class FalconForCausalLM(nn.Module):
         num_query_heads_per_kv_head = total_num_heads // total_num_kv_heads
         params_dict = dict(self.named_parameters(remove_duplicate=False))
         for name, loaded_weight in hf_model_weights_iterator(
-                model_name_or_path, cache_dir, load_format, revision):
+            model_name_or_path, cache_dir, load_format, revision
+        ):
             if name == "lm_head.weight":
                 # Falcon uses tied embeddings.
                 continue
@@ -445,24 +454,32 @@ class FalconForCausalLM(nn.Module):
                 loaded_weight_shape = loaded_weight.shape
                 if output_dim is not None:
                     loaded_weight = loaded_weight.view(
-                        loaded_weight_shape[:output_dim] +
-                        (total_num_kv_heads, num_query_heads_per_kv_head + 2,
-                         -1) + loaded_weight_shape[output_dim + 1:])
+                        loaded_weight_shape[:output_dim]
+                        + (total_num_kv_heads, num_query_heads_per_kv_head + 2, -1)
+                        + loaded_weight_shape[output_dim + 1 :]
+                    )
                     wq = loaded_weight.narrow(
-                        output_dim + 1, 0,
-                        num_query_heads_per_kv_head).reshape(
-                            *loaded_weight_shape[:output_dim], -1,
-                            *loaded_weight_shape[output_dim + 1:])
+                        output_dim + 1, 0, num_query_heads_per_kv_head
+                    ).reshape(
+                        *loaded_weight_shape[:output_dim],
+                        -1,
+                        *loaded_weight_shape[output_dim + 1 :]
+                    )
                     wk = loaded_weight.narrow(
-                        output_dim + 1, num_query_heads_per_kv_head,
-                        1).reshape(*loaded_weight_shape[:output_dim], -1,
-                                   *loaded_weight_shape[output_dim + 1:])
+                        output_dim + 1, num_query_heads_per_kv_head, 1
+                    ).reshape(
+                        *loaded_weight_shape[:output_dim],
+                        -1,
+                        *loaded_weight_shape[output_dim + 1 :]
+                    )
                     wv = loaded_weight.narrow(
-                        output_dim + 1, num_query_heads_per_kv_head + 1,
-                        1).reshape(*loaded_weight_shape[:output_dim], -1,
-                                   *loaded_weight_shape[output_dim + 1:])
+                        output_dim + 1, num_query_heads_per_kv_head + 1, 1
+                    ).reshape(
+                        *loaded_weight_shape[:output_dim],
+                        -1,
+                        *loaded_weight_shape[output_dim + 1 :]
+                    )
                     loaded_weight = torch.cat([wq, wk, wv], dim=output_dim)
 
-            weight_loader = getattr(param, "weight_loader",
-                                    default_weight_loader)
+            weight_loader = getattr(param, "weight_loader", default_weight_loader)
             weight_loader(param, loaded_weight)

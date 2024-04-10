@@ -17,24 +17,18 @@ def create_test_prompts() -> List[Tuple[str, SamplingParams]]:
         ),
         (
             "What is the meaning of life?",
-            SamplingParams(n=2,
-                           best_of=5,
-                           temperature=0.8,
-                           top_p=0.95,
-                           frequency_penalty=0.1),
+            SamplingParams(
+                n=2, best_of=5, temperature=0.8, top_p=0.95, frequency_penalty=0.1
+            ),
         ),
         (
             "It is only with the heart that one can see rightly",
-            SamplingParams(n=3,
-                           best_of=3,
-                           use_beam_search=True,
-                           temperature=0.0),
+            SamplingParams(n=3, best_of=3, use_beam_search=True, temperature=0.0),
         ),
     ]
 
 
-def process_requests(engine: LLMEngine,
-                     test_prompts: List[Tuple[str, SamplingParams]]):
+def process_requests(engine: LLMEngine, test_prompts: List[Tuple[str, SamplingParams]]):
     """Continuously process a list of prompts and handle the outputs."""
     request_id = 0
 
@@ -66,7 +60,8 @@ def main(args: argparse.Namespace):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Demo on using the LLMEngine class directly")
+        description="Demo on using the LLMEngine class directly"
+    )
     parser = EngineArgs.add_cli_args(parser)
     args = parser.parse_args()
     main(args)

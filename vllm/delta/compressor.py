@@ -13,7 +13,8 @@ try:
 except ImportError:
     raise ImportError(
         "Please install kvikio to use the LosslessCompressor class. "
-        "You can install it with `pip install kvikio`.")
+        "You can install it with `pip install kvikio`."
+    )
 
 dtype_maps = {
     "int8": torch.int8,
@@ -32,9 +33,7 @@ cp_dtype_maps = {
 
 class LosslessCompressor:
 
-    def __init__(self,
-                 algorithm: str = "gdeflate",
-                 device_id: int = 0) -> None:
+    def __init__(self, algorithm: str = "gdeflate", device_id: int = 0) -> None:
         if algorithm == "gdeflate":
             self.comp_manager = GdeflateManager(device_id=device_id)
         elif algorithm == "lz4":
@@ -84,7 +83,8 @@ class LosslessCompressor:
         self.comp_manager.input_type = cp_dtype_maps[dtype]
         decompressed_tensor = self.comp_manager.decompress(compressed_tensor)
         torch_tensor = torch.reshape(
-            from_dlpack(decompressed_tensor.toDlpack()), tensor_shape)
+            from_dlpack(decompressed_tensor.toDlpack()), tensor_shape
+        )
         return torch_tensor.to(torch.device(target_device))
 
     def compress_state_dict(self, state_dict: Dict[str, torch.Tensor]):
@@ -92,8 +92,9 @@ class LosslessCompressor:
         tensors_shape = {}
         tensors_dtype = {}
         for key in state_dict:
-            tensors[key], tensors_shape[key], tensors_dtype[
-                key] = self.compress_tensor(state_dict[key])
+            tensors[key], tensors_shape[key], tensors_dtype[key] = self.compress_tensor(
+                state_dict[key]
+            )
         return tensors, tensors_shape, tensors_dtype
 
     def decompress_state_dict(

@@ -54,11 +54,11 @@ class GPUExecutor(ExecutorBase):
         # before CUDA_VISIBLE_DEVICES is set in the Worker
         from vllm.worker.worker import Worker
 
-        assert (self.parallel_config.world_size == 1
-                ), "GPUExecutor only supports single GPU."
+        assert (
+            self.parallel_config.world_size == 1
+        ), "GPUExecutor only supports single GPU."
 
-        distributed_init_method = get_distributed_init_method(
-            get_ip(), get_open_port())
+        distributed_init_method = get_distributed_init_method(get_ip(), get_open_port())
         self.driver_worker = Worker(
             self.model_config,
             self.parallel_config,
@@ -97,8 +97,9 @@ class GPUExecutor(ExecutorBase):
             cache_dtype=self.cache_config.cache_dtype,
         )
 
-        logger.info(f"# GPU blocks: {num_gpu_blocks}, "
-                    f"# CPU blocks: {num_cpu_blocks}")
+        logger.info(
+            f"# GPU blocks: {num_gpu_blocks}, " f"# CPU blocks: {num_cpu_blocks}"
+        )
 
         check_block_size_valid(
             num_gpu_blocks,

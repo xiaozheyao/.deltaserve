@@ -86,30 +86,23 @@ async def show_version():
 
 
 @app.post("/v1/chat/completions")
-async def create_chat_completion(request: ChatCompletionRequest,
-                                 raw_request: Request):
-    generator = await openai_serving_chat.create_chat_completion(
-        request, raw_request)
+async def create_chat_completion(request: ChatCompletionRequest, raw_request: Request):
+    generator = await openai_serving_chat.create_chat_completion(request, raw_request)
     if isinstance(generator, ErrorResponse):
-        return JSONResponse(content=generator.model_dump(),
-                            status_code=generator.code)
+        return JSONResponse(content=generator.model_dump(), status_code=generator.code)
     if request.stream:
-        return StreamingResponse(content=generator,
-                                 media_type="text/event-stream")
+        return StreamingResponse(content=generator, media_type="text/event-stream")
     else:
         return JSONResponse(content=generator.model_dump())
 
 
 @app.post("/v1/completions")
 async def create_completion(request: CompletionRequest, raw_request: Request):
-    generator = await openai_serving_completion.create_completion(
-        request, raw_request)
+    generator = await openai_serving_completion.create_completion(request, raw_request)
     if isinstance(generator, ErrorResponse):
-        return JSONResponse(content=generator.model_dump(),
-                            status_code=generator.code)
+        return JSONResponse(content=generator.model_dump(), status_code=generator.code)
     if request.stream:
-        return StreamingResponse(content=generator,
-                                 media_type="text/event-stream")
+        return StreamingResponse(content=generator, media_type="text/event-stream")
     else:
         return JSONResponse(content=generator.model_dump())
 
@@ -132,8 +125,7 @@ if __name__ == "__main__":
             if not request.url.path.startswith("/v1"):
                 return await call_next(request)
             if request.headers.get("Authorization") != "Bearer " + token:
-                return JSONResponse(content={"error": "Unauthorized"},
-                                    status_code=401)
+                return JSONResponse(content={"error": "Unauthorized"}, status_code=401)
             return await call_next(request)
 
     for middleware in args.middleware:
@@ -144,8 +136,9 @@ if __name__ == "__main__":
         elif inspect.iscoroutinefunction(imported):
             app.middleware("http")(imported)
         else:
-            raise ValueError(f"Invalid middleware {middleware}. "
-                             f"Must be a function or a class.")
+            raise ValueError(
+                f"Invalid middleware {middleware}. " f"Must be a function or a class."
+            )
 
     logger.info(f"vLLM API server version {vllm.__version__}")
     logger.info(f"args: {args}")
@@ -166,7 +159,8 @@ if __name__ == "__main__":
         args.chat_template,
     )
     openai_serving_completion = OpenAIServingCompletion(
-        engine, served_model, args.lora_modules, args.delta_modules)
+        engine, served_model, args.lora_modules, args.delta_modules
+    )
 
     app.root_path = args.root_path
     uvicorn.run(

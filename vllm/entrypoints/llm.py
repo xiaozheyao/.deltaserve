@@ -94,8 +94,8 @@ class LLM:
         if "enable_lora" in kwargs and "enable_delta" in kwargs:
             if kwargs["enable_lora"] and kwargs["enable_delta"]:
                 raise ValueError(
-                    "LoRA and Delta cannot be enabled at the same "
-                    "time.")
+                    "LoRA and Delta cannot be enabled at the same " "time."
+                )
 
         engine_args = EngineArgs(
             model=model,
@@ -118,8 +118,7 @@ class LLM:
         self.llm_engine = LLMEngine.from_engine_args(engine_args)
         self.request_counter = Counter()
 
-    def get_tokenizer(
-            self) -> Union[PreTrainedTokenizer, PreTrainedTokenizerFast]:
+    def get_tokenizer(self) -> Union[PreTrainedTokenizer, PreTrainedTokenizerFast]:
         return self.llm_engine.tokenizer.tokenizer
 
     def set_tokenizer(
@@ -160,16 +159,19 @@ class LLM:
             completions in the same order as the input prompts.
         """
         if prompts is None and prompt_token_ids is None:
-            raise ValueError("Either prompts or prompt_token_ids must be "
-                             "provided.")
+            raise ValueError("Either prompts or prompt_token_ids must be " "provided.")
         if isinstance(prompts, str):
             # Convert a single prompt to a list.
             prompts = [prompts]
 
-        if (prompts is not None and prompt_token_ids is not None
-                and len(prompts) != len(prompt_token_ids)):
-            raise ValueError("The lengths of prompts and prompt_token_ids "
-                             "must be the same.")
+        if (
+            prompts is not None
+            and prompt_token_ids is not None
+            and len(prompts) != len(prompt_token_ids)
+        ):
+            raise ValueError(
+                "The lengths of prompts and prompt_token_ids " "must be the same."
+            )
         if sampling_params is None:
             # Use default sampling params.
             sampling_params = SamplingParams()
@@ -178,12 +180,10 @@ class LLM:
             multi_modal_data.data = multi_modal_data.data.to(torch.float16)
 
         # Add requests to the engine.
-        num_requests = len(prompts) if prompts is not None else len(
-            prompt_token_ids)
+        num_requests = len(prompts) if prompts is not None else len(prompt_token_ids)
         for i in range(num_requests):
             prompt = prompts[i] if prompts is not None else None
-            token_ids = None if prompt_token_ids is None else prompt_token_ids[
-                i]
+            token_ids = None if prompt_token_ids is None else prompt_token_ids[i]
             self._add_request(
                 prompt,
                 sampling_params,
@@ -191,10 +191,14 @@ class LLM:
                 lora_request=lora_request,
                 delta_request=delta_request,
                 # Get ith image while maintaining the batch dim.
-                multi_modal_data=(MultiModalData(
-                    type=multi_modal_data.type,
-                    data=multi_modal_data.data[i].unsqueeze(0),
-                ) if multi_modal_data else None),
+                multi_modal_data=(
+                    MultiModalData(
+                        type=multi_modal_data.type,
+                        data=multi_modal_data.data[i].unsqueeze(0),
+                    )
+                    if multi_modal_data
+                    else None
+                ),
             )
         return self._run_engine(use_tqdm)
 
@@ -222,9 +226,9 @@ class LLM:
         # Initialize tqdm.
         if use_tqdm:
             num_requests = self.llm_engine.get_num_unfinished_requests()
-            pbar = tqdm(total=num_requests,
-                        desc="Processed prompts",
-                        dynamic_ncols=True)
+            pbar = tqdm(
+                total=num_requests, desc="Processed prompts", dynamic_ncols=True
+            )
         # Run the engine.
         outputs: List[RequestOutput] = []
         while self.llm_engine.has_unfinished_requests():

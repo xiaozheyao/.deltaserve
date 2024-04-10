@@ -36,8 +36,9 @@ class FlashAttentionBackend(AttentionBackend):
         num_kv_heads: int,
         head_size: int,
     ) -> Tuple[int, ...]:
-        return PagedAttention.get_kv_cache_shape(num_blocks, block_size,
-                                                 num_kv_heads, head_size)
+        return PagedAttention.get_kv_cache_shape(
+            num_blocks, block_size, num_kv_heads, head_size
+        )
 
     @staticmethod
     def swap_blocks(
@@ -138,8 +139,9 @@ class FlashAttentionImpl(AttentionImpl):
         self.head_size = head_size
         self.scale = float(scale)
         self.num_kv_heads = num_heads if num_kv_heads is None else num_kv_heads
-        self.sliding_window = ((sliding_window, sliding_window)
-                               if sliding_window is not None else (-1, -1))
+        self.sliding_window = (
+            (sliding_window, sliding_window) if sliding_window is not None else (-1, -1)
+        )
         if alibi_slopes is not None:
             alibi_slopes = torch.tensor(alibi_slopes, dtype=torch.float32)
         self.alibi_slopes = alibi_slopes
@@ -151,7 +153,8 @@ class FlashAttentionImpl(AttentionImpl):
         if head_size not in suppored_head_sizes:
             raise ValueError(
                 f"Head size {head_size} is not supported by PagedAttention. "
-                f"Supported head sizes are: {suppored_head_sizes}.")
+                f"Supported head sizes are: {suppored_head_sizes}."
+            )
 
     def forward(
         self,
@@ -180,7 +183,8 @@ class FlashAttentionImpl(AttentionImpl):
 
         if kv_cache is not None:
             key_cache, value_cache = PagedAttention.split_kv_cache(
-                kv_cache, self.num_kv_heads, self.head_size)
+                kv_cache, self.num_kv_heads, self.head_size
+            )
 
             # Reshape the input keys and values and store them in the cache.
             # If kv_cache is not provided, the new key and value tensors are

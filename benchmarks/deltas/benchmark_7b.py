@@ -34,9 +34,9 @@ outputs = llm.generate(
 )
 print(f"without delta: {outputs[0].outputs[0].text}")
 print(outputs)
-outputs = llm.generate(prompts,
-                       sampling_params,
-                       delta_request=DeltaRequest("vicuna", 1, delta_path))
+outputs = llm.generate(
+    prompts, sampling_params, delta_request=DeltaRequest("vicuna", 1, delta_path)
+)
 torch.cuda.nvtx.range_pop()
 print(f"with delta: {outputs[0].outputs[0].text}")
 print(outputs)

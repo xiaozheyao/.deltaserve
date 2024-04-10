@@ -7,11 +7,10 @@ from vllm.sequence import SamplerOutput, SequenceGroupOutput, SequenceOutput
 def sample_outputs():
     return [
         SequenceGroupOutput(
-            samples=[
-                SequenceOutput(parent_seq_id=0, output_token=i, logprobs={})
-            ],
+            samples=[SequenceOutput(parent_seq_id=0, output_token=i, logprobs={})],
             prompt_logprobs=None,
-        ) for i in range(5)
+        )
+        for i in range(5)
     ]
 
 
@@ -33,9 +32,7 @@ def test_sampler_output_getitem(sampler_output, sample_outputs):
 
 def test_sampler_output_setitem(sampler_output):
     new_output = SequenceGroupOutput(
-        samples=[
-            SequenceOutput(parent_seq_id=0, output_token=99, logprobs={})
-        ],
+        samples=[SequenceOutput(parent_seq_id=0, output_token=99, logprobs={})],
         prompt_logprobs=None,
     )
     sampler_output[2] = new_output
