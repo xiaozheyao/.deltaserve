@@ -4,7 +4,7 @@ import safetensors as st
 from fractions import Fraction
 from safetensors.torch import save_file
 
-transpose_modules = True
+transpose_modules = False
 
 
 def main(args):

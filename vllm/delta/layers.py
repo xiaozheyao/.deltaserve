@@ -60,7 +60,6 @@ class DeltaMapping:
 
 
 class BaseLayerWithDelta(nn.Module):
-
     def create_delta_weights(
         self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig
     ) -> None:
@@ -140,6 +139,12 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.indices_len = indices_len
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # indices = self.indices[: self.indices_len[0]]
+        # # base_output = F.embedding(x, self.base_layer.weight)
+        # base_output = self.base_layer.forward(x)
+        # # apply_delta_embed(
+        # #     x, self.delta_weights, indices, base_output
+        # # )
         indices = self.indices[: self.indices_len[0]]
         if self.tp_size > 1:
             # Build the mask.
@@ -171,7 +176,6 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
 
 
 class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
-
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
@@ -338,8 +342,8 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             torch.zeros(
                 max_deltas,
                 1,
-                self.base_layer.weight.shape[0] // 2,
                 self.base_layer.weight.shape[1] // delta_config.pack_factor,
+                self.base_layer.weight.shape[0] // 2,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             )
@@ -410,13 +414,13 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             start_idx = tp_rank * shard_size
             end_idx = (tp_rank + 1) * shard_size
             if qweight[0] is not None:
-                qweight[0] = qweight[0][start_idx:end_idx, :]
+                # qweight[0] = qweight[0][start_idx:end_idx, :]
                 qzeros[0] = qzeros[0][
                     :, start_idx // self.pack_factor : end_idx // self.pack_factor
                 ]
                 scales[0] = scales[0][:, start_idx:end_idx]
             if qweight[1] is not None:
-                qweight[1] = qweight[1][start_idx:end_idx, :]
+                # qweight[1] = qweight[1][start_idx:end_idx, :]
                 qzeros[1] = qzeros[1][
                     :, start_idx // self.pack_factor : end_idx // self.pack_factor
                 ]
@@ -452,19 +456,17 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        if self.device_tensor:
-            output = apply_delta_packed_nslice(
-                x,
-                self.qweight_stacked,
-                self.qzeros_stacked,
-                self.scales_stacked,
-                self.g_idx,
-                self.indices[: self.indices_len[0]],
-                output,
-                (self.output_dim, self.output_dim),
-                self.device_tensor,
-                transposed_qweight=True,
-            )
+        output = apply_delta_packed_nslice(
+            x,
+            self.qweight_stacked,
+            self.qzeros_stacked,
+            self.scales_stacked,
+            self.g_idx,
+            self.indices[: self.indices_len[0]],
+            output,
+            (self.output_dim, self.output_dim),
+            self.device_tensor,
+        )
         return output
 
     @classmethod
@@ -482,7 +484,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
 
 class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
-
     def __init__(self, base_layer: QKVParallelLinear) -> None:
         super().__init__(base_layer)
         self.device_tensor = None
@@ -507,24 +508,24 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             torch.zeros(
                 max_deltas,
                 1,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 self.q_proj_shard_size,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
                 1,
-                self.kv_proj_shard_size,
                 self.base_layer.weight.shape[1] // delta_config.pack_factor,
+                self.kv_proj_shard_size,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
                 1,
-                self.kv_proj_shard_size,
                 self.base_layer.weight.shape[1] // delta_config.pack_factor,
+                self.kv_proj_shard_size,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
@@ -634,13 +635,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.device_tensor = device_tensor
         if self.tp_size > 1:
             if qweight[0] is not None:
-                qweight_q = qweight[0][
-                    self.q_proj_shard_size
-                    * self.q_shard_id : self.q_proj_shard_size
-                    * (self.q_shard_id + 1),
-                    :,
-                ]
-
                 qzeros_q = qzeros[0][
                     :,
                     self.q_proj_shard_size
@@ -656,10 +650,9 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.q_shard_id + 1),
                 ]
 
-                # logger.info(f"Copying {qweight_q.nbytes/1024} kbytes from {qweight_q.device} to {self.qweight_stacked[0].device}")
                 self.qweight_stacked[0][
-                    index, 0, : qweight_q.shape[0], : qweight_q.shape[1]
-                ].copy_(qweight_q, non_blocking=ASYNC_COPY)
+                    index, 0, : qweight[0].shape[0], : qweight[0].shape[1]
+                ].copy_(qweight[0], non_blocking=ASYNC_COPY)
                 self.qzeros_stacked[0][
                     index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
                 ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
@@ -669,12 +662,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.g_idx_stacked[0] = g_idx[0]
 
             if qweight[1] is not None:
-                qweight_kv = qweight[1][
-                    self.kv_proj_shard_size
-                    * self.kv_shard_id : self.kv_proj_shard_size
-                    * (self.kv_shard_id + 1),
-                    :,
-                ]
 
                 qzeros_q = qzeros[1][
                     :,
@@ -692,8 +679,8 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 ]
 
                 self.qweight_stacked[1][
-                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
-                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
+                    index, 0, : qweight[1].shape[0], : qweight[1].shape[1]
+                ].copy_(qweight[1], non_blocking=ASYNC_COPY)
                 self.qzeros_stacked[1][
                     index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
                 ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
@@ -704,12 +691,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.g_idx_stacked[1] = g_idx[1]
 
             if qweight[2] is not None:
-                qweight_kv = qweight[2][
-                    self.kv_proj_shard_size
-                    * self.kv_shard_id : self.kv_proj_shard_size
-                    * (self.kv_shard_id + 1),
-                    :,
-                ]
                 qzeros_q = qzeros[2][
                     :,
                     self.kv_proj_shard_size
@@ -725,8 +706,8 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.kv_shard_id + 1),
                 ]
                 self.qweight_stacked[2][
-                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
-                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
+                    index, 0, : qweight[2].shape[0], : qweight[2].shape[1]
+                ].copy_(qweight[2], non_blocking=ASYNC_COPY)
                 self.qzeros_stacked[2][
                     index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
                 ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
@@ -801,7 +782,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 output,
                 self.output_slices,
                 self.device_tensor,
-                transposed_qweight=True,
             )
         return output
 
@@ -817,7 +797,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
 
 class RowParallelLinearWithDelta(BaseLayerWithDelta):
-
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
@@ -1063,17 +1042,15 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         # Get the logits for the next tokens.
         logits = torch.matmul(hidden_states, embedding.t())
         # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
+        if logits is None:
+            return None
         apply_delta_uncompressed(
             hidden_states,
             self.weight_stacked,
             self.indices[: self.indices_len[1]],
             logits,
         )
-        if embedding_bias is not None:
-            logits += embedding_bias
         logits = tensor_model_parallel_gather(logits)
-        if logits is None:
-            return None
         return logits
 
     def forward(self, *args, **kwargs):
