@@ -840,11 +840,7 @@ class ModelRunner:
         if self.lora_config:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
-            self.set_active_deltas(delta_requests, delta_mapping)
-
-        if sequence_groups:
-            for sequence_group in sequence_groups:
-                sequence_group.maybe_set_loading_time(time.time())
+            self.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
 
         # Execute the model.
         if attn_metadata.use_cuda_graph:
@@ -970,11 +966,13 @@ class ModelRunner:
         self.lora_manager.set_active_loras(lora_requests, lora_mapping)
 
     def set_active_deltas(
-        self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping
+        self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping, sequence_groups: List[SequenceGroup]=None
     ):
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
-        self.delta_manager.set_active_deltas(delta_requests, delta_mapping)
+        if sequence_groups is None:
+            sequence_groups = []
+        self.delta_manager.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
 
     def add_lora(self, lora_request: LoRARequest) -> bool:
         if not self.lora_manager:

@@ -89,7 +89,8 @@ class RequestMetrics:
     arrival_time: float
     last_token_time: float
     first_scheduled_time: Optional[float]
-    loading_time: Optional[float]
+    cpu_loading_time: Optional[float]
+    gpu_loading_time: Optional[float]
     first_token_time: Optional[float]
     time_in_queue: Optional[float]
     finished_time: Optional[float] = None
@@ -368,7 +369,8 @@ class SequenceGroup:
             arrival_time=arrival_time,
             last_token_time=arrival_time,
             first_scheduled_time=None,
-            loading_time=None,
+            cpu_loading_time=None,
+            gpu_loading_time=None,
             first_token_time=None,
             time_in_queue=None,
         )
@@ -416,9 +418,13 @@ class SequenceGroup:
             self.metrics.first_scheduled_time = time
             self.metrics.time_in_queue = time - self.metrics.arrival_time
 
-    def maybe_set_loading_time(self, time: Optional[float]) -> None:
-        if self.metrics.loading_time is None:
-            self.metrics.loading_time = time
+    def maybe_set_cpu_loading_time(self, time: Optional[float]) -> None:
+        if self.metrics.cpu_loading_time is None:
+            self.metrics.cpu_loading_time = time
+
+    def maybe_set_gpu_loading_time(self, time: Optional[float]) -> None:
+        if self.metrics.gpu_loading_time is None:
+            self.metrics.gpu_loading_time = time
 
     def set_finished_time(self, time: Optional[float]) -> None:
         """Sets the finished time for Request level timings."""

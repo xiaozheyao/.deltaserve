@@ -13,6 +13,7 @@ from .models import (
     LRUCacheDeltaModelManager,
     create_delta_manager,
 )
+from vllm.sequence import SequenceGroup
 
 logger = init_logger(__name__)
 LOG_TIME = False
@@ -107,12 +108,12 @@ class WorkerDeltaManager(AbstractWorkerManager):
         return delta_manager.model
 
     def set_active_deltas(
-        self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping
+        self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping, sequence_groups: List[SequenceGroup]
     ) -> None:
-        self._apply_deltas(delta_requests)
+        self._apply_deltas(delta_requests, sequence_groups)
         self._delta_manager.set_delta_mapping(delta_mapping)
 
-    def _apply_deltas(self, delta_requests: List[DeltaRequest]) -> None:
+    def _apply_deltas(self, delta_requests: List[DeltaRequest], sequence_groups: List[SequenceGroup]) -> None:
         deltas_that_exist = self.list_deltas()
         deltas_map = {
             delta_request.delta_id: delta_request for delta_request in delta_requests
@@ -129,7 +130,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
             self.remove_delta(delta_id)
 
         for delta_id in deltas_to_add:
-            self.add_delta(deltas_map[delta_id])
+            self.add_delta(deltas_map[delta_id], sequence_groups)
 
     def _load_delta(self, delta_request: DeltaRequest) -> DeltaModel:
         try:
@@ -153,10 +154,12 @@ class WorkerDeltaManager(AbstractWorkerManager):
         #     self._delta_manager.create_dummy_delta(delta_request.delta_int_id)
         # )
 
-    def add_delta(self, delta_request: DeltaRequest) -> bool:
+    def add_delta(self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]) -> bool:
         if delta_request.delta_int_id in self.list_deltas():
             return False
         delta = self._load_delta(delta_request)
+        for sg in sequence_groups:
+            sg.maybe_set_cpu_loading_time(time.time())
         loaded = self._delta_manager.add_delta(delta)
         self._delta_manager.activate_delta(delta.id)
         return loaded
@@ -186,7 +189,7 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         self._delta_manager: LRUCacheDeltaModelManager = delta_manager
         return delta_manager.model
 
-    def _apply_deltas(self, delta_requests: List[DeltaRequest]) -> None:
+    def _apply_deltas(self, delta_requests: List[DeltaRequest], sequence_groups: List[SequenceGroup]) -> None:
         delta_maps = {
             delta_request.delta_int_id: delta_request
             for delta_request in delta_requests
@@ -197,9 +200,9 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
                 f"({self._delta_manager.delta_slots})."
             )
         for delta in delta_maps.values():
-            self.add_delta(delta)
+            self.add_delta(delta, sequence_groups)
 
-    def add_delta(self, delta_request: DeltaRequest) -> bool:
+    def add_delta(self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]) -> bool:
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
@@ -207,19 +210,19 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             loaded = self._delta_manager.add_delta(delta)
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
+        for sg in sequence_groups:
+            sg.maybe_set_cpu_loading_time(time.time())
         self._activate_delta(delta_request=delta_request)
+        for sg in sequence_groups:
+            sg.maybe_set_gpu_loading_time(time.time())
         return loaded
 
     def _activate_delta(self, delta_request: DeltaRequest):
         global LOG_TIME
         if not LOG_TIME:
             logger.info(f"[{time.time()}] activating delta")
-        torch.cuda.synchronize()
         start = timer()
-        torch.cuda.nvtx.range_push("activating delta")
         self._delta_manager.activate_delta(delta_request.delta_int_id)
-        torch.cuda.synchronize()
-        torch.cuda.nvtx.range_pop()
         end = timer()
         if not LOG_TIME:
             logger.info(f"[{time.time()}] CPU -> GPU time: {end - start:.4f}")
