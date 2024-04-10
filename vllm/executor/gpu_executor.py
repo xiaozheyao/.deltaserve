@@ -76,6 +76,9 @@ class GPUExecutor(ExecutorBase):
         self.driver_worker.init_device()
         self.driver_worker.load_model()
 
+    def reload_model(self, model_path_or_name: str) -> None:
+        self.driver_worker.reload_model_weights(model_path_or_name)
+
     def _init_cache(self) -> None:
         """Profiles the memory usage and initializes the KV cache.
 

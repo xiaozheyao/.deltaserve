@@ -21,6 +21,7 @@ from vllm.entrypoints.openai.protocol import (
     ChatCompletionRequest,
     CompletionRequest,
     ErrorResponse,
+    ReloadRequest,
 )
 from vllm.entrypoints.openai.serving_chat import OpenAIServingChat
 from vllm.entrypoints.openai.serving_completion import OpenAIServingCompletion
@@ -83,6 +84,16 @@ async def show_available_models():
 async def show_version():
     ver = {"version": vllm.__version__}
     return JSONResponse(content=ver)
+
+
+@app.get("/sysinfo")
+async def get_sysinfo():
+    pass
+
+
+@app.post("/v1/reload")
+async def reload_model_weights(request: ReloadRequest):
+    pass
 
 
 @app.post("/v1/chat/completions")

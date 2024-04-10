@@ -104,3 +104,14 @@ def get_model(
                 model_config.revision,
             )
     return model.eval()
+
+
+def reload_model_weights(
+    model: nn.Module,
+    model_path_or_name: str,
+    cache_dir: str,
+    load_format: str,
+    revision: str,
+):
+    model.load_weights(model_path_or_name, cache_dir, load_format, revision)
+    return model.eval()

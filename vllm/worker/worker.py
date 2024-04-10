@@ -126,6 +126,9 @@ class Worker:
     def load_model(self):
         self.model_runner.load_model()
 
+    def reload_model_weights(self, model_path_or_name: str) -> None:
+        self.model_runner.reload_model_weights(model_path_or_name)
+
     @torch.inference_mode()
     def profile_num_available_blocks(
         self,

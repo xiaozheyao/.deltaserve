@@ -200,6 +200,10 @@ class ChatCompletionRequest(BaseModel):
         return data
 
 
+class ReloadRequest(BaseModel):
+    new_model: str
+
+
 class CompletionRequest(BaseModel):
     # Ordered by official OpenAI API documentation
     # https://platform.openai.com/docs/api-reference/completions/create

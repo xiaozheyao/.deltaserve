@@ -15,7 +15,8 @@ from vllm.config import (
     SchedulerConfig,
 )
 from vllm.logger import init_logger
-from vllm.model_executor import get_model, SamplingMetadata
+from vllm.model_executor import get_model, SamplingMetadata, reload_model_weights
+
 from vllm.lora.layers import LoRAMapping
 from vllm.lora.request import LoRARequest
 from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
@@ -127,6 +128,15 @@ class ModelRunner:
 
         self.attn_backend = get_attn_backend(
             self.model_config.dtype if model_config is not None else None
+        )
+
+    def reload_model(self, model_path_or_name: str) -> None:
+        reload_model_weights(
+            self.model,
+            model_path_or_name,
+            self.model_config.download_dir,
+            self.model_config.load_format,
+            self.model_config.revision,
         )
 
     def load_model(self) -> None:
