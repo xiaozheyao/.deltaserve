@@ -9,7 +9,7 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-from .layers import (
+from .layers_debug import (
     BaseLayerWithDelta,
     from_layer,
     from_layer_logits_processor,

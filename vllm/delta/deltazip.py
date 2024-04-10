@@ -182,7 +182,6 @@ def apply_delta_uncompressed(
             outputs[i] = torch.matmul(x, delta.T)
     for i in range(len(delta_weights)):
         base_output[indices == i] += outputs[i][indices == i]
-    return base_output
 
 
 def apply_delta_embed(
