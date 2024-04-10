@@ -100,6 +100,9 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.base_layer = base_layer
         self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
+        self.vocab_start_index = self.base_layer.vocab_start_index
+        self.vocab_end_index = self.base_layer.vocab_end_index
+
     def reset_delta(self, index: int):
         pass
 
@@ -150,7 +153,10 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
             masked_input[input_mask] = 0
         else:
             masked_input = x
-        output_parallel = F.embedding(masked_input, self.weight)
+        output_parallel = F.embedding(masked_input, self.base_layer.weight)
+
+        apply_delta_embed(masked_input, self.delta_weights, indices, output_parallel)
+
         if self.tp_size > 1:
             output_parallel[input_mask, :] = 0.0
         # Reduce across all the model parallel GPUs.

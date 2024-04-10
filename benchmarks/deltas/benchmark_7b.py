@@ -15,12 +15,12 @@ llm = LLM(
     enforce_eager=True,
     gpu_memory_utilization=0.8,
     max_context_len_to_capture=64,
-    max_model_len=64,
+    max_model_len=32,
 )
 
 sampling_params = SamplingParams(
     temperature=0,
-    max_tokens=64,
+    max_tokens=32,
 )
 delta_path = f".idea/models/vicuna-7b-4b0.75s-decom-1-optimize_io-tp_{tp_size}"
 
