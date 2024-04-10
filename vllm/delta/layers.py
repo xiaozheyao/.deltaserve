@@ -2,6 +2,7 @@
 import torch
 import inspect
 import torch.nn as nn
+import torch.nn.functional as F
 from typing import TYPE_CHECKING
 from dataclasses import dataclass
 from typing import Tuple, Optional, List, Any, Set, Type
@@ -29,7 +30,12 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .deltazip import apply_delta, apply_delta_packed_nslice, apply_delta_embed, apply_delta_uncompressed
+from .deltazip import (
+    apply_delta,
+    apply_delta_packed_nslice,
+    apply_delta_embed,
+    apply_delta_uncompressed,
+)
 
 ASYNC_COPY = True
 logger = init_logger(__name__)
@@ -93,14 +99,16 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         super().__init__()
         self.base_layer = base_layer
         self.device_tensor = None
-
+        self.tp_size = get_tensor_model_parallel_world_size()
     def reset_delta(self, index: int):
         pass
 
-    def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
+    def create_delta_weights(
+        self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig
+    ) -> None:
         self.delta_weights = torch.zeros(
             max_deltas,
-            self.base_layer.org_vocab_size,
+            self.base_layer.num_embeddings_per_partition,
             self.base_layer.embedding_dim,
             dtype=delta_config.delta_dtype,
             device=self.base_layer.weight.device,
@@ -127,12 +135,27 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.indices_len = indices_len
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        # indices = self.indices[: self.indices_len[0]]
+        # # base_output = F.embedding(x, self.base_layer.weight)
+        # base_output = self.base_layer.forward(x)
+        # # apply_delta_embed(
+        # #     x, self.delta_weights, indices, base_output
+        # # )
         indices = self.indices[: self.indices_len[0]]
-        base_output = self.base_layer(x)
-        apply_delta_embed(
-            x, self.delta_weights, indices, base_output
-        )
-        return base_output
+        if self.tp_size > 1:
+            # Build the mask.
+            input_mask = (x < self.vocab_start_index) | (x >= self.vocab_end_index)
+            # Mask the input.
+            masked_input = x.clone() - self.vocab_start_index
+            masked_input[input_mask] = 0
+        else:
+            masked_input = x
+        output_parallel = F.embedding(masked_input, self.weight)
+        if self.tp_size > 1:
+            output_parallel[input_mask, :] = 0.0
+        # Reduce across all the model parallel GPUs.
+        output = tensor_model_parallel_all_reduce(output_parallel)
+        return output
 
     @classmethod
     def can_replace_layer(
@@ -212,12 +235,9 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         if self.tp_size > 1:
             pass
-        self.qweight_stacked[index, 0, :, :].copy_(
-            qweight, non_blocking=ASYNC_COPY)
-        self.qzero_stacked[index, 0, :, :].copy_(
-            qzeros, non_blocking=ASYNC_COPY)
-        self.scales_stacked[index, 0, :, :].copy_(
-            scales, non_blocking=ASYNC_COPY)
+        self.qweight_stacked[index, 0, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
+        self.qzero_stacked[index, 0, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
+        self.scales_stacked[index, 0, :, :].copy_(scales, non_blocking=ASYNC_COPY)
         self.g_idx_stacked = g_idx
 
     def set_mapping(
@@ -315,8 +335,8 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             torch.zeros(
                 max_deltas,
                 1,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 self.base_layer.weight.shape[0] // 2,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             )
@@ -387,15 +407,15 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             start_idx = tp_rank * shard_size
             end_idx = (tp_rank + 1) * shard_size
             if qweight[0] is not None:
-                qweight[0] = qweight[0][:, start_idx:end_idx]
+                qweight[0] = qweight[0][start_idx:end_idx, :]
                 qzeros[0] = qzeros[0][
-                    :, start_idx // self.pack_factor: end_idx // self.pack_factor
+                    :, start_idx // self.pack_factor : end_idx // self.pack_factor
                 ]
                 scales[0] = scales[0][:, start_idx:end_idx]
             if qweight[1] is not None:
-                qweight[1] = qweight[1][:, start_idx:end_idx]
+                qweight[1] = qweight[1][start_idx:end_idx, :]
                 qzeros[1] = qzeros[1][
-                    :, start_idx // self.pack_factor: end_idx // self.pack_factor
+                    :, start_idx // self.pack_factor : end_idx // self.pack_factor
                 ]
                 scales[1] = scales[1][:, start_idx:end_idx]
 
@@ -440,6 +460,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 output,
                 (self.output_dim, self.output_dim),
                 self.device_tensor,
+                transposed_qweight=True,
             )
         return output
 
@@ -471,8 +492,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.tp_size = get_tensor_model_parallel_world_size()
         tp_rank = get_tensor_model_parallel_rank()
         self.q_proj_shard_size = self.base_layer.num_heads * self.base_layer.head_size
-        # print(f"base_layer.weight.shape: {self.base_layer.weight.shape}")
-        # (6144, 4096)
         self.kv_proj_shard_size = (
             self.base_layer.num_kv_heads * self.base_layer.head_size
         )
@@ -484,24 +503,24 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             torch.zeros(
                 max_deltas,
                 1,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 self.q_proj_shard_size,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
                 1,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 self.kv_proj_shard_size,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
                 1,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 self.kv_proj_shard_size,
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
@@ -612,24 +631,24 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         if self.tp_size > 1:
             if qweight[0] is not None:
                 qweight_q = qweight[0][
-                    :,
                     self.q_proj_shard_size
-                    * self.q_shard_id: self.q_proj_shard_size
+                    * self.q_shard_id : self.q_proj_shard_size
                     * (self.q_shard_id + 1),
+                    :,
                 ]
 
                 qzeros_q = qzeros[0][
                     :,
                     self.q_proj_shard_size
                     * self.q_shard_id
-                    // self.pack_factor: self.q_proj_shard_size
+                    // self.pack_factor : self.q_proj_shard_size
                     * (self.q_shard_id + 1)
                     // self.pack_factor,
                 ]
                 scales_q = scales[0][
                     :,
                     self.q_proj_shard_size
-                    * self.q_shard_id: self.q_proj_shard_size
+                    * self.q_shard_id : self.q_proj_shard_size
                     * (self.q_shard_id + 1),
                 ]
 
@@ -647,24 +666,24 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
             if qweight[1] is not None:
                 qweight_kv = qweight[1][
-                    :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id: self.kv_proj_shard_size
+                    * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
+                    :,
                 ]
 
                 qzeros_q = qzeros[1][
                     :,
                     self.kv_proj_shard_size
                     // self.pack_factor
-                    * self.kv_shard_id: self.kv_proj_shard_size
+                    * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
                 scales_q = scales[1][
                     :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id: self.kv_proj_shard_size
+                    * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
 
@@ -682,23 +701,23 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
             if qweight[2] is not None:
                 qweight_kv = qweight[2][
-                    :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id: self.kv_proj_shard_size
+                    * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
+                    :,
                 ]
                 qzeros_q = qzeros[2][
                     :,
                     self.kv_proj_shard_size
                     // self.pack_factor
-                    * self.kv_shard_id: self.kv_proj_shard_size
+                    * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
                 scales_q = scales[2][
                     :,
                     self.kv_proj_shard_size
-                    * self.kv_shard_id: self.kv_proj_shard_size
+                    * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
                 self.qweight_stacked[2][
@@ -778,6 +797,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 output,
                 self.output_slices,
                 self.device_tensor,
+                transposed_qweight=True,
             )
         return output
 
@@ -872,10 +892,10 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             start_idx = tensor_model_parallel_rank * shard_size
             end_idx = (tensor_model_parallel_rank + 1) * shard_size
             qweight = qweight[
-                start_idx // self.pack_factor: end_idx // self.pack_factor, :
+                start_idx // self.pack_factor : end_idx // self.pack_factor, :
             ]
             qzeros = qzeros[
-                start_idx // self.pack_factor: end_idx // self.pack_factor, :
+                start_idx // self.pack_factor : end_idx // self.pack_factor, :
             ]
             scales = scales[start_idx:end_idx, :]
 
@@ -1002,7 +1022,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
             (max_deltas, 0, self.hidden_size),
             fill_value=float("-inf"),
             dtype=self.dtype,
-            device=self.device
+            device=self.device,
         )
         self.indices = None
         self.indices_padded = None
@@ -1053,20 +1073,19 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
             dtype=self.embeddings_tensors.dtype,
             device=self.embeddings_tensors.device,
         )
-        torch.matmul(self.embeddings_tensors,
-                     hidden_states.T, out=delta_logits[:-1])
+        torch.matmul(self.embeddings_tensors, hidden_states.T, out=delta_logits[:-1])
         delta_logits[-1] = float("-inf")
         delta_logits = delta_logits.mT
         delta_logits = (
             delta_logits.reshape(
-                delta_logits.shape[0] *
-                delta_logits.shape[1], delta_logits.shape[2]
-            ).index_select(0, self.indices_padded[: self.indices_len[2]])
+                delta_logits.shape[0] * delta_logits.shape[1], delta_logits.shape[2]
+            )
+            .index_select(0, self.indices_padded[: self.indices_len[2]])
             .nan_to_num_(nan=float("-inf"), posinf=float("inf"), neginf=float("-inf"))
         )
         logits[
             :,
-            self.base_layer.org_vocab_size: self.base_layer.org_vocab_size
+            self.base_layer.org_vocab_size : self.base_layer.org_vocab_size
             + delta_logits.shape[1],
         ] = delta_logits
 

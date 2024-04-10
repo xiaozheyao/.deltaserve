@@ -1,9 +1,11 @@
 import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
+
 # from .quant_linears.quant_linear_naive import QuantLinear
 # from .quant_linears.quant_linear_exllama import QuantLinear
 from .quant_linears.quant_linear_triton import QuantLinear
+
 
 def add_delta(
     y: torch.Tensor,
@@ -153,12 +155,13 @@ def apply_delta_packed_nslice(
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
 
+
 def apply_delta_uncompressed(
-        x: torch.Tensor,
-        delta_weights: torch.Tensor,
-        indices: torch.Tensor,
-        base_output: torch.Tensor
-    ):
+    x: torch.Tensor,
+    delta_weights: torch.Tensor,
+    indices: torch.Tensor,
+    base_output: torch.Tensor,
+):
     """
     Applies delta to each input.
 
@@ -170,13 +173,17 @@ def apply_delta_uncompressed(
         indices:           (batch_size)
         output:            (batch_size, hidden_dim)
     """
-    outputs = torch.zeros((len(delta_weights), base_output.shape[0], base_output.shape[1]), device=base_output.device)
+    outputs = torch.zeros(
+        (len(delta_weights), base_output.shape[0], base_output.shape[1]),
+        device=base_output.device,
+    )
     for i, delta in enumerate(delta_weights):
         if delta is not None:
             outputs[i] = F.linear(x, delta)
     for i in range(len(delta_weights)):
         base_output[indices == i] += outputs[i][indices == i]
     return base_output
+
 
 def apply_delta_embed(
     x: torch.Tensor,
@@ -197,7 +204,10 @@ def apply_delta_embed(
         delta_weights:     list of delta weights
         indices:           (batch_size)
     """
-    outputs = torch.zeros((len(delta_weights), base_output.shape[0], base_output.shape[1]), device=base_output.device)
+    outputs = torch.zeros(
+        (len(delta_weights), base_output.shape[0], base_output.shape[1]),
+        device=base_output.device,
+    )
     for i, delta in enumerate(delta_weights):
         if delta is not None:
             outputs[i] = F.embedding(x, delta)

@@ -834,7 +834,7 @@ class ModelRunner:
         if sequence_groups:
             for sequence_group in sequence_groups:
                 sequence_group.maybe_set_loading_time(time.time())
-        
+
         # Execute the model.
         if attn_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]

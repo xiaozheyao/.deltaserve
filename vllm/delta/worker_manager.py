@@ -17,6 +17,7 @@ from .models import (
 logger = init_logger(__name__)
 LOG_TIME = False
 
+
 class AbstractWorkerManager(ABC):
     """Abstract class for managing LoRA/Delta models on the worker side."""
 
@@ -36,41 +37,33 @@ class AbstractWorkerManager(ABC):
 
     @property
     @abstractmethod
-    def is_enabled(self) -> bool:
-        ...
+    def is_enabled(self) -> bool: ...
 
     @abstractmethod
     def create_delta_manager(
         self,
         model: torch.nn.Module,
-    ) -> Any:
-        ...
+    ) -> Any: ...
 
     @abstractmethod
     def set_active_deltas(
         self, lora_requests: List[DeltaRequest], lora_mapping: DeltaMapping
-    ) -> None:
-        ...
+    ) -> None: ...
 
     @abstractmethod
-    def add_delta(self, delta_request: DeltaRequest) -> bool:
-        ...
+    def add_delta(self, delta_request: DeltaRequest) -> bool: ...
 
     @abstractmethod
-    def add_dummy_delta(self, delta_request: DeltaRequest) -> bool:
-        ...
+    def add_dummy_delta(self, delta_request: DeltaRequest) -> bool: ...
 
     @abstractmethod
-    def remove_delta(self, delta_id: int) -> bool:
-        ...
+    def remove_delta(self, delta_id: int) -> bool: ...
 
     @abstractmethod
-    def remove_all_deltas(self) -> bool:
-        ...
+    def remove_all_deltas(self) -> bool: ...
 
     @abstractmethod
-    def list_deltas(self) -> Set[int]:
-        ...
+    def list_deltas(self) -> Set[int]: ...
 
 
 class WorkerDeltaManager(AbstractWorkerManager):

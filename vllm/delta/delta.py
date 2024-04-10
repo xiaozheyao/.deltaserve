@@ -9,20 +9,21 @@ class DeltaLayerWeights:
     def __init__(
         self,
         module_name: str,
-        qweight: Optional[torch.Tensor]=None,
-        qzeros: Optional[torch.Tensor]=None,
-        scales: Optional[torch.Tensor]=None,
+        qweight: Optional[torch.Tensor] = None,
+        qzeros: Optional[torch.Tensor] = None,
+        scales: Optional[torch.Tensor] = None,
         g_idx: Optional[torch.Tensor] = None,
         compress_config: Optional[CompressionConfig] = None,
         weight: Optional[torch.Tensor] = None,
-        
     ) -> None:
         if weight is not None:
             self._compressed = False
             assert qweight is None, "qweight should be None if weight is provided"
         else:
             self._compressed = True
-            assert qweight is not None, "qweight should not be None if weight is not provided"
+            assert (
+                qweight is not None
+            ), "qweight should not be None if weight is not provided"
         self.module_name = module_name
         self.config = compress_config
         self.qweight = qweight
@@ -30,7 +31,8 @@ class DeltaLayerWeights:
         self.scales = scales
         self.g_idx = g_idx
         self.weight = weight
-        
+
+
 class PackedDeltaLayerWeights(DeltaLayerWeights):
     """Delta used for packed layers (eg. qkv_proj)."""
 

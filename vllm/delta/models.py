@@ -9,7 +9,7 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-from .layers_debug import (
+from .layers import (
     BaseLayerWithDelta,
     from_layer,
     from_layer_logits_processor,
@@ -21,6 +21,7 @@ from .utils import (
     ExLlamaV2DeviceTensors,
 )
 from timeit import default_timer as timer
+
 # from .compressor import LosslessCompressor
 import transformers
 from transformers import AutoConfig
@@ -35,6 +36,7 @@ from .config import QuantKernel
 
 logger = init_logger(__name__)
 _GLOBAL_DELTA_ID = 0
+
 
 def convert_mapping(
     mapping: DeltaMapping,
@@ -153,7 +155,11 @@ class DeltaModel:
         )
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
-        model_tensor_filenames = ["deltazip-compressed-remain.safetensors", f"rank.{tp_rank}.safetensors"]
+        model_tensor_filenames = [
+            "deltazip-compressed-remain.safetensors",
+            f"rank.{tp_rank}.safetensors",
+        ]
+
         def skip(*args, **kwargs):
             pass
 
@@ -192,7 +198,7 @@ class DeltaModel:
             with cp.cuda.Device(0):
                 for key in tensors.keys():
                     tensors[key] = cp.array(tensors[key], copy=False)
-            
+
             tensors = lossless_compressor.decompress_state_dict(
                 tensors,
                 tensor_shapes,
@@ -203,12 +209,10 @@ class DeltaModel:
             del tensor_dtypes, tensor_shapes
             del lossless_compressor
         else:
-            
+
             logger.info("Lossless Compression Disabled")
             for mtf in model_tensor_filenames:
-                with safe_open(
-                    os.path.join(path_or_name, mtf), "torch"
-                ) as f:
+                with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
                     keys = f.keys()
                     for key in keys:
                         tensors[key] = f.get_tensor(key)
@@ -221,7 +225,7 @@ class DeltaModel:
                 if all([y not in x for y in ignore_modules])
             ]
         )
-        
+
         for module in module_names:
             modules[module] = DeltaLayerWeights(
                 module_name=module,
@@ -243,11 +247,13 @@ class DeltaModel:
         for module in remaining_module_names:
             modules[module] = DeltaLayerWeights(
                 module_name=module,
-                weight = tensors[module+".weight"].pin_memory(),
+                weight=tensors[module + ".weight"].pin_memory(),
             )
         end = timer()
         total_bytes = total_bytes_count(tensors)
-        logger.info(f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds")
+        logger.info(
+            f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds"
+        )
         del tensors
         return cls(id, modules)
 

@@ -336,9 +336,9 @@ def test_embeddings_with_new_embeddings(dist_init, num_loras, device) -> None:
             *mapping_info,
         )
 
-        expanded_embedding.weight[
-            512 : 512 + (embeddings_tensor_len * max_loras)
-        ] = torch.cat(embeddings_tensors)
+        expanded_embedding.weight[512 : 512 + (embeddings_tensor_len * max_loras)] = (
+            torch.cat(embeddings_tensors)
+        )
 
         lora_result = lora_embedding(torch.cat(original_inputs))
 
