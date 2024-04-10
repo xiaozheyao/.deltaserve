@@ -70,7 +70,7 @@ def add_delta_slice(
         device_tensor=device_tensor,
     )
     output = ql(x)
-    y[:, y_offset : y_offset + y_slice_size] += output
+    y[:, y_offset:y_offset + y_slice_size] += output
 
 
 def apply_delta(
@@ -179,7 +179,11 @@ def apply_delta_uncompressed(
     )
     for i, delta in enumerate(delta_weights):
         if delta is not None:
-            outputs[i] = F.linear(x, delta)
+            print(f"x.shape: {x.shape}, delta.shape: {delta.shape}")
+            outputs[i] = torch.matmul(x, delta.T)
+    print(
+        f"outputs.shape: {outputs.shape}, base_output.shape: {base_output.shape}"
+    )
     for i in range(len(delta_weights)):
         base_output[indices == i] += outputs[i][indices == i]
     return base_output

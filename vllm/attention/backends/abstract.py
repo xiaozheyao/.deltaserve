@@ -48,14 +48,19 @@ class AttentionBackend(ABC):
 
 @dataclass
 class AttentionMetadata:
+
     def asdict_zerocopy(self) -> Dict[str, Any]:
         """Similar to dataclasses.asdict, but avoids deepcopying."""
         # Note that if we add dataclasses as fields, they will need
         # similar handling.
-        return {field.name: getattr(self, field.name) for field in fields(self)}
+        return {
+            field.name: getattr(self, field.name)
+            for field in fields(self)
+        }
 
 
 class AttentionImpl(ABC):
+
     @abstractmethod
     def __init__(
         self,

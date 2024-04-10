@@ -76,31 +76,36 @@ def convert_mapping(
     embedding_indices = indices.copy()
     delta_indices = indices.copy()
     prompt_mapping = [
-        delta_index_to_id.index(x) if x > 0 else -1 for x in mapping.prompt_mapping
+        delta_index_to_id.index(x) if x > 0 else -1
+        for x in mapping.prompt_mapping
     ]
     delta_idx = None
     for i in range(len(indices)):
         # TODO index can be slow. optimize
-        delta_idx = delta_index_to_id.index(indices[i]) if indices[i] > 0 else -1
+        delta_idx = delta_index_to_id.index(
+            indices[i]) if indices[i] > 0 else -1
         embedding_indices[i] = delta_idx if indices[i] > 0 else 0
         indices[i] = i
         delta_indices[i] = delta_idx
 
-    indices = torch.tensor(
-        [indices, delta_indices, embedding_indices], dtype=torch.long, device="cuda"
-    )
-    prompt_mapping = torch.tensor(prompt_mapping, device="cuda", dtype=torch.long)
-    embeddings_indices = torch.stack(
-        [indices[2] * extra_vocab_size, indices[2] * (vocab_size + extra_vocab_size)]
-    )
+    indices = torch.tensor([indices, delta_indices, embedding_indices],
+                           dtype=torch.long,
+                           device="cuda")
+    prompt_mapping = torch.tensor(prompt_mapping,
+                                  device="cuda",
+                                  dtype=torch.long)
+    embeddings_indices = torch.stack([
+        indices[2] * extra_vocab_size,
+        indices[2] * (vocab_size + extra_vocab_size)
+    ])
     embeddings_indices[embeddings_indices == -1] = max_deltas - 1
     base_indices = indices[1]
     sampler_indices = prompt_mapping
     sampler_indices_padded = sampler_indices.clone()
     sampler_indices_padded[sampler_indices_padded == -1] = max_deltas - 1
     sampler_indices_padded = torch.arange(
-        0, len(sampler_indices_padded), device="cuda", dtype=torch.long
-    ) + (sampler_indices_padded * len(sampler_indices_padded))
+        0, len(sampler_indices_padded), device="cuda", dtype=torch.long) + (
+            sampler_indices_padded * len(sampler_indices_padded))
     indices_len = (
         base_indices.shape[-1],
         sampler_indices.shape[-1],
@@ -150,11 +155,11 @@ class DeltaModel:
         tp_size = get_tensor_model_parallel_world_size()
         tp_rank = get_tensor_model_parallel_rank()
         logger.debug(f"Loading DeltaModel from {path_or_name}")
-        config = AutoConfig.from_pretrained(
-            path_or_name, trust_remote=trust_remote_code
-        )
+        config = AutoConfig.from_pretrained(path_or_name,
+                                            trust_remote=trust_remote_code)
         compress_config = CompressionConfig.from_pretrained(path_or_name)
-        logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
+        logger.debug(
+            f"Loaded DeltaModel from {path_or_name}, config: {config}")
         model_tensor_filenames = [
             "deltazip-compressed-remain.safetensors",
             f"rank.{tp_rank}.safetensors",
@@ -185,9 +190,8 @@ class DeltaModel:
             # )
             # TODO(xiaozhe): fix this later...
             metadata = None
-            with safe_open(
-                os.path.join(path_or_name, model_tensor_filenames), "numpy"
-            ) as f:
+            with safe_open(os.path.join(path_or_name, model_tensor_filenames),
+                           "numpy") as f:
                 metadata = f.metadata()
                 keys = f.keys()
                 for key in keys:
@@ -218,13 +222,10 @@ class DeltaModel:
                         tensors[key] = f.get_tensor(key)
 
         modules = {}
-        module_names = set(
-            [
-                x.rsplit(".", 1)[0]
-                for x in tensors.keys()
-                if all([y not in x for y in ignore_modules])
-            ]
-        )
+        module_names = set([
+            x.rsplit(".", 1)[0] for x in tensors.keys()
+            if all([y not in x for y in ignore_modules])
+        ])
 
         for module in module_names:
             modules[module] = DeltaLayerWeights(
@@ -237,13 +238,10 @@ class DeltaModel:
             )
 
         # now handling remaining modules
-        remaining_module_names = set(
-            [
-                x.rsplit(".", 1)[0]
-                for x in tensors.keys()
-                if any([y in x for y in ignore_modules])
-            ]
-        )
+        remaining_module_names = set([
+            x.rsplit(".", 1)[0] for x in tensors.keys()
+            if any([y in x for y in ignore_modules])
+        ])
         for module in remaining_module_names:
             modules[module] = DeltaLayerWeights(
                 module_name=module,
@@ -272,33 +270,32 @@ class DeltaModelManager:
         self.delta_config = delta_config
         self.max_num_seqs = max_num_seqs
         assert (
-            self.capacity >= self.delta_slots
-        ), "capacity must be greater than delta_slots"
+            self.capacity
+            >= self.delta_slots), "capacity must be greater than delta_slots"
         self.max_num_batched_tokens = math.ceil(max_num_batched_tokens / 8) * 8
         self.delta_index_to_id: List[Optional[int]] = [None] * self.delta_slots
         self.vocab_size = vocab_size
-        self.base_indices = torch.empty(
-            self.max_num_batched_tokens, dtype=torch.long, device="cuda"
-        )
-        self.sampler_indices = torch.empty(
-            self.max_num_batched_tokens, dtype=torch.long, device="cuda"
-        )
-        self.sampler_indices_padded = torch.empty(
-            self.max_num_batched_tokens, dtype=torch.long, device="cuda"
-        )
-        self.embeddings_indices = torch.empty(
-            2, self.max_num_batched_tokens, dtype=torch.long, device="cuda"
-        )
+        self.base_indices = torch.empty(self.max_num_batched_tokens,
+                                        dtype=torch.long,
+                                        device="cuda")
+        self.sampler_indices = torch.empty(self.max_num_batched_tokens,
+                                           dtype=torch.long,
+                                           device="cuda")
+        self.sampler_indices_padded = torch.empty(self.max_num_batched_tokens,
+                                                  dtype=torch.long,
+                                                  device="cuda")
+        self.embeddings_indices = torch.empty(2,
+                                              self.max_num_batched_tokens,
+                                              dtype=torch.long,
+                                              device="cuda")
         self.offset = []
         self.indices_len = []
         self.model = model
         if hasattr(self.model, "supported_delta_modules"):
             self.supported_delta_modules = copy.deepcopy(
-                self.model.supported_delta_modules
-            )
+                self.model.supported_delta_modules)
             self.packed_modules_mapping = copy.deepcopy(
-                self.model.packed_modules_mapping
-            )
+                self.model.packed_modules_mapping)
         self.packed_modules: Dict[str, List[str]] = {}
         self.modules: Dict[str, "BaseLayerWithDelta"] = {}
         self._registered_deltas: Dict[int, DeltaModel] = {}
@@ -337,11 +334,8 @@ class DeltaModelManager:
         if delta_id in self._active_deltas:
             return False
         first_free_slot = next(
-            (
-                (i, delta_id)
-                for i, delta_id in enumerate(self.delta_index_to_id)
-                if delta_id is None
-            ),
+            ((i, delta_id) for i, delta_id in enumerate(self.delta_index_to_id)
+             if delta_id is None),
             None,
         )
         if first_free_slot is None:
@@ -350,7 +344,6 @@ class DeltaModelManager:
         self._active_deltas[delta_id] = None
         delta_model = self._registered_deltas[delta_id]
         self.delta_index_to_id[index] = delta_model.id
-
         """
         Only for Exllama
         """
@@ -376,7 +369,8 @@ class DeltaModelManager:
         if self.current_kernel == QuantKernel.EXLLAMA:
             device_tensors = {}
             for device, scratch_bytes in self.fixed_bytes.items():
-                device_tensors[device] = ExLlamaV2DeviceTensors(0, scratch_bytes)
+                device_tensors[device] = ExLlamaV2DeviceTensors(
+                    0, scratch_bytes)
 
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
@@ -394,21 +388,15 @@ class DeltaModelManager:
                         module_delta.qzeros,
                         module_delta.scales,
                         module_delta.g_idx,
-                        device_tensor=(
-                            device_tensors[0]
-                            if self.current_kernel == QuantKernel.EXLLAMA
-                            else True
-                        ),
+                        device_tensor=(device_tensors[0] if self.current_kernel
+                                       == QuantKernel.EXLLAMA else True),
                     )
                 else:
                     module.set_delta(
                         index,
                         module_delta.weight,
-                        device_tensor=(
-                            device_tensors[0]
-                            if self.current_kernel == QuantKernel.EXLLAMA
-                            else True
-                        ),
+                        device_tensor=(device_tensors[0] if self.current_kernel
+                                       == QuantKernel.EXLLAMA else True),
                     )
             else:
                 module.reset_delta(index)
@@ -463,14 +451,13 @@ class DeltaModelManager:
             self.vocab_size,
             self.delta_config.delta_extra_vocab_size,
         )
-        self.base_indices[: base_indices.shape[0]].copy_(base_indices)
-        self.sampler_indices[: sampler_indices.shape[0]].copy_(sampler_indices)
-        self.sampler_indices_padded[: sampler_indices_padded.shape[0]].copy_(
-            sampler_indices_padded
-        )
-        self.embeddings_indices[
-            : embeddings_indices.shape[0], : embeddings_indices.shape[1]
-        ].copy_(embeddings_indices)
+        self.base_indices[:base_indices.shape[0]].copy_(base_indices)
+        self.sampler_indices[:sampler_indices.shape[0]].copy_(sampler_indices)
+        self.sampler_indices_padded[:sampler_indices_padded.shape[0]].copy_(
+            sampler_indices_padded)
+        self.embeddings_indices[:embeddings_indices.
+                                shape[0], :embeddings_indices.shape[1]].copy_(
+                                    embeddings_indices)
         # Maintain the reference
         self.indices_len[:] = indices_len
 
@@ -510,7 +497,8 @@ class DeltaModelManager:
                 ),
             )
             if "lm_head" in module_name:
-                logits_processor_module = self.model.get_submodule("logits_processor")
+                logits_processor_module = self.model.get_submodule(
+                    "logits_processor")
                 new_module = replace_submodule(
                     self.model,
                     "logits_processor",
@@ -542,11 +530,9 @@ class DeltaModelManager:
     def _match_target_modules(self, module_name: str):
         return any(
             re.match(
-                r".*\.{target_module}$".format(target_module=target_module), module_name
-            )
-            or target_module == module_name
-            for target_module in self.supported_delta_modules
-        )
+                r".*\.{target_module}$".format(target_module=target_module),
+                module_name) or target_module == module_name
+            for target_module in self.supported_delta_modules)
 
     def _register_packed_modules(self, module_full_name: str) -> None:
         parts = module_full_name.split(".")
@@ -575,12 +561,13 @@ class DeltaModelManager:
                     continue
                 replacement_deltas[i] = None
             delta_model.deltas[module_name] = PackedDeltaLayerWeights.pack(
-                replacement_deltas
-            )
+                replacement_deltas)
 
 
 class DeltaLRUCache(LRUCache):
-    def __init__(self, capacity: int, deactivate_delta_fn: Callable[[Hashable], None]):
+
+    def __init__(self, capacity: int, deactivate_delta_fn: Callable[[Hashable],
+                                                                    None]):
         super().__init__(capacity)
         self.deactivate_delta_fn = deactivate_delta_fn
 
@@ -601,15 +588,12 @@ class LRUCacheDeltaModelManager(DeltaModelManager):
         vocab_size: int,
         delta_config: DeltaConfig,
     ):
-        super().__init__(
-            model, max_num_seqs, max_num_batched_tokens, vocab_size, delta_config
-        )
+        super().__init__(model, max_num_seqs, max_num_batched_tokens,
+                         vocab_size, delta_config)
         self._registered_deltas: DeltaLRUCache = DeltaLRUCache(
-            self.capacity, self.deactivate_delta
-        )
+            self.capacity, self.deactivate_delta)
         self._active_deltas: DeltaLRUCache = DeltaLRUCache(
-            self.delta_slots, self._deactivate_delta
-        )
+            self.delta_slots, self._deactivate_delta)
 
     def list_deltas(self) -> Dict[int, DeltaModel]:
         """List all registered DeltaModels."""
@@ -630,10 +614,8 @@ class LRUCacheDeltaModelManager(DeltaModelManager):
         self,
         delta_id: int,
     ) -> bool:
-        if (
-            delta_id not in self._active_deltas
-            and len(self._active_deltas) >= self.delta_slots
-        ):
+        if (delta_id not in self._active_deltas
+                and len(self._active_deltas) >= self.delta_slots):
             self._active_deltas.remove_oldest()
         result = super().activate_delta(delta_id)
         # We always touch to update the LRU cache order

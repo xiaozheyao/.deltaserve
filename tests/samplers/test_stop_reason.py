@@ -32,9 +32,9 @@ def test_stop_reason(vllm_model, example_prompts):
     # test stop token
     outputs = llm.generate(
         example_prompts,
-        sampling_params=SamplingParams(
-            seed=SEED, max_tokens=MAX_TOKENS, stop_token_ids=[stop_token_id]
-        ),
+        sampling_params=SamplingParams(seed=SEED,
+                                       max_tokens=MAX_TOKENS,
+                                       stop_token_ids=[stop_token_id]),
     )
     for output in outputs:
         output = output.outputs[0]
@@ -44,7 +44,9 @@ def test_stop_reason(vllm_model, example_prompts):
     # test stop string
     outputs = llm.generate(
         example_prompts,
-        sampling_params=SamplingParams(seed=SEED, max_tokens=MAX_TOKENS, stop="."),
+        sampling_params=SamplingParams(seed=SEED,
+                                       max_tokens=MAX_TOKENS,
+                                       stop="."),
     )
     for output in outputs:
         output = output.outputs[0]
@@ -59,5 +61,4 @@ def test_stop_reason(vllm_model, example_prompts):
     for output in outputs:
         output = output.outputs[0]
         assert output.finish_reason == "length" or (
-            output.finish_reason == "stop" and output.stop_reason is None
-        )
+            output.finish_reason == "stop" and output.stop_reason is None)

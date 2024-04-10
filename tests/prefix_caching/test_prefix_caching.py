@@ -41,9 +41,7 @@ def test_block_allocator(
 
 
 @pytest.mark.parametrize("num_blocks", [16])
-def test_eviction(
-    num_blocks: int,
-):
+def test_eviction(num_blocks: int, ):
     block_size = 16
     block_allocator = CachedBlockAllocator(Device.CPU, block_size, num_blocks)
     blocks = []

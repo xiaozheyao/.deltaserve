@@ -11,6 +11,7 @@ Mostly the same as the autotuner in Triton, but with a few changes like using 40
 
 
 class CustomizedTritonAutoTuner(triton.KernelInterface):
+
     def __init__(
         self,
         fn,
@@ -60,8 +61,7 @@ class CustomizedTritonAutoTuner(triton.KernelInterface):
         if conflicts:
             raise ValueError(
                 f"Conflicting meta-parameters: {', '.join(conflicts)}."
-                " Make sure that you don't re-define auto-tuned symbols."
-            )
+                " Make sure that you don't re-define auto-tuned symbols.")
         # augment meta-parameters with tunable ones
         current = dict(meta, **config.kwargs)
 
@@ -79,9 +79,9 @@ class CustomizedTritonAutoTuner(triton.KernelInterface):
         try:
             # In testings using only 40 reps seems to be close enough and it appears to be what PyTorch uses
             # PyTorch also sets fast_flush to True, but I didn't see any speedup so I'll leave the default
-            return triton.testing.do_bench(
-                kernel_call, quantiles=(0.5, 0.2, 0.8), rep=40
-            )
+            return triton.testing.do_bench(kernel_call,
+                                           quantiles=(0.5, 0.2, 0.8),
+                                           rep=40)
         except triton.OutOfResources:
             return (float("inf"), float("inf"), float("inf"))
 
@@ -93,7 +93,7 @@ class CustomizedTritonAutoTuner(triton.KernelInterface):
             # This reduces the amount of autotuning by rounding the keys to the nearest power of two
             # In my testing this gives decent results, and greatly reduces the amount of tuning required
             if self.nearest_power_of_two:
-                key = tuple([2 ** int(math.log2(x) + 0.5) for x in key])
+                key = tuple([2**int(math.log2(x) + 0.5) for x in key])
 
             if key not in self.cache:
                 # prune configs
@@ -133,7 +133,8 @@ class CustomizedTritonAutoTuner(triton.KernelInterface):
                 top_k = int(len(self.configs) * top_k)
             if len(pruned_configs) > top_k:
                 est_timing = {
-                    config: self.perf_model(
+                    config:
+                    self.perf_model(
                         **self.nargs,
                         **kwargs,
                         **config.kwargs,
@@ -142,9 +143,8 @@ class CustomizedTritonAutoTuner(triton.KernelInterface):
                     )
                     for config in pruned_configs
                 }
-                pruned_configs = sorted(est_timing.keys(), key=lambda x: est_timing[x])[
-                    :top_k
-                ]
+                pruned_configs = sorted(est_timing.keys(),
+                                        key=lambda x: est_timing[x])[:top_k]
         return pruned_configs
 
     def warmup(self, *args, **kwargs):
@@ -160,9 +160,12 @@ class CustomizedTritonAutoTuner(triton.KernelInterface):
         self.nargs = None
 
 
-def autotune(
-    configs, key, prune_configs_by=None, reset_to_zero=None, nearest_power_of_two=False
-):
+def autotune(configs,
+             key,
+             prune_configs_by=None,
+             reset_to_zero=None,
+             nearest_power_of_two=False):
+
     def decorator(fn):
         return CustomizedTritonAutoTuner(
             fn,
@@ -181,9 +184,9 @@ def matmul248_kernel_config_pruner(configs, nargs):
     """
     The main purpose of this function is to shrink BLOCK_SIZE_* when the corresponding dimension is smaller.
     """
-    m = max(2 ** int(math.ceil(math.log2(nargs["M"]))), 16)
-    n = max(2 ** int(math.ceil(math.log2(nargs["N"]))), 16)
-    k = max(2 ** int(math.ceil(math.log2(nargs["K"]))), 16)
+    m = max(2**int(math.ceil(math.log2(nargs["M"]))), 16)
+    n = max(2**int(math.ceil(math.log2(nargs["N"]))), 16)
+    k = max(2**int(math.ceil(math.log2(nargs["K"]))), 16)
 
     used = set()
     for config in configs:
@@ -193,25 +196,23 @@ def matmul248_kernel_config_pruner(configs, nargs):
         group_size_m = config.kwargs["GROUP_SIZE_M"]
 
         if (
-            block_size_m,
-            block_size_n,
-            block_size_k,
-            group_size_m,
-            config.num_stages,
-            config.num_warps,
-        ) in used:
-            continue
-
-        used.add(
-            (
                 block_size_m,
                 block_size_n,
                 block_size_k,
                 group_size_m,
                 config.num_stages,
                 config.num_warps,
-            )
-        )
+        ) in used:
+            continue
+
+        used.add((
+            block_size_m,
+            block_size_n,
+            block_size_k,
+            group_size_m,
+            config.num_stages,
+            config.num_warps,
+        ))
         yield triton.Config(
             {
                 "BLOCK_SIZE_M": block_size_m,
@@ -224,9 +225,12 @@ def matmul248_kernel_config_pruner(configs, nargs):
         )
 
 
-def autotune(
-    configs, key, prune_configs_by=None, reset_to_zero=None, nearest_power_of_two=False
-):
+def autotune(configs,
+             key,
+             prune_configs_by=None,
+             reset_to_zero=None,
+             nearest_power_of_two=False):
+
     def decorator(fn):
         return CustomizedTritonAutoTuner(
             fn,
@@ -245,9 +249,9 @@ def bmm248_kernel_config_pruner(configs, nargs):
     """
     The main purpose of this function is to shrink BLOCK_SIZE_* when the corresponding dimension is smaller.
     """
-    m = max(2 ** int(math.ceil(math.log2(nargs["M"]))), 16)
-    n = max(2 ** int(math.ceil(math.log2(nargs["N"]))), 16)
-    k = max(2 ** int(math.ceil(math.log2(nargs["K"]))), 16)
+    m = max(2**int(math.ceil(math.log2(nargs["M"]))), 16)
+    n = max(2**int(math.ceil(math.log2(nargs["N"]))), 16)
+    k = max(2**int(math.ceil(math.log2(nargs["K"]))), 16)
 
     used = set()
     for config in configs:
@@ -257,27 +261,25 @@ def bmm248_kernel_config_pruner(configs, nargs):
         group_size_m = config.kwargs["GROUP_SIZE_M"]
         batch_size_b = config.kwargs["BATCH_SIZE_B"]
         if (
-            block_size_m,
-            block_size_n,
-            block_size_k,
-            group_size_m,
-            config.num_stages,
-            config.num_warps,
-            batch_size_b,
-        ) in used:
-            continue
-
-        used.add(
-            (
                 block_size_m,
                 block_size_n,
                 block_size_k,
                 group_size_m,
-                batch_size_b,
                 config.num_stages,
                 config.num_warps,
-            )
-        )
+                batch_size_b,
+        ) in used:
+            continue
+
+        used.add((
+            block_size_m,
+            block_size_n,
+            block_size_k,
+            group_size_m,
+            batch_size_b,
+            config.num_stages,
+            config.num_warps,
+        ))
         yield triton.Config(
             {
                 "BLOCK_SIZE_M": block_size_m,

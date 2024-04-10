@@ -24,12 +24,10 @@ def torch_moe(a, w1, w2, score, topk):
     for i in range(w1.shape[0]):
         mask = topk_ids == i
         if mask.sum():
-            out[mask] = SiluAndMul()(a[mask] @ w1[i].transpose(0, 1)) @ w2[i].transpose(
-                0, 1
-            )
-    return (
-        out.view(B, -1, w2.shape[1]) * topk_weight.view(B, -1, 1).to(out.dtype)
-    ).sum(dim=1)
+            out[mask] = SiluAndMul()(
+                a[mask] @ w1[i].transpose(0, 1)) @ w2[i].transpose(0, 1)
+    return (out.view(B, -1, w2.shape[1]) *
+            topk_weight.view(B, -1, 1).to(out.dtype)).sum(dim=1)
 
 
 @pytest.mark.parametrize("m", [512, 222, 33, 1])
@@ -56,7 +54,8 @@ def test_fused_moe(
     assert torch.allclose(triton_output, torch_output, atol=1e-2, rtol=0)
 
 
-@pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
+@pytest.mark.parametrize("dtype",
+                         [torch.float32, torch.float16, torch.bfloat16])
 @torch.inference_mode()
 def test_mixtral_moe(dtype: torch.dtype):
     """Make sure our Mixtral MoE implementation agrees with the one from
@@ -77,7 +76,8 @@ def test_mixtral_moe(dtype: torch.dtype):
     # Load the weights
     vllm_moe.gate.linear_weights["weight"][:] = hf_moe.gate.weight.data
     for i in range(config.num_local_experts):
-        weights = (hf_moe.experts[i].w1.weight.data, hf_moe.experts[i].w3.weight.data)
+        weights = (hf_moe.experts[i].w1.weight.data,
+                   hf_moe.experts[i].w3.weight.data)
         vllm_moe.ws[i][:] = torch.cat(weights, dim=0)
         vllm_moe.w2s[i][:] = hf_moe.experts[i].w2.weight.data
 

@@ -34,13 +34,15 @@ def do_sample(
     n_tokens: int = 256,
 ):
     prompts = PROMPTS
-    sampling_params = vllm.SamplingParams(
-        temperature=0, max_tokens=n_tokens, logprobs=logprobs, stop=["[/assistant]"]
-    )
+    sampling_params = vllm.SamplingParams(temperature=0,
+                                          max_tokens=n_tokens,
+                                          logprobs=logprobs,
+                                          stop=["[/assistant]"])
     outputs = llm.generate(
         prompts,
         sampling_params,
-        lora_request=LoRARequest(str(lora_id), lora_id, lora_path) if lora_id else None,
+        lora_request=LoRARequest(str(lora_id), lora_id, lora_path)
+        if lora_id else None,
     )
     # Print the outputs.
     generated_texts = []
@@ -50,9 +52,10 @@ def do_sample(
         generated_text = output.outputs[0].text
         generated_texts.append(generated_text)
         print(f"Prompt: {prompt!r}, Generated text: {generated_text!r}")
-        generated_logprobs.append(
-            [list(logprob.keys()) for out in output.outputs for logprob in out.logprobs]
-        )
+        generated_logprobs.append([
+            list(logprob.keys()) for out in output.outputs
+            for logprob in out.logprobs
+        ])
     return generated_logprobs if logprobs else generated_texts
 
 
@@ -66,7 +69,8 @@ SUPPORTED_MODULES = [
 ]
 TARGET_MODULES_LIST = []
 for length in range(2, 6):
-    TARGET_MODULES_LIST.extend([sample(SUPPORTED_MODULES, length) for _ in range(3)])
+    TARGET_MODULES_LIST.extend(
+        [sample(SUPPORTED_MODULES, length) for _ in range(3)])
 
 
 # Test the correctness when layer and rank are varied

@@ -28,7 +28,10 @@ def seeded_uniform(
         raise ValueError("seeded_uniform only supports up to 3D tensors")
 
     if out is None:
-        out = torch.empty(*size, dtype=dtype, device=device, pin_memory=pin_memory)
+        out = torch.empty(*size,
+                          dtype=dtype,
+                          device=device,
+                          pin_memory=pin_memory)
     elif out.shape != size:
         raise ValueError("shape of out and size must be the same")
 
@@ -52,7 +55,8 @@ def seeded_uniform(
         raise ValueError("seeds must be a 1D tensor")
 
     if seeds.numel() != n_rows:
-        raise ValueError("seeds must have the same number of elements as out has rows")
+        raise ValueError(
+            "seeds must have the same number of elements as out has rows")
 
     # The philox PRNG Triton uses generates 4 random numbers at once.
     # Therefore, the most efficient use of it is to divide the
@@ -130,17 +134,24 @@ def _seeded_uniform_triton(
     # Generate random numbers in [0, 1).
     out1, out2, out3, out4 = tl.rand4x(seed, philox_offsets)
 
-    output_row_start_ptr = (
-        out_ptr + row_idx * out_row_stride + three_d_idx * out_3d_stride
-    )
+    output_row_start_ptr = (out_ptr + row_idx * out_row_stride +
+                            three_d_idx * out_3d_stride)
     out1_offsets = philox_offsets
-    tl.store(output_row_start_ptr + out1_offsets, out1, mask=out1_offsets < n_cols)
+    tl.store(output_row_start_ptr + out1_offsets,
+             out1,
+             mask=out1_offsets < n_cols)
     if n_slices > 1:
         out2_offsets = tl.arange(block_size, block_size * 2)
-        tl.store(output_row_start_ptr + out2_offsets, out2, mask=out2_offsets < n_cols)
+        tl.store(output_row_start_ptr + out2_offsets,
+                 out2,
+                 mask=out2_offsets < n_cols)
     if n_slices > 2:
         out3_offsets = tl.arange(block_size * 2, block_size * 3)
-        tl.store(output_row_start_ptr + out3_offsets, out3, mask=out3_offsets < n_cols)
+        tl.store(output_row_start_ptr + out3_offsets,
+                 out3,
+                 mask=out3_offsets < n_cols)
     if n_slices > 3:
         out4_offsets = tl.arange(block_size * 3, block_size * 4)
-        tl.store(output_row_start_ptr + out4_offsets, out4, mask=out4_offsets < n_cols)
+        tl.store(output_row_start_ptr + out4_offsets,
+                 out4,
+                 mask=out4_offsets < n_cols)

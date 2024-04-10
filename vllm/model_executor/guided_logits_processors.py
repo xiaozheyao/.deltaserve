@@ -26,6 +26,7 @@ from transformers import PreTrainedTokenizerBase
 
 
 class BaseLogitsProcessor:
+
     def adapt_tokenizer(self, tokenizer: PreTrainedTokenizerBase):
         """Adapt vLLM's tokenizer to use to compile the FSM.
 
@@ -74,7 +75,8 @@ class BaseLogitsProcessor:
         """Initialize the FSM states."""
         self.fsm_state: DefaultDict[int, int] = defaultdict(int)
 
-    def __call__(self, input_ids: List[int], scores: torch.Tensor) -> torch.Tensor:
+    def __call__(self, input_ids: List[int],
+                 scores: torch.Tensor) -> torch.Tensor:
         """Use the FSM to bias the logits before sampling the next token."""
 
         seq_id = hash(tuple(input_ids))
@@ -85,12 +87,13 @@ class BaseLogitsProcessor:
             last_token = input_ids[-1]
             last_seq_id = hash(tuple(input_ids[:-1]))
             self.fsm_state[seq_id] = self.fsm.next_state(
-                self.fsm_state[last_seq_id], last_token
-            )
+                self.fsm_state[last_seq_id], last_token)
 
         allowed_tokens = self.fsm.allowed_token_ids(self.fsm_state[seq_id])
 
-        mask = torch.full((scores.shape[-1],), -math.inf, device=scores.device)
+        mask = torch.full((scores.shape[-1], ),
+                          -math.inf,
+                          device=scores.device)
         mask[allowed_tokens] = 0
         scores.add_(mask)
 
@@ -98,6 +101,7 @@ class BaseLogitsProcessor:
 
 
 class RegexLogitsProcessor(BaseLogitsProcessor):
+
     def __init__(self, regex_string: str, tokenizer: PreTrainedTokenizerBase):
         """Compile the FSM that drives the regex-structured generation.
 
@@ -115,6 +119,7 @@ class RegexLogitsProcessor(BaseLogitsProcessor):
 
 
 class JSONLogitsProcessor(RegexLogitsProcessor):
+
     def __init__(
         self,
         schema: Union[str, Dict, BaseModel],
@@ -146,13 +151,13 @@ class JSONLogitsProcessor(RegexLogitsProcessor):
             raise ValueError(
                 f"Cannot parse schema {schema}. The schema must be either "
                 f"a Pydantic object, a dictionary or a string that contains "
-                f"the JSON Schema specification"
-            )
+                f"the JSON Schema specification")
         regex_string = build_regex_from_schema(schema_str, whitespace_pattern)
         super().__init__(regex_string, tokenizer)
 
 
 class CFGLogitsProcessor(BaseLogitsProcessor):
+
     def __init__(self, cfg: str, tokenizer: PreTrainedTokenizerBase):
         """Compile the FSM that drives the context free grammar generation.
 

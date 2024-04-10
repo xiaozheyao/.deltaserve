@@ -21,9 +21,7 @@ def test_create_target_seq_id_iterator(num_target_seq_ids: int):
 
     for seq_ids in all_seq_ids:
         max_seq_id = max(seq_ids)
-        iterator = scorer._create_target_seq_id_iterator(
-            seq_ids
-        )  # pylint: disable=protected-access
+        iterator = scorer._create_target_seq_id_iterator(seq_ids)  # pylint: disable=protected-access
         for _ in range(num_target_seq_ids):
             assert next(iterator) > max_seq_id
 
@@ -41,12 +39,10 @@ def test_get_token_ids_to_score(k: int):
         [],
     ]
     for i in range(proposal_token_ids.shape[0]):
-        expected_output.append(proposal_token_ids[: i + 1].tolist())
+        expected_output.append(proposal_token_ids[:i + 1].tolist())
 
     scorer = BatchExpansionTop1Scorer(mock_worker(), "cuda:0", 32_000)
-    actual_output = scorer._get_token_ids_to_score(
-        proposal_token_ids
-    )  # pylint: disable=protected-access
+    actual_output = scorer._get_token_ids_to_score(proposal_token_ids)  # pylint: disable=protected-access
 
     actual_output = [
         x.tolist() if isinstance(x, torch.Tensor) else x for x in actual_output
@@ -66,7 +62,8 @@ def test_create_single_target_seq_group_metadata(k: int):
 
     num_tokens_processed = len(prompt_tokens) + len(prev_output_tokens) - 1
 
-    final_seq_len = len(prompt_tokens) + len(prev_output_tokens) + len(token_ids)
+    final_seq_len = len(prompt_tokens) + len(prev_output_tokens) + len(
+        token_ids)
 
     block_size = 32
     input_seq_group_metadata = create_seq_group_metadata_from_prompts(
@@ -91,14 +88,11 @@ def test_create_single_target_seq_group_metadata(k: int):
 
     assert output.request_id == input_seq_group_metadata.request_id
     assert len(output.seq_data) == 1
-    assert output.seq_data[target_seq_id].get_prompt_token_ids() == prompt_tokens
-    assert (
-        output.seq_data[target_seq_id].get_output_token_ids()
-        == prev_output_tokens + token_ids
-    )
+    assert output.seq_data[target_seq_id].get_prompt_token_ids(
+    ) == prompt_tokens
+    assert (output.seq_data[target_seq_id].get_output_token_ids() ==
+            prev_output_tokens + token_ids)
 
     assert len(output.block_tables) == 1
-    assert (
-        output.block_tables[target_seq_id]
-        == input_seq_group_metadata.block_tables[input_seq_id]
-    )
+    assert (output.block_tables[target_seq_id] ==
+            input_seq_group_metadata.block_tables[input_seq_id])

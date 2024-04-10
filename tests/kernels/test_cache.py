@@ -20,7 +20,9 @@ NUM_BLOCKS = [1024, 10000]
 
 NUM_MAPPINGS = [256]  # Arbitrary values for testing
 SEEDS = [0]
-CUDA_DEVICES = [f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)]
+CUDA_DEVICES = [
+    f"cuda:{i}" for i in range(1 if torch.cuda.device_count() == 1 else 2)
+]
 KV_CACHE_DTYPE = ["auto", "fp8_e5m2"]
 
 
@@ -97,7 +99,8 @@ def test_copy_blocks(
     # Compare the results.
     for key_cache, cloned_key_cache in zip(key_caches, cloned_key_caches):
         assert torch.allclose(key_cache, cloned_key_cache)
-    for value_cache, cloned_value_cache in zip(value_caches, cloned_value_caches):
+    for value_cache, cloned_value_cache in zip(value_caches,
+                                               cloned_value_caches):
         assert torch.allclose(value_cache, cloned_value_cache)
 
 
@@ -135,9 +138,9 @@ def test_reshape_and_cache(
     _, key, value = qkv.unbind(dim=1)
 
     # Create the KV caches.
-    key_caches, value_caches = kv_cache_factory(
-        num_blocks, block_size, 1, num_heads, head_size, dtype, None, seed, device
-    )
+    key_caches, value_caches = kv_cache_factory(num_blocks, block_size, 1,
+                                                num_heads, head_size, dtype,
+                                                None, seed, device)
     key_cache, value_cache = key_caches[0], value_caches[0]
 
     # Clone the KV caches.
@@ -145,9 +148,8 @@ def test_reshape_and_cache(
     cloned_value_cache = value_cache.clone()
 
     # Call the reshape_and_cache kernel.
-    cache_ops.reshape_and_cache(
-        key, value, key_cache, value_cache, slot_mapping, "auto"
-    )
+    cache_ops.reshape_and_cache(key, value, key_cache, value_cache,
+                                slot_mapping, "auto")
 
     # Run the reference implementation.
     reshaped_key = key.reshape(num_tokens, *key_cache[0, :, :, 0, :].shape)
@@ -207,25 +209,24 @@ def test_swap_blocks(
 
     # Create the KV caches on the first device.
     src_key_caches, src_value_caches = kv_cache_factory(
-        num_blocks, block_size, 1, num_heads, head_size, dtype, None, seed, src_device
-    )
+        num_blocks, block_size, 1, num_heads, head_size, dtype, None, seed,
+        src_device)
 
     # Create the KV caches on the second device.
     dist_key_caches, dist_value_caches = kv_cache_factory(
-        num_blocks, block_size, 1, num_heads, head_size, dtype, None, seed, dst_device
-    )
+        num_blocks, block_size, 1, num_heads, head_size, dtype, None, seed,
+        dst_device)
 
     src_key_caches_clone = src_key_caches[0].clone()
     src_value_caches_clone = src_value_caches[0].clone()
 
     # Call the swap_blocks kernel.
     cache_ops.swap_blocks(src_key_caches[0], dist_key_caches[0], block_mapping)
-    cache_ops.swap_blocks(src_value_caches[0], dist_value_caches[0], block_mapping)
+    cache_ops.swap_blocks(src_value_caches[0], dist_value_caches[0],
+                          block_mapping)
 
     for src, dst in block_mapping.items():
-        assert torch.allclose(
-            src_key_caches_clone[src].cpu(), dist_key_caches[0][dst].cpu()
-        )
-        assert torch.allclose(
-            src_value_caches_clone[src].cpu(), dist_value_caches[0][dst].cpu()
-        )
+        assert torch.allclose(src_key_caches_clone[src].cpu(),
+                              dist_key_caches[0][dst].cpu())
+        assert torch.allclose(src_value_caches_clone[src].cpu(),
+                              dist_value_caches[0][dst].cpu())

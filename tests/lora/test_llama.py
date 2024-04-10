@@ -18,13 +18,14 @@ def do_sample(llm, lora_path: str, lora_id: int):
         "[user] Write a SQL query to answer the question based on the table schema.\n\n context: CREATE TABLE table_name_60 (pick INTEGER, former_wnba_team VARCHAR)\n\n question: What pick was a player that previously played for the Minnesota Lynx? [/user] [assistant]",  # noqa: E501
         "[user] Write a SQL query to answer the question based on the table schema.\n\n context: CREATE TABLE table_28138035_4 (womens_doubles VARCHAR, mens_singles VARCHAR)\n\n question: Name the women's doubles for werner schlager [/user] [assistant]",  # noqa: E501
     ]
-    sampling_params = vllm.SamplingParams(
-        temperature=0, max_tokens=256, stop=["[/assistant]"]
-    )
+    sampling_params = vllm.SamplingParams(temperature=0,
+                                          max_tokens=256,
+                                          stop=["[/assistant]"])
     outputs = llm.generate(
         prompts,
         sampling_params,
-        lora_request=LoRARequest(str(lora_id), lora_id, lora_path) if lora_id else None,
+        lora_request=LoRARequest(str(lora_id), lora_id, lora_path)
+        if lora_id else None,
     )
     # Print the outputs.
     generated_texts = []
@@ -146,10 +147,10 @@ def test_llama_lora_warmup(sql_lora_files):
         return num_gpu_blocks_no_lora_warmup
 
     num_gpu_blocks_lora_warmup = ray.get(get_num_gpu_blocks_lora.remote())
-    num_gpu_blocks_no_lora_warmup = ray.get(get_num_gpu_blocks_no_lora.remote())
+    num_gpu_blocks_no_lora_warmup = ray.get(
+        get_num_gpu_blocks_no_lora.remote())
     assert num_gpu_blocks_lora_warmup < num_gpu_blocks_no_lora_warmup, (
         "The warmup with lora should be more "
         "conservative than without lora, therefore the number of "
         "memory blocks for the KV cache should be "
-        "less when using lora than when not using lora"
-    )
+        "less when using lora than when not using lora")

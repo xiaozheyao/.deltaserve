@@ -27,16 +27,18 @@ def create_test_prompts(
     return [
         (
             "A robot may not injure a human being",
-            SamplingParams(
-                temperature=0.0, logprobs=1, prompt_logprobs=1, max_tokens=128
-            ),
+            SamplingParams(temperature=0.0,
+                           logprobs=1,
+                           prompt_logprobs=1,
+                           max_tokens=128),
             None,
         ),
         (
             "To be or not to be,",
-            SamplingParams(
-                temperature=0.8, top_k=5, presence_penalty=0.2, max_tokens=128
-            ),
+            SamplingParams(temperature=0.8,
+                           top_k=5,
+                           presence_penalty=0.2,
+                           max_tokens=128),
             None,
         ),
         (
@@ -98,9 +100,10 @@ def process_requests(
     while test_prompts or engine.has_unfinished_requests():
         if test_prompts:
             prompt, sampling_params, lora_request = test_prompts.pop(0)
-            engine.add_request(
-                str(request_id), prompt, sampling_params, lora_request=lora_request
-            )
+            engine.add_request(str(request_id),
+                               prompt,
+                               sampling_params,
+                               lora_request=lora_request)
             request_id += 1
 
         request_outputs: List[RequestOutput] = engine.step()

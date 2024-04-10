@@ -74,31 +74,25 @@ def dist_init_torch_only():
 @pytest.fixture
 def dummy_model() -> nn.Module:
     model = nn.Sequential(
-        OrderedDict(
-            [
-                ("dense1", ColumnParallelLinear(764, 100)),
-                ("dense2", RowParallelLinear(100, 50)),
-                (
-                    "layer1",
-                    nn.Sequential(
-                        OrderedDict(
-                            [
-                                ("dense1", ColumnParallelLinear(100, 10)),
-                                ("dense2", RowParallelLinear(10, 50)),
-                            ]
-                        )
-                    ),
-                ),
-                ("act2", nn.ReLU()),
-                ("output", ColumnParallelLinear(50, 10)),
-                ("outact", nn.Sigmoid()),
-                # Special handling for lm_head & sampler
-                ("lm_head", ParallelLMHead(512, 10)),
-                ("logits_processor", LogitsProcessor(512)),
-                ("sampler", Sampler()),
-            ]
-        )
-    )
+        OrderedDict([
+            ("dense1", ColumnParallelLinear(764, 100)),
+            ("dense2", RowParallelLinear(100, 50)),
+            (
+                "layer1",
+                nn.Sequential(
+                    OrderedDict([
+                        ("dense1", ColumnParallelLinear(100, 10)),
+                        ("dense2", RowParallelLinear(10, 50)),
+                    ])),
+            ),
+            ("act2", nn.ReLU()),
+            ("output", ColumnParallelLinear(50, 10)),
+            ("outact", nn.Sigmoid()),
+            # Special handling for lm_head & sampler
+            ("lm_head", ParallelLMHead(512, 10)),
+            ("logits_processor", LogitsProcessor(512)),
+            ("sampler", Sampler()),
+        ]))
     model.config = MagicMock()
     return model
 
@@ -106,31 +100,25 @@ def dummy_model() -> nn.Module:
 @pytest.fixture
 def dummy_model_gate_up() -> nn.Module:
     model = nn.Sequential(
-        OrderedDict(
-            [
-                ("dense1", ColumnParallelLinear(764, 100)),
-                ("dense2", RowParallelLinear(100, 50)),
-                (
-                    "layer1",
-                    nn.Sequential(
-                        OrderedDict(
-                            [
-                                ("dense1", ColumnParallelLinear(100, 10)),
-                                ("dense2", RowParallelLinear(10, 50)),
-                            ]
-                        )
-                    ),
-                ),
-                ("act2", nn.ReLU()),
-                ("gate_up_proj", MergedColumnParallelLinear(50, [5, 5])),
-                ("outact", nn.Sigmoid()),
-                # Special handling for lm_head & sampler
-                ("lm_head", ParallelLMHead(512, 10)),
-                ("logits_processor", LogitsProcessor(512)),
-                ("sampler", Sampler()),
-            ]
-        )
-    )
+        OrderedDict([
+            ("dense1", ColumnParallelLinear(764, 100)),
+            ("dense2", RowParallelLinear(100, 50)),
+            (
+                "layer1",
+                nn.Sequential(
+                    OrderedDict([
+                        ("dense1", ColumnParallelLinear(100, 10)),
+                        ("dense2", RowParallelLinear(10, 50)),
+                    ])),
+            ),
+            ("act2", nn.ReLU()),
+            ("gate_up_proj", MergedColumnParallelLinear(50, [5, 5])),
+            ("outact", nn.Sigmoid()),
+            # Special handling for lm_head & sampler
+            ("lm_head", ParallelLMHead(512, 10)),
+            ("logits_processor", LogitsProcessor(512)),
+            ("sampler", Sampler()),
+        ]))
     model.config = MagicMock()
     return model
 
@@ -180,7 +168,7 @@ def llama_2_7b_engine_extra_embeddings() -> nn.Module:
 
 
 @pytest.fixture
-def llama_2_7b_model_extra_embeddings(llama_2_7b_engine_extra_embeddings) -> nn.Module:
-    yield (
-        llama_2_7b_engine_extra_embeddings.model_executor.driver_worker.model_runner.model
-    )
+def llama_2_7b_model_extra_embeddings(
+        llama_2_7b_engine_extra_embeddings) -> nn.Module:
+    yield (llama_2_7b_engine_extra_embeddings.model_executor.driver_worker.
+           model_runner.model)

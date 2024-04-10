@@ -31,7 +31,8 @@ class ExecuteModelData:
     blocks_to_copy: Dict[int, List[int]]
 
     def to_dict(self):
-        return dict((field.name, getattr(self, field.name)) for field in fields(self))
+        return dict(
+            (field.name, getattr(self, field.name)) for field in fields(self))
 
     @classmethod
     def from_dict(cls, d):
@@ -64,9 +65,10 @@ def create_execute_model_data(
     )
 
 
-def mock_worker(
-    cls=None, vocab_size: int = 30_000, max_model_len: int = 2048, rank: int = 0
-) -> MagicMock:
+def mock_worker(cls=None,
+                vocab_size: int = 30_000,
+                max_model_len: int = 2048,
+                rank: int = 0) -> MagicMock:
     if cls is None:
         cls = Worker
 
@@ -123,7 +125,8 @@ def create_worker(
         _,
     ) = engine_args.create_engine_configs()
 
-    distributed_init_method = get_distributed_init_method(get_ip(), get_open_port())
+    distributed_init_method = get_distributed_init_method(
+        get_ip(), get_open_port())
 
     worker = cls(
         model_config=model_config,
@@ -176,19 +179,16 @@ def create_seq_group_metadata_from_prompts(
             request_id=str(i),
             is_prompt=len(cont_token_ids) == 0,
             seq_data={
-                i: SequenceData(
+                i:
+                SequenceData(
                     prompt_token_ids=prompt_token_ids[:],
                     output_token_ids=cont_token_ids[:],
                 ),
             },
-            sampling_params=SamplingParams(
-                temperature=0.0,
-            ),
+            sampling_params=SamplingParams(temperature=0.0, ),
             block_tables={i: block_allocations[i][:]},
-        )
-        for i, (prompt_token_ids, cont_token_ids) in enumerate(
-            zip(prompts, continuations)
-        )
+        ) for i, (prompt_token_ids,
+                  cont_token_ids) in enumerate(zip(prompts, continuations))
     ]
 
 
@@ -197,14 +197,14 @@ def assert_logprobs_dict_allclose(
     expected_logprobs: List[Dict[int, Logprob]],
 ) -> None:
     for single_step_actual_logprobs, single_step_expected_logprobs in zip(
-        actual_logprobs, expected_logprobs
-    ):
+            actual_logprobs, expected_logprobs):
         assert set(single_step_actual_logprobs.keys()) == set(
-            single_step_expected_logprobs.keys()
-        )
+            single_step_expected_logprobs.keys())
         for token_id in single_step_actual_logprobs:
-            actual = torch.tensor(single_step_actual_logprobs[token_id].logprob)
-            expected = torch.tensor(single_step_expected_logprobs[token_id].logprob)
+            actual = torch.tensor(
+                single_step_actual_logprobs[token_id].logprob)
+            expected = torch.tensor(
+                single_step_expected_logprobs[token_id].logprob)
             assert torch.allclose(actual, expected)
 
 
@@ -231,13 +231,11 @@ def create_sampler_output_list(
                         )
                     ],
                     prompt_logprobs=None,
-                )
-                for seq_index, token_id in enumerate(token_ids_by_step[step])
+                ) for seq_index, token_id in enumerate(token_ids_by_step[step])
             ],
             sampled_token_probs=probs[step],
             sampled_token_ids=token_ids[step],
-        )
-        for step in range(num_steps)
+        ) for step in range(num_steps)
     ]
 
 
@@ -264,10 +262,9 @@ def create_batch(
         prompt_lens = prompt_len
 
     prompts = [[next(iterator) for _ in range(p_len)] for p_len in prompt_lens]
-    prev_output_tokens = [
-        [next(iterator) for _ in range(prev_output_token_len)]
-        for _ in range(batch_size)
-    ]
+    prev_output_tokens = [[
+        next(iterator) for _ in range(prev_output_token_len)
+    ] for _ in range(batch_size)]
     final_seq_lens = [
         len(prompt) + len(prev_output_token) + k + 1
         for prompt, prev_output_token in zip(prompts, prev_output_tokens)
@@ -281,6 +278,5 @@ def create_batch(
             final_seq_lens,
             prev_output_tokens,
             seq_ids,
-        ),
-    )
+        ), )
     return execute_model_data, prompts, prev_output_tokens

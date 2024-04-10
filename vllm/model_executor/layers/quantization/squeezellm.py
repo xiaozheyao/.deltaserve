@@ -24,8 +24,7 @@ class SqueezeLLMConfig(QuantizationConfig):
         if self.weight_bits != 4:
             raise ValueError(
                 "Currently, only 4-bit weight quantization is supported for "
-                f"SqueezeLLM, but got {self.weight_bits} bits."
-            )
+                f"SqueezeLLM, but got {self.weight_bits} bits.")
 
         self.pack_factor = 32 // self.weight_bits
 
@@ -79,8 +78,7 @@ class SqueezeLLMLinearMethod(LinearMethodBase):
             raise ValueError(
                 "The input size is not aligned with the quantized "
                 "weight shape. This can be caused by too large "
-                "tensor parallel size."
-            )
+                "tensor parallel size.")
         qweight = Parameter(
             torch.empty(
                 input_size_per_partition // self.quant_config.pack_factor,
@@ -125,7 +123,7 @@ class SqueezeLLMLinearMethod(LinearMethodBase):
     ) -> torch.Tensor:
         qweight = weights["qweight"]
         lookup_table = weights["lookup_table"]
-        out_shape = x.shape[:-1] + (qweight.shape[-1],)
+        out_shape = x.shape[:-1] + (qweight.shape[-1], )
         reshaped_x = x.reshape(-1, x.shape[-1])
         if is_hip():
             out_f = torch.zeros(out_shape, dtype=torch.float)

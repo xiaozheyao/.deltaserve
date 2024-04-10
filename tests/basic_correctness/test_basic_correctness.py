@@ -38,6 +38,5 @@ def test_models(
         assert (
             hf_output_str == vllm_output_str
         ), f"Test{i}:\nHF: {hf_output_str!r}\nvLLM: {vllm_output_str!r}"
-        assert (
-            hf_output_ids == vllm_output_ids
-        ), f"Test{i}:\nHF: {hf_output_ids}\nvLLM: {vllm_output_ids}"
+        assert (hf_output_ids == vllm_output_ids
+                ), f"Test{i}:\nHF: {hf_output_ids}\nvLLM: {vllm_output_ids}"

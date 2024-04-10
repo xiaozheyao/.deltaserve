@@ -27,9 +27,8 @@ TOKENIZERS = [
 ]
 
 
-def _run_incremental_decode(
-    tokenizer, all_input_ids, skip_special_tokens: bool, starting_index: int
-):
+def _run_incremental_decode(tokenizer, all_input_ids,
+                            skip_special_tokens: bool, starting_index: int):
     decoded_text = ""
     offset = 0
     token_offset = 0
@@ -37,7 +36,7 @@ def _run_incremental_decode(
     for i in range(starting_index, len(all_input_ids)):
         new_tokens, text, offset, token_offset = detokenize_incrementally(
             tokenizer,
-            all_input_ids[: i + 1],
+            all_input_ids[:i + 1],
             prev_tokens,
             offset,
             token_offset,
@@ -55,18 +54,18 @@ def _run_incremental_decode(
 @pytest.mark.parametrize("with_prompt", [True, False])
 @pytest.mark.parametrize("tokenizer_id", TOKENIZERS)
 @pytest.mark.parametrize("skip_special_tokens", (True, False))
-def test_decode_streaming(tokenizer_id, truth, with_prompt, skip_special_tokens):
+def test_decode_streaming(tokenizer_id, truth, with_prompt,
+                          skip_special_tokens):
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_id)
     if with_prompt:
         truth_tokens = tokenizer(truth, add_special_tokens=False)["input_ids"]
-        prompt_input_ids = truth_tokens[: len(truth) // 2]
-        generated_input_ids = truth_tokens[len(truth) // 2 :]
+        prompt_input_ids = truth_tokens[:len(truth) // 2]
+        generated_input_ids = truth_tokens[len(truth) // 2:]
         all_input_ids = prompt_input_ids + generated_input_ids
         starting_index = len(prompt_input_ids)
-        prompt = tokenizer.decode(
-            prompt_input_ids, skip_special_tokens=skip_special_tokens
-        )
-        generated = truth[len(prompt) :]
+        prompt = tokenizer.decode(prompt_input_ids,
+                                  skip_special_tokens=skip_special_tokens)
+        generated = truth[len(prompt):]
     else:
         generated = truth
         starting_index = 0
@@ -108,9 +107,8 @@ def detokenizer(tokenizer_name: str) -> Detokenizer:
 
 
 @pytest.fixture(name="complete_sequence_token_ids")
-def create_complete_sequence_token_ids(
-    complete_sequence: str, tokenizer_name: str
-) -> List[int]:
+def create_complete_sequence_token_ids(complete_sequence: str,
+                                       tokenizer_name: str) -> List[int]:
     tokenizer = AutoTokenizer.from_pretrained(tokenizer_name)
     complete_sequence_token_ids = tokenizer(complete_sequence)["input_ids"]
     return complete_sequence_token_ids
@@ -127,12 +125,11 @@ def create_sequence(prompt_token_ids=None):
 
 
 def create_dummy_logprobs(
-    complete_sequence_token_ids: List[int],
-) -> List[Dict[int, Logprob]]:
-    return [
-        {token_id: Logprob(logprob=0.0), token_id + 1: Logprob(logprob=0.1)}
-        for token_id in complete_sequence_token_ids
-    ]
+    complete_sequence_token_ids: List[int], ) -> List[Dict[int, Logprob]]:
+    return [{
+        token_id: Logprob(logprob=0.0),
+        token_id + 1: Logprob(logprob=0.1)
+    } for token_id in complete_sequence_token_ids]
 
 
 @pytest.mark.parametrize("complete_sequence", TRUTH)
@@ -145,24 +142,22 @@ def test_decode_sequence_logprobs(
     skip_special_tokens: bool,
 ):
     """Verify Detokenizer decodes logprobs correctly."""
-    sampling_params = SamplingParams(
-        skip_special_tokens=skip_special_tokens, logprobs=2
-    )
+    sampling_params = SamplingParams(skip_special_tokens=skip_special_tokens,
+                                     logprobs=2)
 
     # Run sequentially.
     seq = create_sequence()
     dummy_logprobs = create_dummy_logprobs(complete_sequence_token_ids)
     sequential_logprobs_text_chosen_token = []
     sequential_logprobs_text_other_token = []
-    for new_token, logprobs in zip(complete_sequence_token_ids, dummy_logprobs):
+    for new_token, logprobs in zip(complete_sequence_token_ids,
+                                   dummy_logprobs):
         seq.append_token_id(new_token, logprobs)
         detokenizer.decode_sequence_inplace(seq, sampling_params)
         sequential_logprobs_text_chosen_token.append(
-            seq.output_logprobs[-1][new_token].decoded_token
-        )
+            seq.output_logprobs[-1][new_token].decoded_token)
         sequential_logprobs_text_other_token.append(
-            seq.output_logprobs[-1][new_token + 1].decoded_token
-        )
+            seq.output_logprobs[-1][new_token + 1].decoded_token)
     sequential_result = seq.output_text
 
     assert sequential_result == "".join(sequential_logprobs_text_chosen_token)
@@ -185,15 +180,15 @@ def test_decode_prompt_logprobs(
     skip_special_tokens: bool,
 ):
     """Verify Detokenizer decodes prompt logprobs correctly."""
-    sampling_params = SamplingParams(
-        skip_special_tokens=skip_special_tokens, prompt_logprobs=1
-    )
+    sampling_params = SamplingParams(skip_special_tokens=skip_special_tokens,
+                                     prompt_logprobs=1)
 
     # Run sequentially.
     seq = create_sequence(complete_sequence_token_ids)
-    seq_group = SequenceGroup(
-        request_id="1", seqs=[seq], sampling_params=sampling_params, arrival_time=0.0
-    )
+    seq_group = SequenceGroup(request_id="1",
+                              seqs=[seq],
+                              sampling_params=sampling_params,
+                              arrival_time=0.0)
     dummy_logprobs = create_dummy_logprobs(complete_sequence_token_ids)
     detokenizer.decode_prompt_logprobs_inplace(seq_group, dummy_logprobs)
     decoded_prompt_logprobs = dummy_logprobs
@@ -202,19 +197,11 @@ def test_decode_prompt_logprobs(
         # Text for logprobs for the chosen token should be the same as the
         # prompt text. Note that this will only be true if we skip
         # special tokens.
-        assert complete_sequence == "".join(
-            [
-                logprobs[token_id].decoded_token
-                for token_id, logprobs in zip(
-                    complete_sequence_token_ids, decoded_prompt_logprobs
-                )
-            ]
-        )
-        assert complete_sequence != "".join(
-            [
-                logprobs[token_id + 1].decoded_token
-                for token_id, logprobs in zip(
-                    complete_sequence_token_ids, decoded_prompt_logprobs
-                )
-            ]
-        )
+        assert complete_sequence == "".join([
+            logprobs[token_id].decoded_token for token_id, logprobs in zip(
+                complete_sequence_token_ids, decoded_prompt_logprobs)
+        ])
+        assert complete_sequence != "".join([
+            logprobs[token_id + 1].decoded_token for token_id, logprobs in zip(
+                complete_sequence_token_ids, decoded_prompt_logprobs)
+        ])

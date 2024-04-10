@@ -7,7 +7,8 @@ from vllm.model_executor.layers.ops.rand import seeded_uniform
 from vllm.model_executor.utils import set_random_seed
 
 
-@pytest.mark.parametrize("dtype", [torch.float32, torch.float16, torch.bfloat16])
+@pytest.mark.parametrize("dtype",
+                         [torch.float32, torch.float16, torch.bfloat16])
 @pytest.mark.parametrize("use_3d", [True, False])
 def test_seeded_uniform(dtype: torch.dtype, use_3d: bool):
     device = "cuda"
@@ -23,7 +24,7 @@ def test_seeded_uniform(dtype: torch.dtype, use_3d: bool):
         seeds = torch.randint(
             torch.iinfo(torch.long).min,
             torch.iinfo(torch.long).max,
-            (rows,),
+            (rows, ),
             device=device,
         )
 
@@ -43,7 +44,7 @@ def test_seeded_uniform(dtype: torch.dtype, use_3d: bool):
         out_with_tensor = seeded_uniform(
             *dims,
             out=torch.full(
-                (*dims,),
+                (*dims, ),
                 -1,
                 dtype=dtype,
                 device=device,

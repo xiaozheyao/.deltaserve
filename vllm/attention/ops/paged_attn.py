@@ -36,6 +36,7 @@ class PagedAttentionMetadata:
 
 
 class PagedAttention:
+
     @staticmethod
     def get_supported_head_sizes() -> List[int]:
         return [64, 80, 96, 112, 128, 256]
@@ -59,7 +60,8 @@ class PagedAttention:
         num_blocks = kv_cache.shape[1]
 
         key_cache = kv_cache[0]
-        key_cache = key_cache.view(num_blocks, num_kv_heads, head_size // x, -1, x)
+        key_cache = key_cache.view(num_blocks, num_kv_heads, head_size // x,
+                                   -1, x)
         value_cache = kv_cache[1]
         value_cache = value_cache.view(num_blocks, num_kv_heads, head_size, -1)
         return key_cache, value_cache
@@ -99,7 +101,8 @@ class PagedAttention:
 
         block_size = value_cache.shape[3]
         num_seqs, num_heads, head_size = query.shape
-        max_num_partitions = (max_context_len + _PARTITION_SIZE - 1) // _PARTITION_SIZE
+        max_num_partitions = (max_context_len + _PARTITION_SIZE -
+                              1) // _PARTITION_SIZE
         # NOTE(woosuk): We use a simple heuristic to decide whether to use
         # PagedAttention V1 or V2. If the number of partitions is 1, we use
         # V1 to avoid the overhead of reduction. Also, if the number of
@@ -107,9 +110,8 @@ class PagedAttention:
         # to parallelize.
         # TODO(woosuk): Tune this heuristic.
         # For context len > 8192, use V2 kernel to avoid shared memory shortage.
-        use_v1 = max_context_len <= 8192 and (
-            max_num_partitions == 1 or num_seqs * num_heads > 512
-        )
+        use_v1 = max_context_len <= 8192 and (max_num_partitions == 1
+                                              or num_seqs * num_heads > 512)
         if use_v1:
             # Run PagedAttention V1.
             ops.paged_attention_v1(

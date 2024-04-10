@@ -15,8 +15,7 @@ def get_attn_backend(dtype: torch.dtype) -> AttentionBackend:
     if _can_use_flash_attn(dtype):
         logger.info("Using FlashAttention backend.")
         from vllm.attention.backends.flash_attn import (  # noqa: F401
-            FlashAttentionBackend,
-        )
+            FlashAttentionBackend, )
 
         return FlashAttentionBackend
     else:
@@ -34,13 +33,12 @@ def _can_use_flash_attn(dtype: torch.dtype) -> bool:
 
     if torch.cuda.get_device_capability()[0] < 8:
         # Volta and Turing NVIDIA GPUs.
-        logger.info("Cannot use FlashAttention backend for Volta and Turing " "GPUs.")
+        logger.info("Cannot use FlashAttention backend for Volta and Turing "
+                    "GPUs.")
         return False
     if dtype not in (torch.float16, torch.bfloat16):
-        logger.info(
-            "Cannot use FlashAttention backend for dtype other than "
-            "torch.float16 or torch.bfloat16."
-        )
+        logger.info("Cannot use FlashAttention backend for dtype other than "
+                    "torch.float16 or torch.bfloat16.")
         return False
 
     try:

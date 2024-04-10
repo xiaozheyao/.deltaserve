@@ -18,6 +18,7 @@ sampling_params = SamplingParams(temperature=0.8, top_p=0.95)
 
 # Create a class to do batch inference.
 class LLMPredictor:
+
     def __init__(self):
         # Create an LLM.
         self.llm = LLM(model="meta-llama/Llama-2-7b-chat-hf")

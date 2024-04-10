@@ -46,10 +46,9 @@ def main(args):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Benchmark the performance with or without automatic "
-        "prefix caching."
-    )
-    parser.add_argument(
-        "--enable-prefix-caching", action="store_true", help="enable prefix caching"
-    )
+        "prefix caching.")
+    parser.add_argument("--enable-prefix-caching",
+                        action="store_true",
+                        help="enable prefix caching")
     args = parser.parse_args()
     main(args)

@@ -5,6 +5,7 @@ from vllm.sequence import SequenceGroup
 
 
 class Policy:
+
     def get_priority(
         self,
         now: float,
@@ -22,11 +23,11 @@ class Policy:
                 seq_groups,
                 key=lambda seq_group: self.get_priority(now, seq_group),
                 reverse=True,
-            )
-        )
+            ))
 
 
 class FCFS(Policy):
+
     def get_priority(
         self,
         now: float,

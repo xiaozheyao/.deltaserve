@@ -6,6 +6,7 @@ logger = init_logger(__name__)
 
 
 class QuantLinear(nn.Module):
+
     def __init__(
         self,
         bits: int,
@@ -29,17 +30,19 @@ class QuantLinear(nn.Module):
         self.bias = bias
         if self.bits == 4:
             self.padding = -outfeatures % 32
-        self.wf = torch.tensor(list(range(0, 32, bits)), dtype=torch.int32).unsqueeze(0)
+        self.wf = torch.tensor(list(range(0, 32, bits)),
+                               dtype=torch.int32).unsqueeze(0)
 
     def forward(self, x):
-        out_shape = x.shape[:-1] + (self.outfeatures,)
+        out_shape = x.shape[:-1] + (self.outfeatures, )
         x = x.reshape(-1, x.shape[-1])
         if self.wf.device != self.qzeros.device:
             self.wf = self.wf.to(self.qzeros.device)
 
         if self.bits in [2, 4, 8]:
             zeros = torch.bitwise_right_shift(
-                torch.unsqueeze(self.qzeros, 2).expand(-1, -1, 32 // self.bits),
+                torch.unsqueeze(self.qzeros, 2).expand(-1, -1,
+                                                       32 // self.bits),
                 self.wf.unsqueeze(0),
             ).to(torch.int16 if self.bits == 8 else torch.int8)
             torch.bitwise_and(zeros, (2**self.bits) - 1, out=zeros)
@@ -48,7 +51,8 @@ class QuantLinear(nn.Module):
             zeros = zeros.reshape(self.scales.shape)
 
             weight = torch.bitwise_right_shift(
-                torch.unsqueeze(self.qweight, 1).expand(-1, 32 // self.bits, -1),
+                torch.unsqueeze(self.qweight,
+                                1).expand(-1, 32 // self.bits, -1),
                 self.wf.unsqueeze(-1),
             ).to(torch.int16 if self.bits == 8 else torch.int8)
             torch.bitwise_and(weight, (2**self.bits) - 1, out=weight)
@@ -56,23 +60,22 @@ class QuantLinear(nn.Module):
         elif self.bits == 3:
             raise NotImplementedError("3 bits are not supported.")
 
-        weight = weight.reshape(weight.shape[0] * weight.shape[1], weight.shape[2])
+        weight = weight.reshape(weight.shape[0] * weight.shape[1],
+                                weight.shape[2])
         num_itr = self.g_idx.shape[0] // x.shape[-1]
         if num_itr == 1:
             weights = self.scales[self.g_idx.long()] * (
-                weight - zeros[self.g_idx.long()]
-            )
+                weight - zeros[self.g_idx.long()])
         else:
             num_dim = self.g_idx.shape[0] // num_itr
             weights = []
             for i in range(num_itr):
-                scale_i = self.scales[:, i * num_dim : (i + 1) * num_dim]
-                weight_i = weight[:, i * num_dim : (i + 1) * num_dim]
-                zeros_i = zeros[:, i * num_dim : (i + 1) * num_dim]
-                g_idx_i = self.g_idx[i * num_dim : (i + 1) * num_dim]
-                weights.append(
-                    scale_i[g_idx_i.long()] * (weight_i - zeros_i[g_idx_i.long()])
-                )
+                scale_i = self.scales[:, i * num_dim:(i + 1) * num_dim]
+                weight_i = weight[:, i * num_dim:(i + 1) * num_dim]
+                zeros_i = zeros[:, i * num_dim:(i + 1) * num_dim]
+                g_idx_i = self.g_idx[i * num_dim:(i + 1) * num_dim]
+                weights.append(scale_i[g_idx_i.long()] *
+                               (weight_i - zeros_i[g_idx_i.long()]))
             weights = torch.cat(weights, dim=1)
         out = torch.matmul(x.half(), weights)
         out = out.reshape(out_shape)

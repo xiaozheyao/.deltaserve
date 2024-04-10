@@ -26,9 +26,8 @@ class NeuronWorker:
         self.scheduler_config = scheduler_config
         self.device_config = device_config
 
-        self.model_runner = NeuronModelRunner(
-            model_config, parallel_config, scheduler_config, device_config
-        )
+        self.model_runner = NeuronModelRunner(model_config, parallel_config,
+                                              scheduler_config, device_config)
 
     def init_device(self) -> None:
         # Set random seed.

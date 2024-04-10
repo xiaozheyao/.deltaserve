@@ -33,8 +33,7 @@ def test_get_prompt_logprobs(
         temperature=0.0,
     )
     vllm_results = vllm_model.model.generate(
-        example_prompts, sampling_params=vllm_sampling_params
-    )
+        example_prompts, sampling_params=vllm_sampling_params)
 
     # Test whether logprobs are included in the results.
     for result in vllm_results:
@@ -47,14 +46,13 @@ def test_get_prompt_logprobs(
         output_string_from_most_likely_tokens = []
         for top_logprobs in result.outputs[0].logprobs:
             top_logprob = next(iter(top_logprobs.values()))
-            output_string_from_most_likely_tokens.append(top_logprob.decoded_token)
+            output_string_from_most_likely_tokens.append(
+                top_logprob.decoded_token)
         output_string_from_most_likely_tokens = "".join(
-            output_string_from_most_likely_tokens
-        )
+            output_string_from_most_likely_tokens)
         assert output_text == output_string_from_most_likely_tokens, (
             "The output text from the top logprob for each token position "
-            "should be the same as the output text in the result."
-        )
+            "should be the same as the output text in the result.")
 
     # Test whether prompt logprobs are consistent with HF
     for vllm_result, hf_logprob in zip(vllm_results, hf_logprobs):
@@ -72,13 +70,13 @@ def test_get_prompt_logprobs(
         for i, top_logprobs in enumerate(vllm_sample_logprobs):
             for token_id, sample_logprob in top_logprobs.items():
                 logprob = sample_logprob.logprob
-                torch.testing.assert_close(
-                    logprob, hf_logprob[i][-1][token_id].item(), atol=1e-2, rtol=1e-2
-                )
+                torch.testing.assert_close(logprob,
+                                           hf_logprob[i][-1][token_id].item(),
+                                           atol=1e-2,
+                                           rtol=1e-2)
                 assert isinstance(sample_logprob.decoded_token, str), (
                     "The token should be decoded by the time it is returned "
-                    " to the user."
-                )
+                    " to the user.")
 
 
 def test_max_logprobs():

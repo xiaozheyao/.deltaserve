@@ -38,8 +38,7 @@ from vllm.model_executor.layers.vocab_parallel_embedding import (
     VocabParallelEmbedding,
 )
 from vllm.model_executor.parallel_utils.parallel_state import (
-    get_tensor_model_parallel_world_size,
-)
+    get_tensor_model_parallel_world_size, )
 from vllm.model_executor.sampling_metadata import SamplingMetadata
 from vllm.model_executor.weight_utils import (
     default_weight_loader,
@@ -49,6 +48,7 @@ from vllm.sequence import SamplerOutput
 
 
 class GPTJAttention(nn.Module):
+
     def __init__(
         self,
         config: GPTJConfig,
@@ -81,7 +81,8 @@ class GPTJAttention(nn.Module):
         assert getattr(config, "rotary", True)
         assert config.rotary_dim % 2 == 0
         rope_theta = getattr(config, "rope_theta", 10000)
-        max_position_embeddings = getattr(config, "max_position_embeddings", 8192)
+        max_position_embeddings = getattr(config, "max_position_embeddings",
+                                          8192)
         self.rotary_emb = get_rope(
             self.head_size,
             rotary_dim=config.rotary_dim,
@@ -107,6 +108,7 @@ class GPTJAttention(nn.Module):
 
 
 class GPTJMLP(nn.Module):
+
     def __init__(
         self,
         intermediate_size: int,
@@ -126,9 +128,8 @@ class GPTJMLP(nn.Module):
             linear_method=linear_method,
         )
         quant_config = getattr(linear_method, "quant_config", None)
-        self.act = get_act_fn(
-            config.activation_function, quant_config, intermediate_size
-        )
+        self.act = get_act_fn(config.activation_function, quant_config,
+                              intermediate_size)
 
     def forward(self, hidden_states: torch.Tensor) -> torch.Tensor:
         hidden_states, _ = self.fc_in(hidden_states)
@@ -138,6 +139,7 @@ class GPTJMLP(nn.Module):
 
 
 class GPTJBlock(nn.Module):
+
     def __init__(
         self,
         config: GPTJConfig,
@@ -170,6 +172,7 @@ class GPTJBlock(nn.Module):
 
 
 class GPTJModel(nn.Module):
+
     def __init__(
         self,
         config: GPTJConfig,
@@ -183,8 +186,7 @@ class GPTJModel(nn.Module):
             self.embed_dim,
         )
         self.h = nn.ModuleList(
-            [GPTJBlock(config, linear_method) for _ in range(config.n_layer)]
-        )
+            [GPTJBlock(config, linear_method) for _ in range(config.n_layer)])
         self.ln_f = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_epsilon)
 
     def forward(
@@ -208,6 +210,7 @@ class GPTJModel(nn.Module):
 
 
 class GPTJForCausalLM(nn.Module):
+
     def __init__(
         self,
         config: GPTJConfig,
@@ -233,15 +236,14 @@ class GPTJForCausalLM(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.transformer(input_ids, positions, kv_caches, attn_metadata)
+        hidden_states = self.transformer(input_ids, positions, kv_caches,
+                                         attn_metadata)
         return hidden_states
 
-    def compute_logits(
-        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
-    ) -> torch.Tensor:
-        logits = self.logits_processor(
-            self.lm_head.weight, hidden_states, sampling_metadata, self.lm_head.bias
-        )
+    def compute_logits(self, hidden_states: torch.Tensor,
+                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
+        logits = self.logits_processor(self.lm_head.weight, hidden_states,
+                                       sampling_metadata, self.lm_head.bias)
         return logits
 
     def sample(
@@ -269,8 +271,7 @@ class GPTJForCausalLM(nn.Module):
         ]
         params_dict = dict(self.named_parameters())
         for name, loaded_weight in hf_model_weights_iterator(
-            model_name_or_path, cache_dir, load_format, revision
-        ):
+                model_name_or_path, cache_dir, load_format, revision):
             if "attn.bias" in name or "attn.masked_bias" in name:
                 continue
             for param_name, weight_name, shard_id in stacked_params_mapping:
@@ -289,5 +290,6 @@ class GPTJForCausalLM(nn.Module):
                 if name.endswith(".bias") and name not in params_dict:
                     continue
                 param = params_dict[name]
-                weight_loader = getattr(param, "weight_loader", default_weight_loader)
+                weight_loader = getattr(param, "weight_loader",
+                                        default_weight_loader)
                 weight_loader(param, loaded_weight)

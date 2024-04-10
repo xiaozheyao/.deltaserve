@@ -21,7 +21,8 @@ except ImportError as e:
     cupy = e
     nccl = None
 
-    class NCCLBackend: ...
+    class NCCLBackend:
+        ...
 
 
 _OP_MAPPING = {
@@ -46,8 +47,7 @@ class NCCLBackendWithBFloat16(NCCLBackend):
     def barrier(self) -> None:
         raise RuntimeError(
             "Currently, CuPy NCCL barrier is not supported since the TCP "
-            "store is immediately stopped after the initialization."
-        )
+            "store is immediately stopped after the initialization.")
 
 
 _NCCL_BACKEND = None
@@ -62,12 +62,14 @@ def is_initialized() -> bool:
 @contextlib.contextmanager
 def set_cupy_stream(stream: torch.cuda.Stream):
     """Set the cuda stream for communication"""
-    cupy_stream = cupy.cuda.ExternalStream(stream.cuda_stream, stream.device_index)
+    cupy_stream = cupy.cuda.ExternalStream(stream.cuda_stream,
+                                           stream.device_index)
     with cupy_stream:
         yield
 
 
-def init_process_group(world_size: int, rank: int, host: str, port: int) -> None:
+def init_process_group(world_size: int, rank: int, host: str,
+                       port: int) -> None:
     """Initializes the CuPy NCCL backend.
 
     # TODO: handle NCCL timeouts.
@@ -76,16 +78,14 @@ def init_process_group(world_size: int, rank: int, host: str, port: int) -> None
 
     if isinstance(cupy, Exception):
         raise ImportError(
-            "NCCLBackend is not available. Please install cupy."
-        ) from cupy
+            "NCCLBackend is not available. Please install cupy.") from cupy
 
     # TODO(woosuk): Create TP and PP process groups for CuPy.
     global _NCCL_BACKEND
     global _WORLD_SIZE
     assert world_size > 0, f"{world_size=} should be a positive integer"
-    assert (
-        0 <= rank < world_size
-    ), f"{rank=} should be a integer between [0, {world_size})"
+    assert (0 <= rank < world_size
+            ), f"{rank=} should be a integer between [0, {world_size})"
 
     cupy.cuda.runtime.setDevice(torch.cuda.current_device())
     _NCCL_BACKEND = NCCLBackendWithBFloat16(world_size, rank, host, port)
@@ -109,9 +109,9 @@ def all_reduce(input_: torch.Tensor, op=ReduceOp.SUM) -> None:
         input_ = input_.view(torch.float16)
     cupy_input = cupy.asarray(input_)
     cupy_input._torch_dtype = torch_dtype  # pylint: disable=protected-access
-    _NCCL_BACKEND.all_reduce(
-        in_array=cupy_input, out_array=cupy_input, op=_OP_MAPPING[op]
-    )
+    _NCCL_BACKEND.all_reduce(in_array=cupy_input,
+                             out_array=cupy_input,
+                             op=_OP_MAPPING[op])
 
 
 def destroy_process_group() -> None:

@@ -38,33 +38,40 @@ class AbstractWorkerLoRAManager(ABC):
 
     @property
     @abstractmethod
-    def is_enabled(self) -> bool: ...
+    def is_enabled(self) -> bool:
+        ...
 
     @abstractmethod
     def create_lora_manager(
         self,
         model: torch.nn.Module,
-    ) -> Any: ...
+    ) -> Any:
+        ...
 
     @abstractmethod
-    def set_active_loras(
-        self, lora_requests: List[LoRARequest], lora_mapping: LoRAMapping
-    ) -> None: ...
+    def set_active_loras(self, lora_requests: List[LoRARequest],
+                         lora_mapping: LoRAMapping) -> None:
+        ...
 
     @abstractmethod
-    def add_lora(self, lora_request: LoRARequest) -> bool: ...
+    def add_lora(self, lora_request: LoRARequest) -> bool:
+        ...
 
     @abstractmethod
-    def add_dummy_lora(self, lora_request: LoRARequest, rank: int) -> bool: ...
+    def add_dummy_lora(self, lora_request: LoRARequest, rank: int) -> bool:
+        ...
 
     @abstractmethod
-    def remove_lora(self, lora_id: int) -> bool: ...
+    def remove_lora(self, lora_id: int) -> bool:
+        ...
 
     @abstractmethod
-    def remove_all_loras(self) -> bool: ...
+    def remove_all_loras(self) -> bool:
+        ...
 
     @abstractmethod
-    def list_loras(self) -> Set[int]: ...
+    def list_loras(self) -> Set[int]:
+        ...
 
 
 class WorkerLoRAManager(AbstractWorkerLoRAManager):
@@ -90,9 +97,8 @@ class WorkerLoRAManager(AbstractWorkerLoRAManager):
         self._lora_model_cls = lora_model_cls
         self.embedding_modules = embedding_modules
         self.embedding_padding_modules = embedding_padding_modules
-        super().__init__(
-            max_num_seqs, max_num_batched_tokens, vocab_size, lora_config, device
-        )
+        super().__init__(max_num_seqs, max_num_batched_tokens, vocab_size,
+                         lora_config, device)
 
     @property
     def is_enabled(self) -> bool:
@@ -113,9 +119,8 @@ class WorkerLoRAManager(AbstractWorkerLoRAManager):
         self._lora_manager: LoRAModelManager = lora_manager
         return lora_manager.model
 
-    def set_active_loras(
-        self, lora_requests: List[LoRARequest], lora_mapping: LoRAMapping
-    ) -> None:
+    def set_active_loras(self, lora_requests: List[LoRARequest],
+                         lora_mapping: LoRAMapping) -> None:
         self._apply_loras(lora_requests)
         self._lora_manager.set_lora_mapping(lora_mapping)
 
@@ -123,15 +128,13 @@ class WorkerLoRAManager(AbstractWorkerLoRAManager):
         loras_that_exist = self.list_loras()
         loras_map = {
             lora_request.lora_int_id: lora_request
-            for lora_request in lora_requests
-            if lora_request
+            for lora_request in lora_requests if lora_request
         }
         if len(loras_map) > self._lora_manager.lora_slots:
             raise RuntimeError(
                 f"Number of requested LoRAs ({len(loras_map)}) is greater "
                 "than the number of GPU LoRA slots "
-                f"({self._lora_manager.lora_slots})."
-            )
+                f"({self._lora_manager.lora_slots}).")
         new_loras = set(loras_map)
         loras_to_add = new_loras - loras_that_exist
         loras_to_remove = loras_that_exist - new_loras
@@ -148,36 +151,30 @@ class WorkerLoRAManager(AbstractWorkerLoRAManager):
                 lora_model_id=lora_request.lora_int_id,
                 device="cpu",
                 dtype=self.lora_config.lora_dtype,
-                target_embedding_padding=self.vocab_size
-                + self.lora_config.lora_extra_vocab_size,
+                target_embedding_padding=self.vocab_size +
+                self.lora_config.lora_extra_vocab_size,
                 embedding_modules=self.embedding_modules,
                 embedding_padding_modules=self.embedding_padding_modules,
             )
         except Exception as e:
             raise RuntimeError(
-                f"Loading lora {lora_request.lora_local_path} failed"
-            ) from e
+                f"Loading lora {lora_request.lora_local_path} failed") from e
         if lora.rank > self.lora_config.max_lora_rank:
             raise ValueError(
                 f"LoRA rank {lora.rank} is greater than max_lora_rank "
-                f"{self.lora_config.max_lora_rank}."
-            )
+                f"{self.lora_config.max_lora_rank}.")
         if lora.extra_vocab_size > self.lora_config.lora_extra_vocab_size:
-            raise ValueError(
-                f"LoRA added vocab size {lora.extra_vocab_size} "
-                f"is greater than lora_extra_vocab_size "
-                f"{self.lora_config.lora_extra_vocab_size}."
-            )
+            raise ValueError(f"LoRA added vocab size {lora.extra_vocab_size} "
+                             f"is greater than lora_extra_vocab_size "
+                             f"{self.lora_config.lora_extra_vocab_size}.")
         return lora
 
     def add_dummy_lora(self, lora_request: LoRARequest, rank: int) -> bool:
         if lora_request.lora_int_id in self.list_loras():
             return False
         return self._lora_manager.add_lora(
-            self._lora_manager.create_dummy_lora(
-                lora_request.lora_int_id, rank, self.embedding_modules
-            )
-        )
+            self._lora_manager.create_dummy_lora(lora_request.lora_int_id,
+                                                 rank, self.embedding_modules))
 
     def add_lora(self, lora_request: LoRARequest) -> bool:
         if lora_request.lora_int_id in self.list_loras():
@@ -204,7 +201,8 @@ class LRUCacheWorkerLoRAManager(WorkerLoRAManager):
     (unless they are already loaded) and least recently used LoRAs will
     be unloaded if the cache is above capacity."""
 
-    _lora_manager_cls: Type[LRUCacheLoRAModelManager] = LRUCacheLoRAModelManager
+    _lora_manager_cls: Type[
+        LRUCacheLoRAModelManager] = LRUCacheLoRAModelManager
 
     def create_lora_manager(
         self,
@@ -224,15 +222,13 @@ class LRUCacheWorkerLoRAManager(WorkerLoRAManager):
     def _apply_loras(self, lora_requests: List[LoRARequest]) -> None:
         loras_map = {
             lora_request.lora_int_id: lora_request
-            for lora_request in lora_requests
-            if lora_request
+            for lora_request in lora_requests if lora_request
         }
         if len(loras_map) > self._lora_manager.lora_slots:
             raise RuntimeError(
                 f"Number of requested LoRAs ({len(loras_map)}) is greater "
                 "than the number of GPU LoRA slots "
-                f"({self._lora_manager.lora_slots})."
-            )
+                f"({self._lora_manager.lora_slots}).")
         for lora in loras_map.values():
             self.add_lora(lora)
 

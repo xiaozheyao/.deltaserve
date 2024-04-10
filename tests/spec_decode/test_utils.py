@@ -22,8 +22,7 @@ def test_get_all_seq_ids():
                 seq_id: MagicMock(),
             },
             lora_request=None,
-        )
-        for seq_id in expected_seq_ids
+        ) for seq_id in expected_seq_ids
     ]
 
     actual_seq_ids = get_all_seq_ids(seq_group_metadata_list)
@@ -45,18 +44,20 @@ def fake_sequence_group_metadata():
                 i: MagicMock(),
             },
             lora_request=None,
-        )
-        for i in seq_ids
+        ) for i in seq_ids
     ]
 
 
 def test_filter_zero_length_proposals(fake_sequence_group_metadata):
     proposal_lens = [0, 1, 0]
     filtered_groups, indices = split_batch_by_proposal_len(
-        fake_sequence_group_metadata, proposal_lens, select_proposal_len_zero=True
-    )
+        fake_sequence_group_metadata,
+        proposal_lens,
+        select_proposal_len_zero=True)
 
-    expected_groups = [fake_sequence_group_metadata[0], fake_sequence_group_metadata[2]]
+    expected_groups = [
+        fake_sequence_group_metadata[0], fake_sequence_group_metadata[2]
+    ]
     expected_indices = [0, 2]
 
     assert filtered_groups == expected_groups
@@ -66,10 +67,13 @@ def test_filter_zero_length_proposals(fake_sequence_group_metadata):
 def test_filter_non_zero_length_proposals(fake_sequence_group_metadata):
     proposal_lens = [0, 1, 2]
     filtered_groups, indices = split_batch_by_proposal_len(
-        fake_sequence_group_metadata, proposal_lens, select_proposal_len_zero=False
-    )
+        fake_sequence_group_metadata,
+        proposal_lens,
+        select_proposal_len_zero=False)
 
-    expected_groups = [fake_sequence_group_metadata[1], fake_sequence_group_metadata[2]]
+    expected_groups = [
+        fake_sequence_group_metadata[1], fake_sequence_group_metadata[2]
+    ]
     expected_indices = [1, 2]
 
     assert filtered_groups == expected_groups
@@ -78,8 +82,7 @@ def test_filter_non_zero_length_proposals(fake_sequence_group_metadata):
 
 def test_empty_inputs():
     filtered_groups, indices = split_batch_by_proposal_len(
-        [], [], select_proposal_len_zero=True
-    )
+        [], [], select_proposal_len_zero=True)
 
     assert filtered_groups == []
     assert indices == []
@@ -88,8 +91,9 @@ def test_empty_inputs():
 def test_all_zero_with_non_zero_filter(fake_sequence_group_metadata):
     proposal_lens = [0, 0, 0]
     filtered_groups, indices = split_batch_by_proposal_len(
-        fake_sequence_group_metadata, proposal_lens, select_proposal_len_zero=False
-    )
+        fake_sequence_group_metadata,
+        proposal_lens,
+        select_proposal_len_zero=False)
 
     assert filtered_groups == []
     assert indices == []
@@ -98,8 +102,9 @@ def test_all_zero_with_non_zero_filter(fake_sequence_group_metadata):
 def test_all_non_zero_with_zero_filter(fake_sequence_group_metadata):
     proposal_lens = [1, 1, 1]
     filtered_groups, indices = split_batch_by_proposal_len(
-        fake_sequence_group_metadata, proposal_lens, select_proposal_len_zero=True
-    )
+        fake_sequence_group_metadata,
+        proposal_lens,
+        select_proposal_len_zero=True)
 
     assert filtered_groups == []
     assert indices == []

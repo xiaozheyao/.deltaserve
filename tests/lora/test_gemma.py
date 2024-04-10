@@ -14,7 +14,8 @@ def do_sample(llm, lora_path: str, lora_id: int) -> str:
     outputs = llm.generate(
         prompts,
         sampling_params,
-        lora_request=LoRARequest(str(lora_id), lora_id, lora_path) if lora_id else None,
+        lora_request=LoRARequest(str(lora_id), lora_id, lora_path)
+        if lora_id else None,
     )
     # Print the outputs.
     generated_texts = []
@@ -27,7 +28,10 @@ def do_sample(llm, lora_path: str, lora_id: int) -> str:
 
 
 def test_gemma_lora(gemma_lora_files):
-    llm = vllm.LLM(MODEL_PATH, max_model_len=1024, enable_lora=True, max_loras=4)
+    llm = vllm.LLM(MODEL_PATH,
+                   max_model_len=1024,
+                   enable_lora=True,
+                   max_loras=4)
 
     expected_lora_output = [
         "more important than knowledge.\nAuthor: Albert Einstein\n",

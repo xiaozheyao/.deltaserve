@@ -6,8 +6,7 @@ import torch
 import torch.nn as nn
 
 from vllm.model_executor.parallel_utils.communication_op import (
-    tensor_model_parallel_gather,
-)
+    tensor_model_parallel_gather, )
 from vllm.model_executor.sampling_metadata import SamplingMetadata
 
 
@@ -49,7 +48,8 @@ class LogitsProcessor(nn.Module):
         if self.logits_as_input:
             logits = hidden_states
         else:
-            hidden_states = _prune_hidden_states(hidden_states, sampling_metadata)
+            hidden_states = _prune_hidden_states(hidden_states,
+                                                 sampling_metadata)
 
             # Get the logits for the next tokens.
             logits = self._get_logits(hidden_states, embedding, embedding_bias)
@@ -75,7 +75,7 @@ class LogitsProcessor(nn.Module):
         logits = tensor_model_parallel_gather(logits)
         # Remove paddings in vocab (if any).
         if logits is not None:
-            logits = logits[:, : self.org_vocab_size]
+            logits = logits[:, :self.org_vocab_size]
         return logits
 
 
@@ -83,7 +83,8 @@ def _prune_hidden_states(
     hidden_states: torch.Tensor,
     sampling_metadata: SamplingMetadata,
 ) -> torch.Tensor:
-    return hidden_states.index_select(0, sampling_metadata.selected_token_indices)
+    return hidden_states.index_select(0,
+                                      sampling_metadata.selected_token_indices)
 
 
 def _apply_logits_processors(

@@ -27,7 +27,8 @@ def test_ranks(
         logprobs=num_top_logprobs,
         prompt_logprobs=num_prompt_logprobs,
     )
-    vllm_results = vllm_model.generate_w_logprobs(example_prompts, vllm_sampling_params)
+    vllm_results = vllm_model.generate_w_logprobs(example_prompts,
+                                                  vllm_sampling_params)
     for result in vllm_results:
         assert result[2] is not None
         assert len(result[2]) == len(result[0])

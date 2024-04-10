@@ -47,9 +47,9 @@ from vllm.sequence import SamplerOutput
 
 
 def _get_alibi_slopes(total_num_heads: int) -> torch.Tensor:
-    closest_power_of_2 = 2 ** math.floor(math.log2(total_num_heads))
+    closest_power_of_2 = 2**math.floor(math.log2(total_num_heads))
     base = torch.tensor(
-        2 ** (-(2 ** -(math.log2(closest_power_of_2) - 3))),
+        2**(-(2**-(math.log2(closest_power_of_2) - 3))),
         dtype=torch.float32,
     )
     powers = torch.arange(1, 1 + closest_power_of_2, dtype=torch.int32)
@@ -57,20 +57,22 @@ def _get_alibi_slopes(total_num_heads: int) -> torch.Tensor:
 
     if closest_power_of_2 != total_num_heads:
         extra_base = torch.tensor(
-            2 ** (-(2 ** -(math.log2(2 * closest_power_of_2) - 3))),
+            2**(-(2**-(math.log2(2 * closest_power_of_2) - 3))),
             dtype=torch.float32,
         )
-        num_remaining_heads = min(
-            closest_power_of_2, total_num_heads - closest_power_of_2
-        )
-        extra_powers = torch.arange(
-            start=1, end=1 + 2 * num_remaining_heads, step=2, dtype=torch.int32
-        )
-        slopes = torch.cat([slopes, torch.pow(extra_base, extra_powers)], dim=0)
+        num_remaining_heads = min(closest_power_of_2,
+                                  total_num_heads - closest_power_of_2)
+        extra_powers = torch.arange(start=1,
+                                    end=1 + 2 * num_remaining_heads,
+                                    step=2,
+                                    dtype=torch.int32)
+        slopes = torch.cat(
+            [slopes, torch.pow(extra_base, extra_powers)], dim=0)
     return slopes
 
 
 class BloomAttention(nn.Module):
+
     def __init__(
         self,
         config: BloomConfig,
@@ -108,9 +110,10 @@ class BloomAttention(nn.Module):
         alibi_slopes = alibi_slopes[head_start:head_end].tolist()
 
         scaling = self.head_dim**-0.5
-        self.attn = Attention(
-            self.num_heads, self.head_dim, scaling, alibi_slopes=alibi_slopes
-        )
+        self.attn = Attention(self.num_heads,
+                              self.head_dim,
+                              scaling,
+                              alibi_slopes=alibi_slopes)
 
     def forward(
         self,
@@ -128,6 +131,7 @@ class BloomAttention(nn.Module):
 
 
 class BloomMLP(nn.Module):
+
     def __init__(
         self,
         config: BloomConfig,
@@ -156,6 +160,7 @@ class BloomMLP(nn.Module):
 
 
 class BloomBlock(nn.Module):
+
     def __init__(
         self,
         config: BloomConfig,
@@ -164,15 +169,14 @@ class BloomBlock(nn.Module):
         super().__init__()
         hidden_size = config.hidden_size
 
-        self.input_layernorm = nn.LayerNorm(hidden_size, eps=config.layer_norm_epsilon)
+        self.input_layernorm = nn.LayerNorm(hidden_size,
+                                            eps=config.layer_norm_epsilon)
         self.self_attention = BloomAttention(config, linear_method)
         self.post_attention_layernorm = nn.LayerNorm(
-            hidden_size, eps=config.layer_norm_epsilon
-        )
+            hidden_size, eps=config.layer_norm_epsilon)
         self.mlp = BloomMLP(config, linear_method)
         self.apply_residual_connection_post_layernorm = (
-            config.apply_residual_connection_post_layernorm
-        )
+            config.apply_residual_connection_post_layernorm)
 
     def forward(
         self,
@@ -212,6 +216,7 @@ class BloomBlock(nn.Module):
 
 
 class BloomModel(nn.Module):
+
     def __init__(
         self,
         config: BloomConfig,
@@ -226,13 +231,13 @@ class BloomModel(nn.Module):
             self.embed_dim,
         )
         self.word_embeddings_layernorm = nn.LayerNorm(
-            self.embed_dim, eps=config.layer_norm_epsilon
-        )
+            self.embed_dim, eps=config.layer_norm_epsilon)
 
         # Transformer blocks
-        self.h = nn.ModuleList(
-            [BloomBlock(config, linear_method) for _ in range(config.num_hidden_layers)]
-        )
+        self.h = nn.ModuleList([
+            BloomBlock(config, linear_method)
+            for _ in range(config.num_hidden_layers)
+        ])
 
         # Final Layer Norm
         self.ln_f = nn.LayerNorm(self.embed_dim, eps=config.layer_norm_epsilon)
@@ -259,6 +264,7 @@ class BloomModel(nn.Module):
 
 
 class BloomForCausalLM(nn.Module):
+
     def __init__(
         self,
         config: BloomConfig,
@@ -279,15 +285,14 @@ class BloomForCausalLM(nn.Module):
         kv_caches: List[torch.Tensor],
         attn_metadata: AttentionMetadata,
     ) -> torch.Tensor:
-        hidden_states = self.transformer(input_ids, positions, kv_caches, attn_metadata)
+        hidden_states = self.transformer(input_ids, positions, kv_caches,
+                                         attn_metadata)
         return hidden_states
 
-    def compute_logits(
-        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
-    ) -> torch.Tensor:
-        logits = self.logits_processor(
-            self.lm_head_weight, hidden_states, sampling_metadata
-        )
+    def compute_logits(self, hidden_states: torch.Tensor,
+                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
+        logits = self.logits_processor(self.lm_head_weight, hidden_states,
+                                       sampling_metadata)
         return logits
 
     def sample(
@@ -307,8 +312,7 @@ class BloomForCausalLM(nn.Module):
     ):
         params_dict = dict(self.named_parameters(remove_duplicate=False))
         for name, loaded_weight in hf_model_weights_iterator(
-            model_name_or_path, cache_dir, load_format, revision
-        ):
+                model_name_or_path, cache_dir, load_format, revision):
             if name == "lm_head.weight":
                 continue
             if not name.startswith("transformer."):
@@ -325,12 +329,12 @@ class BloomForCausalLM(nn.Module):
                 if output_dim is not None:
                     loaded_weight_shape = loaded_weight.shape
                     loaded_weight = loaded_weight.view(
-                        loaded_weight_shape[:output_dim]
-                        + (num_heads, 3, -1)
-                        + loaded_weight_shape[output_dim + 1 :]
-                    )
-                    loaded_weight = loaded_weight.transpose(output_dim, output_dim + 1)
+                        loaded_weight_shape[:output_dim] + (num_heads, 3, -1) +
+                        loaded_weight_shape[output_dim + 1:])
+                    loaded_weight = loaded_weight.transpose(
+                        output_dim, output_dim + 1)
                     loaded_weight = loaded_weight.reshape(loaded_weight_shape)
 
-            weight_loader = getattr(param, "weight_loader", default_weight_loader)
+            weight_loader = getattr(param, "weight_loader",
+                                    default_weight_loader)
             weight_loader(param, loaded_weight)

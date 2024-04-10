@@ -34,9 +34,9 @@ class BlockAllocatorBase(ABC):
         pass
 
     @abstractmethod
-    def allocate(
-        self, block_hash: Optional[int] = None, num_hashed_tokens: int = 0
-    ) -> PhysicalTokenBlock:
+    def allocate(self,
+                 block_hash: Optional[int] = None,
+                 num_hashed_tokens: int = 0) -> PhysicalTokenBlock:
         pass
 
     @abstractmethod
@@ -82,9 +82,8 @@ class CachedBlockAllocator(BlockAllocatorBase):
 
         self.default_hash_ctr = count()
 
-    def allocate_block(
-        self, block_hash: int, num_hashed_tokens: int
-    ) -> PhysicalTokenBlock:
+    def allocate_block(self, block_hash: int,
+                       num_hashed_tokens: int) -> PhysicalTokenBlock:
         if self.current_num_blocks == self.num_blocks:
             block = self.evictor.evict()
             block.block_hash = block_hash
@@ -100,9 +99,9 @@ class CachedBlockAllocator(BlockAllocatorBase):
         self.current_num_blocks += 1
         return block
 
-    def allocate(
-        self, block_hash: Optional[int] = None, num_hashed_tokens: int = 0
-    ) -> PhysicalTokenBlock:
+    def allocate(self,
+                 block_hash: Optional[int] = None,
+                 num_hashed_tokens: int = 0) -> PhysicalTokenBlock:
         if block_hash is None:
             block_hash = next(self.default_hash_ctr)
         if block_hash in self.evictor:
@@ -115,8 +114,7 @@ class CachedBlockAllocator(BlockAllocatorBase):
             return block
         if block_hash not in self.cached_blocks:
             self.cached_blocks[block_hash] = self.allocate_block(
-                block_hash, num_hashed_tokens
-            )
+                block_hash, num_hashed_tokens)
         block = self.cached_blocks[block_hash]
         assert block.block_hash == block_hash
         block.ref_count += 1
@@ -178,9 +176,9 @@ class UncachedBlockAllocator(BlockAllocatorBase):
             )
             self.free_blocks.append(block)
 
-    def allocate(
-        self, block_hash: Optional[int] = None, num_hashed_tokens: int = 0
-    ) -> PhysicalTokenBlock:
+    def allocate(self,
+                 block_hash: Optional[int] = None,
+                 num_hashed_tokens: int = 0) -> PhysicalTokenBlock:
         if not self.free_blocks:
             raise ValueError("Out of memory! No free blocks are available.")
         block = self.free_blocks.pop()
@@ -198,10 +196,12 @@ class UncachedBlockAllocator(BlockAllocatorBase):
         return len(self.free_blocks)
 
     def contains_block(self, block_hash: int) -> bool:
-        raise NotImplementedError("Invalid codepath for uncached block allocator.")
+        raise NotImplementedError(
+            "Invalid codepath for uncached block allocator.")
 
     def update_hash(self, block_hash: int, block: PhysicalTokenBlock):
-        raise NotImplementedError("Invalid codepath for uncached block allocator.")
+        raise NotImplementedError(
+            "Invalid codepath for uncached block allocator.")
 
 
 class AllocStatus(enum.Enum):
@@ -237,12 +237,12 @@ class BlockSpaceManager:
 
         if enable_caching and sliding_window is not None:
             raise NotImplementedError(
-                "Sliding window is not allowed with prefix caching enabled!"
-            )
+                "Sliding window is not allowed with prefix caching enabled!")
 
         self.block_sliding_window = None
         if sliding_window is not None:
-            assert sliding_window % block_size == 0, (sliding_window, block_size)
+            assert sliding_window % block_size == 0, (sliding_window,
+                                                      block_size)
             self.block_sliding_window = sliding_window // block_size
 
         self.watermark = watermark
@@ -254,20 +254,16 @@ class BlockSpaceManager:
 
         if self.enable_caching:
             logger.info("enable automatic prefix caching")
-            self.gpu_allocator = CachedBlockAllocator(
-                Device.GPU, block_size, num_gpu_blocks
-            )
-            self.cpu_allocator = CachedBlockAllocator(
-                Device.CPU, block_size, num_cpu_blocks
-            )
+            self.gpu_allocator = CachedBlockAllocator(Device.GPU, block_size,
+                                                      num_gpu_blocks)
+            self.cpu_allocator = CachedBlockAllocator(Device.CPU, block_size,
+                                                      num_cpu_blocks)
         else:
             logger.info("disable automatic prefix caching")
             self.gpu_allocator = UncachedBlockAllocator(
-                Device.GPU, block_size, num_gpu_blocks
-            )
+                Device.GPU, block_size, num_gpu_blocks)
             self.cpu_allocator = UncachedBlockAllocator(
-                Device.CPU, block_size, num_cpu_blocks
-            )
+                Device.CPU, block_size, num_cpu_blocks)
         # Mapping: seq_id -> BlockTable.
         self.block_tables: Dict[int, BlockTable] = {}
 
@@ -278,7 +274,8 @@ class BlockSpaceManager:
         num_required_blocks = len(seq.logical_token_blocks)
 
         if self.block_sliding_window is not None:
-            num_required_blocks = min(num_required_blocks, self.block_sliding_window)
+            num_required_blocks = min(num_required_blocks,
+                                      self.block_sliding_window)
         num_free_gpu_blocks = self.gpu_allocator.get_num_free_blocks()
 
         # Use watermark to avoid frequent cache eviction.
@@ -299,10 +296,8 @@ class BlockSpaceManager:
 
         block_table: BlockTable = []
         for logical_idx in range(num_prompt_blocks):
-            if (
-                self.block_sliding_window is not None
-                and logical_idx >= self.block_sliding_window
-            ):
+            if (self.block_sliding_window is not None
+                    and logical_idx >= self.block_sliding_window):
                 block = block_table[logical_idx % self.block_sliding_window]
                 # Set the reference counts of the token blocks.
                 block.ref_count = seq_group.num_seqs()
@@ -375,8 +370,7 @@ class BlockSpaceManager:
         if self._is_last_block_full(seq):
             block_hash = seq.hash_of_block(len(seq.logical_token_blocks) - 1)
         num_hashed_tokens = seq.num_hashed_tokens_of_block(
-            len(seq.logical_token_blocks) - 1
-        )
+            len(seq.logical_token_blocks) - 1)
         new_block = self.gpu_allocator.allocate(block_hash, num_hashed_tokens)
         if block_hash is None:
             assert new_block.ref_count == 1
@@ -394,14 +388,11 @@ class BlockSpaceManager:
             # Currently this code only supports adding one physical block
             assert len(block_table) == len(logical_blocks) - 1
 
-            if (
-                self.block_sliding_window
-                and len(block_table) >= self.block_sliding_window
-            ):
+            if (self.block_sliding_window
+                    and len(block_table) >= self.block_sliding_window):
                 # reuse a block
-                block_table.append(
-                    block_table[len(block_table) % self.block_sliding_window]
-                )
+                block_table.append(block_table[len(block_table) %
+                                               self.block_sliding_window])
             else:
                 # The sequence has a new logical block.
                 # Allocate a new physical block.
@@ -417,7 +408,8 @@ class BlockSpaceManager:
             if self.enable_caching:
                 # If the last block is now complete, we may reuse an old block
                 # to save memory.
-                maybe_new_block = self._maybe_promote_last_block(seq, last_block)
+                maybe_new_block = self._maybe_promote_last_block(
+                    seq, last_block)
                 block_table[-1] = maybe_new_block
             return None
         else:
@@ -443,8 +435,7 @@ class BlockSpaceManager:
             block.ref_count += 1
 
     def _get_physical_blocks(
-        self, seq_group: SequenceGroup
-    ) -> List[PhysicalTokenBlock]:
+            self, seq_group: SequenceGroup) -> List[PhysicalTokenBlock]:
         # NOTE: Here, we assume that the physical blocks are only shared by
         # the sequences in the same group.
         blocks: Set[PhysicalTokenBlock] = set()
@@ -477,8 +468,7 @@ class BlockSpaceManager:
                     gpu_block.ref_count += 1
                 else:
                     gpu_block = self.gpu_allocator.allocate(
-                        cpu_block.block_hash, cpu_block.num_hashed_tokens
-                    )
+                        cpu_block.block_hash, cpu_block.num_hashed_tokens)
                     mapping[cpu_block] = gpu_block
                 new_block_table.append(gpu_block)
                 # Free the CPU block swapped in to GPU.
@@ -508,8 +498,7 @@ class BlockSpaceManager:
                     cpu_block.ref_count += 1
                 else:
                     cpu_block = self.cpu_allocator.allocate(
-                        gpu_block.block_hash, gpu_block.num_hashed_tokens
-                    )
+                        gpu_block.block_hash, gpu_block.num_hashed_tokens)
                     mapping[gpu_block] = cpu_block
                 new_block_table.append(cpu_block)
                 # Free the GPU block swapped out to CPU.
@@ -528,11 +517,9 @@ class BlockSpaceManager:
         # the block table, we must make sure to not free blocks more
         # than once. If no sliding window is used, there is no block
         # reuse in the block table, so we must free all blocks.
-        blocks_to_free = (
-            block_table[-self.block_sliding_window :]
-            if self.block_sliding_window is not None
-            else block_table
-        )
+        blocks_to_free = (block_table[-self.block_sliding_window:]
+                          if self.block_sliding_window is not None else
+                          block_table)
         for block in set(blocks_to_free):
             if block.device == Device.GPU:
                 self.gpu_allocator.free(block)
@@ -594,10 +581,12 @@ class BlockSpaceManager:
         # prompt is cached. This would cause erroneous behavior in model
         # runner.
         return [
-            b.block_number for b in takewhile(lambda b: b.computed, block_table[:-1])
+            b.block_number
+            for b in takewhile(lambda b: b.computed, block_table[:-1])
         ]
 
-    def get_common_computed_block_ids(self, seq_group: SequenceGroup) -> List[int]:
+    def get_common_computed_block_ids(self,
+                                      seq_group: SequenceGroup) -> List[int]:
         # Can return non-empty result only with prefix caching enabled.
         if not self.enable_caching:
             return []

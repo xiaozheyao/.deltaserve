@@ -22,7 +22,8 @@ model_and_vl_config = [
     (
         "llava-hf/llava-1.5-7b-hf",
         VisionLanguageConfig(
-            image_input_type=VisionLanguageConfig.ImageInputType.IMAGE_FEATURES,
+            image_input_type=VisionLanguageConfig.ImageInputType.
+            IMAGE_FEATURES,
             image_feature_size=576,
             image_token_id=32000,
             image_input_shape=(1, 576, 1024),
@@ -63,11 +64,11 @@ def sanitize_vllm_output(
     image_token_str_len = len(image_token_str)
     input_ids, output_str = vllm_output
     sanitized_input_ids = (
-        input_ids[0:2] + input_ids[2 + vision_language_config.image_feature_size - 1 :]
-    )
-    sanitzied_output_str = output_str[
-        vision_language_config.image_feature_size * image_token_str_len :
-    ]
+        input_ids[0:2] +
+        input_ids[2 + vision_language_config.image_feature_size - 1:])
+    sanitzied_output_str = output_str[vision_language_config.
+                                      image_feature_size *
+                                      image_token_str_len:]
     return sanitized_input_ids, sanitzied_output_str
 
 
@@ -98,9 +99,9 @@ def test_models(
     """
     model_id, vision_language_config = model_and_config
     hf_model = hf_runner(model_id, dtype=dtype)
-    hf_outputs = hf_model.generate_greedy(
-        hf_image_prompts, max_tokens, images=hf_images
-    )
+    hf_outputs = hf_model.generate_greedy(hf_image_prompts,
+                                          max_tokens,
+                                          images=hf_images)
     del hf_model
 
     gc.collect()
@@ -112,9 +113,9 @@ def test_models(
         worker_use_ray=worker_use_ray,
         **as_dict(vision_language_config),
     )
-    vllm_outputs = vllm_model.generate_greedy(
-        vllm_image_prompts, max_tokens, images=vllm_images
-    )
+    vllm_outputs = vllm_model.generate_greedy(vllm_image_prompts,
+                                              max_tokens,
+                                              images=vllm_images)
     del vllm_model
 
     gc.collect()
@@ -123,11 +124,9 @@ def test_models(
     for i in range(len(hf_image_prompts)):
         hf_output_ids, hf_output_str = hf_outputs[i]
         vllm_output_ids, vllm_output_str = sanitize_vllm_output(
-            vllm_outputs[i], vision_language_config, model_id
-        )
+            vllm_outputs[i], vision_language_config, model_id)
         assert (
             hf_output_str == vllm_output_str
         ), f"Test{i}:\nHF: {hf_output_str!r}\nvLLM: {vllm_output_str!r}"
-        assert (
-            hf_output_ids == vllm_output_ids
-        ), f"Test{i}:\nHF: {hf_output_ids}\nvLLM: {vllm_output_ids}"
+        assert (hf_output_ids == vllm_output_ids
+                ), f"Test{i}:\nHF: {hf_output_ids}\nvLLM: {vllm_output_ids}"

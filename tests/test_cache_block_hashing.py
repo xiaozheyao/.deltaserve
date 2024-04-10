@@ -22,8 +22,7 @@ prefix_common = (
     "teaching role. They have 5 years of previous teaching experience "
     "as an assistant teacher at a co-ed, public school with experience "
     "in middle school math teaching. Based on this, fulfill "
-    "the following: "
-)
+    "the following: ")
 prefixes = [start + prefix_common for start in prefix_start]
 
 # Sample prompts.
@@ -43,9 +42,8 @@ def flatten_2d(li):
 @pytest.mark.parametrize("model", ["facebook/opt-125m"])
 @pytest.mark.parametrize("block_size", [16])
 @pytest.mark.parametrize("max_num_seqs", [256])
-@pytest.mark.parametrize(
-    "concurrent_lora_int_ids", [[None], [1], [None, 1], [None, 1, 2], [1, 2]]
-)
+@pytest.mark.parametrize("concurrent_lora_int_ids",
+                         [[None], [1], [None, 1], [None, 1, 2], [1, 2]])
 def test_auto_prefix_caching(
     model: str,
     block_size: int,

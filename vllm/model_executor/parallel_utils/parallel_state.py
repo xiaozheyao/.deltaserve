@@ -53,8 +53,7 @@ def initialize_model_parallel(
         raise RuntimeError(
             f"world_size ({world_size}) is not equal to "
             f"tensor_model_parallel_size ({tensor_model_parallel_size}) x "
-            f"pipeline_model_parallel_size ({pipeline_model_parallel_size})"
-        )
+            f"pipeline_model_parallel_size ({pipeline_model_parallel_size})")
 
     num_tensor_model_parallel_groups: int = world_size // tensor_model_parallel_size
     num_pipeline_model_parallel_groups: int = world_size // pipeline_model_parallel_size
@@ -62,13 +61,11 @@ def initialize_model_parallel(
 
     # Build the tensor model-parallel groups.
     global _TENSOR_MODEL_PARALLEL_GROUP
-    assert (
-        _TENSOR_MODEL_PARALLEL_GROUP is None
-    ), "tensor model parallel group is already initialized"
+    assert (_TENSOR_MODEL_PARALLEL_GROUP
+            is None), "tensor model parallel group is already initialized"
     for i in range(num_tensor_model_parallel_groups):
-        ranks = range(
-            i * tensor_model_parallel_size, (i + 1) * tensor_model_parallel_size
-        )
+        ranks = range(i * tensor_model_parallel_size,
+                      (i + 1) * tensor_model_parallel_size)
         group = torch.distributed.new_group(ranks)
         if rank in ranks:
             _TENSOR_MODEL_PARALLEL_GROUP = group
@@ -76,9 +73,8 @@ def initialize_model_parallel(
     # Build the pipeline model-parallel groups.
     global _PIPELINE_MODEL_PARALLEL_GROUP
     global _PIPELINE_GLOBAL_RANKS
-    assert (
-        _PIPELINE_MODEL_PARALLEL_GROUP is None
-    ), "pipeline model parallel group is already initialized"
+    assert (_PIPELINE_MODEL_PARALLEL_GROUP
+            is None), "pipeline model parallel group is already initialized"
     for i in range(num_pipeline_model_parallel_groups):
         ranks = range(i, world_size, num_pipeline_model_parallel_groups)
         group = torch.distributed.new_group(ranks)
@@ -96,55 +92,52 @@ def ensure_model_parallel_initialized(
     values if the model parallel groups are initialized.
     """
     if not model_parallel_is_initialized():
-        initialize_model_parallel(
-            tensor_model_parallel_size, pipeline_model_parallel_size
-        )
+        initialize_model_parallel(tensor_model_parallel_size,
+                                  pipeline_model_parallel_size)
         return
 
-    assert get_tensor_model_parallel_world_size() == tensor_model_parallel_size, (
+    assert get_tensor_model_parallel_world_size(
+    ) == tensor_model_parallel_size, (
         "tensor parallel group already initialized, but of unexpected size: "
         f"{get_tensor_model_parallel_world_size()=} vs. "
-        f"{tensor_model_parallel_size=}"
-    )
-    assert get_pipeline_model_parallel_world_size() == pipeline_model_parallel_size, (
+        f"{tensor_model_parallel_size=}")
+    assert get_pipeline_model_parallel_world_size(
+    ) == pipeline_model_parallel_size, (
         "pipeline parallel group already initialized, but of unexpected size: "
         f"{get_pipeline_model_parallel_world_size()=} vs. "
-        f"{pipeline_model_parallel_size=}"
-    )
+        f"{pipeline_model_parallel_size=}")
 
 
 def model_parallel_is_initialized():
     """Check if tensor and pipeline parallel groups are initialized."""
-    return (
-        _TENSOR_MODEL_PARALLEL_GROUP is not None
-        and _PIPELINE_MODEL_PARALLEL_GROUP is not None
-    )
+    return (_TENSOR_MODEL_PARALLEL_GROUP is not None
+            and _PIPELINE_MODEL_PARALLEL_GROUP is not None)
 
 
 def get_tensor_model_parallel_group():
     """Get the tensor model parallel group the caller rank belongs to."""
-    assert (
-        _TENSOR_MODEL_PARALLEL_GROUP is not None
-    ), "tensor model parallel group is not initialized"
+    assert (_TENSOR_MODEL_PARALLEL_GROUP
+            is not None), "tensor model parallel group is not initialized"
     return _TENSOR_MODEL_PARALLEL_GROUP
 
 
 def get_pipeline_model_parallel_group():
     """Get the pipeline model parallel group the caller rank belongs to."""
-    assert (
-        _PIPELINE_MODEL_PARALLEL_GROUP is not None
-    ), "pipeline model parallel group is not initialized"
+    assert (_PIPELINE_MODEL_PARALLEL_GROUP
+            is not None), "pipeline model parallel group is not initialized"
     return _PIPELINE_MODEL_PARALLEL_GROUP
 
 
 def get_tensor_model_parallel_world_size():
     """Return world size for the tensor model parallel group."""
-    return torch.distributed.get_world_size(group=get_tensor_model_parallel_group())
+    return torch.distributed.get_world_size(
+        group=get_tensor_model_parallel_group())
 
 
 def get_pipeline_model_parallel_world_size():
     """Return world size for the pipeline model parallel group."""
-    return torch.distributed.get_world_size(group=get_pipeline_model_parallel_group())
+    return torch.distributed.get_world_size(
+        group=get_pipeline_model_parallel_group())
 
 
 def get_tensor_model_parallel_rank():
@@ -154,7 +147,8 @@ def get_tensor_model_parallel_rank():
 
 def get_pipeline_model_parallel_rank():
     """Return my rank for the pipeline model parallel group."""
-    return torch.distributed.get_rank(group=get_pipeline_model_parallel_group())
+    return torch.distributed.get_rank(
+        group=get_pipeline_model_parallel_group())
 
 
 def get_tensor_model_parallel_src_rank():
@@ -168,27 +162,24 @@ def get_tensor_model_parallel_src_rank():
 def get_pipeline_model_parallel_first_rank():
     """Return the global rank of the first process in the pipeline for the
     current tensor parallel group"""
-    assert (
-        _PIPELINE_GLOBAL_RANKS is not None
-    ), "Pipeline parallel group is not initialized"
+    assert (_PIPELINE_GLOBAL_RANKS
+            is not None), "Pipeline parallel group is not initialized"
     return _PIPELINE_GLOBAL_RANKS[0]
 
 
 def get_pipeline_model_parallel_last_rank():
     """Return the global rank of the last process in the pipeline for the
     current tensor parallel group"""
-    assert (
-        _PIPELINE_GLOBAL_RANKS is not None
-    ), "Pipeline parallel group is not initialized"
+    assert (_PIPELINE_GLOBAL_RANKS
+            is not None), "Pipeline parallel group is not initialized"
     last_rank_local = get_pipeline_model_parallel_world_size() - 1
     return _PIPELINE_GLOBAL_RANKS[last_rank_local]
 
 
 def get_pipeline_model_parallel_next_rank():
     """Return the global rank that follows the caller in the pipeline"""
-    assert (
-        _PIPELINE_GLOBAL_RANKS is not None
-    ), "Pipeline parallel group is not initialized"
+    assert (_PIPELINE_GLOBAL_RANKS
+            is not None), "Pipeline parallel group is not initialized"
     rank_in_pipeline = get_pipeline_model_parallel_rank()
     world_size = get_pipeline_model_parallel_world_size()
     return _PIPELINE_GLOBAL_RANKS[(rank_in_pipeline + 1) % world_size]
@@ -196,9 +187,8 @@ def get_pipeline_model_parallel_next_rank():
 
 def get_pipeline_model_parallel_prev_rank():
     """Return the global rank that precedes the caller in the pipeline"""
-    assert (
-        _PIPELINE_GLOBAL_RANKS is not None
-    ), "Pipeline parallel group is not initialized"
+    assert (_PIPELINE_GLOBAL_RANKS
+            is not None), "Pipeline parallel group is not initialized"
     rank_in_pipeline = get_pipeline_model_parallel_rank()
     world_size = get_pipeline_model_parallel_world_size()
     return _PIPELINE_GLOBAL_RANKS[(rank_in_pipeline - 1) % world_size]

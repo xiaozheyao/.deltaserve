@@ -32,14 +32,18 @@ _KEYS_TO_MODIFY_MAPPING = {
 
 # TODO(xwjiang): Run benchmark and decide if TP.
 class LlavaMultiModalProjector(nn.Module):
-    def __init__(
-        self, vision_hidden_size: int, text_hidden_size: int, projector_hidden_act: str
-    ):
+
+    def __init__(self, vision_hidden_size: int, text_hidden_size: int,
+                 projector_hidden_act: str):
         super().__init__()
 
-        self.linear_1 = nn.Linear(vision_hidden_size, text_hidden_size, bias=True)
+        self.linear_1 = nn.Linear(vision_hidden_size,
+                                  text_hidden_size,
+                                  bias=True)
         self.act = get_act_fn(projector_hidden_act)
-        self.linear_2 = nn.Linear(text_hidden_size, text_hidden_size, bias=True)
+        self.linear_2 = nn.Linear(text_hidden_size,
+                                  text_hidden_size,
+                                  bias=True)
 
     def forward(self, image_features):
         hidden_states = self.linear_1(image_features)
@@ -56,10 +60,12 @@ def _merge_vision_embeddings(
 ):
     """In place merges in vision_embeddings with inputs_embeds."""
     mask = input_ids == image_token_id
-    inputs_embeds[mask] = vision_embeddings.view(-1, vision_embeddings.shape[-1])
+    inputs_embeds[mask] = vision_embeddings.view(-1,
+                                                 vision_embeddings.shape[-1])
 
 
 class LlavaForConditionalGeneration(nn.Module):
+
     def __init__(
         self,
         config: "LlavaConfig",
@@ -74,12 +80,10 @@ class LlavaForConditionalGeneration(nn.Module):
         assert self.vision_language_config, (
             "Provide `image_input_type` and other vision "
             "related configurations through LLM entrypoint "
-            "or engine arguments."
-        )
+            "or engine arguments.")
 
         if self.vision_language_config.image_input_type == (
-            VisionLanguageConfig.ImageInputType.PIXEL_VALUES
-        ):
+                VisionLanguageConfig.ImageInputType.PIXEL_VALUES):
             self.vision_tower = CLIPVisionModel(config.vision_config)
         else:
             self.vision_tower = None
@@ -99,9 +103,8 @@ class LlavaForConditionalGeneration(nn.Module):
             org_num_embeddings=self.language_model.org_vocab_size,
         )
         logit_scale = getattr(config, "logit_scale", 1.0)
-        self.logits_processor = LogitsProcessor(
-            self.unpadded_vocab_size, config.vocab_size, logit_scale
-        )
+        self.logits_processor = LogitsProcessor(self.unpadded_vocab_size,
+                                                config.vocab_size, logit_scale)
         self.sampler = Sampler()
 
     def forward(
@@ -150,8 +153,7 @@ class LlavaForConditionalGeneration(nn.Module):
         """
         if image_input is not None:
             if list(image_input.shape[1:]) != list(
-                self.vision_language_config.image_input_shape[1:]
-            ):
+                    self.vision_language_config.image_input_shape[1:]):
                 raise ValueError(
                     f"The expected image tensor shape is batch dimension "
                     f"plus "
@@ -159,16 +161,13 @@ class LlavaForConditionalGeneration(nn.Module):
                     f" You supplied {image_input.shape}. "
                     f"If you are using vLLM's entrypoint, make sure your "
                     f"supplied image input is consistent with "
-                    f"image_input_shape in engine args."
-                )
+                    f"image_input_shape in engine args.")
             if self.vision_tower is not None:
                 # TODO(xwjiang): Maybe port minimal CLIPVisionModel over.
-                image_outputs = self.vision_tower(
-                    image_input, output_hidden_states=True
-                )
+                image_outputs = self.vision_tower(image_input,
+                                                  output_hidden_states=True)
                 image_features = image_outputs.hidden_states[
-                    self.config.vision_feature_layer
-                ]
+                    self.config.vision_feature_layer]
                 # Copied from https://github.com/huggingface/transformers/blob/39c3c0a72af6fbda5614dde02ff236069bb79827/src/transformers/models/llava/modeling_llava.py#L421  # noqa
                 if self.config.vision_feature_select_strategy == "default":
                     image_features = image_features[:, 1:]
@@ -177,8 +176,7 @@ class LlavaForConditionalGeneration(nn.Module):
                 else:
                     raise ValueError(
                         f"Unexpected select feature strategy: "
-                        f"{self.config.vision_feature_select_strategy}"
-                    )
+                        f"{self.config.vision_feature_select_strategy}")
             else:
                 image_features = image_input
             vision_embeddings = self.multi_modal_projector(image_features)
@@ -192,18 +190,18 @@ class LlavaForConditionalGeneration(nn.Module):
             input_ids = None
         else:
             inputs_embeds = None
-        hidden_states = self.language_model(
-            input_ids, positions, kv_caches, attn_metadata, inputs_embeds=inputs_embeds
-        )
+        hidden_states = self.language_model(input_ids,
+                                            positions,
+                                            kv_caches,
+                                            attn_metadata,
+                                            inputs_embeds=inputs_embeds)
 
         return hidden_states
 
-    def compute_logits(
-        self, hidden_states: torch.Tensor, sampling_metadata: SamplingMetadata
-    ) -> torch.Tensor:
-        logits = self.logits_processor(
-            self.lm_head.weight, hidden_states, sampling_metadata
-        )
+    def compute_logits(self, hidden_states: torch.Tensor,
+                       sampling_metadata: SamplingMetadata) -> torch.Tensor:
+        logits = self.logits_processor(self.lm_head.weight, hidden_states,
+                                       sampling_metadata)
         return logits
 
     def sample(
@@ -232,8 +230,7 @@ class LlavaForConditionalGeneration(nn.Module):
         ]
         params_dict = dict(self.named_parameters())
         for name, loaded_weight in hf_model_weights_iterator(
-            model_name_or_path, cache_dir, load_format, revision
-        ):
+                model_name_or_path, cache_dir, load_format, revision):
             if "rotary_emb.inv_freq" in name:
                 continue
             for key_to_modify, new_key in _KEYS_TO_MODIFY_MAPPING.items():
@@ -257,5 +254,6 @@ class LlavaForConditionalGeneration(nn.Module):
                     use_default_weight_loading = True
             if use_default_weight_loading:
                 param = params_dict[name]
-                weight_loader = getattr(param, "weight_loader", default_weight_loader)
+                weight_loader = getattr(param, "weight_loader",
+                                        default_weight_loader)
                 weight_loader(param, loaded_weight)

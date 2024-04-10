@@ -31,8 +31,8 @@ from vllm._C import ops
 
 
 def _rotate_neox(x: torch.Tensor) -> torch.Tensor:
-    x1 = x[..., : x.shape[-1] // 2]
-    x2 = x[..., x.shape[-1] // 2 :]
+    x1 = x[..., :x.shape[-1] // 2]
+    x2 = x[..., x.shape[-1] // 2:]
     return torch.cat((-x2, x1), dim=-1)
 
 
@@ -76,12 +76,8 @@ class RotaryEmbedding(nn.Module):
         # use CPU to compute the cache and then move it to GPU. However, we
         # create the cache on GPU for faster initialization. This may cause
         # a slight numerical difference between the HF implementation and ours.
-        inv_freq = 1.0 / (
-            base
-            ** (
-                torch.arange(0, self.rotary_dim, 2, dtype=torch.float) / self.rotary_dim
-            )
-        )
+        inv_freq = 1.0 / (base**(torch.arange(
+            0, self.rotary_dim, 2, dtype=torch.float) / self.rotary_dim))
         return inv_freq
 
     def _compute_cos_sin_cache(self) -> torch.Tensor:
@@ -106,16 +102,15 @@ class RotaryEmbedding(nn.Module):
         query = query.view(*query.shape[:-1], -1, self.head_size)
         key = key.view(*key.shape[:-1], -1, self.head_size)
 
-        query_rot = query[..., : self.rotary_dim]
-        key_rot = key[..., : self.rotary_dim]
+        query_rot = query[..., :self.rotary_dim]
+        key_rot = key[..., :self.rotary_dim]
         if self.rotary_dim < self.head_size:
-            query_pass = query[..., self.rotary_dim :]
-            key_pass = key[..., self.rotary_dim :]
+            query_pass = query[..., self.rotary_dim:]
+            key_pass = key[..., self.rotary_dim:]
 
         self.cos_sin_cache = self.cos_sin_cache.to(positions.device)
-        cos_sin = self.cos_sin_cache[
-            torch.add(positions, offsets) if offsets is not None else positions
-        ]
+        cos_sin = self.cos_sin_cache[torch.add(positions, offsets)
+                                     if offsets is not None else positions]
         cos, sin = cos_sin.chunk(2, dim=-1)
         if self.is_neox_style:
             # NOTE(woosuk): Here we assume that the positions tensor has the
@@ -191,9 +186,8 @@ class LinearScalingRotaryEmbedding(RotaryEmbedding):
         if isinstance(scaling_factors, float):
             scaling_factors = [scaling_factors]
         self.scaling_factors = scaling_factors
-        super().__init__(
-            head_size, rotary_dim, max_position_embeddings, base, is_neox_style
-        )
+        super().__init__(head_size, rotary_dim, max_position_embeddings, base,
+                         is_neox_style)
 
     def _compute_cos_sin_cache(self) -> torch.Tensor:
         inv_freq = self._compute_inv_freq(self.base)
@@ -231,9 +225,8 @@ class DynamicNTKScalingRotaryEmbedding(RotaryEmbedding):
         scaling_factor: float,
     ) -> None:
         self.scaling_factor = scaling_factor
-        super().__init__(
-            head_size, rotary_dim, max_position_embeddings, base, is_neox_style
-        )
+        super().__init__(head_size, rotary_dim, max_position_embeddings, base,
+                         is_neox_style)
 
     def _compute_cos_sin_cache(self) -> torch.Tensor:
         # NOTE(woosuk): self.max_position_embeddings is the original
@@ -242,9 +235,9 @@ class DynamicNTKScalingRotaryEmbedding(RotaryEmbedding):
         # self.max_position_embeddings * self.scaling_factor.
         max_len = self.max_position_embeddings * self.scaling_factor
         base = self.base * (
-            (self.scaling_factor * max_len / self.max_position_embeddings)
-            - (self.scaling_factor - 1)
-        ) ** (self.rotary_dim / (self.rotary_dim - 2))
+            (self.scaling_factor * max_len / self.max_position_embeddings) -
+            (self.scaling_factor - 1))**(self.rotary_dim /
+                                         (self.rotary_dim - 2))
         inv_freq = self._compute_inv_freq(base)
         t = torch.arange(max_len, dtype=torch.float)
 
@@ -262,9 +255,9 @@ def _yarn_find_correction_dim(
     base: float = 10000,
     max_position_embeddings: int = 2048,
 ) -> float:
-    return (dim * math.log(max_position_embeddings / (num_rotations * 2 * math.pi))) / (
-        2 * math.log(base)
-    )
+    return (dim * math.log(max_position_embeddings /
+                           (num_rotations * 2 * math.pi))) / (2 *
+                                                              math.log(base))
 
 
 # Find dim range bounds based on rotations
@@ -276,17 +269,15 @@ def _yarn_find_correction_range(
     max_position_embeddings: int = 2048,
 ) -> int:
     low = math.floor(
-        _yarn_find_correction_dim(low_rot, dim, base, max_position_embeddings)
-    )
+        _yarn_find_correction_dim(low_rot, dim, base, max_position_embeddings))
     high = math.ceil(
-        _yarn_find_correction_dim(high_rot, dim, base, max_position_embeddings)
-    )
+        _yarn_find_correction_dim(high_rot, dim, base,
+                                  max_position_embeddings))
     return max(low, 0), min(high, dim - 1)  # Clamp values just in case
 
 
-def _yarn_linear_ramp_mask(
-    low: float, high: float, dim: int, dtype: torch.dtype
-) -> torch.Tensor:
+def _yarn_linear_ramp_mask(low: float, high: float, dim: int,
+                           dtype: torch.dtype) -> torch.Tensor:
     if low == high:
         high += 0.001  # Prevent singularity
 
@@ -327,15 +318,15 @@ class YaRNScalingRotaryEmbedding(RotaryEmbedding):
         self.beta_fast = beta_fast
         self.beta_slow = beta_slow
         # Get n-d magnitude scaling corrected for interpolation
-        self.mscale = float(_yarn_get_mscale(self.scaling_factor) * attn_factor)
-        super().__init__(
-            head_size, rotary_dim, max_position_embeddings, base, is_neox_style
-        )
+        self.mscale = float(
+            _yarn_get_mscale(self.scaling_factor) * attn_factor)
+        super().__init__(head_size, rotary_dim, max_position_embeddings, base,
+                         is_neox_style)
 
     def _compute_inv_freq(self, scaling_factor: float) -> torch.Tensor:
-        pos_freqs = self.base ** (
-            torch.arange(0, self.rotary_dim, 2, dtype=torch.float) / self.rotary_dim
-        )
+        pos_freqs = self.base**(
+            torch.arange(0, self.rotary_dim, 2, dtype=torch.float) /
+            self.rotary_dim)
         inv_freq_extrapolation = 1.0 / pos_freqs
         inv_freq_interpolation = 1.0 / (scaling_factor * pos_freqs)
 
@@ -347,21 +338,17 @@ class YaRNScalingRotaryEmbedding(RotaryEmbedding):
             self.max_position_embeddings,
         )
         # Get n-d rotational scaling corrected for extrapolation
-        inv_freq_mask = (
-            1
-            - _yarn_linear_ramp_mask(low, high, self.rotary_dim // 2, dtype=torch.float)
-        ) * self.extrapolation_factor
-        inv_freq = (
-            inv_freq_interpolation * (1 - inv_freq_mask)
-            + inv_freq_extrapolation * inv_freq_mask
-        )
+        inv_freq_mask = (1 - _yarn_linear_ramp_mask(
+            low, high, self.rotary_dim // 2,
+            dtype=torch.float)) * self.extrapolation_factor
+        inv_freq = (inv_freq_interpolation * (1 - inv_freq_mask) +
+                    inv_freq_extrapolation * inv_freq_mask)
         return inv_freq
 
     def _compute_cos_sin_cache(self) -> torch.Tensor:
         inv_freq = self._compute_inv_freq(self.scaling_factor)
-        t = torch.arange(
-            self.max_position_embeddings * self.scaling_factor, dtype=torch.float32
-        )
+        t = torch.arange(self.max_position_embeddings * self.scaling_factor,
+                         dtype=torch.float32)
         freqs = torch.einsum("i,j -> ij", t, inv_freq)
         cos = freqs.cos() * self.mscale
         sin = freqs.sin() * self.mscale
@@ -392,27 +379,28 @@ def get_rope(
         return _ROPE_DICT[key]
 
     if rope_scaling is None:
-        rotary_emb = RotaryEmbedding(
-            head_size, rotary_dim, max_position, base, is_neox_style
-        )
+        rotary_emb = RotaryEmbedding(head_size, rotary_dim, max_position, base,
+                                     is_neox_style)
     else:
         scaling_type = rope_scaling["type"]
         scaling_factor = rope_scaling["factor"]
         if scaling_type == "linear":
-            rotary_emb = LinearScalingRotaryEmbedding(
-                head_size, rotary_dim, max_position, base, is_neox_style, scaling_factor
-            )
+            rotary_emb = LinearScalingRotaryEmbedding(head_size, rotary_dim,
+                                                      max_position, base,
+                                                      is_neox_style,
+                                                      scaling_factor)
         elif scaling_type == "dynamic":
             rotary_emb = DynamicNTKScalingRotaryEmbedding(
-                head_size, rotary_dim, max_position, base, is_neox_style, scaling_factor
-            )
+                head_size, rotary_dim, max_position, base, is_neox_style,
+                scaling_factor)
         elif scaling_type == "yarn":
-            original_max_position = rope_scaling["original_max_position_embeddings"]
+            original_max_position = rope_scaling[
+                "original_max_position_embeddings"]
             extra_kwargs = {
                 k: v
                 for k, v in rope_scaling.items()
-                if k
-                in ("extrapolation_factor", "attn_factor", "beta_fast", "beta_slow")
+                if k in ("extrapolation_factor", "attn_factor", "beta_fast",
+                         "beta_slow")
             }
             rotary_emb = YaRNScalingRotaryEmbedding(
                 head_size,

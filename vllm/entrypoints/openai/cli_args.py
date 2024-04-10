@@ -13,6 +13,7 @@ from vllm.entrypoints.openai.serving_engine import LoRA, Delta
 
 
 class LoRAParserAction(argparse.Action):
+
     def __call__(self, parser, namespace, values, option_string=None):
         lora_list = []
         for item in values:
@@ -22,6 +23,7 @@ class LoRAParserAction(argparse.Action):
 
 
 class DeltaParserAction(argparse.Action):
+
     def __call__(self, parser, namespace, values, option_string=None):
         delta_list = []
         for item in values:
@@ -32,8 +34,7 @@ class DeltaParserAction(argparse.Action):
 
 def make_arg_parser():
     parser = argparse.ArgumentParser(
-        description="vLLM OpenAI-Compatible RESTful API server."
-    )
+        description="vLLM OpenAI-Compatible RESTful API server.")
     parser.add_argument("--host", type=str, default=None, help="host name")
     parser.add_argument("--port", type=int, default=8000, help="port number")
     parser.add_argument(
@@ -43,18 +44,21 @@ def make_arg_parser():
         choices=["debug", "info", "warning", "error", "critical", "trace"],
         help="log level for uvicorn",
     )
-    parser.add_argument(
-        "--allow-credentials", action="store_true", help="allow credentials"
-    )
-    parser.add_argument(
-        "--allowed-origins", type=json.loads, default=["*"], help="allowed origins"
-    )
-    parser.add_argument(
-        "--allowed-methods", type=json.loads, default=["*"], help="allowed methods"
-    )
-    parser.add_argument(
-        "--allowed-headers", type=json.loads, default=["*"], help="allowed headers"
-    )
+    parser.add_argument("--allow-credentials",
+                        action="store_true",
+                        help="allow credentials")
+    parser.add_argument("--allowed-origins",
+                        type=json.loads,
+                        default=["*"],
+                        help="allowed origins")
+    parser.add_argument("--allowed-methods",
+                        type=json.loads,
+                        default=["*"],
+                        help="allowed methods")
+    parser.add_argument("--allowed-headers",
+                        type=json.loads,
+                        default=["*"],
+                        help="allowed headers")
     parser.add_argument(
         "--api-key",
         type=str,
@@ -100,7 +104,8 @@ def make_arg_parser():
         "--response-role",
         type=str,
         default="assistant",
-        help="The role name to return if " "`request.add_generation_prompt=true`.",
+        help="The role name to return if "
+        "`request.add_generation_prompt=true`.",
     )
     parser.add_argument(
         "--ssl-keyfile",
@@ -114,9 +119,10 @@ def make_arg_parser():
         default=None,
         help="The file path to the SSL cert file",
     )
-    parser.add_argument(
-        "--ssl-ca-certs", type=str, default=None, help="The CA certificates file"
-    )
+    parser.add_argument("--ssl-ca-certs",
+                        type=str,
+                        default=None,
+                        help="The CA certificates file")
     parser.add_argument(
         "--ssl-cert-reqs",
         type=int,

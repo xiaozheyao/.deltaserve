@@ -21,9 +21,8 @@ class DeltaLayerWeights:
             assert qweight is None, "qweight should be None if weight is provided"
         else:
             self._compressed = True
-            assert (
-                qweight is not None
-            ), "qweight should not be None if weight is not provided"
+            assert (qweight is not None
+                    ), "qweight should not be None if weight is not provided"
         self.module_name = module_name
         self.config = compress_config
         self.qweight = qweight
@@ -55,7 +54,8 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         )
 
     @classmethod
-    def pack(cls, deltas: List["DeltaLayerWeights"]) -> "PackedDeltaLayerWeights":
+    def pack(cls,
+             deltas: List["DeltaLayerWeights"]) -> "PackedDeltaLayerWeights":
         """Pack a list of Deltas into a single LoRA.
 
         If LoRA is None, it signifies that the submodule does not have a LoRA.
