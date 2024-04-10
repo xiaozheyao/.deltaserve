@@ -93,8 +93,8 @@ async def get_sysinfo():
 
 @app.post("/v1/reload")
 async def reload_model_weights(request: ReloadRequest):
-    pass
-
+    engine.reload_model(request.model_name_or_path)
+    return JSONResponse(content={"message": "Model reloaded"})
 
 @app.post("/v1/chat/completions")
 async def create_chat_completion(request: ChatCompletionRequest, raw_request: Request):

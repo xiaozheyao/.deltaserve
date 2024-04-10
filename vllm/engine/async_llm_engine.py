@@ -417,6 +417,9 @@ class AsyncLLMEngine:
         else:
             return self.engine.get_tokenizer()
 
+    def reload_model(self, model_name_or_path: str):
+        self.engine.reload_model(model_name_or_path)
+
     def start_background_loop(self) -> None:
         """Start the background loop."""
         if self.errored:

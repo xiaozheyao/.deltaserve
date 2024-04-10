@@ -2,7 +2,6 @@ import time
 from typing import Iterable, List, Optional, Tuple, Type, Union
 
 from transformers import PreTrainedTokenizer
-
 import vllm
 from vllm.config import (
     CacheConfig,
@@ -120,7 +119,7 @@ class LLMEngine:
         self.device_config = device_config
         self.log_stats = log_stats
         self._verify_args()
-
+        self.reload_lock = False  # indicating whether the a reloading is in-progress
         self._init_tokenizer()
         self.detokenizer = Detokenizer(self.tokenizer)
         self.seq_counter = Counter()
@@ -138,7 +137,6 @@ class LLMEngine:
         # Ping the tokenizer to ensure liveness if it runs in a
         # different process.
         self.tokenizer.ping()
-
         # Create the scheduler.
         # NOTE: the cache_config here have been updated with the numbers of
         # GPU and CPU blocks, which are profiled in the distributed executor.
@@ -153,6 +151,13 @@ class LLMEngine:
                 labels=dict(model_name=model_config.model),
             )
             self.stat_logger.info("cache_config", self.cache_config)
+
+    def reload_model(self, model_name_or_path: str) -> None:
+        while self.has_unfinished_requests():
+            time.sleep(0.1)
+        self.reload_lock = True
+        self.model_executor.reload_model(model_name_or_path)
+        self.reload_lock = False
 
     @classmethod
     def from_engine_args(cls, engine_args: EngineArgs) -> "LLMEngine":
@@ -706,7 +711,7 @@ class LLMEngine:
             >>>         break
         """
         seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule()
-        if not scheduler_outputs.is_empty():
+        if not scheduler_outputs.is_empty() and not self.reload_lock:
             output = self.model_executor.execute_model(
                 seq_group_metadata_list,
                 scheduler_outputs.blocks_to_swap_in,

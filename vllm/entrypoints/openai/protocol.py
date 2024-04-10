@@ -201,7 +201,7 @@ class ChatCompletionRequest(BaseModel):
 
 
 class ReloadRequest(BaseModel):
-    new_model: str
+    model_name_or_path: str
 
 
 class CompletionRequest(BaseModel):
