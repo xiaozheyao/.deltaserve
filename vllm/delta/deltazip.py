@@ -26,6 +26,7 @@ def add_delta(
         ).squeeze(0)
     """
     ql = QuantLinear.from_tensors(
+        2,
         qweight[0][0],
         qzeros[0][0],
         scales[0][0],
@@ -61,6 +62,7 @@ def add_delta_slice(
     """
 
     ql = QuantLinear.from_tensors(
+        2,
         qweight[0][0],
         qzeros[0][0],
         scales[0][0],

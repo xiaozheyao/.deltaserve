@@ -139,12 +139,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.indices_len = indices_len
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        # indices = self.indices[: self.indices_len[0]]
-        # # base_output = F.embedding(x, self.base_layer.weight)
-        # base_output = self.base_layer.forward(x)
-        # # apply_delta_embed(
-        # #     x, self.delta_weights, indices, base_output
-        # # )
+
         indices = self.indices[: self.indices_len[0]]
         if self.tp_size > 1:
             # Build the mask.
@@ -906,7 +901,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
                 self.g_idx_stacked,
                 self.indices[: self.indices_len[0]],
                 output,
-                # debug=True,
                 self.device_tensor,
             )
         return output

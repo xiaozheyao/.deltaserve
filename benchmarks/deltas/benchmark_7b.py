@@ -22,7 +22,7 @@ sampling_params = SamplingParams(
     temperature=0,
     max_tokens=64,
 )
-delta_path = f".idea/models/vicuna-7b-4b0.75s-decom-1-optimize_io-tp_{tp_size}"
+delta_path = f".idea/models/lmsys.vicuna-7b-v1.5.2b90s128g"
 
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",

@@ -209,7 +209,6 @@ class DeltaModel:
             del tensor_dtypes, tensor_shapes
             del lossless_compressor
         else:
-
             logger.info("Lossless Compression Disabled")
             for mtf in model_tensor_filenames:
                 with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
