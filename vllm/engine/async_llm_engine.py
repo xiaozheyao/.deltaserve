@@ -30,7 +30,7 @@ from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
 ENGINE_ITERATION_TIMEOUT_S = int(
-    os.environ.get("VLLM_ENGINE_ITERATION_TIMEOUT_S", "60")
+    os.environ.get("VLLM_ENGINE_ITERATION_TIMEOUT_S", "600")
 )
 
 

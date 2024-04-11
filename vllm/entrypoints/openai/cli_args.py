@@ -9,8 +9,7 @@ import json
 import ssl
 
 from vllm.engine.arg_utils import AsyncEngineArgs
-from vllm.entrypoints.openai.serving_engine import LoRA, Delta
-
+from vllm.entrypoints.openai.serving_engine import LoRA, Delta, SwapModule
 
 class LoRAParserAction(argparse.Action):
 
@@ -31,6 +30,13 @@ class DeltaParserAction(argparse.Action):
             delta_list.append(Delta(name, path))
         setattr(namespace, self.dest, delta_list)
 
+class SwapParserAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        swappable_modules = []
+        for item in values:
+            name, path = item.split("=")
+            swappable_modules.append(SwapModule(name, path))
+        setattr(namespace, self.dest, swappable_modules)
 
 def make_arg_parser():
     parser = argparse.ArgumentParser(
@@ -89,6 +95,14 @@ def make_arg_parser():
         action=DeltaParserAction,
         help="Delta module configurations in the format name=path. "
         "Multiple modules can be specified.",
+    )
+    parser.add_argument(
+        "--swap-modules",
+        type=str,
+        default=[],
+        nargs="+",
+        action=SwapParserAction,
+        help="Modules that can be reloaded during requests",
     )
     parser.add_argument(
         "--chat-template",

@@ -34,6 +34,10 @@ class Delta:
     name: str
     local_path: str
 
+@dataclass
+class SwapModule:
+    name: str
+    local_path: str
 
 class OpenAIServing:
 
@@ -43,6 +47,7 @@ class OpenAIServing:
         served_model: str,
         lora_modules=Optional[List[LoRA]],
         delta_modules=Optional[List[Delta]],
+        swap_modules=Optional[List[SwapModule]],
     ):
         self.engine = engine
         self.served_model = served_model
@@ -50,6 +55,8 @@ class OpenAIServing:
             self.lora_requests = []
         if delta_modules is None:
             self.delta_requests = []
+        if swap_modules is None:
+            self.swap_requests = []
         else:
             self.lora_requests = [
                 LoRARequest(
@@ -67,7 +74,14 @@ class OpenAIServing:
                 )
                 for i, delta in enumerate(delta_modules, start=1)
             ]
-
+            self.swap_requests = [
+                SwapRequest(
+                    swap_name=swap.name,
+                    swap_int_id=i,
+                    swap_local_path=swap.local_path,
+                )
+                for i, swap in enumerate(swap_modules, start=1)
+            ]
         self.max_model_len = 0
         self.tokenizer = None
 
@@ -128,6 +142,11 @@ class OpenAIServing:
                 permission=[ModelPermission()],
             )
             for delta in self.delta_requests
+        ]
+        swap_cards = [
+            ModelCard(
+                id=swap.nam
+            )
         ]
         model_cards.extend(lora_cards)
         model_cards.extend(delta_cards)
