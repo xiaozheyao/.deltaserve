@@ -129,11 +129,12 @@ class DeltaModel:
     def __init__(
         self,
         delta_model_id: int,
+        bitwidth: int,
         deltas: Dict[str, DeltaLayerWeights],
     ):
         self.id = delta_model_id
         self.deltas: Dict[str, DeltaLayerWeights] = deltas
-
+        self.bitwidth = bitwidth
     def get_delta(self, module_name: str) -> Optional[DeltaLayerWeights]:
         return self.deltas.get(module_name, None)
 
@@ -147,7 +148,6 @@ class DeltaModel:
     ) -> "DeltaModel":
         pin_memory = str(device) == "cpu" and not in_wsl()
         # get tp rank here
-        tp_size = get_tensor_model_parallel_world_size()
         tp_rank = get_tensor_model_parallel_rank()
         logger.debug(f"Loading DeltaModel from {path_or_name}")
         config = AutoConfig.from_pretrained(
@@ -179,6 +179,7 @@ class DeltaModel:
 
         tensors = {}
         start = timer()
+        bitwidth = compress_config.bits
         if compress_config.lossless != "none":
             # lossless_compressor = LosslessCompressor(
             #     compress_config.lossless, device_id=0
@@ -254,7 +255,7 @@ class DeltaModel:
             f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds"
         )
         del tensors
-        return cls(id, modules)
+        return cls(id, bitwidth, modules)
 
 
 class DeltaModelManager:
@@ -388,6 +389,7 @@ class DeltaModelManager:
                         qweight_device = module_delta.qweight.device
                     module.set_delta(
                         index,
+                        delta_model.bitwidth,
                         module_delta.qweight,
                         module_delta.qzeros,
                         module_delta.scales,
@@ -401,6 +403,7 @@ class DeltaModelManager:
                 else:
                     module.set_delta(
                         index,
+                        delta_model.bitwidth,
                         module_delta.weight,
                         device_tensor=(
                             device_tensors[0]
@@ -520,9 +523,6 @@ class DeltaModelManager:
                         self.model.config,
                     ),
                 )
-            # if "embed_tokens" in module_name:
-            #     embed_token_module = self.model.get_submodule(module_name)
-            #     print(f"embed_token_module: {embed_token_module}")
             self.register_module(module_name, new_module)
             self._register_packed_modules(module_name)
             new_module.set_mapping(

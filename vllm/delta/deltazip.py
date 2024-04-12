@@ -1,3 +1,4 @@
+import os
 import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
@@ -6,6 +7,7 @@ import torch.nn.functional as F
 # from .quant_linears.quant_linear_exllama import QuantLinear
 from .quant_linears.quant_linear_triton import QuantLinear
 
+BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
 def add_delta(
     y: torch.Tensor,
@@ -26,7 +28,7 @@ def add_delta(
         ).squeeze(0)
     """
     ql = QuantLinear.from_tensors(
-        2,
+        BITWIDTH,
         qweight[0][0],
         qzeros[0][0],
         scales[0][0],
@@ -60,9 +62,9 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-
+    
     ql = QuantLinear.from_tensors(
-        2,
+        BITWIDTH,
         qweight[0][0],
         qzeros[0][0],
         scales[0][0],
@@ -211,3 +213,4 @@ def apply_delta_embed(
             outputs[i] = F.embedding(x, delta)
     for i in range(len(delta_weights)):
         base_output[indices == i] += outputs[i][indices == i]
+    return base_output

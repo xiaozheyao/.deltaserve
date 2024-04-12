@@ -14,10 +14,11 @@ from vllm.entrypoints.openai.protocol import (
     ModelList,
     ModelPermission,
 )
+from vllm.sequence import Logprob
 from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
-from vllm.sequence import Logprob
+from vllm.entrypoints.openai.utils import SwapRequest
 from vllm.transformers_utils.tokenizer import get_tokenizer
 
 logger = init_logger(__name__)
@@ -145,12 +146,15 @@ class OpenAIServing:
         ]
         swap_cards = [
             ModelCard(
-                id=swap.nam
+                id=swap.swap_name,
+                root=self.served_model,
+                permission=[ModelPermission()],
             )
+            for swap in self.swap_requests
         ]
         model_cards.extend(lora_cards)
         model_cards.extend(delta_cards)
-        print(model_cards)
+        model_cards.extend(swap_cards)
         return ModelList(data=model_cards)
 
     def _create_logprobs(

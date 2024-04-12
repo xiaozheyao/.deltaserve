@@ -4,7 +4,7 @@ from vllm import LLM, SamplingParams
 from vllm.delta.request import DeltaRequest
 
 tp_size = int(os.environ.get("TP_SIZE", "1"))
-bits = int(os.environ.get("BITS", "4"))
+bits = int(os.environ.get("BITWIDTH", "4"))
 
 # print(f"Benchmarking with tensor parallel size={tp_size} and bitwidth={bits}")
 torch.cuda.nvtx.range_push(f"tp_size = {tp_size}")
@@ -22,7 +22,7 @@ sampling_params = SamplingParams(
     temperature=0,
     max_tokens=64,
 )
-delta_path = f".idea/models/lmsys.vicuna-7b-v1.5.2b90s128g"
+delta_path = f".idea/models/vicuna-7b-4b0.75s-optimize_io-tp_{tp_size}-1/"
 
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",
