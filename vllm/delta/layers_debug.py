@@ -153,7 +153,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
             masked_input = x
         output_parallel = F.embedding(masked_input, self.base_layer.weight)
 
-        output_parallel = apply_delta_embed(masked_input, self.delta_weights, indices, output_parallel)
+        #  output_parallel = apply_delta_embed(masked_input, self.delta_weights, indices, output_parallel)
 
         if self.tp_size > 1:
             output_parallel[input_mask, :] = 0.0
@@ -268,16 +268,16 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = apply_delta(
-            x,
-            self.qweight_stacked,
-            self.qzero_stacked,
-            self.scales_stacked,
-            self.g_idx_stacked,
-            self.indices[: self.indices_len[0]],
-            output,
-            self.device_tensor,
-        )
+        # output = apply_delta(
+        #     x,
+        #     self.qweight_stacked,
+        #     self.qzero_stacked,
+        #     self.scales_stacked,
+        #     self.g_idx_stacked,
+        #     self.indices[: self.indices_len[0]],
+        #     output,
+        #     self.device_tensor,
+        # )
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -459,17 +459,17 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = apply_delta_packed_nslice(
-            x,
-            self.qweight_stacked,
-            self.qzeros_stacked,
-            self.scales_stacked,
-            self.g_idx,
-            self.indices[: self.indices_len[0]],
-            output,
-            (self.output_dim, self.output_dim),
-            self.device_tensor,
-        )
+        # output = apply_delta_packed_nslice(
+        #     x,
+        #     self.qweight_stacked,
+        #     self.qzeros_stacked,
+        #     self.scales_stacked,
+        #     self.g_idx,
+        #     self.indices[: self.indices_len[0]],
+        #     output,
+        #     (self.output_dim, self.output_dim),
+        #     self.device_tensor,
+        # )
         return output
 
     @classmethod
@@ -778,17 +778,17 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = apply_delta_packed_nslice(
-            x,
-            self.qweight_stacked,
-            self.qzeros_stacked,
-            self.scales_stacked,
-            self.g_idx_stacked,
-            self.indices[: self.indices_len[0]],
-            output,
-            self.output_slices,
-            self.device_tensor,
-        )
+        # output = apply_delta_packed_nslice(
+        #     x,
+        #     self.qweight_stacked,
+        #     self.qzeros_stacked,
+        #     self.scales_stacked,
+        #     self.g_idx_stacked,
+        #     self.indices[: self.indices_len[0]],
+        #     output,
+        #     self.output_slices,
+        #     self.device_tensor,
+        # )
         return output
 
     @classmethod

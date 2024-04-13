@@ -3,9 +3,9 @@ import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
 
-from .quant_linears.quant_linear_naive import QuantLinear
+# from .quant_linears.quant_linear_naive import QuantLinear
 # from .quant_linears.quant_linear_exllama import QuantLinear
-# from .quant_linears.quant_linear_triton import QuantLinear
+from .quant_linears.quant_linear_triton import QuantLinear
 
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
