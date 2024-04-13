@@ -20,7 +20,7 @@ def main(args):
         "self_attn.o_proj.qweight",
         "mlp.down_proj.qweight",
         "embed_tokens.weight",
-        "lm_head.weight",
+        # "lm_head.weight",
     ]
 
     with open(os.path.join(args.input, "compress_config.json"), "r") as fp:

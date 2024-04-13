@@ -3,9 +3,9 @@ import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
 
-# from .quant_linears.quant_linear_naive import QuantLinear
+from .quant_linears.quant_linear_naive import QuantLinear
 # from .quant_linears.quant_linear_exllama import QuantLinear
-from .quant_linears.quant_linear_triton import QuantLinear
+# from .quant_linears.quant_linear_triton import QuantLinear
 
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
@@ -183,7 +183,10 @@ def apply_delta_uncompressed(
             outputs[i] = torch.matmul(x, delta.T)
     for i in range(len(delta_weights)):
         base_output[indices == i] += outputs[i][indices == i]
-
+    return base_output
+    # output = torch.matmul(x, delta_weights[0].T)
+    # base_output += output
+    # return base_output
 
 def apply_delta_embed(
     x: torch.Tensor,
