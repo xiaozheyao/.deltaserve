@@ -14,7 +14,7 @@ from vllm.entrypoints.openai.protocol import (
     LogProbs,
     UsageInfo,
 )
-from vllm.entrypoints.openai.serving_engine import LoRA, OpenAIServing, Delta
+from vllm.entrypoints.openai.serving_engine import LoRA, OpenAIServing, Delta, SwapModule
 from vllm.logger import init_logger
 from vllm.model_executor.guided_decoding import get_guided_decoding_logits_processor
 from vllm.outputs import RequestOutput
@@ -97,12 +97,14 @@ class OpenAIServingCompletion(OpenAIServing):
         served_model: str,
         lora_modules: Optional[List[LoRA]] = None,
         delta_modules: Optional[List[Delta]] = None,
+        swap_modules: Optional[List[SwapModule]] = None,
     ):
         super().__init__(
             engine=engine,
             served_model=served_model,
             lora_modules=lora_modules,
             delta_modules=delta_modules,
+            swap_modules=swap_modules,
         )
 
     async def create_completion(self, request: CompletionRequest, raw_request: Request):

@@ -16,7 +16,7 @@ from vllm.entrypoints.openai.protocol import (
     ErrorResponse,
     UsageInfo,
 )
-from vllm.entrypoints.openai.serving_engine import LoRA, Delta, OpenAIServing
+from vllm.entrypoints.openai.serving_engine import LoRA, Delta, SwapModule, OpenAIServing
 from vllm.logger import init_logger
 from vllm.model_executor.guided_decoding import get_guided_decoding_logits_processor
 from vllm.outputs import RequestOutput
@@ -34,6 +34,7 @@ class OpenAIServingChat(OpenAIServing):
         response_role: str,
         lora_modules: Optional[List[LoRA]] = None,
         delta_modules: Optional[List[Delta]] = None,
+        swap_modules: Optional[List[SwapModule]] = None,
         chat_template=None,
     ):
         super().__init__(
@@ -41,6 +42,7 @@ class OpenAIServingChat(OpenAIServing):
             served_model=served_model,
             lora_modules=lora_modules,
             delta_modules=delta_modules,
+            swap_modules=swap_modules,
         )
         logger.info(f"delta modules: {delta_modules}")
         self.response_role = response_role

@@ -23,12 +23,10 @@ from vllm.transformers_utils.tokenizer import get_tokenizer
 
 logger = init_logger(__name__)
 
-
 @dataclass
 class LoRA:
     name: str
     local_path: str
-
 
 @dataclass
 class Delta:

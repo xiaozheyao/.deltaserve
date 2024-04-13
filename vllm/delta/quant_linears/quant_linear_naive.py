@@ -59,6 +59,7 @@ class QuantLinear(nn.Module):
 
         weight = weight.reshape(weight.shape[0] * weight.shape[1], weight.shape[2])
         num_itr = self.g_idx.shape[0] // x.shape[-1]
+        assert num_itr==1, "num_itr must be 1"
         if num_itr == 1:
             weights = self.scales[self.g_idx.long()] * (
                 weight - zeros[self.g_idx.long()]

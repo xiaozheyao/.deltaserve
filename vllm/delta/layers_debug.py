@@ -153,7 +153,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
             masked_input = x
         output_parallel = F.embedding(masked_input, self.base_layer.weight)
 
-        #  output_parallel = apply_delta_embed(masked_input, self.delta_weights, indices, output_parallel)
+        # output_parallel = apply_delta_embed(masked_input, self.delta_weights, indices, output_parallel)
 
         if self.tp_size > 1:
             output_parallel[input_mask, :] = 0.0
@@ -882,13 +882,13 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
-        self.qweight_stacked[index, 0, : qweight.shape[0], : qweight.shape[1]].copy_(
+        self.qweight_stacked[index, 0].copy_(
             qweight, non_blocking=ASYNC_COPY
         )
-        self.qzeros_stacked[index, 0, : qzeros.shape[0], : qzeros.shape[1]].copy_(
+        self.qzeros_stacked[index].copy_(
             qzeros, non_blocking=ASYNC_COPY
         )
-        self.scales_stacked[index, 0, : scales.shape[0], : scales.shape[1]].copy_(
+        self.scales_stacked[index].copy_(
             scales, non_blocking=ASYNC_COPY
         )
 
@@ -1049,12 +1049,12 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
         if logits is None:
             return None
-        apply_delta_uncompressed(
-            hidden_states,
-            self.weight_stacked,
-            self.indices[: self.indices_len[1]],
-            logits,
-        )
+        # apply_delta_uncompressed(
+        #     hidden_states,
+        #     self.weight_stacked,
+        #     self.indices[: self.indices_len[1]],
+        #     logits,
+        # )
         logits = tensor_model_parallel_gather(logits)
         return logits
 
