@@ -396,6 +396,7 @@ class LlamaForCausalLM(nn.Module):
         load_format: str = "auto",
         revision: Optional[str] = None,
     ):
+        print("Loading weights....")
         stacked_params_mapping = [
             # (param_name, shard_name, shard_id)
             ("qkv_proj", "q_proj", "q"),
@@ -405,6 +406,11 @@ class LlamaForCausalLM(nn.Module):
             ("gate_up_proj", "up_proj", 1),
         ]
         params_dict = dict(self.named_parameters())
+        # remove the base_layer in the middle if it exists
+        params_dict = {
+            name.replace(".base_layer",""): param for name, param in params_dict.items()
+        }
+        
         for name, loaded_weight in hf_model_weights_iterator(
             model_name_or_path, cache_dir, load_format, revision
         ):
