@@ -27,7 +27,7 @@ def request_thread(
     global_start_time,
 ):
     global inference_results
-    res = requests.post(endpoint, json=req)
+    res = requests.post(endpoint+"/v1/completions", json=req)
     end_time = timer()
     res = {
         "response": res.json(),
@@ -96,11 +96,17 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     req = copy.deepcopy(req)
     req["timestamp"] = 0
     print(req)
-    res = requests.post(endpoint, json=req)
+    res = requests.post(endpoint+'/v1/completions', json=req)
+    if res.status_code != 200:
+        logger.error(f"Failed to warm up: {res.text}")
     logger.info("Warming up ends")
     
-def run(endpoint: str, workload: List, warmup_strategy: str, base_model: str):
+def run(endpoints: List[str], workload: List, warmup_strategy: str, base_model: str):
     global inference_results
-    warmup(endpoint, workload, base_model, warmup_strategy)
-    issue_queries(endpoint, workload)
+    warmup(endpoints[0], workload, base_model, warmup_strategy)
+    issue_queries(endpoints[0], workload)
     return inference_results
+
+def get_sys_info(endpoint:str):
+    return requests.get(endpoint+"/sysinfo").json()
+     

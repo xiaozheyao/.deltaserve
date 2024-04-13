@@ -264,7 +264,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
         print("ColumnParallelLinearWithDelta: apply_weights")
-        # (note): this is not actually used.
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )

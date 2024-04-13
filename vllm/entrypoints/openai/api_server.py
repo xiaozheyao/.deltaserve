@@ -50,7 +50,6 @@ async def lifespan(app: fastapi.FastAPI):
 
 app = fastapi.FastAPI(lifespan=lifespan)
 
-
 def parse_args():
     parser = make_arg_parser()
     return parser.parse_args()
@@ -88,7 +87,14 @@ async def show_version():
 
 @app.get("/sysinfo")
 async def get_sysinfo():
-    pass
+    engine_info = engine_args.to_json()
+    cli_args = {
+        'swap_modules': [swap_module.to_json() for swap_module in args.swap_modules],
+        'lora_modules': [lora_module.to_json() for lora_module in args.lora_modules],
+        'delta_modules': [delta_module.to_json() for delta_module in args.delta_modules],
+    }
+    engine_info.update(cli_args)
+    return JSONResponse(content=engine_info)
 
 
 @app.post("/v1/reload")
@@ -167,10 +173,11 @@ if __name__ == "__main__":
         args.response_role,
         args.lora_modules,
         args.delta_modules,
+        args.swap_modules,
         args.chat_template,
     )
     openai_serving_completion = OpenAIServingCompletion(
-        engine, served_model, args.lora_modules, args.delta_modules
+        engine, served_model, args.lora_modules, args.delta_modules, args.swap_modules,
     )
 
     app.root_path = args.root_path

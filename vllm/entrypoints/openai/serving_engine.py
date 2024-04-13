@@ -27,17 +27,32 @@ logger = init_logger(__name__)
 class LoRA:
     name: str
     local_path: str
-
+    def to_json(self):
+        return {
+            "name": self.name,
+            "local_path": self.local_path,
+        }
+        
 @dataclass
 class Delta:
     name: str
     local_path: str
-
+    def to_json(self):
+        return {
+            "name": self.name,
+            "local_path": self.local_path,
+        }
+        
 @dataclass
 class SwapModule:
     name: str
     local_path: str
-
+    def to_json(self):
+        return {
+            "name": self.name,
+            "local_path": self.local_path,
+        }
+    
 class OpenAIServing:
 
     def __init__(
@@ -52,10 +67,6 @@ class OpenAIServing:
         self.served_model = served_model
         if lora_modules is None:
             self.lora_requests = []
-        if delta_modules is None:
-            self.delta_requests = []
-        if swap_modules is None:
-            self.swap_requests = []
         else:
             self.lora_requests = [
                 LoRARequest(
@@ -65,6 +76,9 @@ class OpenAIServing:
                 )
                 for i, lora in enumerate(lora_modules, start=1)
             ]
+        if delta_modules is None:
+            self.delta_requests = []
+        else:
             self.delta_requests = [
                 DeltaRequest(
                     delta_name=delta.name,
@@ -73,6 +87,9 @@ class OpenAIServing:
                 )
                 for i, delta in enumerate(delta_modules, start=1)
             ]
+        if swap_modules is None:
+            self.swap_requests = []
+        else:
             self.swap_requests = [
                 SwapRequest(
                     swap_name=swap.name,
@@ -153,6 +170,7 @@ class OpenAIServing:
         model_cards.extend(lora_cards)
         model_cards.extend(delta_cards)
         model_cards.extend(swap_cards)
+        
         return ModelList(data=model_cards)
 
     def _create_logprobs(
@@ -218,13 +236,13 @@ class OpenAIServing:
             return
         if request.model in [lora.lora_name for lora in self.lora_requests]:
             return
-        logger.info(
-            f"Delta Models: {[delta.delta_name for delta in self.delta_requests]}"
-        )
         if request.model in [delta.delta_name for delta in self.delta_requests]:
             return
+        if request.model in [swap.swap_name for swap in self.swap_requests]:
+            return
+        
         return self.create_error_response(
-            message=f"The model [{request.model}] does not exist. Expected one of {self.served_model}, {[lora.lora_name for lora in self.lora_requests]}, {[delta.delta_name for delta in self.delta_requests]}",
+            message=f"The model [{request.model}] does not exist. Expected one of {self.served_model}, {[lora.lora_name for lora in self.lora_requests]}, {[delta.delta_name for delta in self.delta_requests]}, {[swap.swap_name for swap in self.swap_requests]}",
             err_type="NotFoundError",
             status_code=HTTPStatus.NOT_FOUND,
         )
@@ -235,7 +253,6 @@ class OpenAIServing:
         for lora in self.lora_requests:
             if request.model == lora.lora_name:
                 return lora
-
         return None
 
     def _maybe_get_delta(self, request) -> Optional[DeltaRequest]:
@@ -244,7 +261,15 @@ class OpenAIServing:
         for delta in self.delta_requests:
             if request.model == delta.delta_name:
                 return delta
-        raise ValueError("The model `{request.model}` does not exist.")
+        return None
+
+    def _maybe_get_swap(self, request) -> Optional[SwapRequest]:
+        if request.model == self.served_model:
+            return
+        for swap in self.swap_requests:
+            if request.model == swap.swap_name:
+                return swap
+        raise ValueError(f"The model {request.model} does not exist.")
 
     def _validate_prompt_and_tokenize(
         self,

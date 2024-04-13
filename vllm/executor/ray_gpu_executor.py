@@ -223,7 +223,7 @@ class RayGPUExecutor(ExecutorBase):
 
     def reload_model(self, model_path_or_name: str) -> None:
         self._run_workers(
-            "reload_model",
+            "reload_model_weights",
             model_path_or_name=model_path_or_name,
             max_concurrent_workers=self.parallel_config.max_parallel_loading_workers,
         )

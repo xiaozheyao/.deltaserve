@@ -44,7 +44,6 @@ class OpenAIServingChat(OpenAIServing):
             delta_modules=delta_modules,
             swap_modules=swap_modules,
         )
-        logger.info(f"delta modules: {delta_modules}")
         self.response_role = response_role
         self._load_chat_template(chat_template)
 
@@ -80,6 +79,7 @@ class OpenAIServingChat(OpenAIServing):
             sampling_params = request.to_sampling_params()
             lora_request = self._maybe_get_lora(request)
             delta_request = self._maybe_get_delta(request)
+            swap_request = self._maybe_get_swap(request)
             guided_decode_logits_processor = await get_guided_decoding_logits_processor(
                 request, await self.engine.get_tokenizer()
             )
@@ -90,7 +90,7 @@ class OpenAIServingChat(OpenAIServing):
         except ValueError as e:
             return self.create_error_response(str(e))
         result_generator = self.engine.generate(
-            prompt, sampling_params, request_id, token_ids, lora_request, delta_request
+            prompt, sampling_params, request_id, token_ids, lora_request, delta_request, swap_request
         )
         # Streaming response
         if request.stream:

@@ -27,6 +27,7 @@ from vllm.outputs import RequestOutput
 from vllm.sampling_params import SamplingParams
 from vllm.sequence import MultiModalData
 from vllm.delta.request import DeltaRequest
+from vllm.entrypoints.openai.utils import SwapRequest
 
 logger = init_logger(__name__)
 ENGINE_ITERATION_TIMEOUT_S = int(
@@ -418,6 +419,7 @@ class AsyncLLMEngine:
             return self.engine.get_tokenizer()
 
     def reload_model(self, model_name_or_path: str):
+        logger.info(f"Reloading model to {model_name_or_path}")
         self.engine.reload_model(model_name_or_path)
 
     def start_background_loop(self) -> None:
@@ -604,6 +606,7 @@ class AsyncLLMEngine:
         prompt_token_ids: Optional[List[int]] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
     ) -> AsyncIterator[RequestOutput]:
         """Generate outputs for a request.
@@ -672,7 +675,10 @@ class AsyncLLMEngine:
         """
         # Preprocess the request.
         arrival_time = time.time()
-
+        print(f"swap request: {swap_request}")
+        if swap_request:
+            print(f"Swapping model request {swap_request.swap_local_path}")
+            self.reload_model(swap_request.swap_local_path)
         try:
             stream = await self.add_request(
                 request_id,
