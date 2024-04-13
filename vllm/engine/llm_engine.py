@@ -153,8 +153,6 @@ class LLMEngine:
             self.stat_logger.info("cache_config", self.cache_config)
 
     def reload_model(self, model_name_or_path: str) -> None:
-        while self.has_unfinished_requests():
-            time.sleep(0.1)
         self.reload_lock = True
         self.model_executor.reload_model(model_name_or_path)
         self.reload_lock = False
