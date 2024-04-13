@@ -996,7 +996,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         self.weight_stacked = torch.zeros(
             (
                 max_deltas,
-                self.base_layer.vocab_size,
+                self.base_layer.vocab_size // self.tp_size,
                 self.hidden_size,
             ),
             dtype=self.dtype,
@@ -1045,21 +1045,17 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         embedding_bias: Optional[torch.Tensor] = None,
     ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
-        tp_rank = get_tensor_model_parallel_rank()
-        start = tp_rank*self.base_layer.vocab_size // self.tp_size
-        end = (tp_rank+1)*self.base_layer.vocab_size // self.tp_size
-        
-        # new_embedding = embedding + self.weight_stacked[0][start:end,:]
-        new_embedding = embedding
-        logits = torch.matmul(hidden_states, new_embedding.t())
+        logits = torch.matmul(hidden_states, embedding.t())
         # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
-        if embedding_bias is not None:
-            logits += embedding_bias
-        logits = tensor_model_parallel_gather(logits)
         if logits is None:
             return None
-        
-        logits = logits[:, : self.base_layer.vocab_size]
+        apply_delta_uncompressed(
+            hidden_states,
+            self.weight_stacked,
+            self.indices[: self.indices_len[1]],
+            logits,
+        )
+        logits = tensor_model_parallel_gather(logits)
         return logits
 
     def forward(self, *args, **kwargs):
