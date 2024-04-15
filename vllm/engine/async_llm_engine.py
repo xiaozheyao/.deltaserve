@@ -577,7 +577,6 @@ class AsyncLLMEngine:
         if swap_request:
             await self.reload_model(swap_request.swap_local_path)
         loaded_time = time.time()
-        
         if self.engine_use_ray:
             prompt_token_ids = await self.engine.encode_request_async.remote(
                 request_id=request_id,

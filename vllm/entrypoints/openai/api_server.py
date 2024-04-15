@@ -31,6 +31,7 @@ TIMEOUT_KEEP_ALIVE = 5  # seconds
 
 openai_serving_chat: OpenAIServingChat = None
 openai_serving_completion: OpenAIServingCompletion = None
+reload_lock = asyncio.Lock()
 logger = init_logger(__name__)
 
 
@@ -115,14 +116,28 @@ async def create_chat_completion(request: ChatCompletionRequest, raw_request: Re
 
 @app.post("/v1/completions")
 async def create_completion(request: CompletionRequest, raw_request: Request):
+    reload_required = False
+    response = None
+    
+    if request.model != engine._current_weight_path and len(args.swap_modules) > 0:
+        reload_required = True
+        await reload_lock.acquire()
+        new_model_name_or_path = [x for x in args.swap_modules if x.name == request.model][0].local_path
+        await engine.reload_model(new_model_name_or_path)
+        reload_lock.release()
+    
     generator = await openai_serving_completion.create_completion(request, raw_request)
+    
     if isinstance(generator, ErrorResponse):
-        return JSONResponse(content=generator.model_dump(), status_code=generator.code)
+        response = JSONResponse(content=generator.model_dump(), status_code=generator.code)
     if request.stream:
-        return StreamingResponse(content=generator, media_type="text/event-stream")
+        response =  StreamingResponse(content=generator, media_type="text/event-stream")
     else:
-        return JSONResponse(content=generator.model_dump())
-
+        response = JSONResponse(content=generator.model_dump())
+    
+    if reload_required:
+        reload_lock.release()
+    return response
 
 if __name__ == "__main__":
     args = parse_args()

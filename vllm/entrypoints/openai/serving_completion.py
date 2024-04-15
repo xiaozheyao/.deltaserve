@@ -128,7 +128,6 @@ class OpenAIServingCompletion(OpenAIServing):
         model_name = request.model
         request_id = f"cmpl-{random_uuid()}"
         created_time = int(time.time())
-
         # Schedule the request and get the result generator.
         generators = []
         try:
@@ -164,15 +163,13 @@ class OpenAIServingCompletion(OpenAIServing):
                         prompt_token_ids=input_ids,
                         lora_request=lora_request,
                         delta_request=delta_request,
-                        swap_request=swap_request,
+                        swap_request=None,
                     )
                 )
         except ValueError as e:
             # TODO: Use a vllm-specific Validation Error
             return self.create_error_response(str(e))
-        print("getting responses")
-        print(len(generators))
-        
+        print("merging iterators...")
         result_generator: AsyncIterator[Tuple[int, RequestOutput]] = (
             merge_async_iterators(*generators)
         )
@@ -200,6 +197,7 @@ class OpenAIServingCompletion(OpenAIServing):
 
         # Non-streaming response
         final_res_batch: RequestOutput = [None] * len(prompts)
+        print("gathering results...")
         try:
             async for i, res in result_generator:
                 if await raw_request.is_disconnected():
@@ -207,11 +205,12 @@ class OpenAIServingCompletion(OpenAIServing):
                     await self.engine.abort(f"{request_id}-{i}")
                     return self.create_error_response("Client disconnected")
                 final_res_batch[i] = res
-            print("getting response")
+            print(f"returning response {final_res_batch}")
             response = self.request_output_to_completion_response(
                 final_res_batch, request, request_id, created_time, model_name
             )
         except ValueError as e:
+            print(f"error: {e}")
             # TODO: Use a vllm-specific Validation Error
             return self.create_error_response(str(e))
 

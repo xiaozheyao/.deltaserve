@@ -101,7 +101,7 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
         logger.error(f"Failed to warm up: {res.text}")
     logger.info("Warming up ends")
     
-def run(endpoints: List[str], workload: List, warmup_strategy: str, base_model: str):
+def run(endpoints: List[str], workload: List, warmup_strategy: str, base_model: str, sysinfo: dict):
     global inference_results
     warmup(endpoints[0], workload, base_model, warmup_strategy)
     issue_queries(endpoints[0], workload)
@@ -109,4 +109,3 @@ def run(endpoints: List[str], workload: List, warmup_strategy: str, base_model: 
 
 def get_sys_info(endpoint:str):
     return requests.get(endpoint+"/sysinfo").json()
-     
