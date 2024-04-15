@@ -20,3 +20,13 @@ class SwapRequest:
 
     def __hash__(self) -> int:
         return self.swap_int_id
+
+def find_swap_model(base_model, requested_model, swap_modules):
+    swappable_modules = [x for x in swap_modules if x.name == requested_model]
+    if len(swappable_modules) == 0:
+        if requested_model == base_model:
+            return base_model
+        else:
+            print(f"Model not found, requested: {requested_model}, available: {[x.name for x in swap_modules] + [base_model]}")
+            return None
+    return swappable_modules[0].local_path

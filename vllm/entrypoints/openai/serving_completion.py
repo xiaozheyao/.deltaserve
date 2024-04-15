@@ -174,7 +174,6 @@ class OpenAIServingCompletion(OpenAIServing):
         except ValueError as e:
             # TODO: Use a vllm-specific Validation Error
             return self.create_error_response(str(e))
-        print("merging iterators...")
         result_generator: AsyncIterator[Tuple[int, RequestOutput]] = (
             merge_async_iterators(*generators)
         )
@@ -199,10 +198,8 @@ class OpenAIServingCompletion(OpenAIServing):
                 model_name,
                 num_prompts=len(prompts),
             )
-
         # Non-streaming response
         final_res_batch: RequestOutput = [None] * len(prompts)
-        print("gathering results...")
         try:
             async for i, res in result_generator:
                 if await raw_request.is_disconnected():
@@ -210,12 +207,10 @@ class OpenAIServingCompletion(OpenAIServing):
                     await self.engine.abort(f"{request_id}-{i}")
                     return self.create_error_response("Client disconnected")
                 final_res_batch[i] = res
-            print(f"returning response {final_res_batch}")
             response = self.request_output_to_completion_response(
                 final_res_batch, request, request_id, created_time, model_name
             )
         except ValueError as e:
-            print(f"error: {e}")
             # TODO: Use a vllm-specific Validation Error
             return self.create_error_response(str(e))
 

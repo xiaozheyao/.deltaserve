@@ -23,6 +23,7 @@ from vllm.entrypoints.openai.protocol import (
     ErrorResponse,
     ReloadRequest,
 )
+from vllm.entrypoints.openai.utils import find_swap_model
 from vllm.entrypoints.openai.serving_chat import OpenAIServingChat
 from vllm.entrypoints.openai.serving_completion import OpenAIServingCompletion
 from vllm.logger import init_logger
@@ -120,21 +121,18 @@ async def create_chat_completion(request: ChatCompletionRequest, raw_request: Re
 
 @app.post("/v1/completions")
 async def create_completion(request: CompletionRequest, raw_request: Request):
-    reload_required = False
     response = None
 
     if request.model != engine._current_weight_path and len(args.swap_modules) > 0:
-        reload_required = True
+        # lock it so other threads don't try to reload the model
         await reload_lock.acquire()
-        swap_model = [x for x in args.swap_modules if x.name == request.model] + [
-            served_model
-        ]
-        if len(swap_model) > 0:
-            await engine.reload_model(swap_model[0].local_path)
+        found_model = find_swap_model(served_model, request.model, args.swap_modules)
+        if found_model:
+            await engine.reload_model(found_model)
         else:
             return JSONResponse(
                 content={
-                    "error": f"Model not found, requested: {request.model}, available: {[x.name for x in args.swap_modules]}"
+                    "error": f"Model not found, requested: {request.model}, available: {[x.name for x in args.swap_modules] + [served_model]}"
                 },
                 status_code=404,
             )
