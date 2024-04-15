@@ -18,8 +18,10 @@ to_eval_models = [
     "vicuna-7b-8",
 ]
 
+
 def format_lmsys(prompt):
     return f"USER: {prompt}\nASSISTANT:"
+
 
 def generate_model_distribution(distribution, num_queries):
     if distribution == "uniform":
@@ -32,12 +34,14 @@ def generate_model_distribution(distribution, num_queries):
         return np.random.choice(to_eval_models, num_queries, p=probs)
     raise ValueError("Invalid distribution")
 
+
 def get_dialogs():
     trace = datasets.load_dataset("lmsys/chatbot_arena_conversations")["train"]
     all_dialogs = []
     for idx, item in enumerate(trace):
         all_dialogs.append(format_lmsys(item["conversation_a"][0]["content"]))
     return all_dialogs
+
 
 def generate_synthetic(args):
     print(args)
@@ -59,19 +63,23 @@ def generate_synthetic(args):
                 "max_tokens": args.gen_tokens,
             }
         )
-    output_file = os.path.join(args.output, f"distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl")
+    output_file = os.path.join(
+        args.output,
+        f"distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl",
+    )
     with open(output_file, "w") as fp:
         for datum in traces_data:
             json.dump(datum, fp)
             fp.write("\n")
 
+
 def main(args):
     generate_synthetic(args)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--distribution", type=str, default="uniform")
+    parser.add_argument("--distribution", type=str, default="uniform")
     parser.add_argument("--output", type=str, default="")
     parser.add_argument("--gen-tokens", type=int, default=512)
     parser.add_argument("--arrival-rate", type=float, default=0)
