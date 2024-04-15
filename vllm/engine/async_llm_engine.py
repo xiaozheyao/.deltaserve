@@ -258,6 +258,7 @@ class _AsyncLLMEngine(LLMEngine):
         sampling_params: SamplingParams,
         prompt_token_ids: Optional[List[int]] = None,
         arrival_time: Optional[float] = None,
+        gpu_loading_time: Optional[float]=None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
@@ -286,6 +287,7 @@ class _AsyncLLMEngine(LLMEngine):
             prompt_token_ids=prompt_token_ids,
             sampling_params=sampling_params,
             arrival_time=arrival_time,
+            gpu_loading_time=gpu_loading_time,
             lora_request=lora_request,
             delta_request=delta_request,
             multi_modal_data=multi_modal_data,
@@ -421,12 +423,9 @@ class AsyncLLMEngine:
             return self.engine.get_tokenizer()
 
     async def reload_model(self, model_name_or_path: str):
-        if model_name_or_path == self._current_weight_path:
-            logger.info(f"Model {model_name_or_path} is already loaded.")
-            return
+        assert model_name_or_path!=self._current_weight_path, "Model is already loaded"
         logger.info(f"Reloading model to {model_name_or_path}")
         self.engine.reload_model(model_name_or_path)
-        self._current_weight_path = model_name_or_path
 
     def start_background_loop(self) -> None:
         """Start the background loop."""
@@ -539,6 +538,7 @@ class AsyncLLMEngine:
         sampling_params: SamplingParams,
         prompt_token_ids: Optional[List[int]] = None,
         arrival_time: Optional[float] = None,
+        gpu_loading_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
         swap_request: Optional[SwapRequest] = None,
@@ -576,7 +576,6 @@ class AsyncLLMEngine:
             arrival_time = time.time()
         if swap_request:
             await self.reload_model(swap_request.swap_local_path)
-        loaded_time = time.time()
         if self.engine_use_ray:
             prompt_token_ids = await self.engine.encode_request_async.remote(
                 request_id=request_id,
@@ -600,6 +599,7 @@ class AsyncLLMEngine:
             sampling_params=sampling_params,
             prompt_token_ids=prompt_token_ids,
             arrival_time=arrival_time,
+            gpu_loading_time=gpu_loading_time,
             lora_request=lora_request,
             delta_request=delta_request,
             multi_modal_data=multi_modal_data,
@@ -617,6 +617,8 @@ class AsyncLLMEngine:
         delta_request: Optional[DeltaRequest] = None,
         swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
+        arrival_time: Optional[float] = None,
+        gpu_loading_time: Optional[float] = None,
     ) -> AsyncIterator[RequestOutput]:
         """Generate outputs for a request.
 
@@ -683,7 +685,8 @@ class AsyncLLMEngine:
             >>> ...
         """
         # Preprocess the request.
-        arrival_time = time.time()
+        if not arrival_time:
+            arrival_time = time.time()
 
         try:
             stream = await self.add_request(
@@ -692,6 +695,7 @@ class AsyncLLMEngine:
                 sampling_params,
                 prompt_token_ids=prompt_token_ids,
                 arrival_time=arrival_time,
+                gpu_loading_time=gpu_loading_time,
                 lora_request=lora_request,
                 delta_request=delta_request,
                 swap_request=swap_request,

@@ -1,0 +1,3 @@
+{"id": 0, "prompt": "USER: What is the difference between OpenCL and CUDA?\nASSISTANT:", "timestamp": 0.26529150272103663, "model": "vicuna-7b-4", "min_tokens": 64, "max_tokens": 64}
+{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 0.683935090376316, "model": "vicuna-7b-7", "min_tokens": 64, "max_tokens": 64}
+{"id": 2, "prompt": "USER: Fuji vs. Nikon, which is better?\nASSISTANT:", "timestamp": 0.9916761389776723, "model": "vicuna-7b-6", "min_tokens": 64, "max_tokens": 64}

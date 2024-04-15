@@ -6,6 +6,9 @@ import numpy as np
 from loguru import logger
 from arrival import PoissonProcess
 
+import tiktoken
+enc = tiktoken.get_encoding("cl100k_base")
+
 to_eval_models = [
     "meta-llama/Llama-2-7b-hf",
     "vicuna-7b-1",
@@ -52,6 +55,7 @@ def generate_synthetic(args):
     traces_data = []
     dialogs = get_dialogs()
     models = generate_model_distribution(args.distribution, len(poisson_ticks))
+    
     for idx in range(len(poisson_ticks)):
         traces_data.append(
             {

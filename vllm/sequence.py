@@ -358,6 +358,7 @@ class SequenceGroup:
         seqs: List[Sequence],
         sampling_params: SamplingParams,
         arrival_time: float,
+        gpu_loading_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
@@ -370,7 +371,7 @@ class SequenceGroup:
             last_token_time=arrival_time,
             first_scheduled_time=None,
             cpu_loading_time=None,
-            gpu_loading_time=None,
+            gpu_loading_time=gpu_loading_time if gpu_loading_time is not None else None,
             first_token_time=None,
             time_in_queue=None,
         )

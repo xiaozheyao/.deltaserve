@@ -112,7 +112,12 @@ class OpenAIServingCompletion(OpenAIServing):
             swap_modules=swap_modules,
         )
 
-    async def create_completion(self, request: CompletionRequest, raw_request: Request):
+    async def create_completion(self, 
+                                request: CompletionRequest, 
+                                raw_request: Request,
+                                arrival_time: Optional[float]=None,
+                                gpu_loading_time: Optional[float] = None
+                                ):
         """Completion API similar to OpenAI's API.
 
         See https://platform.openai.com/docs/api-reference/completions/create
@@ -169,6 +174,8 @@ class OpenAIServingCompletion(OpenAIServing):
                         lora_request=lora_request,
                         delta_request=delta_request,
                         swap_request=None,
+                        arrival_time=arrival_time,
+                        gpu_loading_time=gpu_loading_time,
                     )
                 )
         except ValueError as e:
