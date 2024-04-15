@@ -67,6 +67,7 @@ class BaseLayerWithDelta(nn.Module):
     def set_delta(
         self,
         index: int,
+        bitwidth: int,
         qweight: torch.Tensor,
         qzeros: torch.Tensor,
         scales: torch.Tensor,
@@ -109,6 +110,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def set_delta(
         self,
         index: int,
+        bitwidth: int,
         weight: torch.Tensor,
         device_tensor: Any,
     ):
@@ -202,6 +204,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     def set_delta(
         self,
         index: int,
+        bitwidth: int,
         qweight: torch.Tensor,
         qzeros: torch.Tensor,
         scales: torch.Tensor,
@@ -373,6 +376,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def set_delta(
         self,
         index: int,
+        bitwidth: int,
         qweight: List[torch.Tensor],
         qzeros: List[torch.Tensor],
         scales: List[torch.Tensor],
@@ -601,6 +605,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def set_delta(
         self,
         index: int,
+        bitwidth: int,
         qweight: List[torch.Tensor],
         qzeros: List[torch.Tensor],
         scales: List[torch.Tensor],
@@ -859,6 +864,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     def set_delta(
         self,
         index: int,
+        bitwidth: int,
         qweight: torch.Tensor,
         qzeros: torch.Tensor,
         scales: torch.Tensor,
@@ -1015,6 +1021,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
     def set_delta(
         self,
         index: int,
+        bitwidth: int,
         weight: torch.Tensor,
         device_tensor: Any,
     ):

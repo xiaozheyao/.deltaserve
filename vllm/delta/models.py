@@ -160,7 +160,10 @@ class DeltaModel:
             "deltazip-compressed-remain.safetensors",
             f"rank.{tp_rank}.safetensors",
         ]
-
+        if not os.path.exists(os.path.join(path_or_name, model_tensor_filenames[0])):
+            # no optimized ckpt found
+            model_tensor_filenames = ["deltazip-compressed.safetensors"]
+        
         def skip(*args, **kwargs):
             pass
 
