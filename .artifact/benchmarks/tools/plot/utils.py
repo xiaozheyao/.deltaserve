@@ -24,60 +24,109 @@ def extract_key_metadata(metadata):
     })
     return workload
 
+def parse_delta_compute(data):
+    results = []
+    for id, x in enumerate(data):
+        metric = x['response']['metrics'][0]
+        
+        e2e_latency = x['time_elapsed']
+        inference_latency = metric['finished_time'] - metric['first_scheduled_time']
+        
+        first_token_latency = metric['first_token_time'] - metric['first_scheduled_time']
+        queuing_time = metric['first_scheduled_time'] - metric['arrival_time']
+        gpu_loading_time = metric['gpu_loading_time'] - metric['cpu_loading_time']
+        cpu_loading_time = metric['cpu_loading_time'] - metric['first_scheduled_time']
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": e2e_latency,
+            "type": "E2E Latency",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": gpu_loading_time,
+            "type": "CPU -> GPU",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": cpu_loading_time,
+            "type": "Disk -> CPU",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": inference_latency,
+            "type": "Inference Latency",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": queuing_time,
+            "type": "Queueing Delay",
+        })
+        
+    return results
+
+def parse_swap(data):
+    results = []
+    for id, x in enumerate(data):
+        metric = x['response']['metrics'][0]
+        
+        e2e_latency = x['time_elapsed']
+        inference_latency = metric['finished_time'] - metric['first_scheduled_time']
+        
+        first_token_latency = metric['first_token_time'] - metric['first_scheduled_time']
+        queuing_time = metric['first_scheduled_time'] - metric['arrival_time']
+        if metric['cpu_loading_time'] is None:
+            cpu_loading_time = 0
+        if metric['gpu_loading_time'] is None:
+            gpu_loading_time = 0
+        else:
+            gpu_loading_time = metric['gpu_loading_time'] - metric['arrival_time']
+        
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": e2e_latency,
+            "type": "E2E Latency",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": gpu_loading_time,
+            "type": "CPU -> GPU",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": cpu_loading_time,
+            "type": "Disk -> CPU",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": inference_latency,
+            "type": "Inference Latency",
+        })
+        results.append({
+            "id": id,
+            "model": x['response']['model'],
+            "time": queuing_time,
+            "type": "Queueing Delay",
+        })
+        
+    return results
+
 def parse_data(input_file):
     with open(input_file, "r") as fp:
         data = [json.loads(line) for line in fp]
     metadata = data.pop(0)
     key_metadata = extract_key_metadata(metadata)
-    results = []
-    for id, x in enumerate(data):
-        metric = x['response']['metrics'][0]
-        
-        e2e_latency = x['time_elapsed'] - x['relative_start_at']
-        inference_latency = metric['finished_time'] - metric['first_scheduled_time']
-        
-        first_token_latency = metric['first_token_time'] - metric['arrival_time']
-        
-        if metric['gpu_loading_time'] is None and metric['cpu_loading_time'] is None:
-            gpu_loading_time = 0
-            cpu_loading_time = 0
-        elif metric['cpu_loading_time'] is None:
-            cpu_loading_time = 0
-            gpu_loading_time = metric['gpu_loading_time'] - metric['arrival_time']
-        else:
-            gpu_loading_time = metric['gpu_loading_time'] - metric['arrival_time']
-            cpu_loading_time = metric['cpu_loading_time'] - metric['arrival_time']
-        
-        result = {
-            "id": id,
-            "model": x['response']['model'],
-            "time": e2e_latency,
-            "type": "e2e_latency",
-        }
-        # results.append(result)
-        
-        result = {
-            "id": id,
-            "model": x['response']['model'],
-            "time": gpu_loading_time,
-            "type": "gpu_loading_time",
-        }
-        results.append(result)
-        
-        result = {
-            "id": id,
-            "model": x['response']['model'],
-            "time": cpu_loading_time,
-            "type": "cpu_loading_time",
-        }
-        results.append(result)
-        
-        result = {
-            "id": id,
-            "model": x['response']['model'],
-            "time": inference_latency,
-            "type": "inference_latency",
-        }
-        results.append(result)
+    if key_metadata['is_delta']:
+        results = parse_delta_compute(data)
+    elif key_metadata['is_swap']:
+        results = parse_swap(data)
     return key_metadata, results
     
