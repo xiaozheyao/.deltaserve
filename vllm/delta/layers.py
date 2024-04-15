@@ -1019,7 +1019,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         device_tensor: Any,
     ):
         self.reset_delta(index)
-        self.bitwidth = bitwidth
+        self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
         self.weight_stacked[index, : weight.shape[0], : weight.shape[1]].copy_(
             weight, non_blocking=ASYNC_COPY

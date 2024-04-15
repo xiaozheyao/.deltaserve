@@ -348,7 +348,8 @@ class AsyncLLMEngine:
         self.start_engine_loop = start_engine_loop
         self._request_tracker: Optional[RequestTracker] = None
         self._errored_with: Optional[BaseException] = None
-
+        self._current_weight_path: str
+        
     @classmethod
     def from_engine_args(
         cls, engine_args: AsyncEngineArgs, start_engine_loop: bool = True
@@ -386,6 +387,7 @@ class AsyncLLMEngine:
             max_log_len=engine_args.max_log_len,
             start_engine_loop=start_engine_loop,
         )
+        engine._current_weight_path = engine_args.model
         return engine
 
     @property
@@ -419,8 +421,12 @@ class AsyncLLMEngine:
             return self.engine.get_tokenizer()
 
     def reload_model(self, model_name_or_path: str):
+        if model_name_or_path == self._current_weight_path:
+            logger.info(f"Model {model_name_or_path} is already loaded.")
+            return
         logger.info(f"Reloading model to {model_name_or_path}")
         self.engine.reload_model(model_name_or_path)
+        self._current_weight_path = model_name_or_path
 
     def start_background_loop(self) -> None:
         """Start the background loop."""
@@ -627,8 +633,7 @@ class AsyncLLMEngine:
             multi_modal_data: Multi modal data per request.
 
         Yields:
-            The output `RequestOutput` objects from the LLMEngine for the
-            request.
+            The output `RequestOutput` objects from the LLMEngine for the request.
 
         Details:
             - If the engine is not running, start the background loop,

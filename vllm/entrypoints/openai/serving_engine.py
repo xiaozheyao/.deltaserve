@@ -185,6 +185,7 @@ class OpenAIServing:
         last_token_len = 0
         if num_output_top_logprobs:
             logprobs.top_logprobs = []
+        
         for i, token_id in enumerate(token_ids):
             step_top_logprobs = top_logprobs[i]
             if step_top_logprobs is not None:
@@ -269,7 +270,7 @@ class OpenAIServing:
         for swap in self.swap_requests:
             if request.model == swap.swap_name:
                 return swap
-        raise ValueError(f"The model {request.model} does not exist.")
+        return None
 
     def _validate_prompt_and_tokenize(
         self,

@@ -55,7 +55,8 @@ def generate_synthetic(args):
                 "prompt": dialogs[idx],
                 "timestamp": poisson_ticks[idx],
                 "model": models[idx],
-                "gen_tokens": args.gen_tokens,
+                "min_tokens": args.gen_tokens,
+                "max_tokens": args.gen_tokens,
             }
         )
     output_file = os.path.join(args.output, f"distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl")

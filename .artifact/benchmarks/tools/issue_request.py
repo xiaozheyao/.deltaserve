@@ -2,7 +2,7 @@ import os
 import json
 import argparse
 from core import run, get_sys_info
-
+import uuid
 def before_benchmark(args):
     with open(args.workload, "r") as f:
         workload = [json.loads(line) for line in f]
@@ -29,7 +29,8 @@ if __name__ =="__main__":
     workload_annotation = args.workload.split("/")[-1].split(".")[0]
     annotations = generate_annotation(args.endpoints, sysinfo, workload_annotation)
     outputs = run(endpoints, workload, warmup, args.base_model)
-    output_file = os.path.join(args.output, f"{annotations}.jsonl")
+    new_unique_name = str(uuid.uuid4())
+    output_file = os.path.join(args.output, f"{new_unique_name}.jsonl")
     
     with open(output_file, "a") as f:
         meta = {
