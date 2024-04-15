@@ -136,6 +136,7 @@ class OpenAIServingCompletion(OpenAIServing):
             lora_request = self._maybe_get_lora(request)
             delta_request = self._maybe_get_delta(request)
             swap_request = self._maybe_get_swap(request)
+            
             guided_decode_logit_processor = await get_guided_decoding_logits_processor(
                 request, await self.engine.get_tokenizer()
             )
@@ -169,7 +170,9 @@ class OpenAIServingCompletion(OpenAIServing):
         except ValueError as e:
             # TODO: Use a vllm-specific Validation Error
             return self.create_error_response(str(e))
-
+        print("getting responses")
+        print(len(generators))
+        
         result_generator: AsyncIterator[Tuple[int, RequestOutput]] = (
             merge_async_iterators(*generators)
         )
@@ -204,6 +207,7 @@ class OpenAIServingCompletion(OpenAIServing):
                     await self.engine.abort(f"{request_id}-{i}")
                     return self.create_error_response("Client disconnected")
                 final_res_batch[i] = res
+            print("getting response")
             response = self.request_output_to_completion_response(
                 final_res_batch, request, request_id, created_time, model_name
             )

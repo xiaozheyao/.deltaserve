@@ -420,7 +420,7 @@ class AsyncLLMEngine:
         else:
             return self.engine.get_tokenizer()
 
-    def reload_model(self, model_name_or_path: str):
+    async def reload_model(self, model_name_or_path: str):
         if model_name_or_path == self._current_weight_path:
             logger.info(f"Model {model_name_or_path} is already loaded.")
             return
@@ -541,6 +541,7 @@ class AsyncLLMEngine:
         arrival_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
     ) -> AsyncStream:
         if self.log_requests:
@@ -573,7 +574,10 @@ class AsyncLLMEngine:
 
         if arrival_time is None:
             arrival_time = time.time()
-
+        if swap_request:
+            await self.reload_model(swap_request.swap_local_path)
+        loaded_time = time.time()
+        
         if self.engine_use_ray:
             prompt_token_ids = await self.engine.encode_request_async.remote(
                 request_id=request_id,
@@ -630,6 +634,7 @@ class AsyncLLMEngine:
                 use the tokenizer to convert the prompts to token IDs.
             lora_request: LoRA request to use for generation, if any.
             delta_request: Delta request to sue for generation, if any.
+            swap_request: Swap request to use for generation, if any.
             multi_modal_data: Multi modal data per request.
 
         Yields:
@@ -680,10 +685,7 @@ class AsyncLLMEngine:
         """
         # Preprocess the request.
         arrival_time = time.time()
-        print(f"swap request: {swap_request}")
-        if swap_request:
-            print(f"Swapping model request {swap_request.swap_local_path}")
-            self.reload_model(swap_request.swap_local_path)
+
         try:
             stream = await self.add_request(
                 request_id,
@@ -693,6 +695,7 @@ class AsyncLLMEngine:
                 arrival_time=arrival_time,
                 lora_request=lora_request,
                 delta_request=delta_request,
+                swap_request=swap_request,
                 multi_modal_data=multi_modal_data,
             )
 
