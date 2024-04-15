@@ -1,4 +1,4 @@
-python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --enable-delta --disable-log-requests --gpu-memory-utilization 1 \
---delta-modules vicuna-7b-1=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-1 vicuna-7b-2=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-2 vicuna-7b-3=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-3 vicuna-7b-4=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-4 vicuna-7b-5=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-5 vicuna-7b-6=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-6 vicuna-7b-7=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-7 vicuna-7b-8=.idea/models/vicuna-7b-4b0.75s-optimize_io-tp_1-8 \
---max-deltas 2 --tensor-parallel-size 1 \
+python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --enable-delta --disable-log-requests --gpu-memory-utilization 0.85 \
+--delta-modules vicuna-7b-1=.idea/models/vicuna-7b-4b0.75s-tp_2-1 vicuna-7b-2=.idea/models/vicuna-7b-4b0.75s-tp_2-2 vicuna-7b-3=.idea/models/vicuna-7b-4b0.75s-tp_2-3 vicuna-7b-4=.idea/models/vicuna-7b-4b0.75s-tp_2-4 vicuna-7b-5=.idea/models/vicuna-7b-4b0.75s-tp_2-5 vicuna-7b-6=.idea/models/vicuna-7b-4b0.75s-tp_2-6 vicuna-7b-7=.idea/models/vicuna-7b-4b0.75s-tp_2-7 vicuna-7b-8=.idea/models/vicuna-7b-4b0.75s-tp_2-8 \
+--max-deltas 1 --tensor-parallel-size 2 \
 --enforce-eager

@@ -25,7 +25,6 @@ if __name__ =="__main__":
     parser.add_argument("--warmup-strategy", type=str, default="random", choices=["random", "none"])
     parser.add_argument("--endpoints", default=['http://localhost:8000'], nargs='+')
     parser.add_argument("--output", type=str, default="outputs/")
-    parser.add_argument("--manual-reload", action="store_true", default=False)
     args = parser.parse_args()
     
     endpoints, workload, warmup, sysinfo = before_benchmark(args)

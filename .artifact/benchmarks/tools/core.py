@@ -29,6 +29,8 @@ def request_thread(
     global inference_results
     res = requests.post(endpoint+"/v1/completions", json=req)
     end_time = timer()
+    if res.status_code != 200:
+        logger.error(f"Failed to issue request: {res.text}")
     res = {
         "response": res.json(),
         "time_elapsed": end_time - start_time,

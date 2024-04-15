@@ -51,6 +51,7 @@ async def lifespan(app: fastapi.FastAPI):
 
 app = fastapi.FastAPI(lifespan=lifespan)
 
+
 def parse_args():
     parser = make_arg_parser()
     return parser.parse_args()
@@ -103,6 +104,7 @@ async def reload_model_weights(request: ReloadRequest):
     engine.reload_model(request.model_name_or_path)
     return JSONResponse(content={"message": "Model reloaded"})
 
+
 @app.post("/v1/chat/completions")
 async def create_chat_completion(request: ChatCompletionRequest, raw_request: Request):
     generator = await openai_serving_chat.create_chat_completion(request, raw_request)
@@ -118,24 +120,28 @@ async def create_chat_completion(request: ChatCompletionRequest, raw_request: Re
 async def create_completion(request: CompletionRequest, raw_request: Request):
     reload_required = False
     response = None
-    
+
     if request.model != engine._current_weight_path and len(args.swap_modules) > 0:
         reload_required = True
         await reload_lock.acquire()
-        new_model_name_or_path = [x for x in args.swap_modules if x.name == request.model][0].local_path
-        await engine.reload_model(new_model_name_or_path)
-        reload_lock.release()
-    
+        swap_model = [x for x in args.swap_modules if x.name == request.model] + [served_model]
+        if len(swap_model) > 0:
+            await engine.reload_model(swap_model[0].local_path)
+        else:
+            return JSONResponse(content={"error": f"Model not found, requested: {request.model}, available: {[x.name for x in args.swap_modules]}"}, status_code=404)
+
     generator = await openai_serving_completion.create_completion(request, raw_request)
-    
+
     if isinstance(generator, ErrorResponse):
-        response = JSONResponse(content=generator.model_dump(), status_code=generator.code)
+        response = JSONResponse(
+            content=generator.model_dump(), status_code=generator.code)
     if request.stream:
-        response =  StreamingResponse(content=generator, media_type="text/event-stream")
+        response = StreamingResponse(
+            content=generator, media_type="text/event-stream")
     else:
         response = JSONResponse(content=generator.model_dump())
-    
-    if reload_required:
+
+    if reload_lock.locked():
         reload_lock.release()
     return response
 
