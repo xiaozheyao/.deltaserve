@@ -223,7 +223,7 @@ class LlavaForConditionalGeneration(nn.Module):
         load_format: str = "auto",
         revision: Optional[str] = None,
     ):
-        
+
         # only doing this for language model part for now.
         stacked_params_mapping = [
             # (param_name, shard_name, shard_id)

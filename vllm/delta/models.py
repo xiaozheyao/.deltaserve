@@ -135,6 +135,7 @@ class DeltaModel:
         self.id = delta_model_id
         self.deltas: Dict[str, DeltaLayerWeights] = deltas
         self.bitwidth = bitwidth
+
     def get_delta(self, module_name: str) -> Optional[DeltaLayerWeights]:
         return self.deltas.get(module_name, None)
 

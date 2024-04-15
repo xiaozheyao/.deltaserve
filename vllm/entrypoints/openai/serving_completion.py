@@ -14,7 +14,12 @@ from vllm.entrypoints.openai.protocol import (
     LogProbs,
     UsageInfo,
 )
-from vllm.entrypoints.openai.serving_engine import LoRA, OpenAIServing, Delta, SwapModule
+from vllm.entrypoints.openai.serving_engine import (
+    LoRA,
+    OpenAIServing,
+    Delta,
+    SwapModule,
+)
 from vllm.logger import init_logger
 from vllm.model_executor.guided_decoding import get_guided_decoding_logits_processor
 from vllm.outputs import RequestOutput
@@ -135,7 +140,7 @@ class OpenAIServingCompletion(OpenAIServing):
             lora_request = self._maybe_get_lora(request)
             delta_request = self._maybe_get_delta(request)
             swap_request = self._maybe_get_swap(request)
-            
+
             guided_decode_logit_processor = await get_guided_decoding_logits_processor(
                 request, await self.engine.get_tokenizer()
             )

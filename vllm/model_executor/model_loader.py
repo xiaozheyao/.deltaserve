@@ -113,10 +113,5 @@ def reload_model_weights(
     load_format: str,
     revision: str,
 ):
-    model.load_weights(
-        model_path_or_name,
-        cache_dir,
-        load_format,
-        revision
-    )
+    model.load_weights(model_path_or_name, cache_dir, load_format, revision)
     return model.eval()

@@ -11,6 +11,7 @@ import ssl
 from vllm.engine.arg_utils import AsyncEngineArgs
 from vllm.entrypoints.openai.serving_engine import LoRA, Delta, SwapModule
 
+
 class LoRAParserAction(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
@@ -30,6 +31,7 @@ class DeltaParserAction(argparse.Action):
             delta_list.append(Delta(name, path))
         setattr(namespace, self.dest, delta_list)
 
+
 class SwapParserAction(argparse.Action):
     def __call__(self, parser, namespace, values, option_string=None):
         swappable_modules = []
@@ -37,6 +39,7 @@ class SwapParserAction(argparse.Action):
             name, path = item.split("=")
             swappable_modules.append(SwapModule(name, path))
         setattr(namespace, self.dest, swappable_modules)
+
 
 def make_arg_parser():
     parser = argparse.ArgumentParser(

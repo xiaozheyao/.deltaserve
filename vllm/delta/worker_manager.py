@@ -108,12 +108,17 @@ class WorkerDeltaManager(AbstractWorkerManager):
         return delta_manager.model
 
     def set_active_deltas(
-        self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping, sequence_groups: List[SequenceGroup]
+        self,
+        delta_requests: List[DeltaRequest],
+        delta_mapping: DeltaMapping,
+        sequence_groups: List[SequenceGroup],
     ) -> None:
         self._apply_deltas(delta_requests, sequence_groups)
         self._delta_manager.set_delta_mapping(delta_mapping)
 
-    def _apply_deltas(self, delta_requests: List[DeltaRequest], sequence_groups: List[SequenceGroup]) -> None:
+    def _apply_deltas(
+        self, delta_requests: List[DeltaRequest], sequence_groups: List[SequenceGroup]
+    ) -> None:
         deltas_that_exist = self.list_deltas()
         deltas_map = {
             delta_request.delta_id: delta_request for delta_request in delta_requests
@@ -154,7 +159,9 @@ class WorkerDeltaManager(AbstractWorkerManager):
         #     self._delta_manager.create_dummy_delta(delta_request.delta_int_id)
         # )
 
-    def add_delta(self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]) -> bool:
+    def add_delta(
+        self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]
+    ) -> bool:
         if delta_request.delta_int_id in self.list_deltas():
             return False
         delta = self._load_delta(delta_request)
@@ -189,7 +196,9 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         self._delta_manager: LRUCacheDeltaModelManager = delta_manager
         return delta_manager.model
 
-    def _apply_deltas(self, delta_requests: List[DeltaRequest], sequence_groups: List[SequenceGroup]) -> None:
+    def _apply_deltas(
+        self, delta_requests: List[DeltaRequest], sequence_groups: List[SequenceGroup]
+    ) -> None:
         delta_maps = {
             delta_request.delta_int_id: delta_request
             for delta_request in delta_requests
@@ -202,7 +211,9 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
         for delta in delta_maps.values():
             self.add_delta(delta, sequence_groups)
 
-    def add_delta(self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]) -> bool:
+    def add_delta(
+        self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]
+    ) -> bool:
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()

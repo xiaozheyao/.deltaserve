@@ -16,7 +16,12 @@ from vllm.entrypoints.openai.protocol import (
     ErrorResponse,
     UsageInfo,
 )
-from vllm.entrypoints.openai.serving_engine import LoRA, Delta, SwapModule, OpenAIServing
+from vllm.entrypoints.openai.serving_engine import (
+    LoRA,
+    Delta,
+    SwapModule,
+    OpenAIServing,
+)
 from vllm.logger import init_logger
 from vllm.model_executor.guided_decoding import get_guided_decoding_logits_processor
 from vllm.outputs import RequestOutput
@@ -90,7 +95,13 @@ class OpenAIServingChat(OpenAIServing):
         except ValueError as e:
             return self.create_error_response(str(e))
         result_generator = self.engine.generate(
-            prompt, sampling_params, request_id, token_ids, lora_request, delta_request, swap_request
+            prompt,
+            sampling_params,
+            request_id,
+            token_ids,
+            lora_request,
+            delta_request,
+            swap_request,
         )
         # Streaming response
         if request.stream:

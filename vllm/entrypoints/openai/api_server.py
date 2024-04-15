@@ -91,9 +91,11 @@ async def show_version():
 async def get_sysinfo():
     engine_info = engine_args.to_json()
     cli_args = {
-        'swap_modules': [swap_module.to_json() for swap_module in args.swap_modules],
-        'lora_modules': [lora_module.to_json() for lora_module in args.lora_modules],
-        'delta_modules': [delta_module.to_json() for delta_module in args.delta_modules],
+        "swap_modules": [swap_module.to_json() for swap_module in args.swap_modules],
+        "lora_modules": [lora_module.to_json() for lora_module in args.lora_modules],
+        "delta_modules": [
+            delta_module.to_json() for delta_module in args.delta_modules
+        ],
     }
     engine_info.update(cli_args)
     return JSONResponse(content=engine_info)
@@ -124,26 +126,34 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     if request.model != engine._current_weight_path and len(args.swap_modules) > 0:
         reload_required = True
         await reload_lock.acquire()
-        swap_model = [x for x in args.swap_modules if x.name == request.model] + [served_model]
+        swap_model = [x for x in args.swap_modules if x.name == request.model] + [
+            served_model
+        ]
         if len(swap_model) > 0:
             await engine.reload_model(swap_model[0].local_path)
         else:
-            return JSONResponse(content={"error": f"Model not found, requested: {request.model}, available: {[x.name for x in args.swap_modules]}"}, status_code=404)
+            return JSONResponse(
+                content={
+                    "error": f"Model not found, requested: {request.model}, available: {[x.name for x in args.swap_modules]}"
+                },
+                status_code=404,
+            )
 
     generator = await openai_serving_completion.create_completion(request, raw_request)
 
     if isinstance(generator, ErrorResponse):
         response = JSONResponse(
-            content=generator.model_dump(), status_code=generator.code)
+            content=generator.model_dump(), status_code=generator.code
+        )
     if request.stream:
-        response = StreamingResponse(
-            content=generator, media_type="text/event-stream")
+        response = StreamingResponse(content=generator, media_type="text/event-stream")
     else:
         response = JSONResponse(content=generator.model_dump())
 
     if reload_lock.locked():
         reload_lock.release()
     return response
+
 
 if __name__ == "__main__":
     args = parse_args()
@@ -198,7 +208,11 @@ if __name__ == "__main__":
         args.chat_template,
     )
     openai_serving_completion = OpenAIServingCompletion(
-        engine, served_model, args.lora_modules, args.delta_modules, args.swap_modules,
+        engine,
+        served_model,
+        args.lora_modules,
+        args.delta_modules,
+        args.swap_modules,
     )
 
     app.root_path = args.root_path

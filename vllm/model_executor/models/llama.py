@@ -408,9 +408,10 @@ class LlamaForCausalLM(nn.Module):
         params_dict = dict(self.named_parameters())
         # remove the base_layer in the middle if it exists
         params_dict = {
-            name.replace(".base_layer",""): param for name, param in params_dict.items()
+            name.replace(".base_layer", ""): param
+            for name, param in params_dict.items()
         }
-        
+
         for name, loaded_weight in hf_model_weights_iterator(
             model_name_or_path, cache_dir, load_format, revision
         ):

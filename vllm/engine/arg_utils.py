@@ -573,6 +573,7 @@ class EngineArgs:
             delta_config if self.enable_delta else None,
             vision_language_config,
         )
+
     def to_json(self):
         return dataclasses.asdict(self)
 

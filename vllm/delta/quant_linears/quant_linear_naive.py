@@ -59,7 +59,7 @@ class QuantLinear(nn.Module):
 
         weight = weight.reshape(weight.shape[0] * weight.shape[1], weight.shape[2])
         num_itr = self.g_idx.shape[0] // x.shape[-1]
-        assert num_itr==1, "num_itr must be 1"
+        assert num_itr == 1, "num_itr must be 1"
         if num_itr == 1:
             weights = self.scales[self.g_idx.long()] * (
                 weight - zeros[self.g_idx.long()]
@@ -82,7 +82,9 @@ class QuantLinear(nn.Module):
         return out
 
     @classmethod
-    def from_tensors(cls, bitwidth, qweight, qzeros, scales, g_idx, bias, device_tensor):
+    def from_tensors(
+        cls, bitwidth, qweight, qzeros, scales, g_idx, bias, device_tensor
+    ):
         infeatures = qweight.shape[0] * 32 // bitwidth
         outfeatures = qweight.shape[1]
         obj = cls(bitwidth, infeatures, outfeatures, bias)

@@ -43,6 +43,7 @@ logger = init_logger(__name__)
 if TYPE_CHECKING:
     pass
 
+
 @dataclass
 class DeltaMapping:
     # Per every token in input_ids:
@@ -153,7 +154,9 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
             masked_input = x
         output_parallel = F.embedding(masked_input, self.base_layer.weight)
 
-        output_parallel = apply_delta_embed(masked_input, self.delta_weights, indices, output_parallel)
+        output_parallel = apply_delta_embed(
+            masked_input, self.delta_weights, indices, output_parallel
+        )
 
         if self.tp_size > 1:
             output_parallel[input_mask, :] = 0.0
@@ -184,7 +187,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.qzeros_stacked[index] = 0
         self.scales_stacked[index] = 0
         self.bitwidth[index] = 0
-        
+
     def create_delta_weights(
         self,
         max_deltas: int,
@@ -227,7 +230,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.indices_len: Optional[List[int]] = None
         self.output_dim = self.base_layer.weight.shape[0]
         self.bitwidth = [0] * max_deltas
-        
+
     def set_delta(
         self,
         index: int,
@@ -307,6 +310,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
             and len(packed_modules_list) == 1
         )
 
+
 class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     """ColumnParallelLinear layer that is composed of 2 sublayers (slices)
     packed together (eg. gate_proj + up_proj -> gate_up_proj).
@@ -320,7 +324,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         super().__init__(base_layer)
         self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
-        
+
     def create_delta_weights(
         self,
         max_deltas: int,
@@ -389,7 +393,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.indices: Optional[torch.Tensor] = None
         self.output_dim = self.base_layer.weight.shape[0] // 2
         self.bitwidth = [0] * max_deltas
-        
+
     def reset_delta(self, index: int):
         self.qweight_stacked[0][index] = 0
         self.qweight_stacked[1][index] = 0
@@ -398,7 +402,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.scales_stacked[0][index] = 0
         self.scales_stacked[1][index] = 0
         self.bitwidth[index] = 0
-        
+
     def set_delta(
         self,
         index: int,
@@ -490,7 +494,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         super().__init__(base_layer)
         self.device_tensor = None
         self.tp_rank = get_tensor_model_parallel_rank()
-    
+
     def create_delta_weights(
         self,
         max_deltas: int,
@@ -613,7 +617,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.standard_indices: Optional[torch.Tensor] = None
         self.indices_len: Optional[List[int]] = None
         self.bitwidth = [0] * max_deltas
-        
+
     def reset_delta(self, index: int):
         self.qweight_stacked[0][index] = 0
         self.qweight_stacked[1][index] = 0
@@ -849,7 +853,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             max_deltas,
             1,
             1,
-            self.base_layer.weight.shape[0] ,
+            self.base_layer.weight.shape[0],
             dtype=torch.float16,
             device=self.base_layer.weight.device,
         )
@@ -861,17 +865,17 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             dtype=torch.int32,
         )
         self.bitwidth = [0] * max_deltas
-        
+
     def reset_delta(self, index: int):
         self.qweight_stacked[index] = 0
         self.qzeros_stacked[index] = 0
         self.scales_stacked[index] = 0
         self.bitwidth[index] = 0
-        
+
     def set_delta(
         self,
         index: int,
-        bitwidth:int,
+        bitwidth: int,
         qweight: torch.Tensor,
         qzeros: torch.Tensor,
         scales: torch.Tensor,
@@ -916,9 +920,9 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
                 input_, num_partitions=self.base_layer.tp_size
             )
             input_parallel = splitted_input[tp_rank].contiguous()
-        
+
         output_parallel = self.apply_weights(input_parallel)
-        
+
         if self.base_layer.reduce_results and self.base_layer.tp_size > 1:
             output_ = tensor_model_parallel_all_reduce(output_parallel)
         else:
@@ -1010,7 +1014,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
     def reset_delta(self, index: int):
         self.weight_stacked[index] = 0
         self.bitwidth[index] = 0
-        
+
     def set_delta(
         self,
         index: int,

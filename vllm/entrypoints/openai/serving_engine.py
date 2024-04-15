@@ -23,36 +23,43 @@ from vllm.transformers_utils.tokenizer import get_tokenizer
 
 logger = init_logger(__name__)
 
+
 @dataclass
 class LoRA:
     name: str
     local_path: str
+
     def to_json(self):
         return {
             "name": self.name,
             "local_path": self.local_path,
         }
-        
+
+
 @dataclass
 class Delta:
     name: str
     local_path: str
+
     def to_json(self):
         return {
             "name": self.name,
             "local_path": self.local_path,
         }
-        
+
+
 @dataclass
 class SwapModule:
     name: str
     local_path: str
+
     def to_json(self):
         return {
             "name": self.name,
             "local_path": self.local_path,
         }
-    
+
+
 class OpenAIServing:
 
     def __init__(
@@ -170,7 +177,7 @@ class OpenAIServing:
         model_cards.extend(lora_cards)
         model_cards.extend(delta_cards)
         model_cards.extend(swap_cards)
-        
+
         return ModelList(data=model_cards)
 
     def _create_logprobs(
@@ -185,7 +192,7 @@ class OpenAIServing:
         last_token_len = 0
         if num_output_top_logprobs:
             logprobs.top_logprobs = []
-        
+
         for i, token_id in enumerate(token_ids):
             step_top_logprobs = top_logprobs[i]
             if step_top_logprobs is not None:
@@ -241,7 +248,7 @@ class OpenAIServing:
             return
         if request.model in [swap.swap_name for swap in self.swap_requests]:
             return
-        
+
         return self.create_error_response(
             message=f"The model [{request.model}] does not exist. Expected one of {self.served_model}, {[lora.lora_name for lora in self.lora_requests]}, {[delta.delta_name for delta in self.delta_requests]}, {[swap.swap_name for swap in self.swap_requests]}",
             err_type="NotFoundError",

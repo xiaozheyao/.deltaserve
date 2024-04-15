@@ -966,13 +966,18 @@ class ModelRunner:
         self.lora_manager.set_active_loras(lora_requests, lora_mapping)
 
     def set_active_deltas(
-        self, delta_requests: List[DeltaRequest], delta_mapping: DeltaMapping, sequence_groups: List[SequenceGroup]=None
+        self,
+        delta_requests: List[DeltaRequest],
+        delta_mapping: DeltaMapping,
+        sequence_groups: List[SequenceGroup] = None,
     ):
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         if sequence_groups is None:
             sequence_groups = []
-        self.delta_manager.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
+        self.delta_manager.set_active_deltas(
+            delta_requests, delta_mapping, sequence_groups
+        )
 
     def add_lora(self, lora_request: LoRARequest) -> bool:
         if not self.lora_manager:
