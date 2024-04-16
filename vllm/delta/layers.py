@@ -283,6 +283,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
+        logger.warning("ColumnParallelLinearWithDelta: forward shouldn't be used except warming up and profiling")
         bias = self.base_layer.bias if not self.base_layer.skip_bias_add else None
         output_parallel = self.apply_weights(x, bias)
         if self.base_layer.gather_output:
@@ -494,6 +495,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         super().__init__(base_layer)
         self.device_tensor = None
         self.tp_rank = get_tensor_model_parallel_rank()
+        self.tp_size = get_tensor_model_parallel_world_size()
 
     def create_delta_weights(
         self,
@@ -501,7 +503,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         delta_config: DeltaConfig,
         model_config: PretrainedConfig | None = None,
     ) -> None:
-        self.tp_size = get_tensor_model_parallel_world_size()
         self.q_proj_shard_size = self.base_layer.num_heads * self.base_layer.head_size
         self.kv_proj_shard_size = (
             self.base_layer.num_kv_heads * self.base_layer.head_size
@@ -673,7 +674,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 self.g_idx_stacked[0] = g_idx[0]
 
             if qweight[1] is not None:
-
                 qzeros_q = qzeros[1][
                     :,
                     self.kv_proj_shard_size

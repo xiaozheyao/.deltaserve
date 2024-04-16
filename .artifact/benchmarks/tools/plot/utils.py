@@ -36,6 +36,7 @@ def parse_delta_compute(data):
         metric = x['response']['metrics'][0]
         
         e2e_latency = x['time_elapsed']
+        
         inference_latency = metric['finished_time'] - metric['first_scheduled_time']
         
         first_token_latency = metric['first_token_time'] - metric['first_scheduled_time']

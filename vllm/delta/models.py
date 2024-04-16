@@ -9,12 +9,7 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-from .layers_unoptimized import (
-    BaseLayerWithDelta,
-    from_layer,
-    from_layer_logits_processor,
-    DeltaMapping,
-)
+
 from .utils import (
     replace_submodule,
     calculate_fixed_scratch_size,
@@ -34,9 +29,26 @@ from vllm.model_executor.parallel_utils.parallel_state import (
 from safetensors import safe_open
 from .config import QuantKernel
 
+
 logger = init_logger(__name__)
 _GLOBAL_DELTA_ID = 0
 
+use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
+if use_unoptimized_delta:
+    logger.warning("Using unoptimized delta modules")
+    from .layers_unoptimized import (
+        BaseLayerWithDelta,
+        from_layer,
+        from_layer_logits_processor,
+        DeltaMapping,
+    )
+else:
+    from .layers import (
+        BaseLayerWithDelta,
+        from_layer,
+        from_layer_logits_processor,
+        DeltaMapping,
+    )
 
 def convert_mapping(
     mapping: DeltaMapping,

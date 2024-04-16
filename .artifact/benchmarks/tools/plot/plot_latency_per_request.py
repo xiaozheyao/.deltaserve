@@ -15,9 +15,6 @@ def plot(args):
     e2e_latency = [x for x in data if x['type'] == 'E2E Latency']
     df = pd.DataFrame(except_e2e)
     e2e_df = pd.DataFrame(e2e_latency)
-    
-    print("df ready")
-    print(df)
     fig = px.bar(df, x='id', y='time', color='type', title=title)
     fig.add_trace(
         go.Scatter(
