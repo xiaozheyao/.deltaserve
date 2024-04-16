@@ -263,16 +263,16 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = apply_delta(
-            x,
-            self.qweight_stacked,
-            self.qzero_stacked,
-            self.scales_stacked,
-            self.g_idx_stacked,
-            self.indices[: self.indices_len[0]],
-            output,
-            self.device_tensor,
-        )
+        # output = apply_delta(
+        #     x,
+        #     self.qweight_stacked,
+        #     self.qzero_stacked,
+        #     self.scales_stacked,
+        #     self.g_idx_stacked,
+        #     self.indices[: self.indices_len[0]],
+        #     output,
+        #     self.device_tensor,
+        # )
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -420,7 +420,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     :, start_idx // self.pack_factor: end_idx // self.pack_factor
                 ]
                 scales[0] = scales[0][:, start_idx:end_idx]
-                
             if qweight[1] is not None:
                 qweight[1] = qweight[1][:, start_idx:end_idx]
                 qzeros[1] = qzeros[1][
@@ -430,25 +429,25 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
         if qweight[0] is not None:
             self.qweight_stacked[0][
-                index, 0, : qweight[0].shape[0], : qweight[0].shape[1]
+                index, 0, : , : 
             ].copy_(qweight[0], non_blocking=ASYNC_COPY)
             self.qzeros_stacked[0][
-                index, 0, : qzeros[0].shape[0], : qzeros[0].shape[1]
+                index, 0, : , : 
             ].copy_(qzeros[0], non_blocking=ASYNC_COPY)
             self.scales_stacked[0][
-                index, 0, : scales[0].shape[0], : scales[0].shape[1]
+                index, 0, : , : 
             ].copy_(scales[0], non_blocking=ASYNC_COPY)
             self.g_idx[0] = g_idx[0]
 
         if qweight[1] is not None:
             self.qweight_stacked[1][
-                index, 0, : qweight[1].shape[0], : qweight[1].shape[1]
+                index, 0, :, :
             ].copy_(qweight[1], non_blocking=ASYNC_COPY)
             self.qzeros_stacked[1][
-                index, 0, : qzeros[1].shape[0], : qzeros[1].shape[1]
+                index, 0, : , : 
             ].copy_(qzeros[1], non_blocking=ASYNC_COPY)
             self.scales_stacked[1][
-                index, 0, : scales[1].shape[0], : scales[1].shape[1]
+                index, 0, : , : 
             ].copy_(scales[1], non_blocking=ASYNC_COPY)
             self.g_idx[1] = g_idx[1]
 
@@ -499,8 +498,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         model_config: PretrainedConfig | None = None,
     ) -> None:
         self.q_proj_shard_size = self.base_layer.num_heads * self.base_layer.head_size
-        # print(f"base_layer.weight.shape: {self.base_layer.weight.shape}")
-        # (6144, 4096)
         self.kv_proj_shard_size = (
             self.base_layer.num_kv_heads * self.base_layer.head_size
         )
@@ -908,10 +905,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             qweight = qweight[
                 start_idx // self.pack_factor: end_idx // self.pack_factor, :
             ]
-            qzeros = qzeros[
-                start_idx // self.pack_factor: end_idx // self.pack_factor, :
-            ]
-            scales = scales[start_idx:end_idx, :]
 
         self.qweight_stacked[index, 0, : qweight.shape[0], : qweight.shape[1]].copy_(
             qweight, non_blocking=ASYNC_COPY
@@ -924,6 +917,8 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         )
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
+        if self.base_layer.bias is not None:
+            raise ValueError("RowParallelLinearWithDelta does not support bias yet.")
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x
         )

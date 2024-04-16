@@ -40,6 +40,7 @@ def add_delta(
     )
     output = ql(x)
     y += output
+    return y
 
 
 def add_delta_slice(
