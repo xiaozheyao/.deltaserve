@@ -257,7 +257,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
-        print("ColumnParallelLinearWithDelta: apply_weights")
         # (note): this is not actually used.
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
@@ -275,7 +274,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        logger.warning(f"ColumnParallelLinearWithDelta: forward. This shouldn't be used except warming up and profiling")
         bias = self.base_layer.bias if not self.base_layer.skip_bias_add else None
         output_parallel = self.apply_weights(x, bias)
         if self.base_layer.gather_output:

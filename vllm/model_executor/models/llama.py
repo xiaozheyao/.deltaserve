@@ -396,7 +396,6 @@ class LlamaForCausalLM(nn.Module):
         load_format: str = "auto",
         revision: Optional[str] = None,
     ):
-        print("Loading weights....")
         stacked_params_mapping = [
             # (param_name, shard_name, shard_id)
             ("qkv_proj", "q_proj", "q"),

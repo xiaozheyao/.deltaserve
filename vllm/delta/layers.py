@@ -241,12 +241,12 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         g_idx: torch.Tensor,
         device_tensor: Any,
     ):
-        print("ColumnParallelLinearWithDelta: set_delta")
+        logger.warning("ColumnParallelLinearWithDelta: set_delta")
         self.bitwidth = bitwidth
         self.device_tensor = device_tensor
         self.reset_delta(index)
         if self.tp_size > 1:
-            pass
+            logger.warning(f"qweight.shape: {qweight.shape}, qzeros.shape: {qzeros.shape}, scales.shape: {scales.shape}")
         self.qweight_stacked[index, 0, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
         self.qzero_stacked[index, 0, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, 0, :, :].copy_(scales, non_blocking=ASYNC_COPY)
@@ -266,7 +266,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
-        print("ColumnParallelLinearWithDelta: apply_weights")
+        
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
@@ -283,7 +283,8 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        logger.warning("ColumnParallelLinearWithDelta: forward shouldn't be used except warming up and profiling")
+        # note: this function is called by 
+        # MergedColumnParallelLinearWithDelta
         bias = self.base_layer.bias if not self.base_layer.skip_bias_add else None
         output_parallel = self.apply_weights(x, bias)
         if self.base_layer.gather_output:
