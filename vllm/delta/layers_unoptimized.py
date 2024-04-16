@@ -100,7 +100,8 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.vocab_end_index = self.base_layer.vocab_end_index
         
     def reset_delta(self, index: int):
-        pass
+        self.bitwidth[index] = 0
+        self.delta_weights[index] = 0
 
     def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
         self.delta_weights = torch.zeros(
@@ -178,7 +179,8 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.qweight_stacked[index] = 0
         self.qzeros_stacked[index] = 0
         self.scales_stacked[index] = 0
-
+        self.bitwidth[index] = 0
+        
     def create_delta_weights(
         self,
         max_deltas: int,
@@ -234,7 +236,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self.device_tensor = device_tensor
         self.reset_delta(index)
         if self.tp_size > 1:
-            pass
+            logger.warning(f"qweight.shape: {qweight.shape}, qzeros.shape: {qzeros.shape}, scales.shape: {scales.shape}")
         self.qweight_stacked[index, 0, :, :].copy_(
             qweight, non_blocking=ASYNC_COPY)
         self.qzero_stacked[index, 0, :, :].copy_(
@@ -324,6 +326,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     ) -> None:
         self.pack_factor = delta_config.pack_factor
         n_slices = 2
+        self.bitwidth = [0] * max_deltas
         if not (
             len(self.base_layer.output_sizes) == n_slices
             and self.base_layer.output_sizes[0] == self.base_layer.output_sizes[1]
@@ -383,7 +386,8 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         ]
         self.indices: Optional[torch.Tensor] = None
         self.output_dim = self.base_layer.weight.shape[0] // 2
-
+        
+        
     def reset_delta(self, index: int):
         self.qweight_stacked[0][index] = 0
         self.qweight_stacked[1][index] = 0
@@ -416,6 +420,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     :, start_idx // self.pack_factor: end_idx // self.pack_factor
                 ]
                 scales[0] = scales[0][:, start_idx:end_idx]
+                
             if qweight[1] is not None:
                 qweight[1] = qweight[1][:, start_idx:end_idx]
                 qzeros[1] = qzeros[1][
@@ -990,7 +995,9 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         self.dtype = dtype
         self.device = device
         self.device_tensor = None
-
+        self.tp_size = get_tensor_model_parallel_world_size()
+        self.tp_rank = get_tensor_model_parallel_rank()
+        
     @property
     def logits_as_input(self):
         return self.base_layer.logits_as_input
@@ -1020,25 +1027,21 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         self.weight_stacked = torch.zeros(
             (
                 max_deltas,
-                self.base_layer.vocab_size,
+                self.base_layer.vocab_size // self.tp_size,
                 self.hidden_size,
             ),
             dtype=self.dtype,
             device=self.device,
         )
-        self.embeddings_tensors = torch.full(
-            (max_deltas, 0, self.hidden_size),
-            fill_value=float("-inf"),
-            dtype=self.dtype,
-            device=self.device
-        )
+
         self.indices = None
         self.indices_padded = None
         self.indices_len = None
+        self.bitwidth = [0] * max_deltas
 
     def reset_delta(self, index: int):
         self.weight_stacked[index] = 0
-        self.embeddings_tensors[index] = float("-inf")
+        self.bitwidth[index] = 0
 
     def set_delta(
         self,
@@ -1047,8 +1050,15 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         weight: torch.Tensor,
         device_tensor: Any,
     ):
+        self.reset_delta(index)
+        self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
-        self.weight_stacked[index].copy_(weight, non_blocking=ASYNC_COPY)
+        shard_size = self.base_layer.vocab_size // self.tp_size
+        start_idx = shard_size * self.tp_rank
+        end_idx = shard_size * (self.tp_rank + 1)
+        self.weight_stacked[index, : weight.shape[0], : weight.shape[1]].copy_(
+            weight[start_idx: end_idx, :weight.shape[1]], non_blocking=ASYNC_COPY
+        )
 
     def set_mapping(
         self,
@@ -1070,9 +1080,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
     ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
         logits = torch.matmul(hidden_states, embedding.t())
-        if embedding_bias is not None:
-            logits += embedding_bias
-        logits = tensor_model_parallel_gather(logits)
+        # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
         if logits is None:
             return None
         apply_delta_uncompressed(

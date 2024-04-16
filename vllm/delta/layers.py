@@ -107,7 +107,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
 
     def reset_delta(self, index: int):
         self.bitwidth[index] = 0
-
+        self.delta_weights[index] = 0
     def create_delta_weights(
         self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig
     ) -> None:

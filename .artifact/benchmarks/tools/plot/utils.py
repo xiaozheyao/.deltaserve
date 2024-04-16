@@ -14,6 +14,8 @@ def parse_annotations(annotations:str):
 
 def extract_key_metadata(metadata):
     workload = parse_annotations(metadata['workload'].split("/")[-1].removesuffix(".jsonl"))
+    gen_tokens = metadata['workload'].split("/")[-2].removeprefix("gen_")
+    
     tp_size = metadata['sys_info']['tensor_parallel_size']
     is_swap = len(metadata['sys_info']['swap_modules']) > 0
     is_delta = len(metadata['sys_info']['delta_modules']) > 0
@@ -27,6 +29,7 @@ def extract_key_metadata(metadata):
         "is_swap": is_swap,
         "is_delta": is_delta,
         "is_unoptimized_delta": is_unoptimized_delta,
+        "gen_tokens": gen_tokens,
     })
     return workload
 
@@ -139,9 +142,16 @@ def parse_data(input_file):
     return key_metadata, results
 
 def get_title(key_metadata):
+    sys = "Unknown"
     if key_metadata['is_swap']:
-        return f"Naive vLLM, {key_metadata['distribution']}"
+        sys = "\\text{Naive vLLM}"
     if key_metadata['is_delta'] and key_metadata['is_unoptimized_delta']:
-        return f"vLLM + Delta, {key_metadata['distribution']}"
+        sys = "\\text{vLLM + Delta}"
     if key_metadata['is_delta'] and not key_metadata['is_unoptimized_delta']:
-        return f"vLLM + Delta + Optimized I/O, {key_metadata['distribution']}"
+        sys = "\\text{vLLM + Delta + Optimized I/O}"
+
+    workload = "\\text{<>}, ".replace("<>", key_metadata['distribution']) 
+    workload += f"\lambda={key_metadata['ar']}, "
+    workload += "\\text{duration=<>}, ".replace("<>", key_metadata['duration'])
+    workload += "\\text{tokens=<>}".replace("<>", key_metadata['gen_tokens'])
+    return f"${sys}, {workload}$"
