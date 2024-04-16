@@ -17,10 +17,16 @@ def extract_key_metadata(metadata):
     tp_size = metadata['sys_info']['tensor_parallel_size']
     is_swap = len(metadata['sys_info']['swap_modules']) > 0
     is_delta = len(metadata['sys_info']['delta_modules']) > 0
+    is_unoptimized_delta = False
+    if is_delta:
+        if "unopt" in metadata['sys_info']['delta_modules'][0]['local_path']:
+            is_unoptimized_delta = True
+    
     workload.update({
         "tp_size": tp_size,
         "is_swap": is_swap,
-        "is_delta": is_delta
+        "is_delta": is_delta,
+        "is_unoptimized_delta": is_unoptimized_delta,
     })
     return workload
 
@@ -75,17 +81,18 @@ def parse_swap(data):
         metric = x['response']['metrics'][0]
         
         e2e_latency = x['time_elapsed']
+
         inference_latency = metric['finished_time'] - metric['first_scheduled_time']
         
         first_token_latency = metric['first_token_time'] - metric['first_scheduled_time']
-        queuing_time = metric['first_scheduled_time'] - metric['arrival_time']
+         
         if metric['cpu_loading_time'] is None:
             cpu_loading_time = 0
         if metric['gpu_loading_time'] is None:
             gpu_loading_time = 0
         else:
             gpu_loading_time = metric['gpu_loading_time'] - metric['arrival_time']
-        
+        queuing_time = e2e_latency - inference_latency - gpu_loading_time
         results.append({
             "id": id,
             "model": x['response']['model'],
@@ -129,4 +136,11 @@ def parse_data(input_file):
     elif key_metadata['is_swap']:
         results = parse_swap(data)
     return key_metadata, results
-    
+
+def get_title(key_metadata):
+    if key_metadata['is_swap']:
+        return f"Naive vLLM, {key_metadata['distribution']}"
+    if key_metadata['is_delta'] and key_metadata['is_unoptimized_delta']:
+        return f"vLLM + Delta, {key_metadata['distribution']}"
+    if key_metadata['is_delta'] and not key_metadata['is_unoptimized_delta']:
+        return f"vLLM + Delta + Optimized I/O, {key_metadata['distribution']}"

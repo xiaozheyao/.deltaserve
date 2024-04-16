@@ -5,7 +5,7 @@ import datasets
 import numpy as np
 from loguru import logger
 from arrival import PoissonProcess
-
+from typing import Union
 import tiktoken
 enc = tiktoken.get_encoding("cl100k_base")
 
@@ -41,9 +41,11 @@ def generate_model_distribution(distribution, num_queries):
 def get_dialogs():
     trace = datasets.load_dataset("lmsys/chatbot_arena_conversations")["train"]
     all_dialogs = []
+    response_tokens = []
     for idx, item in enumerate(trace):
         all_dialogs.append(format_lmsys(item["conversation_a"][0]["content"]))
-    return all_dialogs
+        response_tokens.append(len(enc.encode(item["conversation_a"][1]['content'])))
+    return all_dialogs, response_tokens
 
 
 def generate_synthetic(args):
@@ -53,7 +55,7 @@ def generate_synthetic(args):
     )
     logger.info(f"Using Poisson arrival process, total_requests={len(poisson_ticks)}")
     traces_data = []
-    dialogs = get_dialogs()
+    dialogs, response_tokens = get_dialogs()
     models = generate_model_distribution(args.distribution, len(poisson_ticks))
     
     for idx in range(len(poisson_ticks)):
@@ -63,8 +65,8 @@ def generate_synthetic(args):
                 "prompt": dialogs[idx],
                 "timestamp": poisson_ticks[idx],
                 "model": models[idx],
-                "min_tokens": args.gen_tokens,
-                "max_tokens": args.gen_tokens,
+                "min_tokens": args.gen_tokens if args.gen_tokens != "auto" else response_tokens[idx],
+                "max_tokens": args.gen_tokens if args.gen_tokens != "auto" else response_tokens[idx],
             }
         )
     output_file = os.path.join(
@@ -85,7 +87,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--distribution", type=str, default="uniform")
     parser.add_argument("--output", type=str, default="")
-    parser.add_argument("--gen-tokens", type=int, default=512)
+    parser.add_argument("--gen-tokens", default=512)
     parser.add_argument("--arrival-rate", type=float, default=0)
     parser.add_argument("--duration", type=float, default=0)
     args = parser.parse_args()
