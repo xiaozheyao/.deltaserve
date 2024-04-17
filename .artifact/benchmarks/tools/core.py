@@ -15,7 +15,6 @@ def parse_annotation(annotations):
     annos = []
     annotations = annotations.split(",")
     for annotation in annotations:
-        print(annotation)
         anno = annotation.split("=")
         annos.append({"name": anno[0], "value": anno[1]})
     return annos
@@ -31,7 +30,7 @@ def request_thread(
     res = requests.post(endpoint + "/v1/completions", json=req)
     end_time = timer()
     if res.status_code != 200:
-        print(f"Failed to issue request: {res.text}")
+        print(f"Failed to issue request: {res.text}",flush=True)
     res = {
         "response": res.json(),
         "time_elapsed": end_time - start_time,
@@ -59,7 +58,7 @@ def async_issue_requests(endpoint, reqs, global_start_time):
 
 
 def issue_queries(endpoint, queries):
-    print("Issuing queries")
+    print("Issuing queries", flush=True)
     time_step = 0.1
     global threads
     global inference_results
@@ -74,7 +73,7 @@ def issue_queries(endpoint, queries):
             if x["timestamp"] <= time and x["timestamp"] > time - time_step
         ]
         if len(sub_queries) > 0:
-            print(f"sending {len(sub_queries)} queries at {time}")
+            print(f"sending {len(sub_queries)} queries at {time}", flush=True)
             s.enter(
                 time,
                 1,
@@ -87,24 +86,24 @@ def issue_queries(endpoint, queries):
             )
 
     s.run(blocking=True)
-    print(f"total threads: {len(threads)}")
+    print(f"total threads: {len(threads)}", flush=True)
     [thread.join() for thread in threads]
     end = timer()
     return {"results": inference_results, "total_elapsed": end - start}
 
 
 def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str):
-    print("Warming up starts")
+    print("Warming up starts", flush=True)
     if warmup_strategy == "random":
         reqs = np.random.choice(workload, size=10)
     req = [x for x in reqs if x["model"] != base_model][0]
     req = copy.deepcopy(req)
     req["timestamp"] = 0
-    print(req)
+    print(req, flush=True)
     res = requests.post(endpoint + "/v1/completions", json=req)
     if res.status_code != 200:
-        print(f"Failed to warm up: {res.text}")
-    print("Warming up ends")
+        print(f"Failed to warm up: {res.text}", flush=True)
+    print("Warming up ends", flush=True)
 
 
 def run(

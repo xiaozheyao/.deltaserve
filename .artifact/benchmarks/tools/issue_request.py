@@ -20,12 +20,11 @@ def before_benchmark(args):
         except Exception as e:
             print(f"Waiting for 10 secs for the system to be ready: {e}")
             time.sleep(10)
-    print(f"Translating from base-model to {args.base_model}")
+    print(f"Translating from base-model to {sysinfo['model']}", flush=True)
     for job_id, job in enumerate(workload):
         if job['model'] == 'base-model':
             workload[job_id]['model'] = sysinfo['model']
     return args.endpoints, workload, warmup, sysinfo
-
 
 def generate_annotation(endpoints, sysinfo, workload):
     tp_degree = sysinfo["tensor_parallel_size"]

@@ -1,8 +1,8 @@
 from awq import AutoAWQForCausalLM
 from transformers import AutoTokenizer
 
-model_path = 'lmsys/vicuna-13b-v1.5'
-quant_path = '.idea/compressed_models/vicuna-13b-v1.5-8b128g-awq'
+model_path = 'meta-llama/Llama-2-13b-chat-hf'
+quant_path = '.idea/compressed_models/Llama-2-chat-13b-4b128g-awq'
 quant_config = { "zero_point": True, "q_group_size": 128, "w_bit": 4, "version": "GEMM" }
 
 # Load model
