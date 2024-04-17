@@ -3,14 +3,21 @@ import json
 import uuid
 import argparse
 from core import run, get_sys_info
-
+import time
 
 def before_benchmark(args):
     with open(args.workload, "r") as f:
         workload = [json.loads(line) for line in f]
 
     warmup = args.warmup_strategy
-    sysinfo = get_sys_info(args.endpoints[0])
+    system_ready = False
+    # wait until system is ready
+    try:
+        sysinfo = get_sys_info(args.endpoints[0])
+        system_ready = True
+    except Exception as e:
+        print(f"Waiting for 10 secs for the system to be ready: {e}")
+        time.sleep(10)    
     return args.endpoints, workload, warmup, sysinfo
 
 
