@@ -18,7 +18,7 @@ def before_benchmark(args):
             sysinfo = get_sys_info(args.endpoints[0])
             system_ready = True
         except Exception as e:
-            print(f"Waiting for 10 secs for the system to be ready: {e}")
+            print(f"Waiting for 10 secs for the system to be ready: {e}", flush=True)
             time.sleep(10)
     print(f"Translating from base-model to {sysinfo['model']}", flush=True)
     for job_id, job in enumerate(workload):
