@@ -263,16 +263,16 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        # output = apply_delta(
-        #     x,
-        #     self.qweight_stacked,
-        #     self.qzero_stacked,
-        #     self.scales_stacked,
-        #     self.g_idx_stacked,
-        #     self.indices[: self.indices_len[0]],
-        #     output,
-        #     self.device_tensor,
-        # )
+        output = apply_delta(
+            x,
+            self.qweight_stacked,
+            self.qzero_stacked,
+            self.scales_stacked,
+            self.g_idx_stacked,
+            self.indices[: self.indices_len[0]],
+            output,
+            self.device_tensor,
+        )
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -395,7 +395,8 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.qzeros_stacked[1][index] = 0
         self.scales_stacked[0][index] = 0
         self.scales_stacked[1][index] = 0
-
+        self.bitwidth[index] = 0
+        
     def set_delta(
         self,
         index: int,
@@ -905,7 +906,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             qweight = qweight[
                 start_idx // self.pack_factor: end_idx // self.pack_factor, :
             ]
-
         self.qweight_stacked[index, 0, : qweight.shape[0], : qweight.shape[1]].copy_(
             qweight, non_blocking=ASYNC_COPY
         )

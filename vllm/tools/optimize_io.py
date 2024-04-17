@@ -4,8 +4,6 @@ import safetensors as st
 from fractions import Fraction
 from safetensors.torch import save_file
 
-transpose_modules = False
-
 
 def main(args):
     column_chunking_modules = [
@@ -41,8 +39,6 @@ def main(args):
                 rank_tensors[i][key] = tensors[key][
                     :, i * shard_size : (i + 1) * shard_size
                 ]
-                if transpose_modules:
-                    rank_tensors[i][key] = rank_tensors[i][key].transpose(0, 1)
                 rank_tensors[i][key] = rank_tensors[i][key].contiguous()
             chunked_keys.append(key)
 
