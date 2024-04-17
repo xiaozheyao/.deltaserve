@@ -4,7 +4,6 @@ import threading
 import numpy as np
 import sched, time
 from typing import List
-from loguru import logger
 from timeit import default_timer as timer
 
 s = sched.scheduler(time.monotonic, time.sleep)
@@ -32,7 +31,7 @@ def request_thread(
     res = requests.post(endpoint + "/v1/completions", json=req)
     end_time = timer()
     if res.status_code != 200:
-        logger.error(f"Failed to issue request: {res.text}")
+        print(f"Failed to issue request: {res.text}")
     res = {
         "response": res.json(),
         "time_elapsed": end_time - start_time,
@@ -60,7 +59,7 @@ def async_issue_requests(endpoint, reqs, global_start_time):
 
 
 def issue_queries(endpoint, queries):
-    logger.info("Issuing queries")
+    print("Issuing queries")
     time_step = 0.1
     global threads
     global inference_results
@@ -88,14 +87,14 @@ def issue_queries(endpoint, queries):
             )
 
     s.run(blocking=True)
-    logger.info(f"total threads: {len(threads)}")
+    print(f"total threads: {len(threads)}")
     [thread.join() for thread in threads]
     end = timer()
     return {"results": inference_results, "total_elapsed": end - start}
 
 
 def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str):
-    logger.info("Warming up starts")
+    print("Warming up starts")
     if warmup_strategy == "random":
         reqs = np.random.choice(workload, size=10)
     req = [x for x in reqs if x["model"] != base_model][0]
@@ -104,8 +103,8 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     print(req)
     res = requests.post(endpoint + "/v1/completions", json=req)
     if res.status_code != 200:
-        logger.error(f"Failed to warm up: {res.text}")
-    logger.info("Warming up ends")
+        print(f"Failed to warm up: {res.text}")
+    print("Warming up ends")
 
 
 def run(
