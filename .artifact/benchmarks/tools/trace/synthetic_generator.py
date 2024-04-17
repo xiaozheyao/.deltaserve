@@ -10,15 +10,15 @@ import tiktoken
 enc = tiktoken.get_encoding("cl100k_base")
 
 to_eval_models = [
-    "meta-llama/Llama-2-7b-hf",
-    "vicuna-7b-1",
-    "vicuna-7b-2",
-    "vicuna-7b-3",
-    "vicuna-7b-4",
-    "vicuna-7b-5",
-    "vicuna-7b-6",
-    "vicuna-7b-7",
-    "vicuna-7b-8",
+    "base-model",
+    "delta-1",
+    "delta-2",
+    "delta-3",
+    "delta-4",
+    "delta-5",
+    "delta-6",
+    "delta-7",
+    "delta-8",
 ]
 
 
