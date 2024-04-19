@@ -24,7 +24,6 @@ from vllm.logger import init_logger
 from vllm.utils import LRUCache, in_wsl, total_bytes_count
 from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
-    get_tensor_model_parallel_world_size,
 )
 from safetensors import safe_open
 from .config import QuantKernel
@@ -43,7 +42,7 @@ if use_unoptimized_delta:
         DeltaMapping,
     )
 else:
-    from .layers import (
+    from .layers_debug import (
         BaseLayerWithDelta,
         from_layer,
         from_layer_logits_processor,
@@ -175,7 +174,7 @@ class DeltaModel:
         if not os.path.exists(os.path.join(path_or_name, model_tensor_filenames[0])):
             # no optimized ckpt found
             model_tensor_filenames = ["deltazip-compressed.safetensors"]
-        print(f"Loading from {model_tensor_filenames}")
+        logger.info(f"Loading from {model_tensor_filenames}")
         def skip(*args, **kwargs):
             pass
 
@@ -386,7 +385,6 @@ class DeltaModelManager:
                         calculate_fixed_scratch_size(qweight_shape, bits=4),
                         self.fixed_bytes.get(0, 0),
                     )
-            print(f"fixed bytes: {self.fixed_bytes}")
 
         if self.current_kernel == QuantKernel.EXLLAMA:
             device_tensors = {}

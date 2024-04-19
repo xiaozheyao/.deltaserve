@@ -23,9 +23,9 @@ sampling_params = SamplingParams(
     seed=42,
 )
 if use_unoptimized_delta:
-    delta_path = f".idea/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
+    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
 else:
-    delta_path = f".idea/models/vicuna-7b-4b0.75s-tp_{tp_size}/"
+    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}/"
 
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",

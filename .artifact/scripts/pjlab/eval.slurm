@@ -25,8 +25,7 @@ which python
 cd /mnt/petrelfs/huqinghao/xzyao/code/vllm
 # spin up vllm
 
-
-UNOPTIMIZED_DELTA=1 python -m vllm.entrypoints.openai.api_server --model .idea/full_models/llama-70b --enable-delta --disable-log-requests --gpu-memory-utilization 0.85 --delta-modules delta-1=.idea/models/llama2-chat-70b.4b75s128g-unopt-1 delta-2=.idea/models/llama2-chat-70b.4b75s128g-unopt-2 delta-3=.idea/models/llama2-chat-70b.4b75s128g-unopt-3 delta-4=.idea/models/llama2-chat-70b.4b75s128g-unopt-4 delta-5=.idea/models/llama2-chat-70b.4b75s128g-unopt-5 delta-6=.idea/models/llama2-chat-70b.4b75s128g-unopt-6 delta-7=.idea/models/llama2-chat-70b.4b75s128g-unopt-7 delta-8=.idea/models/llama2-chat-70b.4b75s128g-unopt-8 --max-deltas 1 --tensor-parallel-size 8 --enforce-eager --max-cpu-deltas 32
+UNOPTIMIZED_DELTA=1 python -m vllm.entrypoints.openai.api_server --model .idea/full_models/llama-70b --enable-delta --disable-log-requests --gpu-memory-utilization 0.85 --delta-modules delta-1=.idea/models/llama2-chat-70b.4b75s128g-unopt-1 delta-2=.idea/models/llama2-chat-70b.4b75s128g-unopt-2 delta-3=.idea/models/llama2-chat-70b.4b75s128g-unopt-3 delta-4=.idea/models/llama2-chat-70b.4b75s128g-unopt-4 delta-5=.idea/models/llama2-chat-70b.4b75s128g-unopt-5 delta-6=.idea/models/llama2-chat-70b.4b75s128g-unopt-6 delta-7=.idea/models/llama2-chat-70b.4b75s128g-unopt-7 delta-8=.idea/models/llama2-chat-70b.4b75s128g-unopt-8 --max-deltas 1 --tensor-parallel-size 8 --enforce-eager
 
 # srun --jobid 3653359 --interactive /bin/bash
 # unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset HTTPS_PROXY
