@@ -42,7 +42,7 @@ if use_unoptimized_delta:
         DeltaMapping,
     )
 else:
-    from .layers_debug import (
+    from .layers import (
         BaseLayerWithDelta,
         from_layer,
         from_layer_logits_processor,
