@@ -96,6 +96,8 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.base_layer = base_layer
         self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
+        self.tp_rank = get_tensor_model_parallel_rank()
+        
         self.vocab_start_index = self.base_layer.vocab_start_index
         self.vocab_end_index = self.base_layer.vocab_end_index
         
@@ -106,7 +108,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def create_delta_weights(self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig) -> None:
         self.delta_weights = torch.zeros(
             max_deltas,
-            self.base_layer.org_vocab_size,
+            self.base_layer.org_vocab_size // self.tp_size,
             self.base_layer.embedding_dim,
             dtype=delta_config.delta_dtype,
             device=self.base_layer.weight.device,
@@ -121,6 +123,11 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         device_tensor: Any,
     ):
         self.bitwidth[index] = bitwidth
+        shard_size = self.base_layer.org_vocab_size // self.tp_size
+        weight = weight[
+            shard_size*(self.tp_rank): shard_size*(self.tp_rank+1),
+            :
+        ]
         self.delta_weights[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -794,17 +801,17 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        output = apply_delta_packed_nslice(
-            x,
-            self.qweight_stacked,
-            self.qzeros_stacked,
-            self.scales_stacked,
-            self.g_idx_stacked,
-            self.indices[: self.indices_len[0]],
-            output,
-            self.output_slices,
-            self.device_tensor,
-        )
+        # output = apply_delta_packed_nslice(
+        #     x,
+        #     self.qweight_stacked,
+        #     self.qzeros_stacked,
+        #     self.scales_stacked,
+        #     self.g_idx_stacked,
+        #     self.indices[: self.indices_len[0]],
+        #     output,
+        #     self.output_slices,
+        #     self.device_tensor,
+        # )
         return output
 
     @classmethod
@@ -922,16 +929,16 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x
         )
-        output = apply_delta(
-            x,
-            self.qweight_stacked,
-            self.qzeros_stacked,
-            self.scales_stacked,
-            self.g_idx_stacked,
-            self.indices[: self.indices_len[0]],
-            output,
-            self.device_tensor,
-        )
+        # output = apply_delta(
+        #     x,
+        #     self.qweight_stacked,
+        #     self.qzeros_stacked,
+        #     self.scales_stacked,
+        #     self.g_idx_stacked,
+        #     self.indices[: self.indices_len[0]],
+        #     output,
+        #     self.device_tensor,
+        # )
         return output
 
     def forward(self, input_):
@@ -1078,12 +1085,12 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
         if logits is None:
             return None
-        apply_delta_uncompressed(
-            hidden_states,
-            self.weight_stacked,
-            self.indices[: self.indices_len[1]],
-            logits,
-        )
+        # apply_delta_uncompressed(
+        #     hidden_states,
+        #     self.weight_stacked,
+        #     self.indices[: self.indices_len[1]],
+        #     logits,
+        # )
         logits = tensor_model_parallel_gather(logits)
         return logits
 

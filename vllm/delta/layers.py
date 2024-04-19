@@ -437,6 +437,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             self.qweight_stacked[0][
                 index, 0, : , : 
             ].copy_(qweight[0], non_blocking=ASYNC_COPY)
+            
             self.qzeros_stacked[0][
                 index, 0, :, : 
             ].copy_(qzeros[0], non_blocking=ASYNC_COPY)
@@ -886,16 +887,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
         
-        # if self.base_layer.tp_size > 1:
-        #     tensor_model_parallel_rank = get_tensor_model_parallel_rank()
-        #     shard_size = self.base_layer.weight.shape[1]
-        #     start_idx = tensor_model_parallel_rank * shard_size // self.pack_factor
-        #     end_idx = (tensor_model_parallel_rank + 1) * shard_size // self.pack_factor
-        #     print(f"start_idx: {start_idx}, end_idx: {end_idx}")
-        #     print(f"qweight: {qweight.shape}, qweight_stacked: {self.qweight_stacked.shape}")
-        #     # qweight = qweight[
-        #     #     start_idx : end_idx , :
-        #     # ]
         self.qweight_stacked[index, 0, : , :].copy_(
             qweight, non_blocking=ASYNC_COPY
         )

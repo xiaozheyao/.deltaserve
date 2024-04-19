@@ -1,5 +1,6 @@
 import os
 import json
+import torch
 import safetensors as st
 from fractions import Fraction
 from safetensors.torch import save_file
@@ -25,7 +26,10 @@ def main(args):
         compress_config = json.load(fp)
     pack_factor = Fraction(32, compress_config["bits"])
     tensors = {}
-    rank_tensors = [{}] * args.tp_size
+    rank_tensors = {
+        i: {}
+        for i in range(args.tp_size)
+    }
     with st.safe_open(
         os.path.join(args.input, "deltazip-compressed.safetensors"), "torch"
     ) as f:
@@ -38,8 +42,7 @@ def main(args):
                 shard_size = tensors[key].shape[1] // args.tp_size
                 rank_tensors[i][key] = tensors[key][
                     :, i * shard_size : (i + 1) * shard_size
-                ]
-                rank_tensors[i][key] = rank_tensors[i][key].contiguous()
+                ].contiguous()
             chunked_keys.append(key)
 
         if any([module in key for module in row_chunking_modules]):
@@ -47,16 +50,18 @@ def main(args):
                 shard_size = tensors[key].shape[0] // args.tp_size
                 rank_tensors[i][key] = tensors[key][
                     i * shard_size : (i + 1) * shard_size, :
-                ]
-                rank_tensors[i][key] = rank_tensors[i][key].contiguous()
+                ].contiguous()
             chunked_keys.append(key)
 
     for key in chunked_keys:
         del tensors[key]
+    
     print(f"Chunking Finished, saving to {args.input}/rank.[rank_id].safetensors")
-    for rank_id, rank_tensor in enumerate(rank_tensors):
-        print(f"Saving rank {rank_id}")
+    
+    for rank_id in range(args.tp_size):
+        rank_tensor = rank_tensors[rank_id]
         save_file(rank_tensor, f"{args.input}/rank.{rank_id}.safetensors")
+        
     save_file(tensors, f"{args.input}/deltazip-compressed-remain.safetensors")
 
 
