@@ -49,6 +49,7 @@ else:
         DeltaMapping,
     )
 
+
 def convert_mapping(
     mapping: DeltaMapping,
     delta_index_to_id: List[Optional[int]],
@@ -175,6 +176,7 @@ class DeltaModel:
             # no optimized ckpt found
             model_tensor_filenames = ["deltazip-compressed.safetensors"]
         logger.info(f"Loading from {model_tensor_filenames}")
+
         def skip(*args, **kwargs):
             pass
 

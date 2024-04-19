@@ -30,7 +30,7 @@ def request_thread(
     res = requests.post(endpoint + "/v1/completions", json=req)
     end_time = timer()
     if res.status_code != 200:
-        print(f"Failed to issue request: {res.text}",flush=True)
+        print(f"Failed to issue request: {res.text}", flush=True)
     res = {
         "response": res.json(),
         "time_elapsed": end_time - start_time,

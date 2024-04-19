@@ -26,10 +26,7 @@ def main(args):
         compress_config = json.load(fp)
     pack_factor = Fraction(32, compress_config["bits"])
     tensors = {}
-    rank_tensors = {
-        i: {}
-        for i in range(args.tp_size)
-    }
+    rank_tensors = {i: {} for i in range(args.tp_size)}
     with st.safe_open(
         os.path.join(args.input, "deltazip-compressed.safetensors"), "torch"
     ) as f:
@@ -55,13 +52,13 @@ def main(args):
 
     for key in chunked_keys:
         del tensors[key]
-    
+
     print(f"Chunking Finished, saving to {args.input}/rank.[rank_id].safetensors")
-    
+
     for rank_id in range(args.tp_size):
         rank_tensor = rank_tensors[rank_id]
         save_file(rank_tensor, f"{args.input}/rank.{rank_id}.safetensors")
-        
+
     save_file(tensors, f"{args.input}/deltazip-compressed-remain.safetensors")
 
 

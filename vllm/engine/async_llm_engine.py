@@ -258,7 +258,7 @@ class _AsyncLLMEngine(LLMEngine):
         sampling_params: SamplingParams,
         prompt_token_ids: Optional[List[int]] = None,
         arrival_time: Optional[float] = None,
-        gpu_loading_time: Optional[float]=None,
+        gpu_loading_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
@@ -423,7 +423,9 @@ class AsyncLLMEngine:
             return self.engine.get_tokenizer()
 
     async def reload_model(self, model_name_or_path: str):
-        assert model_name_or_path!=self._current_weight_path, "Model is already loaded"
+        assert (
+            model_name_or_path != self._current_weight_path
+        ), "Model is already loaded"
         logger.info(f"Reloading model to {model_name_or_path}")
         self.engine.reload_model(model_name_or_path)
 
