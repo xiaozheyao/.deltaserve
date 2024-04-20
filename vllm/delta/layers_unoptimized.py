@@ -427,39 +427,39 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             start_idx = tp_rank * shard_size
             end_idx = (tp_rank + 1) * shard_size
             if qweight[0] is not None:
-                qweight[0] = qweight[0][:, start_idx:end_idx]
-                qzeros[0] = qzeros[0][
+                qweight_0 = qweight[0][:, start_idx:end_idx]
+                qzeros_0 = qzeros[0][
                     :, start_idx // self.pack_factor : end_idx // self.pack_factor
                 ]
-                scales[0] = scales[0][:, start_idx:end_idx]
+                scales_0 = scales[0][:, start_idx:end_idx]
             if qweight[1] is not None:
-                qweight[1] = qweight[1][:, start_idx:end_idx]
-                qzeros[1] = qzeros[1][
+                qweight_1 = qweight[1][:, start_idx:end_idx]
+                qzeros_1 = qzeros[1][
                     :, start_idx // self.pack_factor : end_idx // self.pack_factor
                 ]
-                scales[1] = scales[1][:, start_idx:end_idx]
+                scales_1 = scales[1][:, start_idx:end_idx]
 
         if qweight[0] is not None:
             self.qweight_stacked[0][index, 0, :, :].copy_(
-                qweight[0], non_blocking=ASYNC_COPY
+                qweight_0, non_blocking=ASYNC_COPY
             )
             self.qzeros_stacked[0][index, 0, :, :].copy_(
-                qzeros[0], non_blocking=ASYNC_COPY
+                qzeros_0, non_blocking=ASYNC_COPY
             )
             self.scales_stacked[0][index, 0, :, :].copy_(
-                scales[0], non_blocking=ASYNC_COPY
+                scales_0, non_blocking=ASYNC_COPY
             )
             self.g_idx[0] = g_idx[0]
 
         if qweight[1] is not None:
             self.qweight_stacked[1][index, 0, :, :].copy_(
-                qweight[1], non_blocking=ASYNC_COPY
+                qweight_1, non_blocking=ASYNC_COPY
             )
             self.qzeros_stacked[1][index, 0, :, :].copy_(
-                qzeros[1], non_blocking=ASYNC_COPY
+                qzeros_1, non_blocking=ASYNC_COPY
             )
             self.scales_stacked[1][index, 0, :, :].copy_(
-                scales[1], non_blocking=ASYNC_COPY
+                scales_1, non_blocking=ASYNC_COPY
             )
             self.g_idx[1] = g_idx[1]
 
@@ -673,26 +673,16 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * self.q_shard_id : self.q_proj_shard_size
                     * (self.q_shard_id + 1),
                 ]
-                self.qweight_stacked[0][
-                    index, 0, : qweight_q.shape[0], : qweight_q.shape[1]
-                ].copy_(qweight_q, non_blocking=ASYNC_COPY)
-                self.qzeros_stacked[0][
-                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
-                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
-                self.scales_stacked[0][
-                    index, 0, : scales_q.shape[0], : scales_q.shape[1]
-                ].copy_(scales_q, non_blocking=ASYNC_COPY)
-                self.g_idx_stacked[0] = g_idx[0]
 
             if qweight[1] is not None:
-                qweight_kv = qweight[1][
+                qweight_k = qweight[1][
                     :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
 
-                qzeros_q = qzeros[1][
+                qzeros_k = qzeros[1][
                     :,
                     self.kv_proj_shard_size
                     // self.pack_factor
@@ -700,33 +690,24 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
-                scales_q = scales[1][
+                scales_k = scales[1][
                     :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
 
-                self.qweight_stacked[1][
-                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
-                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
-                self.qzeros_stacked[1][
-                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
-                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
-                self.scales_stacked[1][
-                    index, 0, : scales_q.shape[0], : scales_q.shape[1]
-                ].copy_(scales_q, non_blocking=ASYNC_COPY)
 
                 self.g_idx_stacked[1] = g_idx[1]
 
             if qweight[2] is not None:
-                qweight_kv = qweight[2][
+                qweight_v = qweight[2][
                     :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
-                qzeros_q = qzeros[2][
+                qzeros_v = qzeros[2][
                     :,
                     self.kv_proj_shard_size
                     // self.pack_factor
@@ -734,70 +715,57 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
                 ]
-                scales_q = scales[2][
+                scales_v = scales[2][
                     :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
                 ]
-                self.qweight_stacked[2][
-                    index, 0, : qweight_kv.shape[0], : qweight_kv.shape[1]
-                ].copy_(qweight_kv, non_blocking=ASYNC_COPY)
-                self.qzeros_stacked[2][
-                    index, 0, : qzeros_q.shape[0], : qzeros_q.shape[1]
-                ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
-                self.scales_stacked[2][
-                    index, 0, : scales_q.shape[0], : scales_q.shape[1]
-                ].copy_(scales_q, non_blocking=ASYNC_COPY)
-                self.g_idx_stacked[2] = g_idx[2]
         else:
-            if qweight[0] is not None:
-                self.qweight_stacked[0][
-                    index, 0, : qweight[0].shape[0], : qweight[0].shape[1]
-                ].copy_(qweight[0], non_blocking=ASYNC_COPY)
-            if qweight[1] is not None:
-                self.qweight_stacked[1][
-                    index, 0, : qweight[1].shape[0], : qweight[1].shape[1]
-                ].copy_(qweight[1], non_blocking=ASYNC_COPY)
-
-            if qweight[2] is not None:
-                self.qweight_stacked[2][
-                    index, 0, : qweight[2].shape[0], : qweight[2].shape[1]
-                ].copy_(qweight[2], non_blocking=ASYNC_COPY)
-
-            if qzeros[0] is not None:
-                self.qzeros_stacked[0][
-                    index, 0, : qzeros[0].shape[0], : qzeros[0].shape[1]
-                ].copy_(qzeros[0], non_blocking=ASYNC_COPY)
-
-            if qzeros[1] is not None:
-                self.qzeros_stacked[1][
-                    index, 0, : qzeros[1].shape[0], : qzeros[1].shape[1]
-                ].copy_(qzeros[1], non_blocking=ASYNC_COPY)
-            if qzeros[2] is not None:
-                self.qzeros_stacked[2][
-                    index, 0, : qzeros[2].shape[0], : qzeros[2].shape[1]
-                ].copy_(qzeros[2], non_blocking=ASYNC_COPY)
-
-            if scales[0] is not None:
-                self.scales_stacked[0][
-                    index, 0, : scales[0].shape[0], : scales[0].shape[1]
-                ].copy_(scales[0], non_blocking=ASYNC_COPY)
-            if scales[1] is not None:
-                self.scales_stacked[1][
-                    index, 0, : scales[1].shape[0], : scales[1].shape[1]
-                ].copy_(scales[1], non_blocking=ASYNC_COPY)
-            if scales[2] is not None:
-                self.scales_stacked[2][
-                    index, 0, : scales[2].shape[0], : scales[2].shape[1]
-                ].copy_(scales[2], non_blocking=ASYNC_COPY)
-
-            if g_idx[0] is not None:
-                self.g_idx_stacked[0] = g_idx[0]
-            if g_idx[1] is not None:
-                self.g_idx_stacked[1] = g_idx[1]
-            if g_idx[2] is not None:
-                self.g_idx_stacked[2] = g_idx[2]
+            qweight_q = qweight[0]
+            qzeros_q = qzeros[0]
+            scales_q = scales[0]
+            qweight_k = qweight[1]
+            qzeros_k = qzeros[1]
+            scales_k = scales[1]
+            qweight_v = qweight[2]
+            qzeros_v = qzeros[2]
+            scales_v = scales[2]
+            
+        if qweight[0] is not None:
+            self.qweight_stacked[0][
+                index, 0, : , : 
+            ].copy_(qweight_q, non_blocking=ASYNC_COPY)
+            self.qzeros_stacked[0][
+                index, 0, : , : 
+            ].copy_(qzeros_q, non_blocking=ASYNC_COPY)
+            self.scales_stacked[0][
+                index, 0, : , : 
+            ].copy_(scales_q, non_blocking=ASYNC_COPY)
+            self.g_idx_stacked[0] = g_idx[0]
+            
+        if qweight[1] is not None:
+            self.qweight_stacked[1][
+                index, 0, : , : 
+            ].copy_(qweight_k, non_blocking=ASYNC_COPY)
+            self.qzeros_stacked[1][
+                index, 0, : , : 
+            ].copy_(qzeros_k, non_blocking=ASYNC_COPY)
+            self.scales_stacked[1][
+                index, 0, : , : 
+            ].copy_(scales_k, non_blocking=ASYNC_COPY)
+            self.g_idx_stacked[1] = g_idx[1]
+        if qweight[2] is not None:
+            self.qweight_stacked[2][
+                index, 0, : , : 
+            ].copy_(qweight_v, non_blocking=ASYNC_COPY)
+            self.qzeros_stacked[2][
+                index, 0, : , : 
+            ].copy_(qzeros_v, non_blocking=ASYNC_COPY)
+            self.scales_stacked[2][
+                index, 0, : , : 
+            ].copy_(scales_v, non_blocking=ASYNC_COPY)
+            self.g_idx_stacked[2] = g_idx[2]
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
