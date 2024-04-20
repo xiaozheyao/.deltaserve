@@ -403,6 +403,14 @@ class DeltaModelManager:
                     else:
                         # unpacked
                         qweight_device = module_delta.qweight.device
+                    if isinstance(module_delta.qzeros, list):
+                        if module_delta.qzeros[0].shape[0] == 0:
+                            print(f"Empty qzeros for {module_name}")
+                            exit(1)
+                    else:
+                        if module_delta.qzeros.shape[0] == 0:
+                            print(f"Empty qzeros for {module_name}")
+                            exit(1)
                     module.set_delta(
                         index,
                         delta_model.bitwidth,

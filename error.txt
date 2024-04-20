@@ -1,0 +1,5 @@
+qzeros[0]: torch.Size([1, 0]), scales[0]: torch.Size([1, 0])
+self.qzeros_stacked[0]: torch.Size([1, 1, 1, 256]), self.scales_stacked[0]: torch.Size([1, 1, 1, 2048])
+self.kv_proj_shard_size: 2048, self.q_proj_shard_size: 2048
+self.q_shard_id: 1, self.kv_shard_id: 1 
+original_qzeros_shape: torch.Size([1, 256])
