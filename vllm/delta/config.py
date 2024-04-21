@@ -1,3 +1,4 @@
+import os
 import json
 import torch
 from typing import Optional
@@ -7,6 +8,7 @@ from os.path import join
 from fractions import Fraction
 from enum import Enum
 
+use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 
 class QuantKernel(Enum):
     EXLLAMA = "exllama"
@@ -88,7 +90,11 @@ class DeltaConfig:
             raise ValueError("max_cpu_deltas must be greater than max_deltas")
         if self.max_bitwidth not in [2, 4, 8]:
             raise ValueError("max_bitwidth must be 2, 4 or 8")
-        self.pack_factor = Fraction(32, self.max_bitwidth)
+        if use_bitblas:
+            self.delta_dtype = torch.int8
+            self.pack_factor = Fraction(8, self.max_bitwidth)
+        else:
+            self.pack_factor = Fraction(32, self.max_bitwidth)
         if self.kernel not in QuantKernel:
             raise ValueError(
                 f"kernel must be one of {list(QuantKernel.__members__.keys())}"
