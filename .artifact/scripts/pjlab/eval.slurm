@@ -1,11 +1,11 @@
 #!/bin/bash
 #SBATCH --partition=llm_s
-#SBATCH --cpus-per-task=16
+#SBATCH --cpus-per-task=64
 #SBATCH --gres=gpu:8
 #SBATCH --ntasks=2
 #SBATCH --nodes=1
 #SBATCH --output=./logs/%A_%x.out
-#SBATCH --mem-per-cpu=2GB
+#SBATCH --mem-per-cpu=8GB
 
 set -e
 
