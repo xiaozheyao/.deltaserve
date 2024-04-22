@@ -35,17 +35,14 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    # ql = QuantLinear.from_tensors(
-    #     BITWIDTH,
-    #     qweight[0][0],
-    #     qzeros[0][0],
-    #     scales[0][0],
-    #     g_idx,
-    #     bias=None,
-    #     device_tensor=device_tensor,
-    # )
+    x = x.repeat(qweight.shape[0], 1, 1)
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
-    y += output
+    # y.shape [2048, 4096]
+    # output.shape [2048, 4096]
+    for i in range(len(indices)):
+        if indices[i] == -1:
+            continue
+        y[i,:] += output[indices[i], i, :]
     return y
 
 
@@ -73,18 +70,18 @@ def add_delta_slice(
     """
     bsz = qweight.shape[0]
     x = x.repeat(bsz, 1, 1)
-    print(f"x: {x.shape}@{x.device}@{x.dtype}")
-    print(f"qweight: {qweight.shape}@{qweight.device}@{qweight.dtype}")
-    print(f"qzeros: {qzeros.shape}@{qzeros.device}@{qzeros.dtype}")
-    print(f"scales: {scales.shape}@{scales.device}@{scales.dtype}")
-
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
-    print(f"output.shape: {output.shape}")
-    print(
-        f"y.shape: {y.shape}, y_offset.shape: {y[:, y_offset : y_offset + y_slice_size].shape}"
-    )
-    y[:, y_offset : y_offset + y_slice_size] += output
-
+    # output shape: (num_deltas, bsz, dim2)
+    # indices shape: (bsz), ranges in [0, num_deltas)
+    # y shape: (bsz, dim2)
+    # goal: y[indices[i], y_offset: y_offset + y_slice_size] += output[i, :y_slice_size]
+    for i in range(len(indices)):
+        if indices[i] == -1:
+            continue
+        # print(f"output shape: {output[indices[i], :].shape}")
+        y[i, y_offset:y_offset + y_slice_size] += output[indices[i], i, :]
+    return y
+    
 
 def apply_delta(
     x: torch.Tensor,
@@ -194,9 +191,6 @@ def apply_delta_uncompressed(
     for i in range(len(delta_weights)):
         base_output[indices == i] += outputs[i][indices == i]
     return base_output
-    # output = torch.matmul(x, delta_weights[0].T)
-    # base_output += output
-    # return base_output
 
 
 def apply_delta_embed(

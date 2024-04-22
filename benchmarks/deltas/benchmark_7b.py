@@ -16,10 +16,10 @@ llm = LLM(
     enable_delta=True,
     tensor_parallel_size=tp_size,
     enforce_eager=True,
-    gpu_memory_utilization=0.8,
+    gpu_memory_utilization=0.9,
     max_context_len_to_capture=64,
     max_model_len=64,
-    max_deltas=2,
+    max_deltas=1,
 )
 
 sampling_params = SamplingParams(

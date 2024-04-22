@@ -384,6 +384,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     for i in range(self.base_layer.weight.shape[1])
                 ],
                 dtype=torch.int32,
+                device=self.base_layer.weight.device,
             ),
             torch.tensor(
                 [
@@ -391,6 +392,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                     for i in range(self.base_layer.weight.shape[1])
                 ],
                 dtype=torch.int32,
+                device=self.base_layer.weight.device,
             ),
         ]
         self.indices: Optional[torch.Tensor] = None
@@ -774,7 +776,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.qweight_stacked = torch.zeros(
             (
                 max_deltas,
-                1,
                 self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 self.base_layer.weight.shape[0],
             ),
@@ -785,14 +786,13 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             (
                 max_deltas,
                 1,
-                1,
                 self.base_layer.weight.shape[0] // delta_config.pack_factor,
             ),
+            device=self.base_layer.weight.device,
             dtype=torch.int32,
         )
         self.scales_stacked = torch.zeros(
             max_deltas,
-            1,
             1,
             self.base_layer.weight.shape[0],
             dtype=torch.float16,
@@ -804,6 +804,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
                 for i in range(self.base_layer.weight.shape[1])
             ],
             dtype=torch.int32,
+            device=self.base_layer.weight.device,
         )
 
     def reset_delta(self, index: int):
@@ -825,9 +826,9 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
-        self.qweight_stacked[index, 0, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
-        self.qzeros_stacked[index, 0, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
-        self.scales_stacked[index, 0, :, :].copy_(scales, non_blocking=ASYNC_COPY)
+        self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
+        self.qzeros_stacked[index, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
+        self.scales_stacked[index, :, :].copy_(scales, non_blocking=ASYNC_COPY)
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
         if self.base_layer.bias is not None:
