@@ -2,15 +2,20 @@ import os
 import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
+from .quant_linears.quant_linear_triton import QuantLinear
 
 USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
+USE_TRITEIA = os.environ.get("USE_TRITEIA", "0") == "1"
 if USE_BITBLAS:
     from .quant_linears.quant_linear_bitblas import QuantLinear
+elif USE_TRITEIA:
+    from triteia.ao.ops.linalg.matmul.bmm_lowprec import quant_bmm_248
 else:
-    from .quant_linears.quant_linear_triton import QuantLinear
     # from .quant_linears.quant_linear_naive import QuantLinear
     # from .quant_linears.quant_linear_exllama import QuantLinear
+    pass
+
 
 def add_delta(
     y: torch.Tensor,
@@ -30,16 +35,16 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    ql = QuantLinear.from_tensors(
-        BITWIDTH,
-        qweight[0][0],
-        qzeros[0][0],
-        scales[0][0],
-        g_idx,
-        bias=None,
-        device_tensor=device_tensor,
-    )
-    output = ql(x)
+    # ql = QuantLinear.from_tensors(
+    #     BITWIDTH,
+    #     qweight[0][0],
+    #     qzeros[0][0],
+    #     scales[0][0],
+    #     g_idx,
+    #     bias=None,
+    #     device_tensor=device_tensor,
+    # )
+    output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
     y += output
     return y
 
@@ -66,18 +71,18 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    ql = QuantLinear.from_tensors(
-        BITWIDTH,
-        qweight[0][0],
-        qzeros[0][0],
-        scales[0][0],
-        g_idx,
-        bias=None,
-        device_tensor=device_tensor,
-    )
-    output = ql(x)
+    bsz = qweight.shape[0]
+    x = x.repeat(bsz, 1, 1)
+    print(f"x: {x.shape}@{x.device}@{x.dtype}")
+    print(f"qweight: {qweight.shape}@{qweight.device}@{qweight.dtype}")
+    print(f"qzeros: {qzeros.shape}@{qzeros.device}@{qzeros.dtype}")
+    print(f"scales: {scales.shape}@{scales.device}@{scales.dtype}")
+
+    output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
     print(f"output.shape: {output.shape}")
-    print(f"y.shape: {y.shape}, y_offset.shape: {y[:, y_offset : y_offset + y_slice_size].shape}")
+    print(
+        f"y.shape: {y.shape}, y_offset.shape: {y[:, y_offset : y_offset + y_slice_size].shape}"
+    )
     y[:, y_offset : y_offset + y_slice_size] += output
 
 

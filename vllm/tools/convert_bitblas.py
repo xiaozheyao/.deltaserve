@@ -5,6 +5,8 @@ from triteia.ao.utils.bitblas import convert_to_bitblas
 from safetensors.torch import save_file
 
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
+
+
 def main(args):
     print(args)
     tensors = {}
@@ -31,10 +33,11 @@ def main(args):
         if module + ".bias" in remaining_modules:
             remaining_modules.remove(module + ".bias")
         remaining_modules.remove(module + ".g_idx")
-        
+
     for module in remaining_modules:
         new_tensors[module] = tensors[module]
     save_file(new_tensors, args.output)
+
 
 if __name__ == "__main__":
     import argparse

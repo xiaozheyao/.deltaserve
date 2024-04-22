@@ -715,7 +715,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 scales_q, non_blocking=ASYNC_COPY
             )
             self.g_idx_stacked[0] = g_idx[0]
-            
 
         if qweight[1] is not None:
             self.qweight_stacked[1][index, 0, :, :].copy_(

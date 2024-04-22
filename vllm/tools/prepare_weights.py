@@ -1,17 +1,15 @@
 import os
-SRC=".idea/models/"
-DST="/dev/shm/xiayao/models/"
+
+SRC = ".idea/models/"
+DST = "/dev/shm/xiayao/models/"
 
 os.makedirs(DST)
 
 NUM_MODELS = 8
-PREFIXS = [
-    'llama2-chat-70b.4b75s128g-1-tp_8',
-    'llama2-chat-70b.4b75s128g-unopt'
-]
+PREFIXS = ["llama2-chat-70b.4b75s128g-1-tp_8", "llama2-chat-70b.4b75s128g-unopt"]
 
 for prefix in PREFIXS:
-    for i in range(1, NUM_MODELS+1):
+    for i in range(1, NUM_MODELS + 1):
         src = f"{SRC}{prefix}-{i}"
         dst = f"{DST}{prefix}-{i}"
         # check if src exists

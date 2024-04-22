@@ -34,6 +34,7 @@ _GLOBAL_DELTA_ID = 0
 
 use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
+use_triteia = os.environ.get("USE_TRITEIA", "0") == "1"
 
 if use_unoptimized_delta:
     logger.warning("Using unoptimized delta modules")
@@ -46,6 +47,13 @@ if use_unoptimized_delta:
 elif use_bitblas:
     logger.warning("Using bitblas delta modules")
     from .layers_bitblas import (
+        BaseLayerWithDelta,
+        from_layer,
+        from_layer_logits_processor,
+        DeltaMapping,
+    )
+elif use_triteia:
+    from .layers_triteia import (
         BaseLayerWithDelta,
         from_layer,
         from_layer_logits_processor,
@@ -180,13 +188,15 @@ class DeltaModel:
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
         if use_bitblas:
-            model_tensor_filenames = ['bitblas.safetensors']
+            model_tensor_filenames = ["bitblas.safetensors"]
         else:
             model_tensor_filenames = [
                 "deltazip-compressed-remain.safetensors",
                 f"rank.{tp_rank}.safetensors",
             ]
-            if not os.path.exists(os.path.join(path_or_name, model_tensor_filenames[0])):
+            if not os.path.exists(
+                os.path.join(path_or_name, model_tensor_filenames[0])
+            ):
                 # no optimized ckpt found
                 model_tensor_filenames = ["deltazip-compressed.safetensors"]
         logger.info(f"Loading from {model_tensor_filenames}")

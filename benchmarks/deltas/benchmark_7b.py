@@ -19,6 +19,7 @@ llm = LLM(
     gpu_memory_utilization=0.8,
     max_context_len_to_capture=64,
     max_model_len=64,
+    max_deltas=2,
 )
 
 sampling_params = SamplingParams(
