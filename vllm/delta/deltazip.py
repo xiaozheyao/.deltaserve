@@ -47,9 +47,8 @@ def add_delta(
     g_idx = g_idx.to(qweight.device)
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
     valid_mask = indices != -1
-    valid_mask = valid_mask.to("cpu")
     filtered_indices = indices[valid_mask]
-    y[valid_mask] += output[filtered_indices, torch.arange(y.shape[0])[valid_mask], :]
+    # y[valid_mask] += output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :]
     return y
 
 
@@ -84,9 +83,8 @@ def add_delta_slice(
     g_idx = g_idx.to(qweight.device)
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
     valid_mask = indices != -1
-    valid_mask = valid_mask.to("cpu")
     filtered_indices = indices[valid_mask]
-    y[valid_mask, y_offset:y_offset + y_slice_size] += output[filtered_indices, torch.arange(y.shape[0])[valid_mask], :y_slice_size]
+    # y[valid_mask, y_offset:y_offset + y_slice_size] += output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :y_slice_size]
     return y
     
 
@@ -192,13 +190,11 @@ def apply_delta_uncompressed(
         (len(delta_weights), base_output.shape[0], base_output.shape[1]),
         device=base_output.device,
     )
-    for i, delta in enumerate(delta_weights):
-        if delta is not None:
-            outputs[i] = torch.matmul(x, delta.T)
-    for i in range(len(delta_weights)):
-        base_output[indices == i] += outputs[i][indices == i]
+    valid_mask = indices != -1
+    filtered_indices = indices[valid_mask]
+    outputs = torch.matmul(x, delta_weights.mT)
+    base_output[valid_mask] += outputs[filtered_indices, torch.arange(base_output.shape[0], device=base_output.device)[valid_mask], :]
     return base_output
-
 
 def apply_delta_embed(
     x: torch.Tensor,
@@ -223,9 +219,10 @@ def apply_delta_embed(
         (len(delta_weights), base_output.shape[0], base_output.shape[1]),
         device=base_output.device,
     )
-    for i, delta in enumerate(delta_weights):
-        if delta is not None:
-            outputs[i] = F.embedding(x, delta)
-    for i in range(len(delta_weights)):
-        base_output[indices == i] += outputs[i][indices == i]
+    embedding_2d = delta_weights.view(
+        delta_weights.shape[0] * delta_weights.shape[1],
+        delta_weights.shape[2],
+    )
+    outputs = F.embedding(x, embedding_2d)
+    base_output += outputs
     return base_output
