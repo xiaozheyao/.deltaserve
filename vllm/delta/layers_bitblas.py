@@ -516,7 +516,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         )
         self.q_shard_id = self.tp_rank
         self.kv_shard_id = self.tp_rank // self.base_layer.num_kv_head_replicas
-
+        
         self.pack_factor = delta_config.pack_factor
         self.qweight_stacked = (
             torch.zeros(
@@ -704,6 +704,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             scales_k = scales[1]
             qzeros_v = qzeros[2]
             scales_v = scales[2]
+        
         if qweight[0] is not None:
             self.qweight_stacked[0][index, 0, :, :].copy_(
                 qweight[0], non_blocking=ASYNC_COPY

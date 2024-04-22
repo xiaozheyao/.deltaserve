@@ -3,13 +3,16 @@ import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
 
-# from .quant_linears.quant_linear_naive import QuantLinear
-# from .quant_linears.quant_linear_exllama import QuantLinear
-# from .quant_linears.quant_linear_triton import QuantLinear
-from .quant_linears.quant_linear_bitblas import QuantLinear
 
+
+USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
-
+if USE_BITBLAS:
+    from .quant_linears.quant_linear_bitblas import QuantLinear
+else:
+    from .quant_linears.quant_linear_triton import QuantLinear
+    # from .quant_linears.quant_linear_naive import QuantLinear
+    # from .quant_linears.quant_linear_exllama import QuantLinear
 
 def add_delta(
     y: torch.Tensor,
@@ -75,6 +78,8 @@ def add_delta_slice(
         device_tensor=device_tensor,
     )
     output = ql(x)
+    print(f"output.shape: {output.shape}")
+    print(f"y.shape: {y.shape}, y_offset.shape: {y[:, y_offset : y_offset + y_slice_size].shape}")
     y[:, y_offset : y_offset + y_slice_size] += output
 
 
