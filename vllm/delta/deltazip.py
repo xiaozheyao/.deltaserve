@@ -3,8 +3,6 @@ import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
 
-
-
 USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 if USE_BITBLAS:

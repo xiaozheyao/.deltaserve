@@ -365,6 +365,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 1,
                 self.base_layer.weight.shape[0] // 2 // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device,
             )
             for _ in range(n_slices)
         )
@@ -551,6 +552,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 1,
                 self.q_proj_shard_size // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
@@ -558,6 +560,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 1,
                 self.kv_proj_shard_size // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
@@ -565,6 +568,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 1,
                 self.kv_proj_shard_size // delta_config.pack_factor,
                 dtype=delta_config.delta_dtype,
+                device=self.base_layer.weight.device,
             ),
         )
         self.scales_stacked = (
@@ -802,8 +806,8 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             (
                 max_deltas,
                 1,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
                 self.base_layer.weight.shape[0],
+                self.base_layer.weight.shape[1] // delta_config.pack_factor,
             ),
             dtype=delta_config.delta_dtype,
             device=self.base_layer.weight.device,
@@ -816,12 +820,13 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
                 self.base_layer.weight.shape[0] // delta_config.pack_factor,
             ),
             dtype=torch.int32,
+            device=self.base_layer.weight.device,
         )
         self.scales_stacked = torch.zeros(
             max_deltas,
             1,
-            1,
             self.base_layer.weight.shape[0],
+            1,
             dtype=torch.float16,
             device=self.base_layer.weight.device,
         )
@@ -852,6 +857,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
+        
         self.qweight_stacked[index, 0, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
         self.qzeros_stacked[index, 0, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, 0, :, :].copy_(scales, non_blocking=ASYNC_COPY)
@@ -883,7 +889,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
                 input_, num_partitions=self.base_layer.tp_size
             )
             input_parallel = splitted_input[tp_rank].contiguous()
-
         output_parallel = self.apply_weights(input_parallel)
         if self.base_layer.reduce_results and self.base_layer.tp_size > 1:
             output_ = tensor_model_parallel_all_reduce(output_parallel)

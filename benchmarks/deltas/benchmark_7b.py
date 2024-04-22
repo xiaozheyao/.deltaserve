@@ -11,7 +11,8 @@ os.environ["NUMEXPR_MAX_THREADS"] = "32"
 print(f"Benchmarking with tensor parallel size={tp_size}")
 
 llm = LLM(
-    model=".idea/models/vicuna-7b-v1.5-1",
+    # model=".idea/models/vicuna-7b-v1.5-1",
+    model="meta-llama/Llama-2-7b-hf",
     enable_delta=True,
     tensor_parallel_size=tp_size,
     enforce_eager=True,
