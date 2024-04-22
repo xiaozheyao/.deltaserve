@@ -1,12 +1,14 @@
 import os
-import torch
 from vllm import LLM, SamplingParams
 from vllm.delta.request import DeltaRequest
 
 tp_size = int(os.environ.get("TP_SIZE", "1"))
 use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
+use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
+os.environ["NUMEXPR_MAX_THREADS"] = "32"
 
 print(f"Benchmarking with tensor parallel size={tp_size}")
+
 llm = LLM(
     model="meta-llama/Llama-2-7b-hf",
     enable_delta=True,
@@ -22,10 +24,12 @@ sampling_params = SamplingParams(
     max_tokens=64,
     seed=42,
 )
-if use_unoptimized_delta:
+if use_bitblas:
+    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-unopt-1"
+elif use_unoptimized_delta:
     delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
 else:
-    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}/"
+    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-1"
 
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",

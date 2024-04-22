@@ -33,6 +33,8 @@ logger = init_logger(__name__)
 _GLOBAL_DELTA_ID = 0
 
 use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
+use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
+
 if use_unoptimized_delta:
     logger.warning("Using unoptimized delta modules")
     from .layers_unoptimized import (
@@ -41,13 +43,22 @@ if use_unoptimized_delta:
         from_layer_logits_processor,
         DeltaMapping,
     )
-else:
-    from .layers_debug import (
+elif use_bitblas:
+    logger.warning("Using bitblas delta modules")
+    from .layers_bitblas import (
         BaseLayerWithDelta,
         from_layer,
         from_layer_logits_processor,
         DeltaMapping,
     )
+else:
+    from .layers import (
+        BaseLayerWithDelta,
+        from_layer,
+        from_layer_logits_processor,
+        DeltaMapping,
+    )
+
 
 def convert_mapping(
     mapping: DeltaMapping,
@@ -158,6 +169,7 @@ class DeltaModel:
         device: Optional[int] = None,
         trust_remote_code: bool = False,
     ) -> "DeltaModel":
+        use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
         pin_memory = str(device) == "cpu" and not in_wsl()
         # get tp rank here
         tp_rank = get_tensor_model_parallel_rank()
@@ -167,14 +179,18 @@ class DeltaModel:
         )
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
-        model_tensor_filenames = [
-            "deltazip-compressed-remain.safetensors",
-            f"rank.{tp_rank}.safetensors",
-        ]
-        if not os.path.exists(os.path.join(path_or_name, model_tensor_filenames[0])):
-            # no optimized ckpt found
-            model_tensor_filenames = ["deltazip-compressed.safetensors"]
+        if use_bitblas:
+            model_tensor_filenames = ['bitblas.safetensors']
+        else:
+            model_tensor_filenames = [
+                "deltazip-compressed-remain.safetensors",
+                f"rank.{tp_rank}.safetensors",
+            ]
+            if not os.path.exists(os.path.join(path_or_name, model_tensor_filenames[0])):
+                # no optimized ckpt found
+                model_tensor_filenames = ["deltazip-compressed.safetensors"]
         logger.info(f"Loading from {model_tensor_filenames}")
+
         def skip(*args, **kwargs):
             pass
 
@@ -242,14 +258,23 @@ class DeltaModel:
         )
 
         for module in module_names:
-            modules[module] = DeltaLayerWeights(
-                module_name=module,
-                qweight=tensors[module + ".qweight"].pin_memory(),
-                qzeros=tensors[module + ".qzeros"].pin_memory(),
-                scales=tensors[module + ".scales"].pin_memory(),
-                g_idx=tensors[module + ".g_idx"].pin_memory(),
-                compress_config=compress_config,
-            )
+            if use_bitblas:
+                modules[module] = DeltaLayerWeights(
+                    module_name=module,
+                    qweight=tensors[module + ".qweight"].pin_memory(),
+                    qzeros=tensors[module + ".zeros"].pin_memory(),
+                    scales=tensors[module + ".scales"].pin_memory(),
+                    compress_config=compress_config,
+                )
+            else:
+                modules[module] = DeltaLayerWeights(
+                    module_name=module,
+                    qweight=tensors[module + ".qweight"].pin_memory(),
+                    qzeros=tensors[module + ".qzeros"].pin_memory(),
+                    scales=tensors[module + ".scales"].pin_memory(),
+                    g_idx=tensors[module + ".g_idx"].pin_memory(),
+                    compress_config=compress_config,
+                )
 
         # now handling remaining modules
         remaining_module_names = set(
@@ -401,6 +426,14 @@ class DeltaModelManager:
                     else:
                         # unpacked
                         qweight_device = module_delta.qweight.device
+                    if isinstance(module_delta.qzeros, list):
+                        if module_delta.qzeros[0].shape[0] == 0:
+                            print(f"Empty qzeros for {module_name}")
+                            exit(1)
+                    else:
+                        if module_delta.qzeros.shape[0] == 0:
+                            print(f"Empty qzeros for {module_name}")
+                            exit(1)
                     module.set_delta(
                         index,
                         delta_model.bitwidth,

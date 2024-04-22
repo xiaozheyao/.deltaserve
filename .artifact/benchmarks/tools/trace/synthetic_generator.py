@@ -7,6 +7,7 @@ from loguru import logger
 from arrival import PoissonProcess
 from typing import Union
 import tiktoken
+
 enc = tiktoken.get_encoding("cl100k_base")
 
 to_eval_models = [
@@ -44,7 +45,7 @@ def get_dialogs():
     response_tokens = []
     for idx, item in enumerate(trace):
         all_dialogs.append(format_lmsys(item["conversation_a"][0]["content"]))
-        response_tokens.append(len(enc.encode(item["conversation_a"][1]['content'])))
+        response_tokens.append(len(enc.encode(item["conversation_a"][1]["content"])))
     return all_dialogs, response_tokens
 
 
@@ -57,7 +58,7 @@ def generate_synthetic(args):
     traces_data = []
     dialogs, response_tokens = get_dialogs()
     models = generate_model_distribution(args.distribution, len(poisson_ticks))
-    
+
     for idx in range(len(poisson_ticks)):
         traces_data.append(
             {
@@ -65,8 +66,16 @@ def generate_synthetic(args):
                 "prompt": dialogs[idx],
                 "timestamp": poisson_ticks[idx],
                 "model": models[idx],
-                "min_tokens": args.gen_tokens if args.gen_tokens != "auto" else response_tokens[idx],
-                "max_tokens": args.gen_tokens if args.gen_tokens != "auto" else response_tokens[idx],
+                "min_tokens": (
+                    args.gen_tokens
+                    if args.gen_tokens != "auto"
+                    else response_tokens[idx]
+                ),
+                "max_tokens": (
+                    args.gen_tokens
+                    if args.gen_tokens != "auto"
+                    else response_tokens[idx]
+                ),
             }
         )
     output_file = os.path.join(

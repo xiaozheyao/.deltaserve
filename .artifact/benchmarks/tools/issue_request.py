@@ -5,11 +5,12 @@ import argparse
 from core import run, get_sys_info
 import time
 
+
 def before_benchmark(args):
     with open(args.workload, "r") as f:
         workload = [json.loads(line) for line in f]
     # translate "base-model" to the actual model name
-    
+
     warmup = args.warmup_strategy
     system_ready = False
     # wait until system is ready
@@ -22,9 +23,10 @@ def before_benchmark(args):
             time.sleep(10)
     print(f"Translating from base-model to {sysinfo['model']}", flush=True)
     for job_id, job in enumerate(workload):
-        if job['model'] == 'base-model':
-            workload[job_id]['model'] = sysinfo['model']
+        if job["model"] == "base-model":
+            workload[job_id]["model"] = sysinfo["model"]
     return args.endpoints, workload, warmup, sysinfo
+
 
 def generate_annotation(endpoints, sysinfo, workload):
     tp_degree = sysinfo["tensor_parallel_size"]

@@ -128,7 +128,9 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
         # lock it so other threads don't try to reload the model
         await reload_lock.acquire()
         arrival_time = time.time()
-        model_id, found_model = find_swap_model(served_model, request.model, args.swap_modules)
+        model_id, found_model = find_swap_model(
+            served_model, request.model, args.swap_modules
+        )
         if found_model:
             await engine.reload_model(found_model)
             engine._current_weight_path = model_id
@@ -140,7 +142,7 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
                 status_code=404,
             )
         gpu_loading_time = time.time()
-    
+
     generator = await openai_serving_completion.create_completion(
         request,
         raw_request,
