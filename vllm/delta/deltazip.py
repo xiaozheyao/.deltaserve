@@ -2,7 +2,6 @@ import os
 import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
-from .quant_linears.quant_linear_triton import QuantLinear
 
 USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
@@ -38,15 +37,19 @@ def add_delta(
     # y.shape [2048, 4096]
     # output.shape [max_deltas, 2048, 4096]
     # x.shape [max_deltas, 2048, 4096]
+    # indices [2048]
+    valid_indices = indices != -1
     x = x[indices != -1]
     if x.shape[0] == 0:
         return y
     x = x.repeat(qweight.shape[0], 1, 1)
+    g_idx = g_idx.repeat(qweight.shape[0], 1)
+    g_idx = g_idx.to(qweight.device)
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
-    for i in range(x.shape[1]):
-        if indices[i] == -1:
-            continue
-        y[i,:] += output[indices[i], i, :]
+    valid_mask = indices != -1
+    valid_mask = valid_mask.to("cpu")
+    filtered_indices = indices[valid_mask]
+    y[valid_mask] += output[filtered_indices, torch.arange(y.shape[0])[valid_mask], :]
     return y
 
 
@@ -73,17 +76,17 @@ def add_delta_slice(
         ).squeeze(0)
     """
     bsz = qweight.shape[0]
-    x = x.repeat(bsz, 1, 1)
+    x = x[indices != -1]
+    if x.shape[0] == 0:
+        return y
+    x = x.repeat(qweight.shape[0], 1, 1)
+    g_idx = g_idx.repeat(qweight.shape[0], 1)
+    g_idx = g_idx.to(qweight.device)
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
-    # output shape: (num_deltas, bsz, dim2)
-    # indices shape: (bsz), ranges in [0, num_deltas)
-    # y shape: (bsz, dim2)
-    # goal: y[indices[i], y_offset: y_offset + y_slice_size] += output[i, :y_slice_size]
-    for i in range(len(indices)):
-        if indices[i] == -1:
-            continue
-        # print(f"output shape: {output[indices[i], :].shape}")
-        y[i, y_offset:y_offset + y_slice_size] += output[indices[i], i, :]
+    valid_mask = indices != -1
+    valid_mask = valid_mask.to("cpu")
+    filtered_indices = indices[valid_mask]
+    y[valid_mask, y_offset:y_offset + y_slice_size] += output[filtered_indices, torch.arange(y.shape[0])[valid_mask], :y_slice_size]
     return y
     
 
