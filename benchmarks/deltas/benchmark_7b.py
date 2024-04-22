@@ -5,6 +5,7 @@ from vllm.delta.request import DeltaRequest
 tp_size = int(os.environ.get("TP_SIZE", "1"))
 use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
+os.environ["NUMEXPR_MAX_THREADS"] = "32"
 
 print(f"Benchmarking with tensor parallel size={tp_size}")
 

@@ -3,10 +3,10 @@ import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
 
-from .quant_linears.quant_linear_naive import QuantLinear
-
+# from .quant_linears.quant_linear_naive import QuantLinear
 # from .quant_linears.quant_linear_exllama import QuantLinear
 # from .quant_linears.quant_linear_triton import QuantLinear
+from .quant_linears.quant_linear_bitblas import QuantLinear
 
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
@@ -65,7 +65,6 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-
     ql = QuantLinear.from_tensors(
         BITWIDTH,
         qweight[0][0],

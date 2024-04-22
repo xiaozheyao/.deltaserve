@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 from vllm.delta.utils import (
     ext_gemm_half_q_half,
@@ -61,6 +62,7 @@ class QuantLinear(nn.Module):
     def scratch_space_fixed(self, max_input_len=2048, max_batch_size=8):
         return self.temp_dq_size() + self.temp_fwd_size(max_input_len, max_batch_size)
 
+    @torch.inference_mode()
     def forward(self, x, y_slice):
         if self.bits == 4:
             output = ext_gemm_half_q_half(x, self.q_handle, self.outfeatures, False)

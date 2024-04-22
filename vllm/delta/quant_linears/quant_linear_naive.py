@@ -32,6 +32,7 @@ class QuantLinear(nn.Module):
             self.padding = -outfeatures % 32
         self.wf = torch.tensor(list(range(0, 32, bits)), dtype=torch.int32).unsqueeze(0)
 
+    @torch.inference_mode()
     def forward(self, x):
         out_shape = x.shape[:-1] + (self.outfeatures,)
         x = x.reshape(-1, x.shape[-1])
