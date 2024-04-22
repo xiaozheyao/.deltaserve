@@ -35,11 +35,15 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
+    # y.shape [2048, 4096]
+    # output.shape [max_deltas, 2048, 4096]
+    # x.shape [max_deltas, 2048, 4096]
+    x = x[indices != -1]
+    if x.shape[0] == 0:
+        return y
     x = x.repeat(qweight.shape[0], 1, 1)
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
-    # y.shape [2048, 4096]
-    # output.shape [2048, 4096]
-    for i in range(len(indices)):
+    for i in range(x.shape[1]):
         if indices[i] == -1:
             continue
         y[i,:] += output[indices[i], i, :]

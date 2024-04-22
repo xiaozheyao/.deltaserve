@@ -36,6 +36,7 @@ else:
 
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",
+    # "USER: Who is Alan Turing?\nASSISTANT:"
 ]
 outputs = llm.generate(
     prompts, sampling_params, delta_request=DeltaRequest("vicuna", 1, delta_path)
