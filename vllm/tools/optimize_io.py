@@ -1,6 +1,5 @@
 import os
 import json
-import torch
 import safetensors as st
 from fractions import Fraction
 from safetensors.torch import save_file
