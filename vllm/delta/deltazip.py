@@ -6,6 +6,8 @@ import torch.nn.functional as F
 USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 USE_TRITEIA = os.environ.get("USE_TRITEIA", "0") == "1"
+from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
+
 if USE_BITBLAS:
     from .quant_linears.quant_linear_bitblas import QuantLinear
 elif USE_TRITEIA:
@@ -34,28 +36,9 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    # y.shape [2048, 4096]
-    # output.shape [max_deltas, 2048, 4096]
-    # x.shape [max_deltas, 2048, 4096]
-    # indices [2048]
-    x = x[indices != -1]
-    if x.shape[0] == 0:
-        return y
-    x = x.repeat(qweight.shape[0], 1, 1)
     g_idx = g_idx.repeat(qweight.shape[0], 1)
     g_idx = g_idx.to(qweight.device)
-    output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
-    valid_mask = indices != -1
-    filtered_indices = indices[valid_mask]
-    try:
-        yrange = torch.arange(y.shape[0], device=y.device)
-        partial = output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :]
-    except:
-        with open("error.txt", "w") as f:
-            f.write(f"{output.shape}\n")
-            f.write(f"{y.shape}\n")
-            f.write(f"{valid_mask.shape}\n")
-    # y[valid_mask] += partial
+    quant_select_bmm_248(BITWIDTH, indices, y, x, qweight, qzeros, scales, g_idx, bias=None)
     return y
 
 
@@ -81,17 +64,10 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    bsz = qweight.shape[0]
-    x = x[indices != -1]
-    if x.shape[0] == 0:
-        return y
-    x = x.repeat(qweight.shape[0], 1, 1)
+
     g_idx = g_idx.repeat(qweight.shape[0], 1)
     g_idx = g_idx.to(qweight.device)
-    output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
-    valid_mask = indices != -1
-    filtered_indices = indices[valid_mask]
-    y[valid_mask, y_offset:y_offset + y_slice_size] += output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :y_slice_size]
+    quant_select_bmm_248(BITWIDTH, indices, y[:, y_offset:y_offset + y_slice_size], x, qweight, qzeros, scales, g_idx, bias=None)
     return y
     
 

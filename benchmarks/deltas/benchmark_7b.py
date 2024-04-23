@@ -19,7 +19,7 @@ llm = LLM(
     gpu_memory_utilization=0.9,
     max_context_len_to_capture=64,
     max_model_len=64,
-    max_deltas=4,
+    max_deltas=1,
 )
 
 sampling_params = SamplingParams(
@@ -36,9 +36,9 @@ else:
 
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",
-    "USER: Who is Alan Turing?\nASSISTANT:"
-    "USER: What is the capital of France?\nASSISTANT:",
-    "USER: What is the capital of France?\nASSISTANT:",
+    # "USER: Who is Alan Turing?\nASSISTANT:",
+    # "USER: What is the capital of France?\nASSISTANT:",
+    # "USER: What is the capital of China?\nASSISTANT:",
 ]
 outputs = llm.generate(
     prompts, sampling_params, delta_request=DeltaRequest("vicuna", 1, delta_path)

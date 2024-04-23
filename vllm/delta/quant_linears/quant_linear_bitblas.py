@@ -5,7 +5,6 @@ from triteia.ao.ops.linalg.matmul.bitblas_matmul_lowprec import bitblas_quant_bm
 
 logger = init_logger(__name__)
 
-
 class QuantLinear(nn.Module):
     def __init__(
         self,
