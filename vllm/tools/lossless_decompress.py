@@ -4,7 +4,7 @@ import json
 import cupy as cp
 from safetensors.torch import save_file
 
-FILEPATH = "../deltazip/.local/compressed_models/lmsys.vicuna-13b-v1.5.4b50s128g/deltazip-compressed.safetensors"
+FILEPATH = ".idea/models/lmsys.vicuna-7b-v1.5.2b50s128g/deltazip-compressed.safetensors"
 
 lc = LosslessCompressor()
 tensors = {}
@@ -29,5 +29,5 @@ tensors = lc.decompress_state_dict(
 # save the decompressed tensors
 save_file(
     tensors,
-    ".idea/models/vicuna-13b-4b0.75s-decompressed/deltazip-compressed.safetensors",
+    ".idea/models/lmsys.vicuna-7b-v1.5.2b50s128g/deltazip-compressed.safetensors",
 )

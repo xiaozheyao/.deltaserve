@@ -1,12 +1,15 @@
 import os
 
 SRC = ".idea/models/"
-DST = "/dev/shm/xiayao/models/"
+DST = "/scratch/xiayao/models/"
 
-os.makedirs(DST)
+os.makedirs(DST, exist_ok=True)
 
 NUM_MODELS = 8
-PREFIXS = ["llama2-chat-70b.4b75s128g-1-tp_8", "llama2-chat-70b.4b75s128g-unopt"]
+PREFIXS = [
+    "awq-vicuna-7b-v1.5-4b128g", 
+    "vicuna-7b-v1.5"
+]
 
 for prefix in PREFIXS:
     for i in range(1, NUM_MODELS + 1):
@@ -19,5 +22,5 @@ for prefix in PREFIXS:
         # check if dst exists
         if os.path.exists(dst):
             continue
-        # os.system(f"cp -r {src} {dst}")
-        print(f"cp -r {src} {dst}")
+        os.system(f"cp -r {src} {dst}")
+        # print(f"cp -r {src} {dst}")
