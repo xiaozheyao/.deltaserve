@@ -2,21 +2,9 @@ import os
 import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
-
-USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
-BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
-USE_TRITEIA = os.environ.get("USE_TRITEIA", "0") == "1"
 from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
 
-if USE_BITBLAS:
-    from .quant_linears.quant_linear_bitblas import QuantLinear
-elif USE_TRITEIA:
-    from triteia.ao.ops.linalg.matmul.bmm_lowprec import quant_bmm_248
-else:
-    # from .quant_linears.quant_linear_naive import QuantLinear
-    # from .quant_linears.quant_linear_exllama import QuantLinear
-    pass
-
+BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
 def add_delta(
     y: torch.Tensor,

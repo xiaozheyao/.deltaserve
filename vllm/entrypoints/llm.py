@@ -96,7 +96,6 @@ class LLM:
                 raise ValueError(
                     "LoRA and Delta cannot be enabled at the same " "time."
                 )
-
         engine_args = EngineArgs(
             model=model,
             tokenizer=tokenizer,

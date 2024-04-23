@@ -559,10 +559,14 @@ class EngineArgs:
         else:
             vision_language_config = None
 
-        delta_config = DeltaConfig(
-            max_deltas=self.max_deltas,
-            max_cpu_deltas=self.max_cpu_deltas if self.max_cpu_deltas else None,
-        )
+        if self.max_deltas == 0:
+            delta_config = None
+        else:
+            delta_config = DeltaConfig(
+                max_deltas=self.max_deltas,
+                max_cpu_deltas=self.max_cpu_deltas if self.max_cpu_deltas else None,
+            )
+        
         return (
             model_config,
             cache_config,

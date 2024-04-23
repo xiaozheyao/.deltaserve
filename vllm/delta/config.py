@@ -9,7 +9,7 @@ from fractions import Fraction
 from enum import Enum
 
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
-
+bitwidth = int(os.environ.get("BITWIDTH", "4"))
 
 class QuantKernel(Enum):
     EXLLAMA = "exllama"
@@ -77,7 +77,7 @@ class CompressionConfig(PushToHubMixin):
 @dataclass
 class DeltaConfig:
     max_deltas: int = 1
-    max_bitwidth: int = 4
+    max_bitwidth: int = bitwidth
     delta_dtype: Optional[torch.dtype] = torch.int32
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0
