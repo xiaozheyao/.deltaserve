@@ -38,7 +38,6 @@ def add_delta(
     # output.shape [max_deltas, 2048, 4096]
     # x.shape [max_deltas, 2048, 4096]
     # indices [2048]
-    valid_indices = indices != -1
     x = x[indices != -1]
     if x.shape[0] == 0:
         return y
@@ -48,7 +47,15 @@ def add_delta(
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
     valid_mask = indices != -1
     filtered_indices = indices[valid_mask]
-    # y[valid_mask] += output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :]
+    try:
+        yrange = torch.arange(y.shape[0], device=y.device)
+        partial = output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :]
+    except:
+        with open("error.txt", "w") as f:
+            f.write(f"{output.shape}\n")
+            f.write(f"{y.shape}\n")
+            f.write(f"{valid_mask.shape}\n")
+    # y[valid_mask] += partial
     return y
 
 
@@ -84,7 +91,7 @@ def add_delta_slice(
     output = quant_bmm_248(BITWIDTH, x, qweight, qzeros, scales, g_idx, bias=None)
     valid_mask = indices != -1
     filtered_indices = indices[valid_mask]
-    # y[valid_mask, y_offset:y_offset + y_slice_size] += output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :y_slice_size]
+    y[valid_mask, y_offset:y_offset + y_slice_size] += output[filtered_indices, torch.arange(y.shape[0], device=y.device)[valid_mask], :y_slice_size]
     return y
     
 
