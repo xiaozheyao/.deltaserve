@@ -6,19 +6,20 @@ from safetensors.torch import save_file
 
 
 def main(args):
-    column_chunking_modules = [
+    row_chunking_modules = [
         "self_attn.q_proj.qweight",
         "self_attn.k_proj.qweight",
         "self_attn.v_proj.qweight",
         "mlp.gate_proj.qweight",
         "mlp.up_proj.qweight",
-    ]
-
-    row_chunking_modules = [
-        "self_attn.o_proj.qweight",
-        "mlp.down_proj.qweight",
+        
         "embed_tokens.weight",
         "lm_head.weight",
+    ]
+
+    column_chunking_modules = [
+        "self_attn.o_proj.qweight",
+        "mlp.down_proj.qweight",
     ]
 
     with open(os.path.join(args.input, "compress_config.json"), "r") as fp:
@@ -27,7 +28,7 @@ def main(args):
     tensors = {}
     rank_tensors = {i: {} for i in range(args.tp_size)}
     with st.safe_open(
-        os.path.join(args.input, "deltazip-compressed.safetensors"), "torch"
+        os.path.join(args.input, "bitblas.safetensors"), "torch"
     ) as f:
         for key in f.keys():
             tensors[key] = f.get_tensor(key)
@@ -56,9 +57,9 @@ def main(args):
 
     for rank_id in range(args.tp_size):
         rank_tensor = rank_tensors[rank_id]
-        save_file(rank_tensor, f"{args.input}/rank.{rank_id}.safetensors")
+        save_file(rank_tensor, f"{args.input}/bitblas.rank.{rank_id}.safetensors")
 
-    save_file(tensors, f"{args.input}/deltazip-compressed-remain.safetensors")
+    save_file(tensors, f"{args.input}/bitblas.remain.safetensors")
 
 
 if __name__ == "__main__":

@@ -58,7 +58,6 @@ class DeltaMapping:
     def __str__(self):
         return f"index_mapping: {self.index_mapping}, prompt_mapping: {self.prompt_mapping}"
 
-
 class BaseLayerWithDelta(nn.Module):
     def create_delta_weights(
         self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig
@@ -102,7 +101,6 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
-
         self.vocab_start_index = self.base_layer.vocab_start_index
         self.vocab_end_index = self.base_layer.vocab_end_index
 
@@ -974,7 +972,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
-        self.weight_stacked[index, : weight.shape[0], : weight.shape[1]].copy_(
+        self.weight_stacked[index, :weight.shape[0], : weight.shape[1]].copy_(
             weight, non_blocking=ASYNC_COPY
         )
 

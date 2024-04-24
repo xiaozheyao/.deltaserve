@@ -31,9 +31,6 @@ class QuantLinear(nn.Module):
             qzero=self.zeros,
             scale=self.scales,
         )
-
-        print(output)
-        print(output.device)
         return output
 
     @classmethod

@@ -188,7 +188,15 @@ class DeltaModel:
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
         if use_bitblas:
-            model_tensor_filenames = ["bitblas.safetensors"]
+            model_tensor_filenames = [
+                "bitblas.remain.safetensors",
+                f"bitblas.rank.{tp_rank}.safetensors"
+            ]
+            if not os.path.exists(
+                os.path.join(path_or_name, model_tensor_filenames[0])
+            ):
+                print(f"cannot find {os.path.join(path_or_name, model_tensor_filenames[0])}")
+                model_tensor_filenames = ["bitblas.safetensors"]
         else:
             model_tensor_filenames = [
                 "deltazip-compressed-remain.safetensors",
@@ -222,6 +230,7 @@ class DeltaModel:
         start = timer()
         bitwidth = compress_config.bits
         if compress_config.lossless != "none":
+            raise NotImplementedError("Lossless Compression supported is deprecated.")
             # lossless_compressor = LosslessCompressor(
             #     compress_config.lossless, device_id=0
             # )
@@ -250,6 +259,7 @@ class DeltaModel:
             )
             del tensor_dtypes, tensor_shapes
             del lossless_compressor
+            
         else:
             logger.info("Lossless Compression Disabled")
             for mtf in model_tensor_filenames:
