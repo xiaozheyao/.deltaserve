@@ -2,9 +2,15 @@ import os
 import torch
 from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
-from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
 
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
+USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
+
+if USE_BITBLAS:
+    print("Using bitblas")
+    from triteia.ao.ops.linalg.select_matmul.select_bmm import bitblas_quant_select_bmm_248 as quant_select_bmm_248
+else:
+    from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
 
 def add_delta(
     y: torch.Tensor,
@@ -24,8 +30,9 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    g_idx = g_idx.repeat(qweight.shape[0], 1)
-    g_idx = g_idx.to(qweight.device)
+    if not USE_BITBLAS:
+        g_idx = g_idx.repeat(qweight.shape[0], 1)
+        g_idx = g_idx.to(qweight.device)
     quant_select_bmm_248(BITWIDTH, indices, y, x, qweight, qzeros, scales, g_idx, bias=None)
     return y
 
@@ -52,9 +59,9 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-
-    g_idx = g_idx.repeat(qweight.shape[0], 1)
-    g_idx = g_idx.to(qweight.device)
+    if not USE_BITBLAS:
+        g_idx = g_idx.repeat(qweight.shape[0], 1)
+        g_idx = g_idx.to(qweight.device)
     quant_select_bmm_248(BITWIDTH, indices, y[:, y_offset:y_offset + y_slice_size], x, qweight, qzeros, scales, g_idx, bias=None)
     return y
     
@@ -138,7 +145,6 @@ def apply_delta_packed_nslice(
         )
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
-
 
 def apply_delta_uncompressed(
     x: torch.Tensor,

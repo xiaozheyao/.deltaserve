@@ -28,7 +28,7 @@ sampling_params = SamplingParams(
     seed=42,
 )
 if use_bitblas:
-    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-unopt-1"
+    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-unopt-bitblas-1"
 elif use_unoptimized_delta:
     delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
 else:
