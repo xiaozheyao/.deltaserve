@@ -132,15 +132,7 @@ def parse_swap(data):
                 "id": id,
                 "model": x["response"]["model"],
                 "time": gpu_loading_time,
-                "type": "CPU -> GPU",
-            }
-        )
-        results.append(
-            {
-                "id": id,
-                "model": x["response"]["model"],
-                "time": cpu_loading_time,
-                "type": "Disk -> CPU",
+                "type": "Disk -> GPU",
             }
         )
         results.append(
@@ -159,7 +151,6 @@ def parse_swap(data):
                 "type": "Queueing Delay",
             }
         )
-
     return results
 
 
