@@ -1,4 +1,4 @@
 USE_BITBLAS=1 BITWIDTH=4 python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --enable-delta --disable-log-requests --gpu-memory-utilization 0.9 \
---delta-modules delta-1=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-1 delta-2=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-2 delta-3=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-3 delta-4=vicuna-7b-4b0.75s-tp_2-bitblas-4 delta-5=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-5 delta-6=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-6 delta-7=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-7 delta-8=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-8 \
---max-deltas 8 --max-cpu-deltas 32 --tensor-parallel-size 2 \
+--delta-modules delta-1=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-1 delta-2=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-2 delta-3=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-3 delta-4=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-4 delta-5=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-5 delta-6=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-6 delta-7=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-7 delta-8=/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-bitblas-8 \
+--max-deltas 4 --max-cpu-deltas 32 --tensor-parallel-size 2 \
 --enforce-eager
