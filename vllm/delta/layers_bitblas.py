@@ -355,8 +355,8 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.qzeros_stacked = tuple(
             torch.zeros(
                 max_deltas,
-                1,
                 self.base_layer.weight.shape[0] // 2 // delta_config.pack_factor,
+                1,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             )
@@ -420,14 +420,14 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
             if qweight[0] is not None:
                 qzeros_0 = qzeros[0][
-                    :, start_idx // self.pack_factor : end_idx // self.pack_factor
+                    start_idx // self.pack_factor : end_idx // self.pack_factor, :
                 ]
-                scales_0 = scales[0][:, start_idx:end_idx]
+                scales_0 = scales[0][start_idx:end_idx,:]
             if qweight[1] is not None:
                 qzeros_1 = qzeros[1][
-                    :, start_idx // self.pack_factor : end_idx // self.pack_factor
+                    start_idx // self.pack_factor : end_idx // self.pack_factor, :
                 ]
-                scales_1 = scales[1][:, start_idx:end_idx]
+                scales_1 = scales[1][start_idx:end_idx,:]
         else:
             qzeros_0 = qzeros[0]
             scales_0 = scales[0]
@@ -537,22 +537,22 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.qzeros_stacked = (
             torch.zeros(
                 max_deltas,
-                1,
                 self.q_proj_shard_size // delta_config.pack_factor,
+                1,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
-                1,
                 self.kv_proj_shard_size // delta_config.pack_factor,
+                1,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
-                1,
                 self.kv_proj_shard_size // delta_config.pack_factor,
+                1,
                 dtype=delta_config.delta_dtype,
                 device=self.base_layer.weight.device,
             ),
@@ -641,48 +641,48 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         if self.tp_size > 1:
             if qweight[0] is not None:
                 qzeros_q = qzeros[0][
-                    :,
                     self.q_proj_shard_size
                     * self.q_shard_id
                     // self.pack_factor : self.q_proj_shard_size
                     * (self.q_shard_id + 1)
                     // self.pack_factor,
+                    :,
                 ]
                 scales_q = scales[0][
-                    :,
                     self.q_proj_shard_size
                     * self.q_shard_id : self.q_proj_shard_size
                     * (self.q_shard_id + 1),
+                    :,
                 ]
             if qweight[1] is not None:
                 qzeros_k = qzeros[1][
-                    :,
                     self.kv_proj_shard_size
                     // self.pack_factor
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
+                    :,
                 ]
                 scales_k = scales[1][
-                    :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
+                    :,
                 ]
             if qweight[2] is not None:
                 qzeros_v = qzeros[2][
-                    :,
                     self.kv_proj_shard_size
                     // self.pack_factor
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1)
                     // self.pack_factor,
+                    :,
                 ]
                 scales_v = scales[2][
-                    :,
                     self.kv_proj_shard_size
                     * self.kv_shard_id : self.kv_proj_shard_size
                     * (self.kv_shard_id + 1),
+                    :,
                 ]
         else:
             qzeros_q = qzeros[0]
@@ -796,8 +796,8 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.qzeros_stacked = torch.zeros(
             (
                 max_deltas,
-                1,
                 self.base_layer.weight.shape[0] // delta_config.pack_factor,
+                1,
             ),
             dtype=torch.int32,
             device=self.base_layer.weight.device,

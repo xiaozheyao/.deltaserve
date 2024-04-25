@@ -195,7 +195,7 @@ class DeltaModel:
             if not os.path.exists(
                 os.path.join(path_or_name, model_tensor_filenames[0])
             ):
-                print(f"cannot find {os.path.join(path_or_name, model_tensor_filenames[0])}")
+                logger.info(f"cannot find {os.path.join(path_or_name, model_tensor_filenames[0])}")
                 model_tensor_filenames = ["bitblas.safetensors"]
         else:
             model_tensor_filenames = [

@@ -5,8 +5,8 @@
 # echo "--------- Split weights ---------"
 # TP_SIZE=2 python benchmarks/deltas/benchmark_7b.py
 
-# echo "--------- TP=1 (bitblas) ---------"
-# TP_SIZE=1 USE_BITBLAS=1 python benchmarks/deltas/benchmark_7b.py
+echo "--------- TP=1 (bitblas) ---------"
+TP_SIZE=1 USE_BITBLAS=1 python benchmarks/deltas/benchmark_7b.py
 echo "--------- TP=2 (bitblas) ---------"
 TP_SIZE=2 USE_BITBLAS=1 python benchmarks/deltas/benchmark_7b.py
 

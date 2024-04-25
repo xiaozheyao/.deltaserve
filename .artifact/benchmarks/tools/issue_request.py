@@ -49,7 +49,7 @@ if __name__ == "__main__":
     endpoints, workload, warmup, sysinfo = before_benchmark(args)
     workload_annotation = args.workload.split("/")[-1].split(".")[0]
     annotations = generate_annotation(args.endpoints, sysinfo, workload_annotation)
-    outputs = run(endpoints, workload, warmup, args.base_model, sysinfo)
+    outputs = run(endpoints, workload, warmup, sysinfo['model'], sysinfo)
     new_unique_name = str(uuid.uuid4())
     output_file = os.path.join(args.output, f"{new_unique_name}.jsonl")
 
