@@ -6,7 +6,7 @@ tp_size = int(os.environ.get("TP_SIZE", "1"))
 use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
-
+bitwidth = int(os.environ.get("BITWIDTH", "4"))
 print(f"Benchmarking with tensor parallel size={tp_size}")
 
 llm = LLM(
@@ -26,17 +26,22 @@ sampling_params = SamplingParams(
     max_tokens=64,
     seed=42,
 )
-
-if use_bitblas:
-    if tp_size == 1:
-        delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-unopt-bitblas-1"
+if bitwidth == 4:
+    if use_bitblas:
+        if tp_size == 1:
+            delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-unopt-bitblas-1"
+        else:
+            delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-bitblas-1"
+    elif use_unoptimized_delta:
+        delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
     else:
-        delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-bitblas-1"
-elif use_unoptimized_delta:
-    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
+        delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-1"
+        
+elif bitwidth == 2:
+    delta_path = f".idea/models/lmsys.vicuna-7b-v1.5.2b50s-bitblas-1"
 else:
-    delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-1"
-
+    raise ValueError(f"Unsupported bitwidth: {bitwidth}")
+    
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",
     "USER: Who is Alan Turing?\nASSISTANT:",
