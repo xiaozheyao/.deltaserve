@@ -138,11 +138,12 @@ class WorkerDeltaManager(AbstractWorkerManager):
         for delta_id in deltas_to_add:
             self.add_delta(deltas_map[delta_id], sequence_groups)
 
-    def _load_delta(self, delta_request: DeltaRequest) -> DeltaModel:
+    def _load_delta(self, delta_request: DeltaRequest, prefetch_event=None) -> DeltaModel:
         try:
             delta = self._delta_model_cls.from_checkpoint(
                 delta_request.delta_local_path,
                 id=delta_request.delta_int_id,
+                prefetch_thread_event=prefetch_event,
             )
             # TODO(xiaozhe): track loading time here
         except Exception as e:
@@ -242,7 +243,7 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
 
 class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
     _delta_manager_cls = LRUCacheDeltaModelManager
-
+    prefetching_thread_event = threading.Event()
     def create_delta_manager(self, model) -> Any:
         delta_manager = create_delta_manager(
             model,
@@ -271,23 +272,27 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
             self.add_delta(delta, sequence_groups)
 
     def prefetch_delta(self, delta_request: DeltaRequest):
-        def _load_delta(delta_request):
+        def _load_delta_thread(delta_request):
             if delta_request.delta_int_id not in self.list_deltas():
                 if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                     return
-                delta = self._load_delta(delta_request)
+                self.prefetching_thread_event.set()
+                delta = self._load_delta(delta_request, prefetch_event=self.prefetching_thread_event)
                 loaded = self._delta_manager.add_delta(delta)
-        thread = threading.Thread(target=_load_delta, args=(delta_request,))
+                self.prefetching_thread_event.clear()
+        thread = threading.Thread(target=_load_delta_thread, args=(delta_request,))
         thread.start()
+
     def add_delta(
         self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]
     ) -> bool:
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
+            self.prefetching_thread_event.set()
             delta = self._load_delta(delta_request)
-            
             loaded = self._delta_manager.add_delta(delta)
+            self.prefetching_thread_event.clear()
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
         for sg in sequence_groups:

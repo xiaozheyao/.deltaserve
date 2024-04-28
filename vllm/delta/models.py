@@ -9,7 +9,7 @@ import torch.nn as nn
 from typing import Dict, Optional, List, Callable, Hashable, Any, Type, Tuple
 from .delta import DeltaLayerWeights, PackedDeltaLayerWeights
 from .config import DeltaConfig, CompressionConfig
-
+import threading
 from .utils import (
     replace_submodule,
     calculate_fixed_scratch_size,
@@ -176,6 +176,7 @@ class DeltaModel:
         id: int,
         device: Optional[int] = None,
         trust_remote_code: bool = False,
+        prefetch_thread_event: threading.Event = None,
     ) -> "DeltaModel":
         use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
         pin_memory = str(device) == "cpu" and not in_wsl()
@@ -266,8 +267,10 @@ class DeltaModel:
                 with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
                     keys = f.keys()
                     for key in keys:
+                        if prefetch_thread_event is not None:
+                            if prefetch_thread_event.is_set():
+                                prefetch_thread_event.wait()
                         tensors[key] = f.get_tensor(key)
-
         modules = {}
         module_names = set(
             [
