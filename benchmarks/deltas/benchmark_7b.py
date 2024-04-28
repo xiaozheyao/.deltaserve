@@ -38,7 +38,9 @@ if bitwidth == 4:
         delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-1"
         
 elif bitwidth == 2:
-    delta_path = f".idea/models/lmsys.vicuna-7b-v1.5.2b50s-bitblas-1"
+    if use_bitblas:
+        if tp_size == 2:
+            delta_path = f"/scratch/xiayao/models/2bit/2b50s.bitblas.tp_2.1/"
 else:
     raise ValueError(f"Unsupported bitwidth: {bitwidth}")
     

@@ -573,7 +573,6 @@ class AsyncLLMEngine:
                     "error that caused the background loop to stop "
                     "(AsyncEngineDeadError)."
                 )
-
         if arrival_time is None:
             arrival_time = time.time()
         if swap_request:
@@ -703,7 +702,6 @@ class AsyncLLMEngine:
                 swap_request=swap_request,
                 multi_modal_data=multi_modal_data,
             )
-
             async for request_output in stream:
                 yield request_output
         except (Exception, asyncio.CancelledError) as e:

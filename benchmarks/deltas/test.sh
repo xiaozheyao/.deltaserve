@@ -16,5 +16,5 @@
 # echo "--------- TP=1 (triton) ---------"
 # TP_SIZE=1 python benchmarks/deltas/benchmark_7b.py
 
-echo "--------- TP=1 (bitblas, 2bits) ---------"
-BITWIDTH=2 TP_SIZE=1 USE_BITBLAS=1 python benchmarks/deltas/benchmark_7b.py
+echo "--------- TP=2 (bitblas, 2bits) ---------"
+BITWIDTH=2 TP_SIZE=2 USE_BITBLAS=1 python benchmarks/deltas/benchmark_7b.py

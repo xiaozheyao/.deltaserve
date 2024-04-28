@@ -495,7 +495,8 @@ class SequenceGroup:
         return (
             f"SequenceGroup(request_id={self.request_id}, "
             f"sampling_params={self.sampling_params}, "
-            f"num_seqs={len(self.seqs_dict)})"
+            f"num_seqs={len(self.seqs_dict)}), "
+            f"delta_int_id={self.delta_int_id}"
         )
 
 

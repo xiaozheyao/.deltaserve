@@ -24,7 +24,7 @@ from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
 from vllm.delta.config import DeltaConfig
 from vllm.delta.layers import DeltaMapping
 from vllm.delta.request import DeltaRequest
-from vllm.delta.worker_manager import LRUCacheWorkerDeltaManager
+from vllm.delta.worker_manager import OverlapLRUCacheWorkerDeltaManager
 
 from vllm.attention import AttentionMetadata, get_attn_backend
 
@@ -192,7 +192,7 @@ class ModelRunner:
                 self.model, "embedding_padding_modules"
             ), "Model does not have embedding_padding_modules"
 
-            self.delta_manager = LRUCacheWorkerDeltaManager(
+            self.delta_manager = OverlapLRUCacheWorkerDeltaManager(
                 self.scheduler_config.max_num_seqs,
                 self.scheduler_config.max_num_batched_tokens,
                 self.vocab_size,

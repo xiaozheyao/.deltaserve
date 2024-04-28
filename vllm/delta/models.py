@@ -410,50 +410,10 @@ class DeltaModelManager:
         self._active_deltas[delta_id] = None
         delta_model = self._registered_deltas[delta_id]
         self.delta_index_to_id[index] = delta_model.id
-        """
-        Only for Exllama
-        """
-        if self.current_kernel == QuantKernel.EXLLAMA:
-            for module_name, module in self.modules.items():
-                module_delta = delta_model.get_delta(module_name)
-                if module_delta:
-                    if type(module_delta.qweight) == list:
-                        # packed module
-                        qweight_shape = module_delta.qweight[0].shape
-                        qweight_device = module_delta.qweight[0].device
-                    else:
-                        # unpacked
-                        qweight_shape = module_delta.qweight.shape
-                        qweight_device = module_delta.qweight.device
-                    # TODO(xiaozhe): set cuda correctly
-                    self.fixed_bytes[0] = max(
-                        calculate_fixed_scratch_size(qweight_shape, bits=4),
-                        self.fixed_bytes.get(0, 0),
-                    )
-
-        if self.current_kernel == QuantKernel.EXLLAMA:
-            device_tensors = {}
-            for device, scratch_bytes in self.fixed_bytes.items():
-                device_tensors[device] = ExLlamaV2DeviceTensors(0, scratch_bytes)
-
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:
                 if module_delta._compressed:
-                    if type(module_delta.qweight) == list:
-                        # packed module
-                        qweight_device = module_delta.qweight[0].device
-                    else:
-                        # unpacked
-                        qweight_device = module_delta.qweight.device
-                    if isinstance(module_delta.qzeros, list):
-                        if module_delta.qzeros[0].shape[0] == 0:
-                            print(f"Empty qzeros for {module_name}")
-                            exit(1)
-                    else:
-                        if module_delta.qzeros.shape[0] == 0:
-                            print(f"Empty qzeros for {module_name}")
-                            exit(1)
                     module.set_delta(
                         index,
                         delta_model.bitwidth,
@@ -461,22 +421,14 @@ class DeltaModelManager:
                         module_delta.qzeros,
                         module_delta.scales,
                         module_delta.g_idx,
-                        device_tensor=(
-                            device_tensors[0]
-                            if self.current_kernel == QuantKernel.EXLLAMA
-                            else True
-                        ),
+                        device_tensor=True,
                     )
                 else:
                     module.set_delta(
                         index,
                         delta_model.bitwidth,
                         module_delta.weight,
-                        device_tensor=(
-                            device_tensors[0]
-                            if self.current_kernel == QuantKernel.EXLLAMA
-                            else True
-                        ),
+                        device_tensor=True,
                     )
             else:
                 module.reset_delta(index)

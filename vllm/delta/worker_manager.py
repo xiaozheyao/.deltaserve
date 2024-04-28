@@ -166,6 +166,7 @@ class WorkerDeltaManager(AbstractWorkerManager):
             return False
         delta = self._load_delta(delta_request)
         for sg in sequence_groups:
+            print(sg)
             sg.maybe_set_cpu_loading_time(time.time())
         loaded = self._delta_manager.add_delta(delta)
         self._delta_manager.activate_delta(delta.id)
@@ -179,7 +180,6 @@ class WorkerDeltaManager(AbstractWorkerManager):
 
     def list_deltas(self) -> Set[int]:
         return set(self._delta_manager.list_deltas())
-
 
 class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
     _delta_manager_cls = LRUCacheDeltaModelManager
@@ -218,7 +218,64 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
             delta = self._load_delta(delta_request)
+            loaded = self._delta_manager.add_delta(delta)
+        else:
+            loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
+        for sg in sequence_groups:
+            sg.maybe_set_cpu_loading_time(time.time())
+        self._activate_delta(delta_request=delta_request)
+        for sg in sequence_groups:
+            sg.maybe_set_gpu_loading_time(time.time())
+        return loaded
 
+    def _activate_delta(self, delta_request: DeltaRequest):
+        global LOG_TIME
+        if not LOG_TIME:
+            logger.info(f"[{time.time()}] activating delta")
+        start = timer()
+        self._delta_manager.activate_delta(delta_request.delta_int_id)
+        end = timer()
+        if not LOG_TIME:
+            logger.info(f"[{time.time()}] CPU -> GPU time: {end - start:.4f}")
+            LOG_TIME = True
+
+class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
+    _delta_manager_cls = LRUCacheDeltaModelManager
+
+    def create_delta_manager(self, model) -> Any:
+        delta_manager = create_delta_manager(
+            model,
+            delta_manager_cls=self._delta_manager_cls,
+            max_num_seqs=self.max_num_seqs,
+            vocab_size=self.vocab_size,
+            delta_config=self.delta_config,
+            max_num_batched_tokens=self.max_num_batched_tokens,
+        )
+        self._delta_manager: LRUCacheDeltaModelManager = delta_manager
+        return delta_manager.model
+
+    def _apply_deltas(
+        self, delta_requests: List[DeltaRequest], sequence_groups: List[SequenceGroup]
+    ) -> None:
+        delta_maps = {
+            delta_request.delta_int_id: delta_request
+            for delta_request in delta_requests
+        }
+        if len(delta_maps) > self._delta_manager.delta_slots:
+            raise RuntimeError(
+                f"Number of requested deltas ({len(delta_maps)}) is greater than the number of GPU delta slots "
+                f"({self._delta_manager.delta_slots})."
+            )
+        for delta in delta_maps.values():
+            self.add_delta(delta, sequence_groups)
+
+    def add_delta(
+        self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]
+    ) -> bool:
+        if delta_request.delta_int_id not in self.list_deltas():
+            if len(self._delta_manager) + 1 > self._delta_manager.capacity:
+                self._delta_manager.remove_oldest_delta()
+            delta = self._load_delta(delta_request)
             loaded = self._delta_manager.add_delta(delta)
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
