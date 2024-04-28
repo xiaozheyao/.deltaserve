@@ -688,7 +688,7 @@ class AsyncLLMEngine:
         # Preprocess the request.
         if not arrival_time:
             arrival_time = time.time()
-
+        self.engine.prefetch_delta(delta_request)
         try:
             stream = await self.add_request(
                 request_id,

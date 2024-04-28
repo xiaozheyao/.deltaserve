@@ -340,6 +340,13 @@ class RayGPUExecutor(ExecutorBase):
     def list_deltas(self) -> List[int]:
         return self._run_workers("list_deltas")
 
+    def prefetch_deltas(self, delta_request: DeltaRequest) -> bool:
+        assert delta_request.delta_int_id > 0, "delta_id must be greater than 0."
+        return self._run_workers(
+            "prefetch_delta",
+            delta_request=delta_request,
+        )
+    
     def _run_workers(
         self,
         method: str,

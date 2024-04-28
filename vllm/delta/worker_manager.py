@@ -14,6 +14,7 @@ from .models import (
     create_delta_manager,
 )
 from vllm.sequence import SequenceGroup
+import threading
 
 logger = init_logger(__name__)
 LOG_TIME = False
@@ -269,6 +270,15 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
         for delta in delta_maps.values():
             self.add_delta(delta, sequence_groups)
 
+    def prefetch_delta(self, delta_request: DeltaRequest):
+        def _load_delta(delta_request):
+            if delta_request.delta_int_id not in self.list_deltas():
+                if len(self._delta_manager) + 1 > self._delta_manager.capacity:
+                    return
+                delta = self._load_delta(delta_request)
+                loaded = self._delta_manager.add_delta(delta)
+        thread = threading.Thread(target=_load_delta, args=(delta_request,))
+        thread.start()
     def add_delta(
         self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]
     ) -> bool:
@@ -276,6 +286,7 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
             delta = self._load_delta(delta_request)
+            
             loaded = self._delta_manager.add_delta(delta)
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)

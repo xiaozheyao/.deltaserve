@@ -818,6 +818,9 @@ class ModelRunner:
             multi_modal_input,
         )
 
+    def prefetch_delta(self, delta_request: DeltaRequest):
+        self.delta_manager.prefetch_delta(delta_request)
+    
     @torch.inference_mode()
     def execute_model(
         self,
@@ -841,7 +844,6 @@ class ModelRunner:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
             self.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
-
         # Execute the model.
         if attn_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]
@@ -989,6 +991,11 @@ class ModelRunner:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.add_delta(delta_request)
 
+    def prefetch_delta(self, delta_request: DeltaRequest, destination='cpu') -> None:
+        if not self.delta_manager:
+            raise RuntimeError("Delta is not enabled.")
+        self.delta_manager.prefetch_delta(delta_request)
+    
     def remove_lora(self, lora_id: int) -> bool:
         if not self.lora_manager:
             raise RuntimeError("LoRA is not enabled.")

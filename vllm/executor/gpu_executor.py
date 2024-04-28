@@ -163,6 +163,9 @@ class GPUExecutor(ExecutorBase):
         # it's running.
         return
 
+    def prefetch_deltas(self, delta_request: DeltaRequest) -> bool:
+        assert delta_request.delta_int_id > 0, "delta_id must be greater than 0."
+        return self.driver_worker.prefetch_deltas(delta_request)
 
 class GPUExecutorAsync(GPUExecutor, ExecutorAsyncBase):
 
