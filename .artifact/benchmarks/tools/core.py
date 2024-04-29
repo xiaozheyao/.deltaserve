@@ -19,7 +19,6 @@ def parse_annotation(annotations):
         annos.append({"name": anno[0], "value": anno[1]})
     return annos
 
-
 def request_thread(
     endpoint,
     req,
@@ -33,8 +32,8 @@ def request_thread(
         print(f"Failed to issue request: {res.text}", flush=True)
     res = {
         "response": res.json(),
-        "time_elapsed": end_time - start_time,
-        "relative_start_at": start_time - global_start_time,
+        "end_at": end_time,
+        "start_at": start_time,
     }
     inference_results.append(res)
     return res
@@ -84,7 +83,6 @@ def issue_queries(endpoint, queries):
                     start,
                 ),
             )
-
     s.run(blocking=True)
     print(f"total threads: {len(threads)}", flush=True)
     [thread.join() for thread in threads]
@@ -104,7 +102,6 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     if res.status_code != 200:
         print(f"Failed to warm up: {res.text}", flush=True)
     print("Warming up ends", flush=True)
-
 
 def run(
     endpoints: List[str],

@@ -1,6 +1,16 @@
 import os
 import json
 
+color_palette = {
+    'general': [
+        '#f9daad',
+        '#90a0c8',
+        '#f19e7b',
+        '#72ba9d',
+        '#fbe9d8',
+        '#bfc8c9'
+    ]
+}
 
 def parse_annotations(annotations: str):
     """annotations are in format: key1=val1,key2=val2,...
@@ -23,6 +33,23 @@ def extract_key_metadata(metadata):
     tp_size = metadata["sys_info"]["tensor_parallel_size"]
     is_swap = len(metadata["sys_info"]["swap_modules"]) > 0
     is_delta = len(metadata["sys_info"]["delta_modules"]) > 0
+    enable_prefetch = True
+    bitwidth = 4
+    if "enable_prefetch" in metadata["sys_info"]:
+        if not metadata["sys_info"]['enable_prefetch']:
+            enable_prefetch = False
+    is_nvme = False
+    if is_swap:
+        bitwidth = 16
+        if metadata['sys_info']['swap_modules'][0]['local_path'].startswith('/scratch'):
+            is_nvme = True
+    if is_delta:
+        if metadata['sys_info']['delta_modules'][0]['local_path'].startswith('/scratch'):
+            is_nvme = True
+        if "2b" in metadata['sys_info']['delta_modules'][0]['local_path']:
+            bitwidth = 2
+        if "4b" in metadata['sys_info']['delta_modules'][0]['local_path']:
+            bitwidth = 4
     is_unoptimized_delta = False
     if is_delta:
         if "unopt" in metadata["sys_info"]["delta_modules"][0]["local_path"]:
@@ -30,11 +57,14 @@ def extract_key_metadata(metadata):
 
     workload.update(
         {
+            "bitwidth": bitwidth,
             "tp_size": tp_size,
             "is_swap": is_swap,
             "is_delta": is_delta,
             "is_unoptimized_delta": is_unoptimized_delta,
             "gen_tokens": gen_tokens,
+            "is_nvme": is_nvme,
+            "enable_prefetch": enable_prefetch
         }
     )
     return workload
@@ -44,23 +74,28 @@ def parse_delta_compute(data):
     results = []
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
-
-        e2e_latency = x["time_elapsed"]
-
-        inference_latency = metric["finished_time"] - metric["first_scheduled_time"]
-
+        e2e_latency = metric['finished_time'] - metric['arrival_time']
         first_token_latency = (
-            metric["first_token_time"] - metric["first_scheduled_time"]
+            metric["first_token_time"] - metric["arrival_time"]
         )
         queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
+        inference_time = metric["finished_time"] - metric["gpu_loading_time"]
         results.append(
             {
                 "id": id,
                 "model": x["response"]["model"],
                 "time": e2e_latency,
                 "type": "E2E Latency",
+            }
+        )
+        results.append(
+            {
+                "id": id,
+                "model": x["response"]["model"],
+                "time": first_token_latency,
+                "type": "TTFT",
             }
         )
         results.append(
@@ -83,7 +118,7 @@ def parse_delta_compute(data):
             {
                 "id": id,
                 "model": x["response"]["model"],
-                "time": inference_latency,
+                "time": inference_time,
                 "type": "Inference Latency",
             }
         )
@@ -104,14 +139,15 @@ def parse_swap(data):
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
 
-        e2e_latency = x["time_elapsed"]
-
-        inference_latency = metric["finished_time"] - metric["first_scheduled_time"]
-
+        e2e_latency = metric['finished_time'] - metric['arrival_time']
+        
+        if metric['gpu_loading_time'] is not None:
+            inference_latency = metric["finished_time"] - metric["gpu_loading_time"]
+        else:
+            inference_latency = metric["finished_time"] - metric["first_scheduled_time"]
         first_token_latency = (
             metric["first_token_time"] - metric["first_scheduled_time"]
         )
-
         if metric["cpu_loading_time"] is None:
             cpu_loading_time = 0
         if metric["gpu_loading_time"] is None:
@@ -168,15 +204,48 @@ def parse_data(input_file):
 
 def get_title(key_metadata):
     sys = "Unknown"
+    hardware = "Unknown"
     if key_metadata["is_swap"]:
-        sys = "\\text{Naive vLLM}"
-    if key_metadata["is_delta"] and key_metadata["is_unoptimized_delta"]:
-        sys = "\\text{vLLM + Delta}"
-    if key_metadata["is_delta"] and not key_metadata["is_unoptimized_delta"]:
-        sys = "\\text{vLLM + Delta + Optimized I/O}"
+        sys = "\\text{vLLM}"
+    if key_metadata["is_delta"]:
+        sys = "\\text{DeltaServe}"
+        sys += f"({key_metadata['bitwidth']}bit)"
+        if key_metadata["is_unoptimized_delta"]:
+            pass
+        if key_metadata["is_delta"] and not key_metadata["is_unoptimized_delta"]:
+            sys += "\\text{+I/O}"
+        if key_metadata["enable_prefetch"]:
+            sys += "\\text{+Prefetch}"
+    workload = ""
+    # workload = "\\text{<>}, ".replace("<>", key_metadata["distribution"])
+    workload += f"\lambda={key_metadata['ar']}"
+    if key_metadata["is_nvme"]:
+        hardware = "\\text{NVMe}"
+    else:
+        hardware = "\\text{NFS}"
+    sys = "\Large{" + sys + "}"
+    workload = "\Large{" + workload + "}"
+    hardware = "\Large{" + hardware + "}"
+    return f"${sys}, {workload}, {hardware}$"
 
-    workload = "\\text{<>}, ".replace("<>", key_metadata["distribution"])
-    workload += f"\lambda={key_metadata['ar']}, "
-    workload += "\\text{duration=<>}, ".replace("<>", key_metadata["duration"])
-    workload += "\\text{tokens=<>}".replace("<>", key_metadata["gen_tokens"])
-    return f"${sys}, {workload}$"
+def get_sys_name(key_metadata):
+    sys = "Unknown"
+    hardware = "Unknown"
+    if key_metadata["is_swap"]:
+        sys = "\\text{vLLM}"
+    if key_metadata["is_delta"]:
+        sys = "\\text{DeltaServe}"
+        sys += str(key_metadata['bitwidth']) + "\\text{bit}"
+        if key_metadata["is_unoptimized_delta"]:
+            pass
+        if key_metadata["is_delta"] and not key_metadata["is_unoptimized_delta"]:
+            sys += "\\text{+I/O}"
+        if key_metadata["enable_prefetch"]:
+            sys += "\\text{+Prefetch}"
+    if key_metadata["is_nvme"]:
+        hardware = "\\text{NVMe}"
+    else:
+        hardware = "\\text{NFS}"
+    sys = "\Large{" + sys + "}"
+    hardware = "\Large{" + hardware + "}"
+    return f"${sys}, {hardware}$"

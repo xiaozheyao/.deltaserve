@@ -127,7 +127,6 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     if request.model != engine._current_weight_path and len(args.swap_modules) > 0:
         # lock it so other threads don't try to reload the model
         await reload_lock.acquire()
-        arrival_time = time.time()
         model_id, found_model = find_swap_model(
             served_model, request.model, args.swap_modules
         )
