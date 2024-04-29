@@ -276,10 +276,11 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
             if delta_request.delta_int_id not in self.list_deltas():
                 if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                     return
-                self.prefetching_thread_event.set()
+                self.prefetching_thread_event.wait()
+                self.prefetching_thread_event.clear()
                 delta = self._load_delta(delta_request, prefetch_event=self.prefetching_thread_event)
                 loaded = self._delta_manager.add_delta(delta)
-                self.prefetching_thread_event.clear()
+                self.prefetching_thread_event.set()
         thread = threading.Thread(target=_load_delta_thread, args=(delta_request,))
         thread.start()
 
@@ -289,10 +290,10 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
         if delta_request.delta_int_id not in self.list_deltas():
             if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                 self._delta_manager.remove_oldest_delta()
-            self.prefetching_thread_event.set()
+            self.prefetching_thread_event.clear()
             delta = self._load_delta(delta_request)
             loaded = self._delta_manager.add_delta(delta)
-            self.prefetching_thread_event.clear()
+            self.prefetching_thread_event.set()
         else:
             loaded = self._delta_manager.get_delta(delta_request.delta_int_id)
         for sg in sequence_groups:

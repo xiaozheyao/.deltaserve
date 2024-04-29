@@ -467,7 +467,6 @@ class AsyncLLMEngine:
 
     async def engine_step(self) -> bool:
         """Kick the engine to process the waiting requests.
-
         Returns True if there are in-progress requests."""
 
         (
