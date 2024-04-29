@@ -1,8 +1,9 @@
 import os
 import argparse
 import pandas as pd
-from dstool.plot.style import set_font, set_plotly_theme
+from dstool.plot.style import set_plotly_theme
 from utils import parse_data, get_title, color_palette
+from style import set_font
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -16,22 +17,23 @@ def plot(args):
     e2e_latency = [x for x in data if x["type"] == "E2E Latency"]
     df = pd.DataFrame(except_e2e)
     e2e_df = pd.DataFrame(e2e_latency)
-    fig = px.bar(df, x="id", y="time", color="type", title=f"{title}", 
-                #color_discrete_sequence=color_palette['general']
+    df['Time Spent On'] = df['type']
+    fig = px.bar(df, x="id", y="time", color="Time Spent On", title=f"{title}", 
+            color_discrete_sequence=color_palette['general']
                 )
-    fig.add_trace(
-        go.Scatter(
-            x=e2e_df.id,
-            y=e2e_df.time,
-            mode="lines",
-            name="E2E Latency",
-        )
-    )
+    # fig.add_trace(
+    #     go.Scatter(
+    #         x=e2e_df.id,
+    #         y=e2e_df.time,
+    #         mode="lines",
+    #         name="E2E Latency",
+    #     )
+    # )
     # set title font
     fig.update_yaxes(title_text="Time (s)")
-    set_font(fig)
     fig.update_layout(title_x=0.5)
     set_plotly_theme(fig)
+    set_font(fig)
     fig.write_image(
         os.path.join(args.output, f"{filename}.png"), width=1200, height=800
     )

@@ -102,16 +102,8 @@ def parse_delta_compute(data):
             {
                 "id": id,
                 "model": x["response"]["model"],
-                "time": gpu_loading_time,
-                "type": "CPU -> GPU",
-            }
-        )
-        results.append(
-            {
-                "id": id,
-                "model": x["response"]["model"],
-                "time": cpu_loading_time,
-                "type": "Disk -> CPU",
+                "time": gpu_loading_time + cpu_loading_time,
+                "type": "Loading",
             }
         )
         results.append(
@@ -119,7 +111,7 @@ def parse_delta_compute(data):
                 "id": id,
                 "model": x["response"]["model"],
                 "time": inference_time,
-                "type": "Inference Latency",
+                "type": "Inference",
             }
         )
         results.append(
@@ -127,7 +119,7 @@ def parse_delta_compute(data):
                 "id": id,
                 "model": x["response"]["model"],
                 "time": queuing_time,
-                "type": "Queueing Delay",
+                "type": "Queueing",
             }
         )
 
@@ -171,7 +163,7 @@ def parse_swap(data):
                 "id": id,
                 "model": x["response"]["model"],
                 "time": gpu_loading_time,
-                "type": "Disk -> GPU",
+                "type": "Loading",
             }
         )
         results.append(
@@ -179,7 +171,7 @@ def parse_swap(data):
                 "id": id,
                 "model": x["response"]["model"],
                 "time": inference_time,
-                "type": "Inference Latency",
+                "type": "Inference",
             }
         )
         results.append(
@@ -187,7 +179,7 @@ def parse_swap(data):
                 "id": id,
                 "model": x["response"]["model"],
                 "time": queuing_time,
-                "type": "Queueing Delay",
+                "type": "Queueing",
             }
         )
     return results
