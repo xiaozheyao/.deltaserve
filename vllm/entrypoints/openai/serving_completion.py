@@ -118,6 +118,7 @@ class OpenAIServingCompletion(OpenAIServing):
         raw_request: Request,
         arrival_time: Optional[float] = None,
         gpu_loading_time: Optional[float] = None,
+        start_loading_time: Optional[float] = None,
     ):
         """Completion API similar to OpenAI's API.
 
@@ -177,6 +178,7 @@ class OpenAIServingCompletion(OpenAIServing):
                         swap_request=None,
                         arrival_time=arrival_time,
                         gpu_loading_time=gpu_loading_time,
+                        start_loading_time=start_loading_time,
                     )
                 )
         except ValueError as e:

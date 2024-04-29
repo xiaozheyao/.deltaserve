@@ -88,6 +88,7 @@ class RequestMetrics:
 
     arrival_time: float
     last_token_time: float
+    start_loading_time: float
     first_scheduled_time: Optional[float]
     cpu_loading_time: Optional[float]
     gpu_loading_time: Optional[float]
@@ -362,6 +363,7 @@ class SequenceGroup:
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
+        start_loading_time: Optional[float] = None,
     ) -> None:
         self.request_id = request_id
         self.seqs_dict = {seq.seq_id: seq for seq in seqs}
@@ -372,6 +374,7 @@ class SequenceGroup:
             first_scheduled_time=None,
             cpu_loading_time=None,
             gpu_loading_time=gpu_loading_time if gpu_loading_time is not None else None,
+            start_loading_time=start_loading_time,
             first_token_time=None,
             time_in_queue=None,
         )
@@ -412,6 +415,9 @@ class SequenceGroup:
         if self.metrics.first_token_time is None:
             self.metrics.first_token_time = time
 
+    def set_start_loading_time(self, time: float) -> None:
+        self.metrics.start_loading_time = time
+    
     def maybe_set_first_scheduled_time(self, time: float) -> None:
         """Sets the first scheduled time and time in queue for Request
         level timings."""

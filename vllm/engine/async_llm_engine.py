@@ -262,6 +262,7 @@ class _AsyncLLMEngine(LLMEngine):
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
+        start_loading_time: Optional[float] = None,
     ) -> None:
         if lora_request is not None and not self.lora_config:
             raise ValueError(
@@ -291,6 +292,7 @@ class _AsyncLLMEngine(LLMEngine):
             lora_request=lora_request,
             delta_request=delta_request,
             multi_modal_data=multi_modal_data,
+            start_loading_time=start_loading_time,
         )
 
     async def check_health_async(self) -> None:
@@ -547,6 +549,7 @@ class AsyncLLMEngine:
         delta_request: Optional[DeltaRequest] = None,
         swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
+        start_loading_time: Optional[float] = None,
     ) -> AsyncStream:
         if self.log_requests:
             shortened_prompt = prompt
@@ -612,6 +615,7 @@ class AsyncLLMEngine:
             lora_request=lora_request,
             delta_request=delta_request,
             multi_modal_data=multi_modal_data,
+            start_loading_time=start_loading_time,
         )
 
         return stream
@@ -628,6 +632,7 @@ class AsyncLLMEngine:
         multi_modal_data: Optional[MultiModalData] = None,
         arrival_time: Optional[float] = None,
         gpu_loading_time: Optional[float] = None,
+        start_loading_time: Optional[float] = None,
     ) -> AsyncIterator[RequestOutput]:
         """Generate outputs for a request.
 
@@ -709,6 +714,7 @@ class AsyncLLMEngine:
                 delta_request=delta_request,
                 swap_request=swap_request,
                 multi_modal_data=multi_modal_data,
+                start_loading_time=start_loading_time,
             )
             async for request_output in stream:
                 yield request_output

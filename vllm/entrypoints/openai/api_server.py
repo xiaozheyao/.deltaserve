@@ -124,9 +124,11 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     response = None
     arrival_time = time.time()
     gpu_loading_time = None
+    start_loading_time = None
     if request.model != engine._current_weight_path and len(args.swap_modules) > 0:
         # lock it so other threads don't try to reload the model
         await reload_lock.acquire()
+        start_loading_time = time.time()
         model_id, found_model = find_swap_model(
             served_model, request.model, args.swap_modules
         )
@@ -147,6 +149,7 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
         raw_request,
         arrival_time=arrival_time,
         gpu_loading_time=gpu_loading_time,
+        start_loading_time=start_loading_time,
     )
 
     if isinstance(generator, ErrorResponse):

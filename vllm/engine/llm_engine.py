@@ -265,6 +265,7 @@ class LLMEngine:
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
+        start_loading_time: Optional[float] = None,
     ) -> None:
         """Add a request to the engine's request pool.
 
@@ -367,6 +368,7 @@ class LLMEngine:
             lora_request,
             delta_request,
             multi_modal_data,
+            start_loading_time,
         )
 
         # Add the sequence group to the scheduler.
