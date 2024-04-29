@@ -138,29 +138,32 @@ def parse_swap(data):
     results = []
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
-
+        cpu_loading_time = 0
         e2e_latency = metric['finished_time'] - metric['arrival_time']
-        
-        if metric['gpu_loading_time'] is not None:
-            inference_latency = metric["finished_time"] - metric["gpu_loading_time"]
-        else:
-            inference_latency = metric["finished_time"] - metric["first_scheduled_time"]
         first_token_latency = (
-            metric["first_token_time"] - metric["first_scheduled_time"]
+            metric["first_token_time"] - metric["arrival_time"]
         )
-        if metric["cpu_loading_time"] is None:
-            cpu_loading_time = 0
-        if metric["gpu_loading_time"] is None:
+        if metric["start_loading_time"] is None:
             gpu_loading_time = 0
+            queuing_time = metric['first_scheduled_time'] - metric['arrival_time']
         else:
-            gpu_loading_time = metric["gpu_loading_time"] - metric["arrival_time"]
-        queuing_time = e2e_latency - inference_latency - gpu_loading_time
+            gpu_loading_time = metric['gpu_loading_time'] - metric['start_loading_time']
+            queuing_time = metric['start_loading_time'] - metric['arrival_time']
+        inference_time = metric['finished_time'] - metric['first_scheduled_time']
         results.append(
             {
                 "id": id,
                 "model": x["response"]["model"],
                 "time": e2e_latency,
                 "type": "E2E Latency",
+            }
+        )
+        results.append(
+            {
+                "id": id,
+                "model": x["response"]["model"],
+                "time": first_token_latency,
+                "type": "TTFT",
             }
         )
         results.append(
@@ -175,7 +178,7 @@ def parse_swap(data):
             {
                 "id": id,
                 "model": x["response"]["model"],
-                "time": inference_latency,
+                "time": inference_time,
                 "type": "Inference Latency",
             }
         )
