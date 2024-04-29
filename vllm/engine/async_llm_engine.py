@@ -334,6 +334,7 @@ class AsyncLLMEngine:
         log_requests: bool = True,
         max_log_len: Optional[int] = None,
         start_engine_loop: bool = True,
+        enable_prefetch: bool = False,
         **kwargs,
     ) -> None:
         self.worker_use_ray = worker_use_ray
@@ -351,7 +352,8 @@ class AsyncLLMEngine:
         self._request_tracker: Optional[RequestTracker] = None
         self._errored_with: Optional[BaseException] = None
         self._current_weight_path: str
-
+        self._enable_prefetch = enable_prefetch
+        
     @classmethod
     def from_engine_args(
         cls, engine_args: AsyncEngineArgs, start_engine_loop: bool = True
@@ -388,6 +390,7 @@ class AsyncLLMEngine:
             log_stats=not engine_args.disable_log_stats,
             max_log_len=engine_args.max_log_len,
             start_engine_loop=start_engine_loop,
+            enable_prefetch=engine_args.enable_prefetch,
         )
         engine._current_weight_path = engine_args.model
         return engine
@@ -572,10 +575,16 @@ class AsyncLLMEngine:
                     "error that caused the background loop to stop "
                     "(AsyncEngineDeadError)."
                 )
+        
         if arrival_time is None:
             arrival_time = time.time()
         if swap_request:
             await self.reload_model(swap_request.swap_local_path)
+        if self._enable_prefetch:
+            self.engine.prefetch_delta(delta_request)
+        else:
+            print("Prefetching is disabled")
+            
         if self.engine_use_ray:
             prompt_token_ids = await self.engine.encode_request_async.remote(
                 request_id=request_id,
@@ -687,7 +696,7 @@ class AsyncLLMEngine:
         # Preprocess the request.
         if not arrival_time:
             arrival_time = time.time()
-        self.engine.prefetch_delta(delta_request)
+        
         try:
             stream = await self.add_request(
                 request_id,

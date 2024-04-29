@@ -70,7 +70,7 @@ class EngineArgs:
     image_input_shape: Optional[str] = None
     image_feature_size: Optional[int] = None
     scheduler_delay_factor: float = 0.0
-
+    enable_prefetch: bool = False
     def __post_init__(self):
         if self.tokenizer is None:
             self.tokenizer = self.model
@@ -453,6 +453,12 @@ class EngineArgs:
             default=EngineArgs.scheduler_delay_factor,
             help="Apply a delay (of delay factor multiplied by previous"
             "prompt latency) before scheduling next prompt.",
+        )
+        parser.add_argument(
+            "--enable-prefetch",
+            action="store_true",
+            default=EngineArgs.enable_prefetch,
+            help="Enable prefetching of model delta in the model executor.",
         )
         return parser
 
