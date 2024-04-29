@@ -17,7 +17,7 @@ def plot(args):
     df = pd.DataFrame(except_e2e)
     e2e_df = pd.DataFrame(e2e_latency)
     fig = px.bar(df, x="id", y="time", color="type", title=f"{title}", 
-                 #color_discrete_sequence=color_palette['general']
+                #color_discrete_sequence=color_palette['general']
                 )
     fig.add_trace(
         go.Scatter(
