@@ -19,7 +19,7 @@ def plot(args):
         else:
             if not metadata['is_nvme']:
                 continue
-        if metadata['bitwidth'] == 2:
+        if metadata['bitwidth'] == 4:
             continue
         title = get_sys_name(metadata)
         except_e2e = [x for x in data if x["type"] not in ["E2E Latency", "TTFT"]]
@@ -65,7 +65,7 @@ def plot(args):
     )
     fig.update_xaxes(title_font=dict(size=24), tickfont_size=24)
     fig.update_annotations(
-        font_size=28,
+        font_size=36,
         font_color="black",
         font_family="CMU Sans Serif",
     )
@@ -74,7 +74,9 @@ def plot(args):
             annotation['yshift'] -= 5
         if annotation['text'] == "Time (s)":
             if args.type == "nvme":
-                annotation['yshift'] = 50
+                annotation['yshift'] = -60
+            else:
+                annotation['yshift'] = 60
     fig.update_xaxes(nticks=4)
     fig.update_yaxes(nticks=4)
     fig.update_layout(
@@ -82,7 +84,7 @@ def plot(args):
     )
     set_plotly_theme(fig)
     set_font(fig)
-    fig.update_layout(margin=dict(t=40))
+    fig.update_layout(margin=dict(t=50, l=20,r=10))
     fig.write_image(
         os.path.join(args.output, f"latency_{args.type}.pdf"), 
         width=1800, height=800,
