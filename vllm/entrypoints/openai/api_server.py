@@ -161,7 +161,7 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     else:
         response = JSONResponse(content=generator.model_dump())
 
-    if reload_lock.locked():
+    if reload_lock.locked() and not engine.engine.has_unfinished_requests():
         reload_lock.release()
     return response
 

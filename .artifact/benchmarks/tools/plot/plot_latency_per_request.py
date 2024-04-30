@@ -7,7 +7,6 @@ from style import set_font
 import plotly.express as px
 import plotly.graph_objects as go
 
-
 def plot(args):
     print(args)
     metadata, data = parse_data(args.input)
@@ -18,9 +17,9 @@ def plot(args):
     df = pd.DataFrame(except_e2e)
     e2e_df = pd.DataFrame(e2e_latency)
     df['Time Spent On'] = df['type']
-    fig = px.bar(df, x="id", y="time", color="Time Spent On", title=f"{title}", 
+    fig = px.bar(df, x="id", y="time", color="Time Spent On", title=title, 
             color_discrete_sequence=color_palette['general']
-                )
+    )
     # fig.add_trace(
     #     go.Scatter(
     #         x=e2e_df.id,
@@ -31,11 +30,12 @@ def plot(args):
     # )
     # set title font
     fig.update_yaxes(title_text="Time (s)")
+    fig.update_xaxes(title_text="Request ID")
     fig.update_layout(title_x=0.5)
     set_plotly_theme(fig)
     set_font(fig)
     fig.write_image(
-        os.path.join(args.output, f"{filename}.png"), width=1200, height=800
+        os.path.join(args.output, f"{filename}.pdf"), width=1200, height=800
     )
 
 

@@ -1,20 +1,18 @@
 def set_font(fig):
     fig.update_layout(
         font={
-            "family": "Latin Modern",
+            "color": "black",
+            "family": "CMU Sans Serif",
         },
-        font_color="black",
-        title_font_color="black",
-        legend_title_font_color="black",
         title={
             'font': {
-                "family": "Latin Modern",
+                "family": "CMU Sans Serif",
             },
         },
         xaxis={
             'title': {
                 'font': {
-                    "family": "Latin Modern",
+                    "family": "CMU Sans Serif",
                 },
             },
             'tickfont': {
