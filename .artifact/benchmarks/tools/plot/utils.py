@@ -184,7 +184,6 @@ def parse_swap(data):
         )
     return results
 
-
 def parse_data(input_file):
     with open(input_file, "r") as fp:
         data = [json.loads(line) for line in fp]
