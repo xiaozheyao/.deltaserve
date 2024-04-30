@@ -41,7 +41,6 @@ def plot(args):
         partial_df['system'] = title
         df = pd.concat([df, partial_df])
 
-    
     fig = make_subplots(
         rows = 1,
         cols=2,

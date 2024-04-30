@@ -12,6 +12,23 @@ color_palette = {
     ]
 }
 
+def get_system_name(sys):
+    sys = sys.lower()
+    if "vllm" in sys:
+        return "Baseline-1"
+    if "deltaserve" in sys:
+        if "prefetch" not in sys:
+            return "Ours"
+        else:
+            return "Ours+"
+    return "Unknown"
+
+system_color_mapping = {
+    "Baseline-1": "#90a0c8",
+    "Ours": "#f19e7b",
+    "Ours+": "#72ba9d"
+}
+
 def parse_annotations(annotations: str):
     """annotations are in format: key1=val1,key2=val2,...
     this function parse it into dictionary as {key1: val1, key2: val2, ...}

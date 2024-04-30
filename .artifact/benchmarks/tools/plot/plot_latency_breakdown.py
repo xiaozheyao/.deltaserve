@@ -6,8 +6,7 @@ from utils import parse_data, get_sys_name, color_palette
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
-import time
-import plotly.io as pio   
+import plotly.io as pio
 pio.kaleido.scope.mathjax = None
 
 def plot(args):
@@ -27,7 +26,6 @@ def plot(args):
         title = get_sys_name(metadata)
         except_e2e = [x for x in data if x["type"] not in ["E2E Latency", "TTFT"]]
         filename = args.input.split("/")[-1].removesuffix(".jsonl")
-        
         partial_df = pd.DataFrame(except_e2e)
         partial_df['system'] = title
         df = pd.concat([df, partial_df])

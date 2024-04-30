@@ -2,11 +2,11 @@ import os
 import json
 import argparse
 import datasets
+import tiktoken
 import numpy as np
 from loguru import logger
 from arrival import PoissonProcess
 from typing import Union
-import tiktoken
 
 enc = tiktoken.get_encoding("cl100k_base")
 
