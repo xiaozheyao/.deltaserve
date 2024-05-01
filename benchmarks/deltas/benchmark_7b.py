@@ -31,7 +31,7 @@ if bitwidth == 4:
         if tp_size == 1:
             delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-unopt-bitblas-1"
         else:
-            delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-bitblas-1"
+            delta_path = f"/scratch/xiayao/models/4bit/4b75s.bitblas.tp_2.1"
     elif use_unoptimized_delta:
         delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
     else:
