@@ -243,25 +243,31 @@ class LRUCacheWorkerDeltaManager(WorkerDeltaManager):
 class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
     _delta_manager_cls = LRUCacheDeltaModelManager
     prefetching_thread_event = threading.Event()
-    prefetching_jobqueue: Queue[DeltaRequest] = Queue()
+    discard_prefetching_event = threading.Event()
+    prefetching_jobqueue: List[DeltaRequest] = []
+    current_prefetching_request: DeltaRequest = None
 
     def create_delta_manager(self, model) -> Any:
         
         def _load_delta_background():
             while True:
-                if time.time() % 100 == 0:
-                    logger.info(f"# deltas in the queue: {len(self.prefetching_jobqueue.queue)}")
-                for delta_request in self.prefetching_jobqueue.queue:
+                if time.time() % 10 == 0:
+                    logger.info(f"# deltas in the queue: {len(self.prefetching_jobqueue)}")
+                for delta_request in self.prefetching_jobqueue:
                     if delta_request.delta_int_id not in self.list_deltas():
                         if len(self._delta_manager) + 1 > self._delta_manager.capacity:
                             return
                         self.prefetching_thread_event.wait()
                         logger.info(f"Prefetching delta {delta_request.delta_int_id}")
+                        self.current_prefetching_request = delta_request
                         delta = self._load_delta(
-                            delta_request, prefetch_event=self.prefetching_thread_event
+                            delta_request, prefetch_event=self.prefetching_thread_event,
+                            discard_prefetching_event=self.discard_prefetching_event
                         )
-                        loaded = self._delta_manager.add_delta(delta)
+                        if delta is not None:
+                            loaded = self._delta_manager.add_delta(delta)
                         self.prefetching_thread_event.set()
+                        self.current_prefetching_request = None
         thread = threading.Thread(target=_load_delta_background)
         logger.info("Starting prefetching thread")
         thread.start()
@@ -293,7 +299,7 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
 
     def prefetch_delta(self, delta_request: DeltaRequest):
         logger.info(f"queuing prefetching delta {delta_request.delta_int_id}")
-        self.prefetching_jobqueue.put(delta_request)
+        self.prefetching_jobqueue.append(delta_request)
 
     def add_delta(
         self, delta_request: DeltaRequest, sequence_groups: List[SequenceGroup]
@@ -305,6 +311,10 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
             # note: here we don't pass prefetching_thread_event to _load_delta
             # because this is the main thread and has higher priority
             logger.warning(f"Missed prefetch, fall back to loading delta {delta_request.delta_int_id} now")
+            if delta_request in self.prefetching_jobqueue:
+                self.prefetching_jobqueue.remove(delta_request)
+            if self.current_prefetching_request is not None and delta_request.delta_int_id == self.current_prefetching_request.delta_int_id:
+                self.discard_prefetching_event.set()
             delta = self._load_delta(
                 delta_request
             )

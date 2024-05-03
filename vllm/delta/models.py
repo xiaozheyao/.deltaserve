@@ -177,6 +177,7 @@ class DeltaModel:
         device: Optional[int] = None,
         trust_remote_code: bool = False,
         prefetch_thread_event: threading.Event = None,
+        discard_prefetching_event: threading.Event = None,
     ) -> "DeltaModel":
         use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
         pin_memory = str(device) == "cpu" and not in_wsl()
@@ -267,9 +268,12 @@ class DeltaModel:
                 with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
                     keys = f.keys()
                     for key in keys:
+                        if discard_prefetching_event is not None:
+                            if discard_prefetching_event.is_set():
+                                return None
                         if prefetch_thread_event is not None:
                             prefetch_thread_event.wait()
-                        tensors[key] = f.get_tensor(key)
+                            tensors[key] = f.get_tensor(key)
         modules = {}
         module_names = set(
             [
