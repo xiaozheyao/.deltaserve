@@ -123,8 +123,6 @@ class Worker:
         # Set random seed.
         set_random_seed(self.model_config.seed)
 
-    
-    
     def load_model(self):
         self.model_runner.load_model()
 
@@ -270,10 +268,10 @@ class Worker:
 
     def list_deltas(self) -> Set[int]:
         return self.model_runner.list_deltas()
-    
+
     def prefetch_delta(self, delta_request: DeltaRequest):
         return self.model_runner.prefetch_delta(delta_request)
-    
+
     @property
     def max_model_len(self) -> int:
         return self.model_config.max_model_len

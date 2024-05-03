@@ -4,6 +4,7 @@ import json
 import cupy as cp
 from safetensors.torch import save_file
 
+
 def main(args):
     print(args)
     tensors = {}
@@ -34,8 +35,10 @@ def main(args):
     )
     print("Done!")
 
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
     parser.add_argument("--ckpt", type=str, help="Path to the compressed file")
     args = parser.parse_args()

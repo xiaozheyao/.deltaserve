@@ -12,7 +12,6 @@ def main(args):
         "self_attn.v_proj.qweight",
         "mlp.gate_proj.qweight",
         "mlp.up_proj.qweight",
-        
         "embed_tokens.weight",
         "lm_head.weight",
     ]
@@ -27,9 +26,7 @@ def main(args):
     pack_factor = Fraction(32, compress_config["bits"])
     tensors = {}
     rank_tensors = {i: {} for i in range(args.tp_size)}
-    with st.safe_open(
-        os.path.join(args.input, "bitblas.safetensors"), "torch"
-    ) as f:
+    with st.safe_open(os.path.join(args.input, "bitblas.safetensors"), "torch") as f:
         for key in f.keys():
             tensors[key] = f.get_tensor(key)
     chunked_keys = []
@@ -61,6 +58,7 @@ def main(args):
 
     save_file(tensors, f"{args.input}/bitblas.remain.safetensors")
     print("All Done!", flush=True)
+
 
 if __name__ == "__main__":
     import argparse

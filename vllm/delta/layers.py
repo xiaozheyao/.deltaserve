@@ -43,6 +43,7 @@ logger = init_logger(__name__)
 if TYPE_CHECKING:
     pass
 
+
 @dataclass
 class DeltaMapping:
     # Per every token in input_ids:
@@ -56,6 +57,7 @@ class DeltaMapping:
 
     def __str__(self):
         return f"index_mapping: {self.index_mapping}, prompt_mapping: {self.prompt_mapping}"
+
 
 class BaseLayerWithDelta(nn.Module):
     def create_delta_weights(

@@ -1,15 +1,13 @@
 import os
 from tqdm import tqdm
+
 SRC = ".idea/models/"
 DST = "/scratch/xiayao/models/"
 
 os.makedirs(DST, exist_ok=True)
 
 NUM_MODELS = 8
-PREFIXS = [
-    "lmsys.vicuna-7b-v1.5.2b50s",
-    "lmsys.vicuna-7b-v1.5.2b50s-tp_2"
-]
+PREFIXS = ["lmsys.vicuna-7b-v1.5.2b50s", "lmsys.vicuna-7b-v1.5.2b50s-tp_2"]
 
 for prefix in PREFIXS:
     for i in tqdm(range(1, NUM_MODELS + 1)):

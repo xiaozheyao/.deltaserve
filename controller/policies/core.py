@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 uss = []
 
+
 @dataclass
-class UpstreamServer():
+class UpstreamServer:
     url: str
     weight: Optional[float]
-

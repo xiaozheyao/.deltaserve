@@ -2,15 +2,15 @@ import os
 import json
 
 color_palette = {
-    'general': [
-        '#90a0c8',
-        '#f19e7b',
-        '#72ba9d',
-        '#bfc8c9'
-        '#f9daad',
-        '#fbe9d8',
+    "general": [
+        "#90a0c8",
+        "#f19e7b",
+        "#72ba9d",
+        "#bfc8c9" "#f9daad",
+        "#fbe9d8",
     ]
 }
+
 
 def get_system_name(sys):
     sys = sys.lower()
@@ -23,11 +23,9 @@ def get_system_name(sys):
             return "Ours+"
     return "Unknown"
 
-system_color_mapping = {
-    "Baseline-1": "#90a0c8",
-    "Ours": "#f19e7b",
-    "Ours+": "#72ba9d"
-}
+
+system_color_mapping = {"Baseline-1": "#90a0c8", "Ours": "#f19e7b", "Ours+": "#72ba9d"}
+
 
 def parse_annotations(annotations: str):
     """annotations are in format: key1=val1,key2=val2,...
@@ -53,19 +51,21 @@ def extract_key_metadata(metadata):
     enable_prefetch = True
     bitwidth = 4
     if "enable_prefetch" in metadata["sys_info"]:
-        if not metadata["sys_info"]['enable_prefetch']:
+        if not metadata["sys_info"]["enable_prefetch"]:
             enable_prefetch = False
     is_nvme = False
     if is_swap:
         bitwidth = 16
-        if metadata['sys_info']['swap_modules'][0]['local_path'].startswith('/scratch'):
+        if metadata["sys_info"]["swap_modules"][0]["local_path"].startswith("/scratch"):
             is_nvme = True
     if is_delta:
-        if metadata['sys_info']['delta_modules'][0]['local_path'].startswith('/scratch'):
+        if metadata["sys_info"]["delta_modules"][0]["local_path"].startswith(
+            "/scratch"
+        ):
             is_nvme = True
-        if "2b" in metadata['sys_info']['delta_modules'][0]['local_path']:
+        if "2b" in metadata["sys_info"]["delta_modules"][0]["local_path"]:
             bitwidth = 2
-        if "4b" in metadata['sys_info']['delta_modules'][0]['local_path']:
+        if "4b" in metadata["sys_info"]["delta_modules"][0]["local_path"]:
             bitwidth = 4
     is_unoptimized_delta = False
     if is_delta:
@@ -81,7 +81,7 @@ def extract_key_metadata(metadata):
             "is_unoptimized_delta": is_unoptimized_delta,
             "gen_tokens": gen_tokens,
             "is_nvme": is_nvme,
-            "enable_prefetch": enable_prefetch
+            "enable_prefetch": enable_prefetch,
         }
     )
     return workload
@@ -91,10 +91,8 @@ def parse_delta_compute(data):
     results = []
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
-        e2e_latency = metric['finished_time'] - metric['arrival_time']
-        first_token_latency = (
-            metric["first_token_time"] - metric["arrival_time"]
-        )
+        e2e_latency = metric["finished_time"] - metric["arrival_time"]
+        first_token_latency = metric["first_token_time"] - metric["arrival_time"]
         queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
@@ -148,17 +146,15 @@ def parse_swap(data):
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
         cpu_loading_time = 0
-        e2e_latency = metric['finished_time'] - metric['arrival_time']
-        first_token_latency = (
-            metric["first_token_time"] - metric["arrival_time"]
-        )
+        e2e_latency = metric["finished_time"] - metric["arrival_time"]
+        first_token_latency = metric["first_token_time"] - metric["arrival_time"]
         if metric["start_loading_time"] is None:
             gpu_loading_time = 0
-            queuing_time = metric['first_scheduled_time'] - metric['arrival_time']
+            queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
         else:
-            gpu_loading_time = metric['gpu_loading_time'] - metric['start_loading_time']
-            queuing_time = metric['start_loading_time'] - metric['arrival_time']
-        inference_time = metric['finished_time'] - metric['first_scheduled_time']
+            gpu_loading_time = metric["gpu_loading_time"] - metric["start_loading_time"]
+            queuing_time = metric["start_loading_time"] - metric["arrival_time"]
+        inference_time = metric["finished_time"] - metric["first_scheduled_time"]
         results.append(
             {
                 "id": id,
@@ -201,6 +197,7 @@ def parse_swap(data):
         )
     return results
 
+
 def parse_data(input_file):
     with open(input_file, "r") as fp:
         data = [json.loads(line) for line in fp]
@@ -239,6 +236,7 @@ def get_title(key_metadata):
     hardware = "\Large{" + hardware + "}"
     return f"${sys}, {workload}, {hardware}$"
 
+
 def get_sys_name(key_metadata):
     sys = "Unknown"
     hardware = "Unknown"
@@ -246,7 +244,7 @@ def get_sys_name(key_metadata):
         sys = "\\text{vLLM}"
     if key_metadata["is_delta"]:
         sys = "\\text{DeltaServe}"
-        sys += str(key_metadata['bitwidth']) + "\\text{bit}"
+        sys += str(key_metadata["bitwidth"]) + "\\text{bit}"
         if key_metadata["is_unoptimized_delta"]:
             pass
         if key_metadata["is_delta"] and not key_metadata["is_unoptimized_delta"]:

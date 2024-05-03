@@ -192,12 +192,14 @@ class DeltaModel:
         if use_bitblas:
             model_tensor_filenames = [
                 "bitblas.remain.safetensors",
-                f"bitblas.rank.{tp_rank}.safetensors"
+                f"bitblas.rank.{tp_rank}.safetensors",
             ]
             if not os.path.exists(
                 os.path.join(path_or_name, model_tensor_filenames[0])
             ):
-                logger.info(f"cannot find {os.path.join(path_or_name, model_tensor_filenames[0])}")
+                logger.info(
+                    f"cannot find {os.path.join(path_or_name, model_tensor_filenames[0])}"
+                )
                 model_tensor_filenames = ["bitblas.safetensors"]
         else:
             model_tensor_filenames = [
@@ -261,7 +263,7 @@ class DeltaModel:
             )
             del tensor_dtypes, tensor_shapes
             del lossless_compressor
-            
+
         else:
             logger.info("Lossless Compression Disabled")
             for mtf in model_tensor_filenames:

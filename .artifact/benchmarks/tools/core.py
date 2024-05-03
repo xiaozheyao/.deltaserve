@@ -19,6 +19,7 @@ def parse_annotation(annotations):
         annos.append({"name": anno[0], "value": anno[1]})
     return annos
 
+
 def request_thread(
     endpoint,
     req,
@@ -102,6 +103,7 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     if res.status_code != 200:
         print(f"Failed to warm up: {res.text}", flush=True)
     print("Warming up ends", flush=True)
+
 
 def run(
     endpoints: List[str],

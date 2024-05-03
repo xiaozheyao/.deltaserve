@@ -58,6 +58,7 @@ class DeltaMapping:
     def __str__(self):
         return f"index_mapping: {self.index_mapping}, prompt_mapping: {self.prompt_mapping}"
 
+
 class BaseLayerWithDelta(nn.Module):
     def create_delta_weights(
         self, max_deltas: int, delta_config: DeltaConfig, model_config: PretrainedConfig
@@ -422,12 +423,12 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 qzeros_0 = qzeros[0][
                     start_idx // self.pack_factor : end_idx // self.pack_factor, :
                 ]
-                scales_0 = scales[0][start_idx:end_idx,:]
+                scales_0 = scales[0][start_idx:end_idx, :]
             if qweight[1] is not None:
                 qzeros_1 = qzeros[1][
                     start_idx // self.pack_factor : end_idx // self.pack_factor, :
                 ]
-                scales_1 = scales[1][start_idx:end_idx,:]
+                scales_1 = scales[1][start_idx:end_idx, :]
         else:
             qzeros_0 = qzeros[0]
             scales_0 = scales[0]
@@ -437,24 +438,16 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             self.qweight_stacked[0][index, :, :].copy_(
                 qweight[0], non_blocking=ASYNC_COPY
             )
-            self.qzeros_stacked[0][index, :, :].copy_(
-                qzeros_0, non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[0][index, :, :].copy_(
-                scales_0, non_blocking=ASYNC_COPY
-            )
+            self.qzeros_stacked[0][index, :, :].copy_(qzeros_0, non_blocking=ASYNC_COPY)
+            self.scales_stacked[0][index, :, :].copy_(scales_0, non_blocking=ASYNC_COPY)
             self.g_idx[0] = g_idx[0]
 
         if qweight[1] is not None:
             self.qweight_stacked[1][index, :, :].copy_(
                 qweight[1], non_blocking=ASYNC_COPY
             )
-            self.qzeros_stacked[1][index, :, :].copy_(
-                qzeros_1, non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[1][index, :, :].copy_(
-                scales_1, non_blocking=ASYNC_COPY
-            )
+            self.qzeros_stacked[1][index, :, :].copy_(qzeros_1, non_blocking=ASYNC_COPY)
+            self.scales_stacked[1][index, :, :].copy_(scales_1, non_blocking=ASYNC_COPY)
             self.g_idx[1] = g_idx[1]
 
     def apply_weights(
@@ -696,36 +689,24 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             self.qweight_stacked[0][index, :, :].copy_(
                 qweight[0], non_blocking=ASYNC_COPY
             )
-            self.qzeros_stacked[0][index, :, :].copy_(
-                qzeros_q, non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[0][index, :, :].copy_(
-                scales_q, non_blocking=ASYNC_COPY
-            )
+            self.qzeros_stacked[0][index, :, :].copy_(qzeros_q, non_blocking=ASYNC_COPY)
+            self.scales_stacked[0][index, :, :].copy_(scales_q, non_blocking=ASYNC_COPY)
             self.g_idx_stacked[0] = g_idx[0]
 
         if qweight[1] is not None:
             self.qweight_stacked[1][index, :, :].copy_(
                 qweight[1], non_blocking=ASYNC_COPY
             )
-            self.qzeros_stacked[1][index, :, :].copy_(
-                qzeros_k, non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[1][index, :, :].copy_(
-                scales_k, non_blocking=ASYNC_COPY
-            )
+            self.qzeros_stacked[1][index, :, :].copy_(qzeros_k, non_blocking=ASYNC_COPY)
+            self.scales_stacked[1][index, :, :].copy_(scales_k, non_blocking=ASYNC_COPY)
             self.g_idx_stacked[1] = g_idx[1]
 
         if qweight[2] is not None:
             self.qweight_stacked[2][index, :, :].copy_(
                 qweight[2], non_blocking=ASYNC_COPY
             )
-            self.qzeros_stacked[2][index, :, :].copy_(
-                qzeros_v, non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[2][index, :, :].copy_(
-                scales_v, non_blocking=ASYNC_COPY
-            )
+            self.qzeros_stacked[2][index, :, :].copy_(qzeros_v, non_blocking=ASYNC_COPY)
+            self.scales_stacked[2][index, :, :].copy_(scales_v, non_blocking=ASYNC_COPY)
             self.g_idx_stacked[2] = g_idx[2]
 
     def apply_weights(
@@ -972,7 +953,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
-        self.weight_stacked[index, :weight.shape[0], : weight.shape[1]].copy_(
+        self.weight_stacked[index, : weight.shape[0], : weight.shape[1]].copy_(
             weight, non_blocking=ASYNC_COPY
         )
 
@@ -1030,6 +1011,7 @@ _all_delta_classes: Set[Type[BaseLayerWithDelta]] = {
     and issubclass(cls, BaseLayerWithDelta)
     and cls is not BaseLayerWithDelta
 }
+
 
 def from_layer(
     layer: nn.Module,

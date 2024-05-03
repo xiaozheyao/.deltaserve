@@ -859,7 +859,7 @@ class LLMEngine:
 
     def prefetch_delta(self, delta_request: DeltaRequest) -> bool:
         return self.model_executor.prefetch_delta(delta_request)
-    
+
     def remove_lora(self, lora_id: int) -> bool:
         return self.model_executor.remove_lora(lora_id)
 
@@ -872,7 +872,5 @@ class LLMEngine:
     def list_deltas(self) -> List[int]:
         return self.model_executor.list_deltas()
 
-
-    
     def check_health(self) -> None:
         self.model_executor.check_health()

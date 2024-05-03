@@ -36,14 +36,14 @@ if bitwidth == 4:
         delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
     else:
         delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_{tp_size}-1"
-        
+
 elif bitwidth == 2:
     if use_bitblas:
         if tp_size == 2:
             delta_path = f"/scratch/xiayao/models/2bit/2b50s.bitblas.tp_2.1/"
 else:
     raise ValueError(f"Unsupported bitwidth: {bitwidth}")
-    
+
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",
     "USER: Who is Alan Turing?\nASSISTANT:",

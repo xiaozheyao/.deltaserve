@@ -417,7 +417,7 @@ class SequenceGroup:
 
     def set_start_loading_time(self, time: float) -> None:
         self.metrics.start_loading_time = time
-    
+
     def maybe_set_first_scheduled_time(self, time: float) -> None:
         """Sets the first scheduled time and time in queue for Request
         level timings."""

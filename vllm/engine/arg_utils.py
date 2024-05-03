@@ -71,6 +71,7 @@ class EngineArgs:
     image_feature_size: Optional[int] = None
     scheduler_delay_factor: float = 0.0
     enable_prefetch: bool = False
+
     def __post_init__(self):
         if self.tokenizer is None:
             self.tokenizer = self.model
@@ -572,7 +573,7 @@ class EngineArgs:
                 max_deltas=self.max_deltas,
                 max_cpu_deltas=self.max_cpu_deltas if self.max_cpu_deltas else None,
             )
-        
+
         return (
             model_config,
             cache_config,

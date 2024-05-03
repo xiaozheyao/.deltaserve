@@ -5,17 +5,17 @@ def set_font(fig):
             "family": "CMU Sans Serif",
         },
         title={
-            'font': {
+            "font": {
                 "family": "CMU Sans Serif",
             },
         },
         xaxis={
-            'title': {
-                'font': {
+            "title": {
+                "font": {
                     "family": "CMU Sans Serif",
                 },
             },
-            'tickfont': {
+            "tickfont": {
                 "size": 30,
             },
         },

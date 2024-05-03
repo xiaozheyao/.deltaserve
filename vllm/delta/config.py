@@ -11,6 +11,7 @@ from enum import Enum
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 bitwidth = int(os.environ.get("BITWIDTH", "4"))
 
+
 class QuantKernel(Enum):
     EXLLAMA = "exllama"
     TRITON = "triton"

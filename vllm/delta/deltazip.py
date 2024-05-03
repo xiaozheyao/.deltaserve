@@ -8,9 +8,12 @@ USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 
 if USE_BITBLAS:
     print("Using bitblas")
-    from triteia.ao.ops.linalg.select_matmul.select_bmm import bitblas_quant_select_bmm_248 as quant_select_bmm_248
+    from triteia.ao.ops.linalg.select_matmul.select_bmm import (
+        bitblas_quant_select_bmm_248 as quant_select_bmm_248,
+    )
 else:
     from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
+
 
 def add_delta(
     y: torch.Tensor,
@@ -33,7 +36,9 @@ def add_delta(
     if not USE_BITBLAS:
         g_idx = g_idx.repeat(qweight.shape[0], 1)
         g_idx = g_idx.to(qweight.device)
-    quant_select_bmm_248(BITWIDTH, indices, y, x, qweight, qzeros, scales, g_idx, bias=None)
+    quant_select_bmm_248(
+        BITWIDTH, indices, y, x, qweight, qzeros, scales, g_idx, bias=None
+    )
     return y
 
 
@@ -62,9 +67,19 @@ def add_delta_slice(
     if not USE_BITBLAS:
         g_idx = g_idx.repeat(qweight.shape[0], 1)
         g_idx = g_idx.to(qweight.device)
-    quant_select_bmm_248(BITWIDTH, indices, y[:, y_offset:y_offset + y_slice_size], x, qweight, qzeros, scales, g_idx, bias=None)
+    quant_select_bmm_248(
+        BITWIDTH,
+        indices,
+        y[:, y_offset : y_offset + y_slice_size],
+        x,
+        qweight,
+        qzeros,
+        scales,
+        g_idx,
+        bias=None,
+    )
     return y
-    
+
 
 def apply_delta(
     x: torch.Tensor,
@@ -146,6 +161,7 @@ def apply_delta_packed_nslice(
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
 
+
 def apply_delta_uncompressed(
     x: torch.Tensor,
     delta_weights: torch.Tensor,
@@ -170,8 +186,13 @@ def apply_delta_uncompressed(
     valid_mask = indices != -1
     filtered_indices = indices[valid_mask]
     outputs = torch.matmul(x, delta_weights.mT)
-    base_output[valid_mask] += outputs[filtered_indices, torch.arange(base_output.shape[0], device=base_output.device)[valid_mask], :]
+    base_output[valid_mask] += outputs[
+        filtered_indices,
+        torch.arange(base_output.shape[0], device=base_output.device)[valid_mask],
+        :,
+    ]
     return base_output
+
 
 def apply_delta_embed(
     x: torch.Tensor,

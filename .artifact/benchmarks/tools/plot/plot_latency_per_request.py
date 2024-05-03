@@ -7,6 +7,7 @@ from style import set_font
 import plotly.express as px
 import plotly.graph_objects as go
 
+
 def plot(args):
     print(args)
     metadata, data = parse_data(args.input)
@@ -16,9 +17,14 @@ def plot(args):
     e2e_latency = [x for x in data if x["type"] == "E2E Latency"]
     df = pd.DataFrame(except_e2e)
     e2e_df = pd.DataFrame(e2e_latency)
-    df['Time Spent On'] = df['type']
-    fig = px.bar(df, x="id", y="time", color="Time Spent On", title=title, 
-            color_discrete_sequence=color_palette['general']
+    df["Time Spent On"] = df["type"]
+    fig = px.bar(
+        df,
+        x="id",
+        y="time",
+        color="Time Spent On",
+        title=title,
+        color_discrete_sequence=color_palette["general"],
     )
     # fig.add_trace(
     #     go.Scatter(
