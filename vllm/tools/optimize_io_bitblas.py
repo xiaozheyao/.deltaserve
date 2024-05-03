@@ -60,7 +60,7 @@ def main(args):
         save_file(rank_tensor, f"{args.input}/bitblas.rank.{rank_id}.safetensors")
 
     save_file(tensors, f"{args.input}/bitblas.remain.safetensors")
-
+    print("All Done!", flush=True)
 
 if __name__ == "__main__":
     import argparse

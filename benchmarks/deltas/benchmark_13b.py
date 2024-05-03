@@ -4,7 +4,6 @@ from vllm.delta.request import DeltaRequest
 
 tp_size = int(os.environ.get("TP_SIZE", "1"))
 bits = int(os.environ.get("BITS", "4"))
-print(f"Benchmarking with tensor parallel size={tp_size} and bitwidth={bits}")
 
 llm = LLM(
     model="meta-llama/Llama-2-13b-hf",
@@ -21,7 +20,7 @@ sampling_params = SamplingParams(
     temperature=0,
     max_tokens=32,
 )
-delta_path = f".idea/models/vicuna-13b-4b0.75s-decompressed-1_optimize-io_tp-{tp_size}"
+delta_path = f"/scratch/xiayao/models/4bit/13b.4b75s.tp_2.1/"
 
 prompts = [
     "USER: Who is Alan Turing?\nASSISTANT:",

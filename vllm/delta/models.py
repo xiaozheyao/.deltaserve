@@ -231,7 +231,7 @@ class DeltaModel:
         start = timer()
         bitwidth = compress_config.bits
         if compress_config.lossless != "none":
-            raise NotImplementedError("Lossless Compression supported is deprecated.")
+            raise NotImplementedError("Lossless Compression support is deprecated.")
             # lossless_compressor = LosslessCompressor(
             #     compress_config.lossless, device_id=0
             # )
@@ -268,8 +268,7 @@ class DeltaModel:
                     keys = f.keys()
                     for key in keys:
                         if prefetch_thread_event is not None:
-                            if prefetch_thread_event.is_set():
-                                prefetch_thread_event.wait()
+                            prefetch_thread_event.wait()
                         tensors[key] = f.get_tensor(key)
         modules = {}
         module_names = set(

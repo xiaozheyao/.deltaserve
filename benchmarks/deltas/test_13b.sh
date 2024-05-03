@@ -1,0 +1,1 @@
+TP_SIZE=2 USE_BITBLAS=1 python3 benchmarks/deltas/benchmark_13b.py
