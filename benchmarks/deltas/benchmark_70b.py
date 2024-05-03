@@ -23,7 +23,7 @@ sampling_params = SamplingParams(
     seed=42,
 )
 
-delta_path = f".idea/models/llama2-chat-70b.4b75s128g-bitblas-tp_{tp_size}-1"
+delta_path = f".idea/models/llama2-chat-70b.4b75s128g-bitblas-unopt-1"
 
 prompts = [
     "USER: Write a letter to the city council to complain the noise in the city.\nASSISTANT:",

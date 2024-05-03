@@ -52,6 +52,12 @@ apptainer shell --nv \
     --env PYTHONPATH=/vllm:/triteia \
     --env CUDA_LAUNCH_BLOCKING=1 \
     --env TVM_TARGET=nvidia/nvidia-a100 \
+    --env BITBLAS_TARGET=nvidia/nvidia-a100 \
     --env RAY_DEDUP_LOGS=0 \
     --workdir /vllm \
     /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif
+
+
+python3 vllm/tools/optimize_io_bitblas.py --input .idea/models/llama2-chat-70b.4b75s128g-bitblas-unopt-1 --tp-size 8
+
+BITWIDTH=4 TP_SIZE=8 USE_BITBLAS=1 python3 benchmarks/deltas/benchmark_70b.py

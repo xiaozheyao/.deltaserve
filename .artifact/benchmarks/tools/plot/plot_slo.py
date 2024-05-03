@@ -7,6 +7,8 @@ from utils import parse_data, get_sys_name, system_color_mapping, get_system_nam
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import plotly.io as pio
+pio.kaleido.scope.mathjax = None
 
 def plot(args):
     print(args)
@@ -36,8 +38,8 @@ def plot(args):
         subplot_titles=['Time to First Token (TTFT)', 'End-to-End Latency'],
         horizontal_spacing=0.015,
         vertical_spacing=0.05,
-        x_title="Request ID",
-        y_title="Time (s)"
+        x_title="SLO Requirement (s)",
+        y_title="Success Rate (%)"
     )
     systems = list(df.system.unique())
     systems = sorted(systems, reverse=True)
@@ -72,14 +74,15 @@ def plot(args):
                 col=i+1,
             )
     for annotation in fig["layout"]["annotations"]:
-        if annotation['text'] == "Request ID":
-            annotation['xshift'] = 15
-        if annotation['text'] == "Time (s)":
+        if annotation['text'] == "SLO Requirement (s)":
+            annotation['xshift'] = 0
+            annotation['yshift'] = -40
+        if annotation['text'] == "Success Rate (%)":
             if args.type == "nvme":
-                annotation['yshift'] = 180
+                #annotation['yshift'] = 180
                 annotation['xshift'] = 0
             else:
-                annotation['yshift'] = 180
+                annotation['yshift'] = 0
                 annotation['xshift'] = 0
     fig.update_layout(title_x=0.5)
     fig.update_layout(
@@ -93,10 +96,10 @@ def plot(args):
         font_family="CMU Sans Serif",
     )
     fig.update_xaxes(nticks=4, title_text="")
-    fig.update_yaxes(nticks=4)
+    fig.update_yaxes(nticks=2)
     set_plotly_theme(fig)
     set_font(fig)
-    fig.update_layout(margin=dict(t=50, l=20,r=10,b=5))
+    fig.update_layout(margin=dict(t=50, l=50,r=10,b=5))
     fig.write_image(
         os.path.join(args.output, f"slo_{args.type}.pdf"), 
         width=1800, height=800,

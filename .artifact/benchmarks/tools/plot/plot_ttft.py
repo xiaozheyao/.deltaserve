@@ -56,6 +56,12 @@ def plot(args):
         # for each system, calculate average latency
         avg_latency = latency_df.groupby(['system']).mean().reset_index()
         avg_latency['system'] = avg_latency['system'].apply(get_system_name)
+        # calculate baseline-1/ours ratio
+        ours_plus = avg_latency[avg_latency.system == "Ours+"].time.values[0]
+        ours = avg_latency[avg_latency.system == "Ours"].time.values[0]
+        baseline = avg_latency[avg_latency.system == "Baseline-1"].time.values[0]
+        ours_plus_ratio = baseline / ours_plus
+        ours_ratio = baseline / ours
         fig2 = px.bar(avg_latency, x="system", y="time")
         for fig2_data in fig2["data"]:
             fig.add_trace(
@@ -69,6 +75,39 @@ def plot(args):
                 row=1,
                 col=i+1
             )
+            if args.type == "nfs":
+                if i == 0:
+                    y1 = 15
+                    y2 = 115
+                else:
+                    y1 = 45
+                    y2 = 165
+            if args.type == "nvme":
+                if i == 0:
+                    y1 = 12
+                    y2 = 15
+                else:
+                    y1 = 40
+                    y2 = 52
+            fig.add_annotation(
+                go.layout.Annotation(
+                    x=0,
+                    y=y1,
+                    text=f"{ours_plus_ratio:.2f}x",
+                ),
+                row=1,
+                col=i+1,
+            )
+            fig.add_annotation(
+                go.layout.Annotation(
+                    x=1,
+                    y=y2,
+                    text=f"{ours_ratio:.2f}x",
+                ),
+                row=1,
+                col=i+1,
+            )
+            
     fig.update_layout(title_x=0.5)
     fig.update_layout(barmode="group")
     # fig.update_yaxes(type="log")
