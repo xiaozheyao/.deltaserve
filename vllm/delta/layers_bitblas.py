@@ -780,7 +780,7 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
                 self.base_layer.weight.shape[0] // delta_config.pack_factor,
                 1,
             ),
-            dtype=torch.int32,
+            dtype=delta_config.delta_dtype,
             device=self.base_layer.weight.device,
         )
         self.scales_stacked = torch.zeros(
@@ -817,7 +817,8 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
-
+        print(f"qweight.shape: {qweight.shape}, qzeros.shape: {qzeros.shape}, scales.shape: {scales.shape}")
+        print(f"self.qweight_stacked.shape: {self.qweight_stacked.shape}, self.qzeros_stacked.shape: {self.qzeros_stacked.shape}, self.scales_stacked.shape: {self.scales_stacked.shape}")
         self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
         self.qzeros_stacked[index, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, :, :].copy_(scales, non_blocking=ASYNC_COPY)
