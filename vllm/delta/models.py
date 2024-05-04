@@ -272,10 +272,11 @@ class DeltaModel:
                     for key in keys:
                         if discard_prefetching_event is not None:
                             if discard_prefetching_event.is_set():
+                                logger.info("Discarding prefetching")
                                 return None
                         if prefetch_thread_event is not None:
                             prefetch_thread_event.wait()
-                            tensors[key] = f.get_tensor(key)
+                        tensors[key] = f.get_tensor(key)
         modules = {}
         module_names = set(
             [
