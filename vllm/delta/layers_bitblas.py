@@ -817,8 +817,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         self.device_tensor = device_tensor
-        print(f"qweight.shape: {qweight.shape}, qzeros.shape: {qzeros.shape}, scales.shape: {scales.shape}")
-        print(f"self.qweight_stacked.shape: {self.qweight_stacked.shape}, self.qzeros_stacked.shape: {self.qzeros_stacked.shape}, self.scales_stacked.shape: {self.scales_stacked.shape}")
         self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
         self.qzeros_stacked[index, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, :, :].copy_(scales, non_blocking=ASYNC_COPY)

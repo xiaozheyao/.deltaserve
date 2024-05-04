@@ -6,7 +6,8 @@ color_palette = {
         "#90a0c8",
         "#f19e7b",
         "#72ba9d",
-        "#bfc8c9" "#f9daad",
+        "#bfc8c9" 
+        "#f9daad",
         "#fbe9d8",
     ]
 }
