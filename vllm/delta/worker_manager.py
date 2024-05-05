@@ -319,7 +319,7 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
             self.add_delta(delta, sequence_groups)
 
     def prefetch_delta(self, delta_request: DeltaRequest):
-        if delta_request.delta_int_id not in self.list_deltas():
+        if delta_request.delta_int_id not in self.list_deltas() and delta_request not in self.prefetching_jobqueue:
             self.prefetching_jobqueue.append(delta_request)
             
             logger.info(f"Adding delta {delta_request.delta_int_id} to prefetching queue: {[x.delta_int_id for x in self.prefetching_jobqueue]}")
