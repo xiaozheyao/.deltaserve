@@ -69,6 +69,7 @@ def extract_key_metadata(metadata):
         if "4b" in metadata["sys_info"]["delta_modules"][0]["local_path"]:
             bitwidth = 4
     is_unoptimized_delta = False
+    
     if is_delta:
         if "unopt" in metadata["sys_info"]["delta_modules"][0]["local_path"]:
             is_unoptimized_delta = True

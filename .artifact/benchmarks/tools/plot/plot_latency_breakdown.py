@@ -10,6 +10,16 @@ import plotly.io as pio
 
 pio.kaleido.scope.mathjax = None
 
+def get_system_name(sys):
+    sys = sys.lower()
+    if "vllm" in sys:
+        return "Baseline-1"
+    if "deltaserve" in sys:
+        if "prefetch" not in sys:
+            return "Ours"
+        else:
+            return "Ours+"
+    return "Unknown"
 
 def plot(args):
     print(args)
@@ -33,7 +43,7 @@ def plot(args):
         df = pd.concat([df, partial_df])
     systems = list(df.system.unique())
     systems = sorted(systems, reverse=True)
-    system_names = ["Baseline-1", "Ours", "Ours+"]
+    system_names = [get_system_name(x) for x in systems]
     fig = make_subplots(
         rows=1,
         cols=len(systems),
