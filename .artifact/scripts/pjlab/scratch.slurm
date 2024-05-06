@@ -61,3 +61,5 @@ apptainer shell --nv \
 python3 vllm/tools/optimize_io_bitblas.py --input .idea/models/llama2-chat-70b.4b75s128g-bitblas-unopt-1 --tp-size 8
 
 BITWIDTH=4 TP_SIZE=8 USE_BITBLAS=1 python3 benchmarks/deltas/benchmark_70b.py
+
+python3 triteia/tools/pre_compile.py
