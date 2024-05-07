@@ -80,17 +80,17 @@ def plot(args):
             )
             if args.type == "nfs":
                 if i == 0:
-                    y1 = 15
-                    y2 = 115
-                else:
                     y1 = 45
-                    y2 = 165
+                    y2 = 150
+                else:
+                    y1 = 85
+                    y2 = 120
             if args.type == "nvme":
                 if i == 0:
                     y1 = 12
                     y2 = 15
                 else:
-                    y1 = 40
+                    y1 = 12
                     y2 = 52
             fig.add_annotation(
                 go.layout.Annotation(

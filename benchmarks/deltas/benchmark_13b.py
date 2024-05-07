@@ -2,7 +2,7 @@ import os
 from vllm import LLM, SamplingParams
 from vllm.delta.request import DeltaRequest
 
-tp_size = int(os.environ.get("TP_SIZE", "1"))
+tp_size = int(os.environ.get("TP_SIZE", "2"))
 bits = int(os.environ.get("BITS", "4"))
 
 llm = LLM(
@@ -20,7 +20,7 @@ sampling_params = SamplingParams(
     temperature=0,
     max_tokens=32,
 )
-delta_path = f"/scratch/xiayao/models/4bit/13b.4b75s.tp_2.1/"
+delta_path = f"/scratch/xiayao/models/temp/13b-bitblas"
 
 prompts = [
     "USER: Who is Alan Turing?\nASSISTANT:",
