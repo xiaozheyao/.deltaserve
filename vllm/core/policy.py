@@ -17,11 +17,12 @@ class Policy:
         self,
         now: float,
         seq_groups: Deque[SequenceGroup],
+        **kwargs,
     ) -> Deque[SequenceGroup]:
         return deque(
             sorted(
                 seq_groups,
-                key=lambda seq_group: self.get_priority(now, seq_group),
+                key=lambda seq_group: self.get_priority(now, seq_group, **kwargs),
                 reverse=True,
             )
         )
@@ -42,8 +43,18 @@ class PopularFirst(Policy):
         self,
         now: float,
         seq_group: SequenceGroup,
+        occurences: dict
     ) -> float:
         return now - seq_group.metrics.arrival_time
+
+class DeltaServe(Policy):
+    def get_priority(
+        self,
+        now: float,
+        seq_group: SequenceGroup,
+        occurences: dict
+    ) -> float:
+        return occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
 
 class RandomPolicy(Policy):
     def get_priority(self, now: float, seq_group: SequenceGroup) -> float:
@@ -54,6 +65,7 @@ class PolicyFactory:
         "fcfs": FCFS,
         "popularity": PopularFirst,
         "random": RandomPolicy,
+        "deltaserve": DeltaServe
     }
 
     @classmethod

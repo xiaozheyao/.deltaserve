@@ -116,7 +116,10 @@ class Scheduler:
         )
 
         # Instantiate the scheduling policy.
-        self.policy = PolicyFactory.get_policy(policy_name="fcfs")
+        if self.delta_enabled:
+            self.policy = PolicyFactory.get_policy(policy_name="deltaserve")
+        else:
+            self.policy = PolicyFactory.get_policy(policy_name="fcfs")
         # Create the block space manager.
         self.block_manager = BlockSpaceManager(
             block_size=self.cache_config.block_size,
@@ -194,7 +197,7 @@ class Scheduler:
     def get_num_unfinished_seq_groups(self) -> int:
         return len(self.waiting) + len(self.running) + len(self.swapped)
 
-    def _schedule(self) -> SchedulerOutputs:
+    def _schedule(self, available_deltas: List[int]) -> SchedulerOutputs:
         # Blocks that need to be swapped or copied before model execution.
         blocks_to_swap_in: Dict[int, int] = {}
         blocks_to_swap_out: Dict[int, int] = {}
@@ -228,6 +231,14 @@ class Scheduler:
             # Optimization: We do not sort the waiting queue since the preempted
             # sequence groups are added to the front and the new sequence groups
             # are added to the back.
+            # Note(xiaozhe): we sort the waiting queue based on the priority, given by the policy here
+            # for deltaserve policy, calculate occurrence of delta requests
+            if self.delta_enabled:
+                waiting_deltas = [
+                    seq_group.delta_request.delta_id for seq_group in self.waiting
+                ]
+                occurences = {k: waiting_deltas.count(k) for k in set(waiting_deltas)}
+                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences)
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0
             while self._passed_delay(now) and self.waiting:
@@ -447,11 +458,11 @@ class Scheduler:
         )
         return scheduler_outputs
 
-    def schedule(self) -> Tuple[List[SequenceGroupMetadata], SchedulerOutputs]:
+    def schedule(self, available_deltas: List[int]) -> Tuple[List[SequenceGroupMetadata], SchedulerOutputs]:
         # Schedule sequence groups.
         # This function call changes the internal states of the scheduler
         # such as self.running, self.swapped, and self.waiting.
-        scheduler_outputs = self._schedule()
+        scheduler_outputs = self._schedule(available_deltas)
         now = time.time()
 
         # Create input data structures.

@@ -713,7 +713,7 @@ class LLMEngine:
             >>>         break
         """
         seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule(
-            
+            self.list_deltas()
         )
         if not scheduler_outputs.is_empty() and not self.reload_lock:
             output = self.model_executor.execute_model(
