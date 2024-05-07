@@ -235,10 +235,10 @@ class Scheduler:
             # for deltaserve policy, calculate occurrence of delta requests
             if self.delta_enabled:
                 waiting_deltas = [
-                    seq_group.delta_request.delta_id for seq_group in self.waiting
+                    seq_group.delta_request.delta_int_id for seq_group in self.waiting
                 ]
                 occurences = {k: waiting_deltas.count(k) for k in set(waiting_deltas)}
-                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences)
+                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=occurences)
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0
             while self._passed_delay(now) and self.waiting:
