@@ -712,7 +712,9 @@ class LLMEngine:
             >>>     if not (engine.has_unfinished_requests() or example_inputs):
             >>>         break
         """
-        seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule()
+        seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule(
+            
+        )
         if not scheduler_outputs.is_empty() and not self.reload_lock:
             output = self.model_executor.execute_model(
                 seq_group_metadata_list,

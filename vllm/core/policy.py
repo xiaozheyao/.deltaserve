@@ -1,6 +1,6 @@
 from collections import deque
 from typing import Deque
-
+import random
 from vllm.sequence import SequenceGroup
 
 
@@ -36,10 +36,24 @@ class FCFS(Policy):
     ) -> float:
         return now - seq_group.metrics.arrival_time
 
+class PopularFirst(Policy):
+    
+    def get_priority(
+        self,
+        now: float,
+        seq_group: SequenceGroup,
+    ) -> float:
+        return now - seq_group.metrics.arrival_time
+
+class RandomPolicy(Policy):
+    def get_priority(self, now: float, seq_group: SequenceGroup) -> float:
+        return random.random()
 
 class PolicyFactory:
     _POLICY_REGISTRY = {
         "fcfs": FCFS,
+        "popularity": PopularFirst,
+        "random": RandomPolicy,
     }
 
     @classmethod

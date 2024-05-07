@@ -277,6 +277,7 @@ class Scheduler:
                         leftover_waiting_sequences.appendleft(seq_group)
                         self.waiting.popleft()
                         continue
+
                 if self.delta_enabled:
                     delta_int_id = seq_group.delta_int_id
                     if (
@@ -391,6 +392,7 @@ class Scheduler:
                         leftover_swapped.appendleft(seq_group)
                         self.swapped.popleft()
                         continue
+                
                 if self.delta_enabled:
                     delta_int_id = seq_group.delta_int_id
                     if (
