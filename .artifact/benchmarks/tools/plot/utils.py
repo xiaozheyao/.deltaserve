@@ -69,7 +69,9 @@ def extract_key_metadata(metadata):
         if "4b" in metadata["sys_info"]["delta_modules"][0]["local_path"]:
             bitwidth = 4
     is_unoptimized_delta = False
-    
+    policy = "fcfs"
+    if "scheduler_policy" in metadata["sys_info"]:
+        policy = metadata["sys_info"]["scheduler_policy"]
     if is_delta:
         if "unopt" in metadata["sys_info"]["delta_modules"][0]["local_path"]:
             is_unoptimized_delta = True
@@ -84,6 +86,7 @@ def extract_key_metadata(metadata):
             "gen_tokens": gen_tokens,
             "is_nvme": is_nvme,
             "enable_prefetch": enable_prefetch,
+            "policy": policy
         }
     )
     return workload
@@ -233,7 +236,7 @@ def get_title(key_metadata):
         hardware = "\\text{NVMe}"
     else:
         hardware = "\\text{NFS}"
-    sys = "\Large{" + sys + "}"
+    sys = "\Large{" + sys +","+ key_metadata['policy'] + "}"
     workload = "\Large{" + workload + "}"
     hardware = "\Large{" + hardware + "}"
     return f"${sys}, {workload}, {hardware}$"
