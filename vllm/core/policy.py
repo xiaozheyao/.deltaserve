@@ -10,6 +10,7 @@ class Policy:
         self,
         now: float,
         seq_group: SequenceGroup,
+        occurences: dict=None,
     ) -> float:
         raise NotImplementedError
 
@@ -17,12 +18,12 @@ class Policy:
         self,
         now: float,
         seq_groups: Deque[SequenceGroup],
-        **kwargs,
+        occurences: dict=None,
     ) -> Deque[SequenceGroup]:
         return deque(
             sorted(
                 seq_groups,
-                key=lambda seq_group: self.get_priority(now, seq_group, **kwargs),
+                key=lambda seq_group: self.get_priority(now, seq_group, occurences=occurences),
                 reverse=True,
             )
         )
@@ -34,6 +35,7 @@ class FCFS(Policy):
         self,
         now: float,
         seq_group: SequenceGroup,
+        occurences: dict=None,
     ) -> float:
         return now - seq_group.metrics.arrival_time
 
@@ -43,7 +45,7 @@ class PopularFirst(Policy):
         self,
         now: float,
         seq_group: SequenceGroup,
-        occurences: dict
+        occurences: dict=None,
     ) -> float:
         return now - seq_group.metrics.arrival_time
 
@@ -52,8 +54,10 @@ class DeltaServe(Policy):
         self,
         now: float,
         seq_group: SequenceGroup,
-        occurences: dict
+        occurences: dict=None,
     ) -> float:
+        if occurences is None:
+            return now - seq_group.metrics.arrival_time
         return occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
 
 class RandomPolicy(Policy):
