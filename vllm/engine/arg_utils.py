@@ -71,7 +71,8 @@ class EngineArgs:
     image_feature_size: Optional[int] = None
     scheduler_delay_factor: float = 0.0
     enable_prefetch: bool = False
-
+    scheduler_policy: str = "fcfs"
+    
     def __post_init__(self):
         if self.tokenizer is None:
             self.tokenizer = self.model
@@ -461,6 +462,12 @@ class EngineArgs:
             default=EngineArgs.enable_prefetch,
             help="Enable prefetching of model delta in the model executor.",
         )
+        parser.add_argument(
+            "--scheduler-policy",
+            type=str,
+            default=EngineArgs.scheduler_policy,
+            help="The scheduling policy to use. "
+        )
         return parser
 
     @classmethod
@@ -528,6 +535,7 @@ class EngineArgs:
             self.max_num_seqs,
             model_config.max_model_len,
             self.scheduler_delay_factor,
+            self.scheduler_policy,
         )
         lora_config = (
             LoRAConfig(

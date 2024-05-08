@@ -117,8 +117,12 @@ class Scheduler:
 
         # Instantiate the scheduling policy.
         if self.delta_enabled:
-            self.policy = PolicyFactory.get_policy(policy_name="deltaserve")
+            self.policy = PolicyFactory.get_policy(
+                policy_name=self.scheduler_config.scheduler_policy
+            )
         else:
+            if self.scheduler_config.scheduler_policy != "fcfs":
+                logger.warning("Only FCFS policy is supported without DeltaServe.")
             self.policy = PolicyFactory.get_policy(policy_name="fcfs")
         # Create the block space manager.
         self.block_manager = BlockSpaceManager(
@@ -239,7 +243,7 @@ class Scheduler:
                 ]
                 occurences = {k: waiting_deltas.count(k) for k in set(waiting_deltas)}
                 occurences[0] = 10
-                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=occurences)
+                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=occurences, available_deltas=available_deltas)
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0
             while self._passed_delay(now) and self.waiting:
@@ -371,6 +375,7 @@ class Scheduler:
 
         # Swap in the sequence groups in the SWAPPED state if possible.
         self.swapped = self.policy.sort_by_priority(now, self.swapped)
+        
         if not preempted:
             num_curr_seqs = sum(
                 seq_group.get_max_num_running_seqs() for seq_group in self.running

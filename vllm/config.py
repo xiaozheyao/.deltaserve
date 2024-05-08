@@ -606,6 +606,7 @@ class SchedulerConfig:
         max_num_seqs: int,
         max_model_len: int,
         delay_factor: float = 0.0,
+        scheduler_policy: str = "fcfs",
     ) -> None:
         if max_num_batched_tokens is not None:
             self.max_num_batched_tokens = max_num_batched_tokens
@@ -616,6 +617,7 @@ class SchedulerConfig:
         self.max_num_seqs = max_num_seqs
         self.max_model_len = max_model_len
         self.delay_factor = delay_factor
+        self.scheduler_policy = scheduler_policy
         self._verify_args()
 
     def _verify_args(self) -> None:
@@ -640,7 +642,8 @@ class SchedulerConfig:
             f"SchedulerConfig(max_num_batched_tokens={self.max_num_batched_tokens}, "
             f"max_num_seqs={self.max_num_seqs}, "
             f"max_model_len={self.max_model_len}, "
-            f"delay_factor={self.delay_factor})"
+            f"delay_factor={self.delay_factor}, "
+            f"scheduler_policy={self.scheduler_policy})"
         )
 
 
