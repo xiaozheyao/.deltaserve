@@ -433,7 +433,6 @@ class AsyncLLMEngine:
         if self._current_weight_path == model_id:
             # if it's the same model, no need to reload
             return
-        print(f"cur: {self._current_weight_path}, to: {model_id}")
         assert self._current_weight_path != model_id, "Model is already loaded."
         logger.info(f"Reloading model to {model_id}")
         self.engine.reload_model(model_name_or_path)
