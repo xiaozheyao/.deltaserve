@@ -429,11 +429,13 @@ class AsyncLLMEngine:
         else:
             return self.engine.get_tokenizer()
 
-    async def reload_model(self, model_name_or_path: str):
-        print(f"cur: {self._current_weight_path}, to: {model_name_or_path}")
-        assert self._current_weight_path != model_name_or_path, "Model is already loaded."
-        
-        logger.info(f"Reloading model to {model_name_or_path}")
+    async def reload_model(self,model_id, model_name_or_path: str):
+        if self._current_weight_path == model_id:
+            # if it's the same model, no need to reload
+            return
+        print(f"cur: {self._current_weight_path}, to: {model_id}")
+        assert self._current_weight_path != model_id, "Model is already loaded."
+        logger.info(f"Reloading model to {model_id}")
         self.engine.reload_model(model_name_or_path)
 
     def start_background_loop(self) -> None:

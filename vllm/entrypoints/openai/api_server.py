@@ -137,7 +137,7 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
         if found_model:
             # change this before the engine finished reloading
             engine._to_weight_path = model_id
-            await engine.reload_model(found_model)
+            await engine.reload_model(model_id, found_model)
             engine._current_weight_path = model_id
         else:
             return JSONResponse(
