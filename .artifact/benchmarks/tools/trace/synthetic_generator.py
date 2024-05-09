@@ -35,6 +35,27 @@ def generate_model_distribution(distribution, num_queries):
         probs = [i**alpha for i in range(1, len(to_eval_models) + 1)]
         probs = np.array(probs) / sum(probs)
         return np.random.choice(to_eval_models, num_queries, p=probs)
+    if distribution == "azure":
+        import pandas as pd
+        print("Using azure trace, loading...")
+        df = pd.read_csv(
+            "https://huggingface.co/datasets/xzyao/traces/resolve/main/AzureFunctionsInvocationTraceForTwoWeeksJan2021.txt"
+        )
+        models = {}
+        df["tstamp"] = df["end_timestamp"] - df["duration"]
+        for row_id, row in df.iterrows():
+            if row["func"] not in models:
+                models[row["func"]] = 1
+            else:
+                models[row["func"]] += 1
+        models = sorted(models.items(), key=lambda x: x[1], reverse=True)
+        # take the first len(to_eval_models) models
+        models = models[: len(to_eval_models)]
+        # convert to probabilities
+        total_calls = sum([x[1] for x in models])
+        probs = [x[1] / total_calls for x in models]
+        print(probs)
+        return np.random.choice(to_eval_models, num_queries, p=probs)
     raise ValueError("Invalid distribution")
 
 def get_dialogs():
