@@ -1,8 +1,8 @@
 {"id": 0, "prompt": "USER: What is the difference between OpenCL and CUDA?\nASSISTANT:", "timestamp": 1.59174901632622, "model": "delta-8", "min_tokens": 171, "max_tokens": 171}
-{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 4.103610542257895, "model": "delta-1", "min_tokens": 139, "max_tokens": 139}
+{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 4.103610542257895, "model": "delta-8", "min_tokens": 139, "max_tokens": 139}
 {"id": 2, "prompt": "USER: Fuji vs. Nikon, which is better?\nASSISTANT:", "timestamp": 5.950056833866033, "model": "delta-5", "min_tokens": 212, "max_tokens": 212}
 {"id": 3, "prompt": "USER: How to build an arena for chatbots?\nASSISTANT:", "timestamp": 7.524459138500575, "model": "delta-8", "min_tokens": 318, "max_tokens": 318}
-{"id": 4, "prompt": "USER: When is it today?\nASSISTANT:", "timestamp": 8.626556120691573, "model": "delta-4", "min_tokens": 61, "max_tokens": 61}
+{"id": 4, "prompt": "USER: When is it today?\nASSISTANT:", "timestamp": 8.626556120691573, "model": "delta-8", "min_tokens": 61, "max_tokens": 61}
 {"id": 5, "prompt": "USER: Count from 1 to 10 with step = 3\nASSISTANT:", "timestamp": 10.702874710578792, "model": "delta-3", "min_tokens": 67, "max_tokens": 67}
 {"id": 6, "prompt": "USER: Emoji for \"sharing\". List 10\nASSISTANT:", "timestamp": 11.853913108916071, "model": "base-model", "min_tokens": 103, "max_tokens": 103}
 {"id": 7, "prompt": "USER: How to parallelize a neural network?\nASSISTANT:", "timestamp": 16.300961934981384, "model": "delta-3", "min_tokens": 258, "max_tokens": 258}
