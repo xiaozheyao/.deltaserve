@@ -354,6 +354,7 @@ class AsyncLLMEngine:
         self._request_tracker: Optional[RequestTracker] = None
         self._errored_with: Optional[BaseException] = None
         self._current_weight_path: str
+        self._to_weight_path: str
         self._enable_prefetch = enable_prefetch
 
     @classmethod
@@ -395,6 +396,7 @@ class AsyncLLMEngine:
             enable_prefetch=engine_args.enable_prefetch,
         )
         engine._current_weight_path = engine_args.model
+        engine._to_weight_path = engine_args.model
         return engine
 
     @property
@@ -428,9 +430,9 @@ class AsyncLLMEngine:
             return self.engine.get_tokenizer()
 
     async def reload_model(self, model_name_or_path: str):
-        assert (
-            model_name_or_path != self._current_weight_path
-        ), "Model is already loaded"
+        print(f"cur: {self._current_weight_path}, to: {model_name_or_path}")
+        assert self._current_weight_path != model_name_or_path, "Model is already loaded."
+        
         logger.info(f"Reloading model to {model_name_or_path}")
         self.engine.reload_model(model_name_or_path)
 

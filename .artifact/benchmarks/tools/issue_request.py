@@ -53,7 +53,7 @@ if __name__ == "__main__":
     new_unique_name = str(uuid.uuid4())
     output_file = os.path.join(args.output, f"{new_unique_name}.jsonl")
 
-    with open(output_file, "a") as f:
+    with open(output_file, "w") as f:
         meta = {
             "workload": args.workload,
             "endpoints": args.endpoints,
