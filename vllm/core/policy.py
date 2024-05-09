@@ -68,7 +68,7 @@ class DeltaServe(Policy):
         if available_deltas is None:
             return occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
         available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
-        return available_bonus + 1000 * occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
+        return available_bonus - 5 * occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
         
 class RandomPolicy(Policy):
     def get_priority(self, now: float, seq_group: SequenceGroup) -> float:
