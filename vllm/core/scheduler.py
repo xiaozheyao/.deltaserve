@@ -243,6 +243,9 @@ class Scheduler:
                 ]
                 occurences = {k: waiting_deltas.count(k) for k in set(waiting_deltas)}
                 occurences[0] = 10
+                occurences = sorted(occurences.items(), key=lambda x: x[1])
+                # get occurences ranking instead of the actual occurences
+                occurences = {k[0]: occurences.index(k) for k in occurences}
                 self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=occurences, available_deltas=available_deltas)
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0

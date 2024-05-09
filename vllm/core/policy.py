@@ -51,6 +51,7 @@ class PopularFirst(Policy):
         now: float,
         seq_group: SequenceGroup,
         occurences: dict=None,
+        available_deltas: list=None,
     ) -> float:
         return now - seq_group.metrics.arrival_time
 
@@ -66,8 +67,8 @@ class DeltaServe(Policy):
             return now - seq_group.metrics.arrival_time
         if available_deltas is None:
             return occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
-        available_bonus = 10 if seq_group.delta_int_id in available_deltas else 0
-        return available_bonus + occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
+        available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
+        return available_bonus + 1000 * occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
         
 class RandomPolicy(Policy):
     def get_priority(self, now: float, seq_group: SequenceGroup) -> float:

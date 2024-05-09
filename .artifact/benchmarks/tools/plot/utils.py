@@ -263,3 +263,16 @@ def get_sys_name(key_metadata):
     sys = "\Large{" + sys + "}"
     hardware = "\Large{" + hardware + "}"
     return f"${sys}, {hardware}$"
+
+def get_short_system_name(key_metadata):
+    if key_metadata["is_swap"]:
+        return 'Baseline-1', 0
+    if key_metadata["is_delta"] and key_metadata['enable_prefetch'] and key_metadata['policy']=='deltaserve':
+        return '+Policy', 3
+    elif key_metadata["is_delta"] and key_metadata['enable_prefetch']:
+        return '+Prefetch', 2 
+    elif key_metadata["is_delta"]:
+        return '+Delta', 1
+    else:
+        raise ValueError('Unknown system type')
+    

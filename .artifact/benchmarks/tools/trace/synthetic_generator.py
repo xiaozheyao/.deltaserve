@@ -26,7 +26,6 @@ to_eval_models = [
 def format_lmsys(prompt):
     return f"USER: {prompt}\nASSISTANT:"
 
-
 def generate_model_distribution(distribution, num_queries):
     if distribution == "uniform":
         return np.random.choice(to_eval_models, num_queries)
@@ -38,7 +37,6 @@ def generate_model_distribution(distribution, num_queries):
         return np.random.choice(to_eval_models, num_queries, p=probs)
     raise ValueError("Invalid distribution")
 
-
 def get_dialogs():
     trace = datasets.load_dataset("lmsys/chatbot_arena_conversations")["train"]
     all_dialogs = []
@@ -47,7 +45,6 @@ def get_dialogs():
         all_dialogs.append(format_lmsys(item["conversation_a"][0]["content"]))
         response_tokens.append(len(enc.encode(item["conversation_a"][1]["content"])))
     return all_dialogs, response_tokens
-
 
 def generate_synthetic(args):
     print(args)

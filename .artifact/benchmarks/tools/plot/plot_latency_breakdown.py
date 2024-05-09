@@ -10,17 +10,6 @@ import plotly.io as pio
 
 pio.kaleido.scope.mathjax = None
 
-def get_system_name(sys):
-    sys = sys.lower()
-    if "vllm" in sys:
-        return "Baseline-1"
-    if "deltaserve" in sys:
-        if "prefetch" not in sys:
-            return "Ours"
-        else:
-            return "Ours+"
-    return "Unknown"
-
 def plot(args):
     print(args)
     files = [x for x in os.listdir(args.input) if x.endswith(".jsonl")]
