@@ -9,7 +9,7 @@ for idx, script in enumerate(scripts):
     if idx == 0:
         job = f"sbatch {os.path.join(SCRIPT_PATH, script)}"
     else:
-        job = f"sbatch --dependency=after:{previous_id} {os.path.join(SCRIPT_PATH, script)}"
+        job = f"sbatch --dependency=afterany:{previous_id} {os.path.join(SCRIPT_PATH, script)}"
     previous_id = subprocess.check_output(job, shell=True, encoding='UTF-8')
     previous_id = previous_id.replace("Submitted batch job ", "")
     previous_id = previous_id.replace("\n", "")
