@@ -4,4 +4,4 @@ applications:
   import_path: rayllm.backend:router_application
   args:
     models:
-      - "./models/continuous_batching/meta-llama--Llama-2-7b-chat-hf.yaml"
+      - "configs/meta-llama--Llama-2-7b-chat-hf.yaml"
