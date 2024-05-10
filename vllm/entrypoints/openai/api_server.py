@@ -99,6 +99,9 @@ async def get_sysinfo():
         ],
     }
     engine_info.update(cli_args)
+    engine_info.update({
+        "pid": os.getpid()
+    })
     return JSONResponse(content=engine_info)
 
 

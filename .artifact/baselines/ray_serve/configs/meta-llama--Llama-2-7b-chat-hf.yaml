@@ -12,7 +12,7 @@ deployment_config:
   max_concurrent_queries: 10000
   ray_actor_options:
     resources:
-      num_gpus: 4
+      num_gpus: 0
 engine_config:
   model_id: meta-llama/Llama-2-7b-chat-hf
   hf_model_id: meta-llama/Llama-2-7b-chat-hf
