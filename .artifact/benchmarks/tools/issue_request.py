@@ -66,7 +66,7 @@ if __name__ == "__main__":
         for output in outputs:
             f.write(json.dumps(output))
             f.write("\n")
-
+    print(f"Results written to {output_file}", flush=True)
 """
 Example: 
 python .artifact/benchmarks/tools/issue_request.py --workload .artifact/workloads/distribution=uniform,ar=3.0,duration=30.0.jsonl --base-model meta-llama/Llama-2-7b-hf --output .artifact/benchmarks/results
