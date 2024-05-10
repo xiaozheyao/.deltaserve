@@ -9,10 +9,10 @@ deployment_config:
     smoothing_factor: 0.6
     downscale_delay_s: 300.0
     upscale_delay_s: 15.0
-  max_concurrent_queries: 64
+  max_concurrent_queries: 10000
   ray_actor_options:
     resources:
-      accelerator_type_a10: 0.01
+      accelerator_type_a10: 4
 engine_config:
   model_id: meta-llama/Llama-2-7b-chat-hf
   hf_model_id: meta-llama/Llama-2-7b-chat-hf
@@ -38,5 +38,3 @@ scaling_config:
   num_gpus_per_worker: 1
   num_cpus_per_worker: 8
   placement_strategy: "STRICT_PACK"
-  resources_per_worker:
-    accelerator_type_a10: 0.01

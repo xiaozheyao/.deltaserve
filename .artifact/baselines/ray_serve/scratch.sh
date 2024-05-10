@@ -4,3 +4,5 @@ singularity shell --nv \
     --env HF_HOME=/hf \
     --workdir /workdir \
     /mnt/scratch/xiayao/cache/images/rayllm.sif
+
+# serve run 7b.yaml
