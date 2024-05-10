@@ -1,0 +1,185 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-05-06 03:14:26,575 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-05-06 03:14:26,575 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-05-06 03:14:26,575 - INFO - NumExpr defaulting to 8 threads.
+2024-05-06 03:14:27,497	INFO scripts.py:1182 -- Did not find any active Ray processes.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45c490>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+/usr/local/lib/python3.10/dist-packages/pydantic/_internal/_fields.py:160: UserWarning: Field "model_name_or_path" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d210>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-06 03:14:42 api_server.py:202] vLLM API server version 0.3.3
+INFO 05-06 03:14:42 api_server.py:203] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[Delta(name='delta-1', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-1'), Delta(name='delta-2', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-2'), Delta(name='delta-3', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-3'), Delta(name='delta-4', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-4'), Delta(name='delta-5', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-5'), Delta(name='delta-6', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-6'), Delta(name='delta-7', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-7'), Delta(name='delta-8', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_4-8')], swap_modules=[], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/llama-70b', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=4, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.95, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=True, max_deltas=4, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=False, engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+2024-05-06 03:14:46,462	INFO worker.py:1749 -- Started a local Ray instance.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45dae0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-06 03:14:49 llm_engine.py:87] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/llama-70b', tokenizer='/vllm/.idea/full_models/llama-70b', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=DeltaConfig(max_deltas=4, max_bitwidth=4, delta_dtype=torch.int8, max_cpu_deltas=32, delta_extra_vocab_size=0, pack_factor=Fraction(2, 1), kernel=<QuantKernel.TRITON: 'triton'>), max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=4, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+INFO 05-06 03:14:49 llm_engine.py:237] ignored verifying delta_config
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45da50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d180>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45c0d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45e3b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45ec80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45e440>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45c190>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d270>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45db40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45db70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45f550>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d600>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45cd30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Using bitblas
+WARNING 05-06 03:17:05 models.py:48] Using bitblas delta modules
+INFO 05-06 03:17:06 selector.py:16] Using FlashAttention backend.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45df90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=121586)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f29cfd00c10>
+[36m(RayWorkerVllm pid=121586)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=121586)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=121586)[0m     self.remove()
+[36m(RayWorkerVllm pid=121586)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=121586)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=121586)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=121832)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7ef4c0500c10>
+[36m(RayWorkerVllm pid=121832)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=121832)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=121832)[0m     self.remove()
+[36m(RayWorkerVllm pid=121832)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=121832)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=121832)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45e860>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=121832)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7ef4c0500c10>
+[36m(RayWorkerVllm pid=121832)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=121832)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=121832)[0m     self.remove()
+[36m(RayWorkerVllm pid=121832)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=121832)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=121832)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45f1c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45ece0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45e410>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45c160>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d1b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d720>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45f220>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d450>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45cb80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45e1a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45ea70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45f070>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45f610>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45e7d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=121586)[0m Using bitblas
+[36m(RayWorkerVllm pid=121832)[0m Using bitblas
+[36m(RayWorkerVllm pid=122268)[0m Using bitblas
+[36m(RayWorkerVllm pid=121586)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=121586)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=121832)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=121832)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=121832)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=121832)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=122268)[0m WARNING 05-06 03:19:03 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:19:03 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=121586)[0m WARNING 05-06 03:19:06 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:19:06 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=121832)[0m WARNING 05-06 03:19:10 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:19:11 selector.py:16] Using FlashAttention backend.
+INFO 05-06 03:19:41 model_runner.py:155] Loading model weights took 32.1245 GB
+INFO 05-06 03:19:41 worker_manager.py:293] Starting prefetching thread
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45e680>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:19:49 model_runner.py:155] Loading model weights took 32.1245 GB
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:19:49 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:19:49 model_runner.py:155] Loading model weights took 32.1245 GB
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:19:49 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:19:50 model_runner.py:155] Loading model weights took 32.1245 GB
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:19:50 worker_manager.py:293] Starting prefetching thread
+WARNING 05-06 03:19:56 quant_linear_triton.py:557] We should warm up the kernel here 
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45c310>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45d0c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fd06d45f3d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=122268)[0m WARNING 05-06 03:20:03 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=121832)[0m WARNING 05-06 03:20:04 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=121586)[0m WARNING 05-06 03:20:04 quant_linear_triton.py:557] We should warm up the kernel here 
+INFO 05-06 03:20:21 ray_gpu_executor.py:266] # GPU blocks: 6080, # CPU blocks: 3276
+INFO 05-06 03:20:25 block_manager.py:264] disable automatic prefix caching
+WARNING 05-06 03:20:25 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [111047]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     ::1:41740 - "GET /sysinfo HTTP/1.1" 200 OK
+Translating from base-model to /vllm/.idea/full_models/llama-70b
+Warming up starts
+{'id': 22, 'prompt': 'USER: Write a python one line lambda function that calculates mean of two lists, without using any imported libraries. The entire function should fit on a single line, start with this. mean = lambda A:\nASSISTANT:', 'timestamp': 0, 'model': 'delta-4', 'min_tokens': 32, 'max_tokens': 32}
+Prefetching is disabled
+WARNING 05-06 03:20:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+INFO 05-06 03:20:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-06 03:20:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=121586)[0m WARNING 05-06 03:20:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:20:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:20:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=121832)[0m WARNING 05-06 03:20:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:20:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:20:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=122268)[0m WARNING 05-06 03:20:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:20:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:20:28 models.py:268] [main] Lossless Compression Disabled
+INFO 05-06 03:20:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:20:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:20:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:21:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:21:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:21:20 models.py:324] Disk -> CPU: Loaded 8428.53 MiB in 52.235 seconds
+INFO 05-06 03:21:21 worker_manager.py:353] Main thread loading delta 4 done
+INFO 05-06 03:21:21 worker_manager.py:368] [1714936881.2087054] activating delta
+INFO 05-06 03:21:21 worker_manager.py:373] [1714936881.63899] CPU -> GPU time: 0.4302
+INFO 05-06 03:22:39 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:22:18 models.py:324] Disk -> CPU: Loaded 8428.53 MiB in 110.190 seconds
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:22:19 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:22:19 worker_manager.py:368] [1714936939.1673932] activating delta
+[36m(RayWorkerVllm pid=122268)[0m INFO 05-06 03:22:19 worker_manager.py:373] [1714936939.66039] CPU -> GPU time: 0.4929
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:22:35 models.py:324] Disk -> CPU: Loaded 8428.53 MiB in 127.324 seconds
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:22:36 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:22:36 worker_manager.py:368] [1714936956.2153654] activating delta
+[36m(RayWorkerVllm pid=121586)[0m INFO 05-06 03:22:36 worker_manager.py:373] [1714936956.6803749] CPU -> GPU time: 0.4650
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:22:38 models.py:324] Disk -> CPU: Loaded 8428.53 MiB in 129.752 seconds
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:22:38 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:22:38 worker_manager.py:368] [1714936958.6399782] activating delta
+[36m(RayWorkerVllm pid=121832)[0m INFO 05-06 03:22:39 worker_manager.py:373] [1714936959.1022062] CPU -> GPU time: 0.4622
+BitBLAS Operator not found in global_operator_cache, creating...
+Config:  MatmulConfig(M=1, N=256, K=8192, A_dtype='float16', W_dtype='uint4', out_dtype='float16', accum_dtype='float16', layout='nt', with_bias=False, group_size=8192, with_scaling=True, with_zeros=True, zeros_mode='quantized', storage_dtype='int8', fast_decoding=True, propagate_a=<TransformKind.NonTransform: 0>, propagate_b=<TransformKind.NonTransform: 0>)
+[36m(RayWorkerVllm pid=121586)[0m BitBLAS Operator not found in global_operator_cache, creating...
+[36m(RayWorkerVllm pid=121586)[0m Config:  MatmulConfig(M=1, N=256, K=8192, A_dtype='float16', W_dtype='uint4', out_dtype='float16', accum_dtype='float16', layout='nt', with_bias=False, group_size=8192, with_scaling=True, with_zeros=True, zeros_mode='quantized', storage_dtype='int8', fast_decoding=True, propagate_a=<TransformKind.NonTransform: 0>, propagate_b=<TransformKind.NonTransform: 0>)
+[36m(RayWorkerVllm pid=121832)[0m BitBLAS Operator not found in global_operator_cache, creating...
+[36m(RayWorkerVllm pid=121832)[0m Config:  MatmulConfig(M=1, N=256, K=8192, A_dtype='float16', W_dtype='uint4', out_dtype='float16', accum_dtype='float16', layout='nt', with_bias=False, group_size=8192, with_scaling=True, with_zeros=True, zeros_mode='quantized', storage_dtype='int8', fast_decoding=True, propagate_a=<TransformKind.NonTransform: 0>, propagate_b=<TransformKind.NonTransform: 0>)
+[36m(RayWorkerVllm pid=122268)[0m BitBLAS Operator not found in global_operator_cache, creating...
+[36m(RayWorkerVllm pid=122268)[0m Config:  MatmulConfig(M=1, N=256, K=8192, A_dtype='float16', W_dtype='uint4', out_dtype='float16', accum_dtype='float16', layout='nt', with_bias=False, group_size=8192, with_scaling=True, with_zeros=True, zeros_mode='quantized', storage_dtype='int8', fast_decoding=True, propagate_a=<TransformKind.NonTransform: 0>, propagate_b=<TransformKind.NonTransform: 0>)
+INFO 05-06 03:22:49 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:22:59 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:23:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:23:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:23:29 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-06 03:23:39 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+slurmstepd: error: *** JOB 3666639 ON HOST-10-140-60-3 CANCELLED AT 2024-05-06T03:23:40 ***
+INFO:     Shutting down
+INFO:     Waiting for background tasks to complete. (CTRL+C to force quit)

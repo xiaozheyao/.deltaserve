@@ -1,0 +1,405 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-05-06 02:21:47,026 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-05-06 02:21:47,026 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-05-06 02:21:47,026 - INFO - NumExpr defaulting to 8 threads.
+2024-05-06 02:21:47,965	INFO scripts.py:1182 -- Did not find any active Ray processes.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+/usr/local/lib/python3.10/dist-packages/pydantic/_internal/_fields.py:160: UserWarning: Field "model_name_or_path" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO 05-06 02:22:00 api_server.py:202] vLLM API server version 0.3.3
+INFO 05-06 02:22:00 api_server.py:203] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[Delta(name='delta-1', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-1'), Delta(name='delta-2', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-2'), Delta(name='delta-3', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-3'), Delta(name='delta-4', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-4'), Delta(name='delta-5', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-5'), Delta(name='delta-6', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-6'), Delta(name='delta-7', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-7'), Delta(name='delta-8', local_path='/vllm/.idea/models/70b/llama2-chat-70b.4b75s128g-bitblas-tp_8-8')], swap_modules=[], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/llama-70b', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=8, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=True, max_deltas=4, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=True, engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+2024-05-06 02:22:03,383	INFO worker.py:1749 -- Started a local Ray instance.
+INFO 05-06 02:22:06 llm_engine.py:87] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/llama-70b', tokenizer='/vllm/.idea/full_models/llama-70b', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=DeltaConfig(max_deltas=4, max_bitwidth=4, delta_dtype=torch.int8, max_cpu_deltas=32, delta_extra_vocab_size=0, pack_factor=Fraction(2, 1), kernel=<QuantKernel.TRITON: 'triton'>), max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=8, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+INFO 05-06 02:22:06 llm_engine.py:237] ignored verifying delta_config
+Using bitblas
+WARNING 05-06 02:24:28 models.py:48] Using bitblas delta modules
+INFO 05-06 02:24:29 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=72797)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7efaa55a8c10>
+[36m(RayWorkerVllm pid=72797)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=72797)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=72797)[0m     self.remove()
+[36m(RayWorkerVllm pid=72797)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=72797)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=72797)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73129)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f680c9d0c10>
+[36m(RayWorkerVllm pid=73129)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73129)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73129)[0m     self.remove()
+[36m(RayWorkerVllm pid=73129)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73129)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73129)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73597)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f11729a8c10>
+[36m(RayWorkerVllm pid=73597)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73597)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73597)[0m     self.remove()
+[36m(RayWorkerVllm pid=73597)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73597)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73597)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=72998)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f6f7bdc4c10>
+[36m(RayWorkerVllm pid=72998)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=72998)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=72998)[0m     self.remove()
+[36m(RayWorkerVllm pid=72998)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=72998)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=72998)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73491)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f596c524c10>
+[36m(RayWorkerVllm pid=73491)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73491)[0m     self.remove()
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73491)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73491)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=72998)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f6f7bdc4c10>
+[36m(RayWorkerVllm pid=72998)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=72998)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=72998)[0m     self.remove()
+[36m(RayWorkerVllm pid=72998)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=72998)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=72998)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73491)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f596c524c10>
+[36m(RayWorkerVllm pid=73491)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73491)[0m     self.remove()
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73491)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73491)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73597)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f11729a8c10>
+[36m(RayWorkerVllm pid=73597)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73597)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73597)[0m     self.remove()
+[36m(RayWorkerVllm pid=73597)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73597)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73597)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73377)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f43f6930c10>
+[36m(RayWorkerVllm pid=73377)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73377)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73377)[0m     self.remove()
+[36m(RayWorkerVllm pid=73377)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73377)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73377)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=72998)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f6f7bdc4c10>
+[36m(RayWorkerVllm pid=72998)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=72998)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=72998)[0m     self.remove()
+[36m(RayWorkerVllm pid=72998)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=72998)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=72998)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73491)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f596c524c10>
+[36m(RayWorkerVllm pid=73491)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73491)[0m     self.remove()
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73491)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73491)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73129)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f680c9d0c10>
+[36m(RayWorkerVllm pid=73129)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73129)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73129)[0m     self.remove()
+[36m(RayWorkerVllm pid=73129)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73129)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73129)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73491)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f596c524c10>
+[36m(RayWorkerVllm pid=73491)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73491)[0m     self.remove()
+[36m(RayWorkerVllm pid=73491)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73491)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73491)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73129)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f680c9d0c10>
+[36m(RayWorkerVllm pid=73129)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=73129)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=73129)[0m     self.remove()
+[36m(RayWorkerVllm pid=73129)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=73129)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=73129)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=73222)[0m Using bitblas
+[36m(RayWorkerVllm pid=72797)[0m Using bitblas
+[36m(RayWorkerVllm pid=73377)[0m Using bitblas
+[36m(RayWorkerVllm pid=73597)[0m Using bitblas
+[36m(RayWorkerVllm pid=72998)[0m Using bitblas
+[36m(RayWorkerVllm pid=73129)[0m Using bitblas
+[36m(RayWorkerVllm pid=73491)[0m Using bitblas
+[36m(RayWorkerVllm pid=72797)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=72797)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=72998)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=72998)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73129)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73129)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73491)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73491)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73597)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73597)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73597)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73597)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=72998)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=72998)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73491)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73491)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73377)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73377)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/48f403b369548aba39d6c090df307a1e42ccf2134eb0ab5bedb62f42b33ca354/tvm_rt_mod'
+[36m(RayWorkerVllm pid=72998)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=72998)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73491)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73491)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73129)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73129)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/df48f21ece37a68d8edc74cfd566f5e6d71711fef0f5f7374d272b65490cf679/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73491)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73491)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73129)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=73129)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/d7ad16146b75ef18e84c753a98127a8180740d93c5a4fb5707942ef579cd0b3c/tvm_rt_mod'
+[36m(RayWorkerVllm pid=73222)[0m WARNING 05-06 02:26:23 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:26:23 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=72797)[0m WARNING 05-06 02:26:28 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:26:28 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=73597)[0m WARNING 05-06 02:26:33 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:26:33 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=73377)[0m WARNING 05-06 02:26:37 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:26:37 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=72998)[0m WARNING 05-06 02:26:39 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:26:39 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=73491)[0m WARNING 05-06 02:26:43 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:26:43 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=73129)[0m WARNING 05-06 02:27:13 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:27:13 selector.py:16] Using FlashAttention backend.
+INFO 05-06 02:27:39 model_runner.py:155] Loading model weights took 16.0630 GB
+INFO 05-06 02:27:39 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:27:42 model_runner.py:155] Loading model weights took 16.0630 GB
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:27:42 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:27:43 model_runner.py:155] Loading model weights took 16.0630 GB
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:27:43 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:27:43 model_runner.py:155] Loading model weights took 16.0630 GB
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:27:43 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:27:43 model_runner.py:155] Loading model weights took 16.0630 GB
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:27:43 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:27:44 model_runner.py:155] Loading model weights took 16.0630 GB
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:27:44 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:27:45 model_runner.py:155] Loading model weights took 16.0630 GB
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:27:45 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:27:45 model_runner.py:155] Loading model weights took 16.0630 GB
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:27:45 worker_manager.py:293] Starting prefetching thread
+WARNING 05-06 02:27:51 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=73222)[0m WARNING 05-06 02:27:54 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=73597)[0m WARNING 05-06 02:27:54 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=73491)[0m WARNING 05-06 02:27:55 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=73377)[0m WARNING 05-06 02:27:55 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=73129)[0m WARNING 05-06 02:27:55 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=72998)[0m WARNING 05-06 02:27:56 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=72797)[0m WARNING 05-06 02:27:56 quant_linear_triton.py:557] We should warm up the kernel here 
+INFO 05-06 02:28:15 ray_gpu_executor.py:266] # GPU blocks: 48922, # CPU blocks: 6553
+INFO 05-06 02:28:20 block_manager.py:264] disable automatic prefix caching
+WARNING 05-06 02:28:20 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [64755]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     ::1:57258 - "GET /sysinfo HTTP/1.1" 200 OK
+INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+[36m(RayWorkerVllm pid=72797)[0m WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+[36m(RayWorkerVllm pid=72998)[0m WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+[36m(RayWorkerVllm pid=73129)[0m WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+[36m(RayWorkerVllm pid=73222)[0m WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.4.safetensors']
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+[36m(RayWorkerVllm pid=73377)[0m WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.5.safetensors']
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+[36m(RayWorkerVllm pid=73491)[0m WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.6.safetensors']
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:28:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+[36m(RayWorkerVllm pid=73597)[0m WARNING 05-06 02:28:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:28:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.7.safetensors']
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:28:28 models.py:268] [main] Lossless Compression Disabled
+INFO 05-06 02:28:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:28:33 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 4.780 seconds
+INFO 05-06 02:28:33 worker_manager.py:353] Main thread loading delta 4 done
+INFO 05-06 02:28:33 worker_manager.py:368] [1714933713.4085457] activating delta
+INFO 05-06 02:28:33 worker_manager.py:373] [1714933713.6434727] CPU -> GPU time: 0.2349
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:28:34 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.222 seconds
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:28:34 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.223 seconds
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:28:34 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.226 seconds
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:28:34 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.411 seconds
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:28:34 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.327 seconds
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:28:34 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.458 seconds
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:28:34 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.454 seconds
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:28:34 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:28:34 worker_manager.py:368] [1714933714.7831893] activating delta
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:28:34 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:28:34 worker_manager.py:368] [1714933714.786798] activating delta
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:28:34 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:28:34 worker_manager.py:368] [1714933714.793818] activating delta
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:28:34 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:28:34 worker_manager.py:368] [1714933714.8964846] activating delta
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:28:34 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:28:34 worker_manager.py:368] [1714933714.9881454] activating delta
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:28:35 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:28:35 worker_manager.py:368] [1714933715.0719755] activating delta
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:28:35 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:28:35 worker_manager.py:368] [1714933715.0652943] activating delta
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:28:35 worker_manager.py:373] [1714933715.1017516] CPU -> GPU time: 0.3185
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:28:35 worker_manager.py:373] [1714933715.1588948] CPU -> GPU time: 0.3721
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:28:35 worker_manager.py:373] [1714933715.1710072] CPU -> GPU time: 0.3771
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:28:35 worker_manager.py:373] [1714933715.2156465] CPU -> GPU time: 0.3191
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:28:35 worker_manager.py:373] [1714933715.3283827] CPU -> GPU time: 0.2564
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:28:35 worker_manager.py:373] [1714933715.3294501] CPU -> GPU time: 0.3413
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:28:35 worker_manager.py:373] [1714933715.4068527] CPU -> GPU time: 0.3415
+INFO 05-06 02:28:37 metrics.py:276] Avg prompt throughput: 2.7 tokens/s, Avg generation throughput: 0.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:28:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:28:48 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:28:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:28:59 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:04 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:20 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:51 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:29:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:30:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:30:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 2.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:57260 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=72797)[0m WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=72998)[0m WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=72998)[0m WARNING 05-06 02:30:12 worker_manager.py:344] Discarding prefetching delta 6
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:12 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:12 models.py:275] Discarding prefetching
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:12 worker_manager.py:280] Failed to prefetch delta 6
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=73129)[0m WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=73222)[0m WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.4.safetensors']
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=73377)[0m WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.5.safetensors']
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=73491)[0m WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.6.safetensors']
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:12 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=73597)[0m WARNING 05-06 02:30:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.7.safetensors']
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:12 models.py:268] [main] Lossless Compression Disabled
+INFO 05-06 02:30:14 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+INFO 05-06 02:30:16 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 4.781 seconds
+INFO 05-06 02:30:17 worker_manager.py:353] Main thread loading delta 6 done
+INFO 05-06 02:30:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-06 02:30:17 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:18 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.302 seconds
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:18 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.263 seconds
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:18 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.287 seconds
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:18 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.254 seconds
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:18 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.323 seconds
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:18 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.385 seconds
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:18 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 6.434 seconds
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:18 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:18 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:18 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:18 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:18 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:18 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:18 worker_manager.py:353] Main thread loading delta 6 done
+INFO 05-06 02:30:22 models.py:324] Disk -> CPU: Loaded 4223.53 MiB in 5.146 seconds
+INFO 05-06 02:30:22 worker_manager.py:278] Prefetching delta 8 done
+INFO 05-06 02:30:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [1]
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 1]
+[36m(RayWorkerVllm pid=72797)[0m WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=72797)[0m INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 1]
+[36m(RayWorkerVllm pid=72998)[0m WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=72998)[0m INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 1]
+[36m(RayWorkerVllm pid=73129)[0m WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=73129)[0m INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 1]
+[36m(RayWorkerVllm pid=73222)[0m WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.4.safetensors']
+[36m(RayWorkerVllm pid=73222)[0m INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 1]
+[36m(RayWorkerVllm pid=73377)[0m WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.5.safetensors']
+[36m(RayWorkerVllm pid=73377)[0m INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 1]
+[36m(RayWorkerVllm pid=73491)[0m WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.6.safetensors']
+[36m(RayWorkerVllm pid=73491)[0m INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:23 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 1]
+[36m(RayWorkerVllm pid=73597)[0m WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.7.safetensors']
+[36m(RayWorkerVllm pid=73597)[0m INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-06 02:30:23 models.py:268] [prefetching] Lossless Compression Disabled
+WARNING 05-06 02:30:23 worker_manager.py:335] Missed prefetch, fall back to loading delta 1 now
+WARNING 05-06 02:30:23 worker_manager.py:344] Discarding prefetching delta 1
+INFO 05-06 02:30:23 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-06 02:30:23 models.py:268] [main] Lossless Compression Disabled
+INFO 05-06 02:30:26 worker_manager.py:325] Adding delta 1 to prefetching queue: [1]
+slurmstepd: error: *** JOB 3666636 ON HOST-10-140-60-3 CANCELLED AT 2024-05-06T02:39:42 ***
+slurmstepd: error: *** JOB 3666636 STEPD TERMINATED ON HOST-10-140-60-3 AT 2024-05-06T02:40:43 DUE TO JOB NOT ENDING WITH SIGNALS ***
