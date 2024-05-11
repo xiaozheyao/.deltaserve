@@ -7,7 +7,6 @@
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=8GB
-#SBATCH --time=2:00:00
 set -e
 
 export HOME=/mnt/petrelfs/huqinghao
@@ -38,7 +37,7 @@ apptainer run --nv \
     --env RAY_DEDUP_LOGS=0 \
     --workdir /vllm \
     /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif \
-    python3 /vllm/vllm/entrypoints/openai/api_server.py --model /vllm/.idea/full_models/Llama-2-13b-hf --disable-log-requests --gpu-memory-utilization 0.85 --swap-modules delta-1=/vllm/.idea/full_models/Llama-2-13b-hf-1 delta-2=/vllm/.idea/full_models/Llama-2-13b-hf-2 delta-3=/vllm/.idea/full_models/Llama-2-13b-hf-3 delta-4=/vllm/.idea/full_models/Llama-2-13b-hf-4 delta-5=/vllm/.idea/full_models/Llama-2-13b-hf-5 delta-6=/vllm/.idea/full_models/Llama-2-13b-hf-6 delta-7=/vllm/.idea/full_models/Llama-2-13b-hf-7 delta-8=/vllm/.idea/full_models/Llama-2-13b-hf-8 --tensor-parallel-size 4 --enforce-eager --max-deltas 0 & python .artifact/benchmarks/tools/issue_request.py --workload .artifact/workloads/gen_auto/distribution=uniform,ar=12.0,duration=30.0.jsonl --output .artifact/benchmarks/results & wait
+    python3 /vllm/vllm/entrypoints/openai/api_server.py --model /vllm/.idea/full_models/Llama-2-13b-hf --disable-log-requests --gpu-memory-utilization 0.85 --swap-modules delta-1=/vllm/.idea/full_models/Llama-2-13b-hf-1 delta-2=/vllm/.idea/full_models/Llama-2-13b-hf-2 delta-3=/vllm/.idea/full_models/Llama-2-13b-hf-3 delta-4=/vllm/.idea/full_models/Llama-2-13b-hf-4 delta-5=/vllm/.idea/full_models/Llama-2-13b-hf-5 delta-6=/vllm/.idea/full_models/Llama-2-13b-hf-6 delta-7=/vllm/.idea/full_models/Llama-2-13b-hf-7 delta-8=/vllm/.idea/full_models/Llama-2-13b-hf-8 --tensor-parallel-size 4 --enforce-eager --max-deltas 0 & python .artifact/benchmarks/tools/issue_request.py --workload .artifact/workloads/gen_auto/distribution=uniform,ar=9.0,duration=30.0.jsonl --output .artifact/benchmarks/results & wait
 
 # srun --jobid 3666603 --interactive /bin/bash
 # unset http_proxy; unset https_proxy; unset HTTP_PROXY; unset HTTPS_PROXY
