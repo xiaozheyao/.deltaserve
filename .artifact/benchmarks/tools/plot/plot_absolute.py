@@ -37,31 +37,27 @@ def plot(args):
             distribution = distribution[0]
             avg_latency = df.groupby(["system", "type"]).mean().reset_index()
             # normalized latency to the baseline-1 system
-            baseline_latency = avg_latency[avg_latency.system == "Baseline-1"]
             # divide the latency of each type by the baseline-1 latency
-            avg_latency = pd.merge(avg_latency, baseline_latency, on="type", suffixes=("", "_baseline"))
-            avg_latency["speedup"] =  avg_latency["time_baseline"] / avg_latency["time"]
             # order by order
             avg_latency = avg_latency.sort_values(by="order")
             for metric in ['E2E Latency', 'TTFT']:
                 subdf = avg_latency[avg_latency.type == metric]
                 # set line width
-                fig = px.line(subdf, x="system", y="speedup", title='')
+                print(subdf)
+                fig = px.line(subdf, x="system", y="time", title='')
                 fig.update_traces(line={'width': 6})
                 set_plotly_theme(fig)
                 fig.update_layout(margin=dict(t=50, l=20, r=10, b=15))
                 set_font(fig)
-                
                 fig.update_yaxes(title_text="Speedup",tickfont=dict(size=36), title_font=dict(size=36))
-                
                 # set font size
                 fig.update_xaxes(title_text="", tickfont=dict(size=36), title_font=dict(size=36))
 
-            fig.write_image(
-                os.path.join(args.output, f"ablation_{distribution}_{ar_str}_{metric}.pdf"),
-                width=800,
-                height=500,
-            )
+                fig.write_image(
+                    os.path.join(args.output, f"ablation_{distribution}_{ar_str}_{metric}.pdf"),
+                    width=800,
+                    height=500,
+                )
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plot latency per request")
