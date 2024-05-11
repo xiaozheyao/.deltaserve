@@ -2,7 +2,9 @@ from collections import deque
 from typing import Deque
 import random
 from vllm.sequence import SequenceGroup
+from vllm.logger import init_logger
 
+logger = init_logger(__name__)
 
 class Policy:
     def get_priority(
@@ -17,11 +19,11 @@ class Policy:
         self,
         now: float,
         seq_groups: Deque[SequenceGroup],
-        occurences: dict=None,
-        available_deltas: list=None,
     ):
         # sort by fcfs, then get the first seq_groups
         seq_groups = sorted(seq_groups, key=lambda seq_group: seq_group.metrics.arrival_time)
+        if len(seq_groups) == 0:
+            return None
         return seq_groups[0]
     
     def sort_by_priority(
@@ -71,10 +73,13 @@ class DeltaServe(Policy):
             return now - seq_group.metrics.arrival_time
         if available_deltas is None:
             return occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
-        most_wanted_bonus = 100 if seq_group.delta_int_id == most_wanted.delta_int_id else 0        
+        if most_wanted is not None:
+            most_wanted_bonus = 100 if seq_group.delta_int_id == most_wanted.delta_int_id else 0
+        else:
+            most_wanted_bonus = 0
         # available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
-        print("[scheduler]: most wanted bonus: ", most_wanted_bonus)
-        print("[scheduler]: fcfs priority: ", now - seq_group.metrics.arrival_time)
+        logger.info("[scheduler]: most wanted bonus: ", most_wanted_bonus)
+        logger.info("[scheduler]: fcfs priority: ", now - seq_group.metrics.arrival_time)
         return  now - seq_group.metrics.arrival_time + most_wanted_bonus
         
 class RandomPolicy(Policy):

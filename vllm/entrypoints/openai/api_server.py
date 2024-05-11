@@ -153,7 +153,7 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     if len(args.swap_modules) > 0:
         while request.model != engine._current_weight_path:
             time.sleep(0.1)
-    
+    logger.info("requested model is loaded --> continuing...")
     generator = await openai_serving_completion.create_completion(
         request,
         raw_request,

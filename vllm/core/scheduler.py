@@ -117,6 +117,7 @@ class Scheduler:
 
         # Instantiate the scheduling policy.
         if self.delta_enabled:
+            logger.info("Using DeltaServe policy.")
             self.policy = PolicyFactory.get_policy(
                 policy_name=self.scheduler_config.scheduler_policy
             )
@@ -238,7 +239,7 @@ class Scheduler:
             # Note(xiaozhe): we sort the waiting queue based on the priority, given by the policy here
             # for deltaserve policy, calculate occurrence of delta requests
             if self.delta_enabled:
-                most_wanted = self.policy.get_most_wanted(now, seq_groups=self.waiting, )
+                most_wanted = self.policy.get_most_wanted(now, seq_groups=self.waiting)
                 # get occurences ranking instead of the actual occurences
                 self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=None, available_deltas=available_deltas, most_wanted=most_wanted)
             
@@ -320,13 +321,16 @@ class Scheduler:
                     curr_loras.add(lora_int_id)
                 if delta_int_id > 0:
                     curr_deltas.add(delta_int_id)
-
                 self.waiting.popleft()
                 self._allocate(seq_group)
                 self.running.append(seq_group)
                 num_curr_seqs += num_new_seqs
                 scheduled.append(seq_group)
-
+            # print all deltas in the running state
+            if self.delta_enabled:
+                running_deltas = [seq_group.delta_int_id for seq_group in self.running]
+                logger.info(f"Delta ids in running state: {running_deltas}")
+                
             self.waiting.extendleft(leftover_waiting_sequences)
 
             if scheduled or ignored_seq_groups:
