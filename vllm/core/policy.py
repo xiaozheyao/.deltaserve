@@ -5,7 +5,6 @@ from vllm.sequence import SequenceGroup
 
 
 class Policy:
-
     def get_priority(
         self,
         now: float,
@@ -14,12 +13,24 @@ class Policy:
     ) -> float:
         raise NotImplementedError
 
+    def get_most_wanted(
+        self,
+        now: float,
+        seq_groups: Deque[SequenceGroup],
+        occurences: dict=None,
+        available_deltas: list=None,
+    ):
+        # sort by fcfs, then get the first seq_groups
+        seq_groups = sorted(seq_groups, key=lambda seq_group: seq_group.metrics.arrival_time)
+        return seq_groups[0]
+    
     def sort_by_priority(
         self,
         now: float,
         seq_groups: Deque[SequenceGroup],
         occurences: dict=None,
         available_deltas: list=None,
+        most_wanted: SequenceGroup=None,
     ) -> Deque[SequenceGroup]:
         return deque(
             sorted(
@@ -28,7 +39,8 @@ class Policy:
                     now, 
                     seq_group, 
                     occurences=occurences, 
-                    available_deltas=available_deltas
+                    available_deltas=available_deltas,
+                    most_wanted=most_wanted,
                 ),
                 reverse=True,
             )
@@ -41,17 +53,7 @@ class FCFS(Policy):
         seq_group: SequenceGroup,
         occurences: dict=None,
         available_deltas: list=None,
-    ) -> float:
-        return now - seq_group.metrics.arrival_time
-
-class PopularFirst(Policy):
-    
-    def get_priority(
-        self,
-        now: float,
-        seq_group: SequenceGroup,
-        occurences: dict=None,
-        available_deltas: list=None,
+        most_wanted=None,
     ) -> float:
         return now - seq_group.metrics.arrival_time
 
@@ -62,13 +64,18 @@ class DeltaServe(Policy):
         seq_group: SequenceGroup,
         occurences: dict=None,
         available_deltas: list=None,
+        most_wanted=None,
     ) -> float:
         if occurences is None:
+            # fall back to fcfs
             return now - seq_group.metrics.arrival_time
         if available_deltas is None:
             return occurences[seq_group.delta_int_id] + now - seq_group.metrics.arrival_time
-        available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
-        return available_bonus + now - seq_group.metrics.arrival_time
+        most_wanted_bonus = 100 if seq_group.delta_int_id == most_wanted.delta_int_id else 0        
+        # available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
+        print("[scheduler]: most wanted bonus: ", most_wanted_bonus)
+        print("[scheduler]: fcfs priority: ", now - seq_group.metrics.arrival_time)
+        return  now - seq_group.metrics.arrival_time + most_wanted_bonus
         
 class RandomPolicy(Policy):
     def get_priority(self, now: float, seq_group: SequenceGroup) -> float:
@@ -77,7 +84,6 @@ class RandomPolicy(Policy):
 class PolicyFactory:
     _POLICY_REGISTRY = {
         "fcfs": FCFS,
-        "popularity": PopularFirst,
         "random": RandomPolicy,
         "deltaserve": DeltaServe
     }

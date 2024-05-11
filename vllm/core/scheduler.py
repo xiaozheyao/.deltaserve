@@ -238,15 +238,10 @@ class Scheduler:
             # Note(xiaozhe): we sort the waiting queue based on the priority, given by the policy here
             # for deltaserve policy, calculate occurrence of delta requests
             if self.delta_enabled:
-                waiting_deltas = [
-                    seq_group.delta_request.delta_int_id for seq_group in self.waiting if seq_group.delta_request is not None
-                ]
-                occurences = {k: waiting_deltas.count(k) for k in set(waiting_deltas)}
-                occurences[0] = 10
-                occurences = sorted(occurences.items(), key=lambda x: x[1])
+                most_wanted = self.policy.get_most_wanted(now, seq_groups=self.waiting, )
                 # get occurences ranking instead of the actual occurences
-                occurences = {k[0]: occurences.index(k) for k in occurences}
-                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=occurences, available_deltas=available_deltas)
+                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=None, available_deltas=available_deltas, most_wanted=most_wanted)
+            
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0
             while self._passed_delay(now) and self.waiting:
