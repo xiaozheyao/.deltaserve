@@ -10,8 +10,7 @@ provider:
     # (e.g. the cluster is in an AWS VPC and you're starting ray from your laptop)
     # This is useful when debugging the local node provider with cloud VMs.
     # external_head_ip: YOUR_HEAD_PUBLIC_IP
-    worker_ips: [10.233.1.1]
-
+    worker_ips: [10.233.1.1, 10.233.1.1, 10.233.1.1, 10.233.1.1]
 auth:
     ssh_user: xiayao
 # The maximum number of workers nodes to launch in addition to the head
