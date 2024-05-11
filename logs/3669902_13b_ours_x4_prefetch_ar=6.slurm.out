@@ -1,0 +1,6 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-05-11 04:34:02,339 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-05-11 04:34:02,340 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-05-11 04:34:02,340 - INFO - NumExpr defaulting to 8 threads.
+2024-05-11 04:34:03,126	INFO scripts.py:1182 -- Did not find any active Ray processes.
+slurmstepd: error: *** JOB 3669902 ON HOST-10-140-60-5 CANCELLED AT 2024-05-11T04:34:03 ***

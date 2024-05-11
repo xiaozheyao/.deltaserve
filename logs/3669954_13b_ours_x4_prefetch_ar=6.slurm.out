@@ -1,0 +1,910 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-05-11 06:21:00,120 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-05-11 06:21:00,121 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-05-11 06:21:00,121 - INFO - NumExpr defaulting to 8 threads.
+2024-05-11 06:21:01,041	INFO scripts.py:1182 -- Did not find any active Ray processes.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864348e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+/usr/local/lib/python3.10/dist-packages/pydantic/_internal/_fields.py:160: UserWarning: Field "model_name_or_path" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435270>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-11 06:21:16 api_server.py:212] vLLM API server version 0.3.3
+INFO 05-11 06:21:16 api_server.py:213] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[Delta(name='delta-1', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-1'), Delta(name='delta-2', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-2'), Delta(name='delta-3', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-3'), Delta(name='delta-4', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-4'), Delta(name='delta-5', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-5'), Delta(name='delta-6', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-6'), Delta(name='delta-7', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-7'), Delta(name='delta-8', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-8')], swap_modules=[], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=4, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.8, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=True, max_deltas=8, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=True, scheduler_policy='fcfs', engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+2024-05-11 06:21:20,051	INFO worker.py:1749 -- Started a local Ray instance.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435330>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-11 06:21:22 llm_engine.py:87] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=DeltaConfig(max_deltas=8, max_bitwidth=4, delta_dtype=torch.int8, max_cpu_deltas=32, delta_extra_vocab_size=0, pack_factor=Fraction(2, 1), kernel=<QuantKernel.TRITON: 'triton'>), max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=4, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+INFO 05-11 06:21:22 llm_engine.py:237] ignored verifying delta_config
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434040>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435b40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436410>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436ce0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436ad0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436200>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435930>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434250>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435360>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1868637c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864342b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435960>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436230>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436b00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864375b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436d40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436770>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435ea0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864347c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437280>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864340a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435b70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436440>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436f80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436830>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864379d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437160>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436620>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435d50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434f10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437340>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435960>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436230>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436b00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437730>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437ac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437ac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437730>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436b00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436230>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864343d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437e80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434490>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436080>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864378e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864377f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434e80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437490>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436ef0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436dd0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437040>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435a80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864349a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435b10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864363e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436b90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437a00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Using bitblas
+WARNING 05-11 06:31:02 models.py:48] Using bitblas delta modules
+INFO 05-11 06:31:02 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=107717)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f2ef69ccdc0>
+[36m(RayWorkerVllm pid=107717)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=107717)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=107717)[0m     self.remove()
+[36m(RayWorkerVllm pid=107717)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=107717)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=107717)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=107889)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f2ca9910dc0>
+[36m(RayWorkerVllm pid=107889)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=107889)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=107889)[0m     self.remove()
+[36m(RayWorkerVllm pid=107889)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=107889)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=107889)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437ee0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=107717)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f2ef69ccdc0>
+[36m(RayWorkerVllm pid=107717)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=107717)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=107717)[0m     self.remove()
+[36m(RayWorkerVllm pid=107717)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=107717)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=107717)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437d90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435000>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436ec0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435bd0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434280>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864787c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864370d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436b60>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437460>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435150>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186478370>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437e50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437d60>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864373a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436da0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864343a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864780d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436b30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436800>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437790>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434fa0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186478a00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864352a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864377f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864378e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864370d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434790>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864790c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436050>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436c20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437a30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435750>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186478580>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864368f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437c40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437670>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436fb0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864344c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864358d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437040>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437640>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864364a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435690>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435690>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864364a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186437640>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864359c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434b80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436410>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc1864375b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186436f20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=107717)[0m Using bitblas
+[36m(RayWorkerVllm pid=107889)[0m Using bitblas
+[36m(RayWorkerVllm pid=108049)[0m Using bitblas
+[36m(RayWorkerVllm pid=107717)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=107717)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=107889)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=107889)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=107717)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=107717)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:39:45 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:39:45 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:39:49 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:39:49 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:39:53 models.py:48] Using bitblas delta modules
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:39:53 selector.py:16] Using FlashAttention backend.
+INFO 05-11 06:40:07 model_runner.py:155] Loading model weights took 6.1114 GB
+INFO 05-11 06:40:07 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:08 model_runner.py:155] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:08 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:09 model_runner.py:155] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:09 worker_manager.py:293] Starting prefetching thread
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:08 model_runner.py:155] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:09 worker_manager.py:293] Starting prefetching thread
+WARNING 05-11 06:40:11 quant_linear_triton.py:557] We should warm up the kernel here 
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186434c40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc186435060>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:40:13 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:40:14 quant_linear_triton.py:557] We should warm up the kernel here 
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:40:14 quant_linear_triton.py:557] We should warm up the kernel here 
+INFO 05-11 06:40:25 ray_gpu_executor.py:266] # GPU blocks: 13451, # CPU blocks: 1310
+INFO 05-11 06:40:28 block_manager.py:264] disable automatic prefix caching
+WARNING 05-11 06:40:28 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [99859]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     ::1:59262 - "GET /sysinfo HTTP/1.1" 200 OK
+Translating from base-model to /vllm/.idea/full_models/Llama-2-13b-hf
+Warming up starts
+{'id': 37, 'prompt': 'USER: Please show me how to server a ReactJS app from a simple ExpressJS server. Use typescript.\nASSISTANT:', 'timestamp': 0, 'model': 'delta-5', 'min_tokens': 401, 'max_tokens': 401}
+INFO 05-11 06:40:32 worker_manager.py:325] Adding delta 5 to prefetching queue: [5]
+WARNING 05-11 06:40:32 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+INFO 05-11 06:40:32 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:40:32 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:32 worker_manager.py:325] Adding delta 5 to prefetching queue: [5]
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:40:32 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:32 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:32 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:32 worker_manager.py:325] Adding delta 5 to prefetching queue: [5]
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:40:32 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:32 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:32 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:32 worker_manager.py:325] Adding delta 5 to prefetching queue: [5]
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:40:32 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:32 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:32 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 06:40:34 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.456 seconds
+INFO 05-11 06:40:34 worker_manager.py:353] Main thread loading delta 5 done
+INFO 05-11 06:40:34 worker_manager.py:368] [1715380834.1567035] activating delta
+INFO 05-11 06:40:34 worker_manager.py:373] [1715380834.2560704] CPU -> GPU time: 0.0993
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:34 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.804 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:34 worker_manager.py:353] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:34 worker_manager.py:368] [1715380834.4760218] activating delta
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:34 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.909 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:34 worker_manager.py:353] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:34 worker_manager.py:368] [1715380834.5812106] activating delta
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:34 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.896 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:34 worker_manager.py:353] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:34 worker_manager.py:368] [1715380834.568509] activating delta
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:40:34 worker_manager.py:373] [1715380834.6003208] CPU -> GPU time: 0.1242
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:40:34 worker_manager.py:373] [1715380834.7105937] CPU -> GPU time: 0.1293
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:40:34 worker_manager.py:373] [1715380834.6936388] CPU -> GPU time: 0.1251
+INFO 05-11 06:40:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:40:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:40:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:40:50 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:40:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:00 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:11 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:16 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:51 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-11 06:41:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-11 06:42:01 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-11 06:42:06 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-11 06:42:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 4.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59264 - "POST /v1/completions HTTP/1.1" 200 OK
+Warming up ends
+Issuing queries
+sending 1 queries at 0.2
+sending 1 queries at 0.4
+sending 1 queries at 0.5
+sending 1 queries at 0.7000000000000001
+sending 1 queries at 0.8
+sending 1 queries at 0.9
+sending 1 queries at 1.0
+sending 1 queries at 1.4000000000000001
+sending 2 queries at 2.0
+sending 1 queries at 2.3000000000000003
+sending 1 queries at 2.4000000000000004
+sending 1 queries at 2.6
+sending 4 queries at 3.0
+sending 1 queries at 3.3000000000000003
+sending 1 queries at 3.6
+sending 1 queries at 3.9000000000000004
+sending 1 queries at 4.6000000000000005
+sending 1 queries at 4.800000000000001
+sending 1 queries at 4.9
+sending 2 queries at 5.2
+sending 2 queries at 5.4
+sending 1 queries at 5.9
+sending 1 queries at 6.0
+sending 2 queries at 6.1000000000000005
+sending 1 queries at 6.4
+sending 1 queries at 6.5
+sending 2 queries at 6.6000000000000005
+sending 1 queries at 6.800000000000001
+sending 1 queries at 7.0
+sending 1 queries at 7.1000000000000005
+sending 1 queries at 7.6000000000000005
+sending 1 queries at 7.800000000000001
+sending 1 queries at 7.9
+sending 1 queries at 8.0
+sending 2 queries at 8.200000000000001
+sending 1 queries at 8.4
+sending 1 queries at 8.5
+sending 2 queries at 8.6
+sending 2 queries at 8.700000000000001
+sending 1 queries at 8.9
+sending 1 queries at 9.0
+sending 2 queries at 9.700000000000001
+sending 2 queries at 9.8
+sending 2 queries at 10.0
+sending 1 queries at 10.100000000000001
+sending 3 queries at 10.200000000000001
+sending 2 queries at 10.4
+sending 2 queries at 10.5
+sending 2 queries at 10.8
+sending 2 queries at 11.200000000000001
+sending 1 queries at 11.8
+sending 1 queries at 11.9
+sending 1 queries at 12.5
+sending 1 queries at 12.700000000000001
+sending 2 queries at 12.9
+sending 3 queries at 13.0
+sending 2 queries at 13.100000000000001
+sending 2 queries at 13.200000000000001
+sending 1 queries at 13.4
+sending 2 queries at 13.600000000000001
+sending 1 queries at 13.700000000000001
+sending 1 queries at 13.8
+sending 1 queries at 13.9
+sending 1 queries at 14.3
+sending 1 queries at 14.4
+sending 2 queries at 14.600000000000001
+sending 1 queries at 14.8
+sending 2 queries at 14.9
+sending 2 queries at 15.100000000000001
+sending 2 queries at 15.4
+sending 1 queries at 15.5
+sending 1 queries at 15.600000000000001
+sending 1 queries at 15.8
+sending 2 queries at 16.400000000000002
+sending 1 queries at 16.6
+sending 1 queries at 16.7
+sending 2 queries at 16.900000000000002
+sending 1 queries at 17.400000000000002
+sending 1 queries at 17.5
+sending 1 queries at 17.8
+sending 1 queries at 18.0
+sending 1 queries at 18.1
+sending 2 queries at 18.400000000000002
+sending 1 queries at 18.8
+sending 1 queries at 18.900000000000002
+sending 1 queries at 19.3
+sending 1 queries at 19.5
+sending 1 queries at 19.700000000000003
+sending 1 queries at 19.8
+sending 1 queries at 20.3
+sending 1 queries at 20.5
+sending 1 queries at 20.6
+sending 3 queries at 20.8
+sending 1 queries at 21.0
+sending 1 queries at 21.1
+sending 1 queries at 21.200000000000003
+sending 2 queries at 21.3
+sending 1 queries at 21.400000000000002
+sending 1 queries at 21.5
+sending 1 queries at 21.700000000000003
+sending 1 queries at 21.8
+sending 1 queries at 22.0
+sending 1 queries at 22.200000000000003
+sending 1 queries at 22.3
+sending 2 queries at 22.700000000000003
+sending 1 queries at 22.8
+sending 1 queries at 23.200000000000003
+sending 1 queries at 23.5
+sending 2 queries at 23.700000000000003
+sending 1 queries at 24.1
+sending 1 queries at 24.3
+sending 1 queries at 25.400000000000002
+sending 1 queries at 25.5
+sending 2 queries at 25.8
+sending 2 queries at 26.0
+sending 1 queries at 26.3
+sending 1 queries at 26.6
+sending 2 queries at 26.8
+sending 1 queries at 26.900000000000002
+sending 1 queries at 27.0
+sending 1 queries at 27.200000000000003
+sending 1 queries at 27.400000000000002
+sending 1 queries at 27.700000000000003
+sending 1 queries at 28.3
+sending 2 queries at 28.6
+sending 1 queries at 28.700000000000003
+sending 1 queries at 28.900000000000002
+sending 1 queries at 29.0
+sending 4 queries at 29.1
+sending 2 queries at 29.400000000000002
+sending 1 queries at 29.5
+sending 1 queries at 30.0
+INFO 05-11 06:42:12 worker_manager.py:325] Adding delta 3 to prefetching queue: [3]
+WARNING 05-11 06:42:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 3 now
+INFO 05-11 06:42:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:12 worker_manager.py:325] Adding delta 3 to prefetching queue: [3]
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:12 worker_manager.py:325] Adding delta 3 to prefetching queue: [3]
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:12 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:12 worker_manager.py:325] Adding delta 3 to prefetching queue: [3]
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:12 worker_manager.py:335] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:12 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:12 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 06:42:12 worker_manager.py:325] Adding delta 3 to prefetching queue: [3]
+INFO 05-11 06:42:13 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.434 seconds
+INFO 05-11 06:42:14 worker_manager.py:353] Main thread loading delta 3 done
+INFO 05-11 06:42:14 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:14 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:14 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.904 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:14 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.909 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:14 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.893 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:14 worker_manager.py:353] Main thread loading delta 3 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:14 worker_manager.py:353] Main thread loading delta 3 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:14 worker_manager.py:353] Main thread loading delta 3 done
+INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 8 to prefetching queue: [3, 8]
+INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 7 to prefetching queue: [3, 8, 7]
+INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 1 to prefetching queue: [3, 8, 7, 1]
+INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 4 to prefetching queue: [3, 8, 7, 1, 4]
+INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 6 to prefetching queue: [3, 8, 7, 1, 4, 6]
+WARNING 05-11 06:42:15 worker_manager.py:335] Missed prefetch, fall back to loading delta 1 now
+INFO 05-11 06:42:15 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:15 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 7 to prefetching queue: [8, 7]
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 7, 1]
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 4 to prefetching queue: [8, 7, 1, 4]
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:15 worker_manager.py:335] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:15 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:15 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 7 to prefetching queue: [8, 7]
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 7, 1]
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 4 to prefetching queue: [8, 7, 1, 4]
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:15 worker_manager.py:335] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:15 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:15 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 7 to prefetching queue: [8, 7]
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 1 to prefetching queue: [8, 7, 1]
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:15 worker_manager.py:325] Adding delta 4 to prefetching queue: [8, 7, 1, 4]
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:15 worker_manager.py:335] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:15 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:15 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 06:42:15 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.893 seconds
+INFO 05-11 06:42:15 worker_manager.py:278] Prefetching delta 3 done
+INFO 05-11 06:42:17 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.642 seconds
+INFO 05-11 06:42:17 worker_manager.py:353] Main thread loading delta 1 done
+INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:17 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:17 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.883 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:17 worker_manager.py:353] Main thread loading delta 1 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:17 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:17 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.877 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:17 worker_manager.py:353] Main thread loading delta 1 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:17 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:17 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.852 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:17 worker_manager.py:353] Main thread loading delta 1 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:17 models.py:268] [prefetching] Lossless Compression Disabled
+WARNING 05-11 06:42:17 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:17 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:17 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:17 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:17 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:17 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:17 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:17 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:17 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.732 seconds
+INFO 05-11 06:42:20 worker_manager.py:278] Prefetching delta 8 done
+INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.589 seconds
+INFO 05-11 06:42:20 worker_manager.py:353] Main thread loading delta 4 done
+INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:20 models.py:268] [prefetching] Lossless Compression Disabled
+WARNING 05-11 06:42:20 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+WARNING 05-11 06:42:20 worker_manager.py:344] Discarding prefetching delta 7
+INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:20 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.805 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 worker_manager.py:278] Prefetching delta 8 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.819 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.917 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 worker_manager.py:278] Prefetching delta 8 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 worker_manager.py:278] Prefetching delta 8 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.905 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.990 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.935 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 worker_manager.py:353] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:20 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:20 worker_manager.py:344] Discarding prefetching delta 7
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:20 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:20 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:20 worker_manager.py:344] Discarding prefetching delta 7
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:20 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:20 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:20 worker_manager.py:344] Discarding prefetching delta 7
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:20 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 06:42:21 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 0.775 seconds
+INFO 05-11 06:42:21 worker_manager.py:278] Prefetching delta 7 done
+INFO 05-11 06:42:22 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.888 seconds
+INFO 05-11 06:42:22 worker_manager.py:353] Main thread loading delta 7 done
+INFO 05-11 06:42:22 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:22 models.py:268] [prefetching] Lossless Compression Disabled
+INFO 05-11 06:42:22 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 0.307 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:23 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.763 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:23 worker_manager.py:278] Prefetching delta 7 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:23 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.817 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:23 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.886 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:23 worker_manager.py:278] Prefetching delta 7 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:23 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.823 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:23 worker_manager.py:278] Prefetching delta 7 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:23 worker_manager.py:353] Main thread loading delta 7 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:23 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.973 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:23 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.894 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:23 worker_manager.py:353] Main thread loading delta 7 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:23 worker_manager.py:353] Main thread loading delta 7 done
+INFO 05-11 06:42:24 worker_manager.py:278] Prefetching delta 6 done
+INFO 05-11 06:42:25 metrics.py:276] Avg prompt throughput: 1.5 tokens/s, Avg generation throughput: 0.1 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-11 06:42:25 worker_manager.py:325] Adding delta 2 to prefetching queue: [2]
+WARNING 05-11 06:42:25 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+INFO 05-11 06:42:25 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 06:42:25 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:25 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:25 worker_manager.py:325] Adding delta 2 to prefetching queue: [6, 2]
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:25 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:25 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:25 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:25 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:25 worker_manager.py:325] Adding delta 2 to prefetching queue: [6, 2]
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:25 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:25 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:25 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:25 worker_manager.py:325] Adding delta 6 to prefetching queue: [6]
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:25 worker_manager.py:325] Adding delta 2 to prefetching queue: [6, 2]
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:25 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:25 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:25 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:26 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 0.565 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:26 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 0.601 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:26 worker_manager.py:353] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:26 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 0.588 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:26 worker_manager.py:353] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:26 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:26 worker_manager.py:353] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:26 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:26 models.py:268] [prefetching] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:26 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=108049)[0m WARNING 05-11 06:42:26 worker_manager.py:344] Discarding prefetching delta 6
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.3.safetensors']
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:26 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:26 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=107717)[0m WARNING 05-11 06:42:26 worker_manager.py:344] Discarding prefetching delta 6
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:26 models.py:268] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:26 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=107889)[0m WARNING 05-11 06:42:26 worker_manager.py:344] Discarding prefetching delta 6
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.2.safetensors']
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:26 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 06:42:27 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 1.311 seconds
+INFO 05-11 06:42:27 worker_manager.py:353] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:29 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.724 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:29 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.683 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:29 worker_manager.py:278] Prefetching delta 6 done
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:29 worker_manager.py:278] Prefetching delta 6 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:29 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.866 seconds
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:29 worker_manager.py:278] Prefetching delta 6 done
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:29 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.732 seconds
+[36m(RayWorkerVllm pid=108049)[0m INFO 05-11 06:42:29 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:29 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.885 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:29 models.py:324] Disk -> CPU: Loaded 1674.62 MiB in 2.833 seconds
+[36m(RayWorkerVllm pid=107889)[0m INFO 05-11 06:42:29 worker_manager.py:353] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=107717)[0m INFO 05-11 06:42:29 worker_manager.py:353] Main thread loading delta 6 done
+INFO:     ::1:59558 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:42:31 metrics.py:276] Avg prompt throughput: 119.2 tokens/s, Avg generation throughput: 4.4 tokens/s, Running: 23 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%
+INFO 05-11 06:42:37 metrics.py:276] Avg prompt throughput: 142.8 tokens/s, Avg generation throughput: 4.9 tokens/s, Running: 63 reqs, Swapped: 0 reqs, Pending: 5 reqs, GPU KV cache usage: 1.1%, CPU KV cache usage: 0.0%
+total threads: 178
+INFO 05-11 06:42:42 metrics.py:276] Avg prompt throughput: 266.8 tokens/s, Avg generation throughput: 6.3 tokens/s, Running: 88 reqs, Swapped: 0 reqs, Pending: 7 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO 05-11 06:42:49 metrics.py:276] Avg prompt throughput: 265.0 tokens/s, Avg generation throughput: 5.6 tokens/s, Running: 123 reqs, Swapped: 0 reqs, Pending: 9 reqs, GPU KV cache usage: 2.6%, CPU KV cache usage: 0.0%
+INFO 05-11 06:42:54 metrics.py:276] Avg prompt throughput: 223.9 tokens/s, Avg generation throughput: 5.1 tokens/s, Running: 153 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 3.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:59858 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59590 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:00 metrics.py:276] Avg prompt throughput: 146.1 tokens/s, Avg generation throughput: 57.4 tokens/s, Running: 160 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 3.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59886 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59548 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59582 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59896 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59602 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59598 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59596 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:06 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 114.0 tokens/s, Running: 152 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59594 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59700 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59610 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59922 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59696 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:11 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 107.2 tokens/s, Running: 145 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59754 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59600 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59936 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59540 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59778 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59832 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:17 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 107.3 tokens/s, Running: 142 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.3%, CPU KV cache usage: 0.0%
+INFO 05-11 06:43:22 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 106.5 tokens/s, Running: 142 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:59854 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:27 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 106.3 tokens/s, Running: 139 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59782 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59728 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59622 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59820 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:33 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 103.4 tokens/s, Running: 137 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59612 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 103.1 tokens/s, Running: 134 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59892 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59694 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59576 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 100.6 tokens/s, Running: 131 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:59554 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59716 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59784 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59864 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:49 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 97.7 tokens/s, Running: 129 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59630 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:54 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 96.4 tokens/s, Running: 127 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59706 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59542 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59570 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:43:59 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 95.3 tokens/s, Running: 124 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59658 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59652 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59722 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 92.8 tokens/s, Running: 122 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59844 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:10 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 91.0 tokens/s, Running: 121 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:44:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 90.3 tokens/s, Running: 121 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:59678 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59528 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 89.7 tokens/s, Running: 119 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59786 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59656 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 88.5 tokens/s, Running: 115 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59530 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59762 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 85.7 tokens/s, Running: 115 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59624 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59814 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:37 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 85.3 tokens/s, Running: 113 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59816 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 83.6 tokens/s, Running: 111 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59708 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59704 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59730 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:47 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 82.2 tokens/s, Running: 109 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59870 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59550 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59668 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 80.1 tokens/s, Running: 105 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:59798 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59738 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:44:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 75.8 tokens/s, Running: 103 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59800 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59764 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59790 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:04 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 72.7 tokens/s, Running: 100 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59804 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59564 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59888 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 76.3 tokens/s, Running: 98 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59796 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59634 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59562 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59604 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59758 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 73.0 tokens/s, Running: 90 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59924 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59916 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59534 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59890 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59552 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 69.0 tokens/s, Running: 88 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59770 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 68.2 tokens/s, Running: 87 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.8%, CPU KV cache usage: 0.0%
+INFO 05-11 06:45:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 67.8 tokens/s, Running: 86 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59546 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 66.9 tokens/s, Running: 85 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59824 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 66.4 tokens/s, Running: 84 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59802 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59660 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 65.8 tokens/s, Running: 82 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59620 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59744 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:50 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 64.6 tokens/s, Running: 81 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59912 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59760 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:45:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 63.6 tokens/s, Running: 79 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:46:00 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 62.9 tokens/s, Running: 78 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59520 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59756 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 61.2 tokens/s, Running: 76 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59822 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59772 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59856 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:10 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 59.0 tokens/s, Running: 74 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59908 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59914 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59588 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 57.1 tokens/s, Running: 70 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59766 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59942 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59626 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:22 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 55.6 tokens/s, Running: 68 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59580 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59752 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:27 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 53.5 tokens/s, Running: 66 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.8%, CPU KV cache usage: 0.0%
+INFO 05-11 06:46:33 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 53.0 tokens/s, Running: 66 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:46:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 52.2 tokens/s, Running: 65 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59670 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59518 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:44 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 52.8 tokens/s, Running: 64 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 7.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59606 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59684 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59894 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:50 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 51.9 tokens/s, Running: 59 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:59934 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59836 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59646 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:46:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 49.3 tokens/s, Running: 57 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59572 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59750 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59768 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:47:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 46.6 tokens/s, Running: 55 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59774 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59632 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:47:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 43.7 tokens/s, Running: 53 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.5%, CPU KV cache usage: 0.0%
+INFO 05-11 06:47:13 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 46.6 tokens/s, Running: 53 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59664 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:47:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 44.2 tokens/s, Running: 52 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59712 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59788 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:47:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 43.1 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59918 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59808 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59776 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59676 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59860 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59522 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:47:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 39.8 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.8%, CPU KV cache usage: 0.0%
+INFO 05-11 06:47:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 38.0 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:47:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 38.2 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 6.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59698 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59662 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59740 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:47:47 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 34.4 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:59688 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59636 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:47:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 38.5 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.4%, CPU KV cache usage: 0.0%
+INFO 05-11 06:47:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 35.0 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59682 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59690 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:48:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 34.4 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59650 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59666 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59724 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:48:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 31.9 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:48:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 31.4 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:48:20 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 31.3 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 5.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59536 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:48:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 30.5 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59898 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59838 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:48:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.6 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59578 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:48:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.9 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+INFO 05-11 06:48:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.8 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+INFO 05-11 06:48:47 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.6 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59900 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:48:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.3 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59780 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:48:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 25.8 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.6%, CPU KV cache usage: 0.0%
+INFO 05-11 06:49:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 25.8 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:59560 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:49:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 24.9 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.6%, CPU KV cache usage: 0.0%
+INFO 05-11 06:49:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 25.0 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59732 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:49:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 24.5 tokens/s, Running: 26 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.5%, CPU KV cache usage: 0.0%
+INFO 05-11 06:49:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 23.9 tokens/s, Running: 24 reqs, Swapped: 0 reqs, Pending: 15 reqs, GPU KV cache usage: 4.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:59926 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59842 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59648 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59524 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:49:30 metrics.py:276] Avg prompt throughput: 64.5 tokens/s, Avg generation throughput: 26.7 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59720 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59880 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:49:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 32.1 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59878 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59830 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59654 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:49:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.3 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59618 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59868 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:49:47 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.4 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59672 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:49:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.0 tokens/s, Running: 29 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:49:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 26.7 tokens/s, Running: 29 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:50:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 26.6 tokens/s, Running: 29 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59920 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59848 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:50:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 25.6 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59736 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:50:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 24.9 tokens/s, Running: 26 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59840 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:50:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 23.6 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.5%, CPU KV cache usage: 0.0%
+INFO 05-11 06:50:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 23.0 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59616 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:50:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 22.4 tokens/s, Running: 24 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:59862 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59702 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:50:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 21.6 tokens/s, Running: 22 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:59748 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59614 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:50:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 19.5 tokens/s, Running: 20 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:50:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 18.8 tokens/s, Running: 20 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+INFO 05-11 06:50:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 18.8 tokens/s, Running: 20 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59742 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:50:57 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 18.3 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.0%, CPU KV cache usage: 0.0%
+INFO 05-11 06:51:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 18.0 tokens/s, Running: 18 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:59850 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:51:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.0 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59734 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:51:13 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.9 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:51:18 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.1 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:51:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.0 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59746 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:51:28 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.4 tokens/s, Running: 16 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59714 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:51:34 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.3 tokens/s, Running: 15 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59810 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:51:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 18.0 tokens/s, Running: 14 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO 05-11 06:51:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.3 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59818 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:51:51 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.1 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:59932 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59726 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:51:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.4 tokens/s, Running: 11 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:52:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.4 tokens/s, Running: 11 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59826 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:52:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.7 tokens/s, Running: 10 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:59812 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:52:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 18.3 tokens/s, Running: 9 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:59556 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59928 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:52:17 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.3 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:52:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.2 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59806 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:52:28 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.9 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.8%, CPU KV cache usage: 0.0%
+INFO 05-11 06:52:33 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.2 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%, CPU KV cache usage: 0.0%
+INFO 05-11 06:52:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.1 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:59628 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:59710 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:52:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.9 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.7%, CPU KV cache usage: 0.0%
+INFO 05-11 06:52:48 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.4 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.7%, CPU KV cache usage: 0.0%
+INFO 05-11 06:52:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.4 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:59876 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:52:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.1 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:59592 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:53:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.5 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-11 06:53:08 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-11 06:53:13 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%
+INFO 05-11 06:53:18 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%
+INFO 05-11 06:53:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:59608 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 06:53:29 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:59584 - "POST /v1/completions HTTP/1.1" 200 OK
+Results written to .artifact/benchmarks/results/9c9b9e7d-ee62-4c5f-82ec-8dc7eb500850.jsonl
+Killing process 99859...
+/var/spool/slurmd/job3669954/slurm_script: line 46: 99824 Killed                  apptainer run --nv --home /mnt/petrelfs/huqinghao/xzyao/:/home/xiayao --bind /mnt/petrelfs/huqinghao/xzyao/code/vllm:/vllm --bind /mnt/petrelfs/huqinghao/xzyao/code/triteia:/triteia --env PYTHONPATH=/vllm:/triteia --env CUDA_LAUNCH_BLOCKING=1 --env TVM_TARGET=nvidia/nvidia-a100 --env TRANSFORMERS_OFFLINE=1 --env NUMEXPR_MAX_THREADS=128 --env USE_BITBLAS=1 --env BITBLAS_TARGET=nvidia/nvidia-a100 --env RAY_DEDUP_LOGS=0 --workdir /vllm /mnt/petrelfs/huqinghao/xzyao/images/vllm-0.4.1.sif python3 /vllm/vllm/entrypoints/openai/api_server.py --model /vllm/.idea/full_models/Llama-2-13b-hf --enable-delta --disable-log-requests --gpu-memory-utilization 0.8 --delta-modules delta-1=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-1 delta-2=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-2 delta-3=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-3 delta-4=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-4 delta-5=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-5 delta-6=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-6 delta-7=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-7 delta-8=/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-8 --max-deltas 8 --tensor-parallel-size 4 --enforce-eager --enable-prefetch
