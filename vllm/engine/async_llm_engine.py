@@ -432,11 +432,12 @@ class AsyncLLMEngine:
     async def reload_model(self,model_id, model_name_or_path: str):
         if self._current_weight_path == model_id:
             # if it's the same model, no need to reload
-            return
+            return False
         assert self._current_weight_path != model_id, "Model is already loaded."
         logger.info(f"Reloading model to {model_id}")
         self.engine.reload_model(model_name_or_path)
-
+        return True
+    
     def start_background_loop(self) -> None:
         """Start the background loop."""
         if self.errored:

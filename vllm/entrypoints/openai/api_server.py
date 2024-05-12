@@ -49,9 +49,7 @@ async def lifespan(app: fastapi.FastAPI):
 
     yield
 
-
 app = fastapi.FastAPI(lifespan=lifespan)
-
 
 def parse_args():
     parser = make_arg_parser()
@@ -107,15 +105,34 @@ async def get_sysinfo():
 
 @app.post("/v1/reload")
 async def reload_model_weights(request: ReloadRequest):
-    engine.reload_model(request.model_name_or_path)
-    return JSONResponse(content={"message": "Model reloaded"})
+    model_id, found_model = find_swap_model(
+        served_model,
+        request.target,
+        args.swap_modules
+    )
+    if found_model:
+        reload_lock.acquire()
+        engine.reload_model(request.target, found_model)
+        reload_lock.release()
+        return JSONResponse(content={"message": "Model reloaded"})
+    else:
+        return JSONResponse(
+            content={
+                "error": f"Model not found, requested: {request.model}, available: {[x.name for x in args.swap_modules] + [served_model]}"
+            },
+            status_code=404,
+        )
+
 
 
 @app.post("/v1/chat/completions")
 async def create_chat_completion(request: ChatCompletionRequest, raw_request: Request):
     generator = await openai_serving_chat.create_chat_completion(request, raw_request)
     if isinstance(generator, ErrorResponse):
-        return JSONResponse(content=generator.model_dump(), status_code=generator.code)
+        return JSONResponse(
+            content=generator.model_dump(),
+            status_code=generator.code
+        )
     if request.stream:
         return StreamingResponse(content=generator, media_type="text/event-stream")
     else:
@@ -128,32 +145,8 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     arrival_time = time.time()
     gpu_loading_time = None
     start_loading_time = None
-    if request.model != engine._current_weight_path and request.model != engine._to_weight_path and len(args.swap_modules) > 0:
-        # lock it so other threads don't try to reload the model
-        # lock acquired --> previous reloading is finished
-        logger.info("Waiting for reload lock...")
-        await reload_lock.acquire()
-        start_loading_time = time.time()
-        model_id, found_model = find_swap_model(
-            served_model, request.model, args.swap_modules
-        )
-        if found_model:
-            # change this before the engine finished reloading
-            engine._to_weight_path = model_id
-            await engine.reload_model(model_id, found_model)
-            engine._current_weight_path = model_id
-        else:
-            return JSONResponse(
-                content={
-                    "error": f"Model not found, requested: {request.model}, available: {[x.name for x in args.swap_modules] + [served_model]}"
-                },
-                status_code=404,
-            )
-        reload_lock.release()
-        gpu_loading_time = time.time()
     # wait until the engine finishes reloading
     total_wait_time = 0
-    logger.info("waiting for model...")
     if len(args.swap_modules) > 0:
         while request.model != engine._current_weight_path:
             total_wait_time += 0.1
@@ -169,7 +162,6 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
         gpu_loading_time=gpu_loading_time,
         start_loading_time=start_loading_time,
     )
-
     if isinstance(generator, ErrorResponse):
         response = JSONResponse(
             content=generator.model_dump(), status_code=generator.code
@@ -179,9 +171,6 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     else:
         response = JSONResponse(content=generator.model_dump())
 
-    # if reload_lock.locked() and not engine.engine.has_running_requests():
-    #     logger.info("release reload lock")
-    #     reload_lock.release()
     return response
 
 

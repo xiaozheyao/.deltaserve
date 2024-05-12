@@ -27,17 +27,22 @@ def request_thread(
     global_start_time,
 ):
     global inference_results
-    res = requests.post(endpoint + "/v1/completions", json=req)
-    end_time = timer()
-    if res.status_code != 200:
-        print(f"Failed to issue request: {res.text}", flush=True)
-    res = {
-        "response": res.json(),
-        "end_at": end_time,
-        "start_at": start_time,
-    }
-    inference_results.append(res)
-    return res
+    if 'type' in req and req['type'] == 'reload':
+        res = requests.post(endpoint + "/v1/reload", json=req)
+        if res.status_code != 200:
+            print("Failed to issue reload request: {res.text}", flush=True)
+    else:
+        res = requests.post(endpoint + "/v1/completions", json=req)
+        end_time = timer()
+        if res.status_code != 200:
+            print(f"Failed to issue request: {res.text}", flush=True)
+        res = {
+            "response": res.json(),
+            "end_at": end_time,
+            "start_at": start_time,
+        }
+        inference_results.append(res)
+        return res
 
 
 def async_issue_requests(endpoint, reqs, global_start_time):
@@ -90,7 +95,6 @@ def issue_queries(endpoint, queries):
     end = timer()
     return {"results": inference_results, "total_elapsed": end - start}
 
-
 def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str):
     print("Warming up starts", flush=True)
     if warmup_strategy == "random":
@@ -104,6 +108,24 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
         print(f"Failed to warm up: {res.text}", flush=True)
     print("Warming up ends", flush=True)
 
+def prepare_queries(workloads: List, sysinfo: dict):
+    swap_modules = sysinfo['swap_modules']
+    if len(swap_modules) == 0:
+        pass
+    else:
+        # add reload workload in the middle
+        current_model = workloads[0]['model']
+        for idx, wk in enumerate(workloads):
+            if wk['model'] != current_model:
+                current_model = wk['model']
+                reload_workload = {
+                    'type': 'reload',
+                    'target': wk['model'],
+                    # Note: for server, only reload when there's no running requests
+                    'timestamp': wk['timestamp']-0.01,
+                }
+                workloads.insert(idx, reload_workload)
+    return workloads
 
 def run(
     endpoints: List[str],
@@ -114,6 +136,9 @@ def run(
 ):
     global inference_results
     warmup(endpoints[0], workload, base_model, warmup_strategy)
+    workload = prepare_queries(workload, sysinfo)
+    for wk in workload:
+        print(wk)
     issue_queries(endpoints[0], workload)
     return inference_results
 
