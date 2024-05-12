@@ -405,6 +405,9 @@ class LLMEngine:
         """Returns True if there are unfinished requests."""
         return self.scheduler.has_unfinished_seqs()
 
+    def has_running_requests(self) -> bool:
+        return self.scheduler.has_running_seqs()
+
     def _check_beam_search_early_stopping(
         self,
         early_stopping: Union[bool, str],
