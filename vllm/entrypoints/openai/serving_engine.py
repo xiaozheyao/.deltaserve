@@ -18,7 +18,7 @@ from vllm.sequence import Logprob
 from vllm.logger import init_logger
 from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
-from vllm.entrypoints.openai.utils import SwapRequest
+from vllm.swap.request import SwapRequest
 from vllm.transformers_utils.tokenizer import get_tokenizer
 
 logger = init_logger(__name__)

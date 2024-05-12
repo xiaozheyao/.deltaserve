@@ -27,7 +27,7 @@ from vllm.outputs import RequestOutput
 from vllm.sampling_params import SamplingParams
 from vllm.sequence import MultiModalData
 from vllm.delta.request import DeltaRequest
-from vllm.entrypoints.openai.utils import SwapRequest
+from vllm.swap.request import SwapRequest
 
 logger = init_logger(__name__)
 ENGINE_ITERATION_TIMEOUT_S = int(
