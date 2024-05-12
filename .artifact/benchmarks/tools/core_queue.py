@@ -1,16 +1,16 @@
 import copy
 import requests
-import threading
 import numpy as np
-import sched, time
+import time
 from typing import List
 from timeit import default_timer as timer
+from queue import Queue
+import threading
 
-s = sched.scheduler(time.monotonic, time.sleep)
-threads = []
 inference_results = []
 ongoing_reload = False
-
+current_model = None
+threads = []
 def parse_annotation(annotations):
     annos = []
     annotations = annotations.split(",")
@@ -19,91 +19,66 @@ def parse_annotation(annotations):
         annos.append({"name": anno[0], "value": anno[1]})
     return annos
 
-
 def request_thread(
     endpoint,
     req,
     start_time,
-    global_start_time,
 ):
     global inference_results
-    global ongoing_reload
-    while ongoing_reload:
-        time.sleep(0.1)
+    global current_model
+    global threads
     if req['reload']:
-        ongoing_reload = True
+        for t in threads:
+            t.join()
+        print(f"Sending reload request for {req['model']}", flush=True)
+        req['start_loading_time'] = time.time()
         res = requests.post(endpoint + "/v1/reload", json={
             "type": "reload",
             "target": req["model"],
             "timestamp": req["timestamp"],
         })
+        req['finish_loading_time'] = time.time()
         if res.status_code != 200:
             print(f"Failed to issue reload request: {res.text}", flush=True)
-        ongoing_reload = False
-    res = requests.post(endpoint + "/v1/completions", json=req)
-    end_time = timer()
-    if res.status_code != 200:
-        print(f"Failed to issue request: {res.text}", flush=True)
-    res = {
-        "response": res.json(),
-        "end_at": end_time,
-        "start_at": start_time,
-    }
-    inference_results.append(res)
-    return res
+        current_model = req['model']
 
-
-def async_issue_requests(endpoint, reqs, global_start_time):
-    global threads
-    for req in reqs:
-        start_time = timer()
-        thread = threading.Thread(
-            target=request_thread,
-            args=(
-                endpoint,
-                req,
-                start_time,
-                global_start_time,
-            ),
-        )
-        threads.append(thread)
-        thread.start()
-
+    def send_completion_requests():
+        print(f"Sending completion request for {req['model']}", flush=True)
+        res = requests.post(endpoint + "/v1/completions", json=req)
+        print(f"response: {res.text}")
+        end_time = timer()
+        if res.status_code != 200:
+            print(f"Failed to issue request: {res.text}", flush=True)
+        res = {
+            "request": req,
+            "response": res.json(),
+            "end_at": end_time,
+            "start_at": start_time,
+        }
+        inference_results.append(res)
+    thread = threading.Thread(target=send_completion_requests)
+    while current_model != req['model']:
+        time.sleep(0.1)
+    thread.start()
+    threads.append(thread)
+    return thread
 
 def issue_queries(endpoint, queries):
     print("Issuing queries", flush=True)
-    time_step = 0.1
-    global threads
-    global inference_results
-    time_range = [x["timestamp"] for x in queries]
-    max_time = max(time_range) + 1
-    # execute for one more second
-    start = timer()
-    for time in np.arange(0, max_time, time_step):
-        sub_queries = [
-            x
-            for x in queries
-            if x["timestamp"] <= time and x["timestamp"] > time - time_step
-        ]
-        if len(sub_queries) > 0:
-            print(f"sending {len(sub_queries)} queries at {time}", flush=True)
-            s.enter(
-                time,
-                1,
-                async_issue_requests,
-                argument=(
-                    endpoint,
-                    sub_queries,
-                    start,
-                ),
-            )
-    s.run(blocking=True)
-    print(f"total threads: {len(threads)}", flush=True)
-    [thread.join() for thread in threads]
-    end = timer()
-    return {"results": inference_results, "total_elapsed": end - start}
-
+    current_time = time.time()
+    queue = Queue()
+    for query in queries:
+        queue.put(query)
+    # not get items from the queue
+    while not queue.empty():
+        query = queue.get()
+        # check if it is time to issue the query
+        while time.time() - current_time < query["timestamp"]:
+            time.sleep(0.1)
+        request_thread(endpoint, query, time.time())
+    
 def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str):
+    global current_model
     print("Warming up starts", flush=True)
     if warmup_strategy == "random":
         reqs = np.random.choice(workload, size=10)
@@ -121,6 +96,7 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     if res.status_code != 200:
         print(f"Failed to warm up: {res.text}", flush=True)
     print("Warming up ends", flush=True)
+    current_model = req['model']
     return req['model']
 
 def prepare_queries(workloads: List, sysinfo: dict, warmup_model:str):
@@ -152,7 +128,6 @@ def run(
         print(wk)
     issue_queries(endpoints[0], workload)
     return inference_results
-
 
 def get_sys_info(endpoint: str):
     return requests.get(endpoint + "/sysinfo").json()

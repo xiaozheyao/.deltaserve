@@ -2,14 +2,13 @@ import os
 import json
 import uuid
 import argparse
-from core import run, get_sys_info
+from core_queue import run, get_sys_info
 import time
 
 def before_benchmark(args):
     with open(args.workload, "r") as f:
         workload = [json.loads(line) for line in f]
     # translate "base-model" to the actual model name
-
     warmup = args.warmup_strategy
     system_ready = False
     # wait until system is ready
@@ -69,8 +68,8 @@ if __name__ == "__main__":
     print(f"Results written to {output_file}", flush=True)
     
     pid = sysinfo['pid']
-    print(f"Killing process {pid}...")
-    os.system(f"kill -9 {pid}")
+    # print(f"Killing process {pid}...")
+    # os.system(f"kill -9 {pid}")
 """
 Example: 
 python .artifact/benchmarks/tools/issue_request.py --workload .artifact/workloads/distribution=uniform,ar=3.0,duration=30.0.jsonl --base-model meta-llama/Llama-2-7b-hf --output .artifact/benchmarks/results

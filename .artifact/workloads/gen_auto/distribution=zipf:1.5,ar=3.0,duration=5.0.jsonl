@@ -1,0 +1,12 @@
+{"id": 0, "prompt": "USER: What is the difference between OpenCL and CUDA?\nASSISTANT:", "timestamp": 0.26529150272103663, "model": "delta-8", "min_tokens": 171, "max_tokens": 171}
+{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 0.683935090376316, "model": "delta-8", "min_tokens": 139, "max_tokens": 139}
+{"id": 2, "prompt": "USER: Fuji vs. Nikon, which is better?\nASSISTANT:", "timestamp": 0.9916761389776723, "model": "delta-8", "min_tokens": 212, "max_tokens": 212}
+{"id": 3, "prompt": "USER: How to build an arena for chatbots?\nASSISTANT:", "timestamp": 1.2540765230834292, "model": "delta-8", "min_tokens": 318, "max_tokens": 318}
+{"id": 4, "prompt": "USER: When is it today?\nASSISTANT:", "timestamp": 1.4377593534485955, "model": "delta-6", "min_tokens": 61, "max_tokens": 61}
+{"id": 5, "prompt": "USER: Count from 1 to 10 with step = 3\nASSISTANT:", "timestamp": 1.783812451763132, "model": "delta-8", "min_tokens": 67, "max_tokens": 67}
+{"id": 6, "prompt": "USER: Emoji for \"sharing\". List 10\nASSISTANT:", "timestamp": 1.9756521848193453, "model": "delta-3", "min_tokens": 103, "max_tokens": 103}
+{"id": 7, "prompt": "USER: How to parallelize a neural network?\nASSISTANT:", "timestamp": 2.716826989163564, "model": "delta-7", "min_tokens": 258, "max_tokens": 258}
+{"id": 8, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 3.821797716514835, "model": "delta-3", "min_tokens": 44, "max_tokens": 44}
+{"id": 9, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 3.9829984168155863, "model": "delta-8", "min_tokens": 12, "max_tokens": 12}
+{"id": 10, "prompt": "USER: What is the future of bitcoin?\nASSISTANT:", "timestamp": 4.505963796805309, "model": "delta-6", "min_tokens": 115, "max_tokens": 115}
+{"id": 11, "prompt": "USER: Make it more polite: I want to have dinner.\nASSISTANT:", "timestamp": 4.756855166650839, "model": "delta-6", "min_tokens": 5, "max_tokens": 5}

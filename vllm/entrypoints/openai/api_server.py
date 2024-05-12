@@ -111,6 +111,8 @@ async def reload_model_weights(request: ReloadRequest):
         args.swap_modules
     )
     if found_model:
+        while engine.engine.has_running_requests():
+            time.sleep(0.1)
         await reload_lock.acquire()
         await engine.reload_model(model_id, found_model)
         reload_lock.release()
@@ -151,7 +153,8 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
             if total_wait_time > 10:
                 logger.warning(f"has waited for {request.model} > 10 seconds..., current: {engine._current_weight_path}")
                 total_wait_time = 0
-    logger.info("requested model is loaded --> continuing...")
+    
+    logger.info(f"Model: {request.model}, current: {engine._current_weight_path}")
     generator = await openai_serving_completion.create_completion(
         request,
         raw_request,
