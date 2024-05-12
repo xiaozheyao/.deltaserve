@@ -7,6 +7,7 @@
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=8GB
+#SBATCH --nodelist=HOST-10-140-60-6
 
 set -e
 
