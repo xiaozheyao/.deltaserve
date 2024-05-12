@@ -1,6 +1,6 @@
 import os
 import subprocess
-SCRIPT_PATH = ".artifact/scripts/pjlab/chains_uniform"
+SCRIPT_PATH = ".artifact/scripts/pjlab/chains_2"
 
 scripts = [x for x in os.listdir(SCRIPT_PATH) if x.endswith(".slurm")]
 previous_id = 0
@@ -13,4 +13,3 @@ for idx, script in enumerate(scripts):
     previous_id = subprocess.check_output(job, shell=True, encoding='UTF-8')
     previous_id = previous_id.replace("Submitted batch job ", "")
     previous_id = previous_id.replace("\n", "")
-    
