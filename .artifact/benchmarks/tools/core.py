@@ -103,6 +103,12 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     req = copy.deepcopy(req)
     req["timestamp"] = 0
     print(req, flush=True)
+    reload_res = requests.post(endpoint + "/v1/reload", json={
+        "type": "reload",
+        "target": req["model"],
+        "timestamp": 0,
+    })
+    print(reload_res)
     res = requests.post(endpoint + "/v1/completions", json=req)
     if res.status_code != 200:
         print(f"Failed to warm up: {res.text}", flush=True)

@@ -111,8 +111,8 @@ async def reload_model_weights(request: ReloadRequest):
         args.swap_modules
     )
     if found_model:
-        reload_lock.acquire()
-        engine.reload_model(request.target, found_model)
+        await reload_lock.acquire()
+        await engine.reload_model(model_id, found_model)
         reload_lock.release()
         return JSONResponse(content={"message": "Model reloaded"})
     else:
@@ -122,8 +122,6 @@ async def reload_model_weights(request: ReloadRequest):
             },
             status_code=404,
         )
-
-
 
 @app.post("/v1/chat/completions")
 async def create_chat_completion(request: ChatCompletionRequest, raw_request: Request):
@@ -138,7 +136,6 @@ async def create_chat_completion(request: ChatCompletionRequest, raw_request: Re
     else:
         return JSONResponse(content=generator.model_dump())
 
-
 @app.post("/v1/completions")
 async def create_completion(request: CompletionRequest, raw_request: Request):
     response = None
@@ -152,7 +149,7 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
             total_wait_time += 0.1
             time.sleep(0.1)
             if total_wait_time > 10:
-                logger.warning("has waited for > 10 seconds...")
+                logger.warning(f"has waited for {request.model} > 10 seconds..., current: {engine._current_weight_path}")
                 total_wait_time = 0
     logger.info("requested model is loaded --> continuing...")
     generator = await openai_serving_completion.create_completion(
@@ -233,7 +230,6 @@ if __name__ == "__main__":
         args.delta_modules,
         args.swap_modules,
     )
-
     app.root_path = args.root_path
     uvicorn.run(
         app,
