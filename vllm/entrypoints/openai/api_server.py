@@ -142,25 +142,11 @@ async def create_chat_completion(request: ChatCompletionRequest, raw_request: Re
 async def create_completion(request: CompletionRequest, raw_request: Request):
     response = None
     arrival_time = time.time()
-    gpu_loading_time = None
-    start_loading_time = None
     # wait until the engine finishes reloading
-    total_wait_time = 0
-    if len(args.swap_modules) > 0:
-        while request.model != engine._current_weight_path:
-            total_wait_time += 0.1
-            time.sleep(0.1)
-            if total_wait_time > 10:
-                logger.warning(f"has waited for {request.model} > 10 seconds..., current: {engine._current_weight_path}")
-                total_wait_time = 0
-    
-    logger.info(f"Model: {request.model}, current: {engine._current_weight_path}")
     generator = await openai_serving_completion.create_completion(
         request,
         raw_request,
         arrival_time=arrival_time,
-        gpu_loading_time=gpu_loading_time,
-        start_loading_time=start_loading_time,
     )
     if isinstance(generator, ErrorResponse):
         response = JSONResponse(

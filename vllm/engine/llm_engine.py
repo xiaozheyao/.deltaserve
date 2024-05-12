@@ -38,6 +38,7 @@ from vllm.transformers_utils.tokenizer_group import (
     get_tokenizer_group,
 )
 from vllm.utils import Counter
+from vllm.swap.request import SwapRequest
 
 logger = init_logger(__name__)
 _LOCAL_LOGGING_INTERVAL_SEC = 5
@@ -264,6 +265,7 @@ class LLMEngine:
         gpu_loading_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
         start_loading_time: Optional[float] = None,
     ) -> None:

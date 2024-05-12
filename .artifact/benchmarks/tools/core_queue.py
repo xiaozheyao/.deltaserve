@@ -27,7 +27,7 @@ def request_thread(
     global inference_results
     global current_model
     global threads
-    if req['reload']:
+    if 'reload' in req and req['reload']:
         for t in threads:
             t.join()
         print(f"Sending reload request for {req['model']}", flush=True)
@@ -77,7 +77,7 @@ def issue_queries(endpoint, queries):
             time.sleep(0.1)
         request_thread(endpoint, query, time.time())
     
-def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str):
+def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str, needs_swap=True):
     global current_model
     print("Warming up starts", flush=True)
     if warmup_strategy == "random":
@@ -86,12 +86,12 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     req = copy.deepcopy(req)
     req["timestamp"] = 0
     print(req, flush=True)
-    reload_res = requests.post(endpoint + "/v1/reload", json={
-        "type": "reload",
-        "target": req["model"],
-        "timestamp": 0,
-    })
-    print(reload_res)
+    if needs_swap:
+        reload_res = requests.post(endpoint + "/v1/reload", json={
+            "type": "reload",
+            "target": req["model"],
+            "timestamp": 0,
+        })
     res = requests.post(endpoint + "/v1/completions", json=req)
     if res.status_code != 200:
         print(f"Failed to warm up: {res.text}", flush=True)
@@ -122,10 +122,11 @@ def run(
     sysinfo: dict,
 ):
     global inference_results
-    selected_model = warmup(endpoints[0], workload, base_model, warmup_strategy)
+    needs_swap = len(sysinfo['swap_modules']) > 0
+    selected_model = warmup(
+        endpoints[0], workload, base_model, warmup_strategy, needs_swap
+    )
     workload = prepare_queries(workload, sysinfo, selected_model)
-    for wk in workload:
-        print(wk)
     issue_queries(endpoints[0], workload)
     return inference_results
 

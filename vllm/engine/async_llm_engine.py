@@ -570,6 +570,7 @@ class AsyncLLMEngine:
                 f"sampling_params: {sampling_params}, "
                 f"prompt_token_ids: {shortened_token_ids}, "
                 f"lora_request: {lora_request}, "
+                f"swap_request: {swap_request}, "
                 f"delta_request: {delta_request}."
             )
 
@@ -586,8 +587,6 @@ class AsyncLLMEngine:
 
         if arrival_time is None:
             arrival_time = time.time()
-        if swap_request:
-            await self.reload_model(swap_request.swap_local_path)
         if self._enable_prefetch:
             self.engine.prefetch_delta(delta_request)
         else:
@@ -600,6 +599,7 @@ class AsyncLLMEngine:
                 prompt_token_ids=prompt_token_ids,
                 lora_request=lora_request,
                 delta_request=delta_request,
+                swap_request=swap_request,
             )
         else:
             prompt_token_ids = await self.engine.encode_request_async(
@@ -608,6 +608,7 @@ class AsyncLLMEngine:
                 prompt_token_ids=prompt_token_ids,
                 lora_request=lora_request,
                 delta_request=delta_request,
+                swap_request=swap_request,
             )
 
         stream = self._request_tracker.add_request(
@@ -619,6 +620,7 @@ class AsyncLLMEngine:
             gpu_loading_time=gpu_loading_time,
             lora_request=lora_request,
             delta_request=delta_request,
+            swap_request=swap_request,
             multi_modal_data=multi_modal_data,
             start_loading_time=start_loading_time,
         )

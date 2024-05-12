@@ -146,6 +146,7 @@ class OpenAIServingCompletion(OpenAIServing):
             sampling_params = request.to_sampling_params()
             lora_request = self._maybe_get_lora(request)
             delta_request = self._maybe_get_delta(request)
+            swap_request = self._maybe_get_swap(request)
             guided_decode_logit_processor = await get_guided_decoding_logits_processor(
                 request, await self.engine.get_tokenizer()
             )
@@ -173,6 +174,7 @@ class OpenAIServingCompletion(OpenAIServing):
                         prompt_token_ids=input_ids,
                         lora_request=lora_request,
                         delta_request=delta_request,
+                        swap_request=swap_request,
                         arrival_time=arrival_time,
                         gpu_loading_time=gpu_loading_time,
                         start_loading_time=start_loading_time,
