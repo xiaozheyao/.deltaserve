@@ -1,0 +1,1868 @@
+INFO 05-11 22:31:11 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:12 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:13 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:14 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.9%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:31:15 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:15 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:15 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:15 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:15 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:15 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:16 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:17 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:17 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:17 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:17 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:17 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:17 scheduler.py:332] Delta ids in running state: [3]
+INFO 05-11 22:31:17 scheduler.py:332] Delta ids in running state: []
+INFO:     127.0.0.1:48850 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:18 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:18 worker_manager.py:325] Adding delta 7 to prefetching queue: [7]
+INFO 05-11 22:31:18 scheduler.py:332] Delta ids in running state: [7]
+WARNING 05-11 22:31:18 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+INFO 05-11 22:31:18 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:18 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:18 worker_manager.py:325] Adding delta 7 to prefetching queue: [7]
+(RayWorkerVllm pid=1825431) WARNING 05-11 22:31:18 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:18 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:18 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:31:18 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:18 worker_manager.py:325] Adding delta 7 to prefetching queue: [7]
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:19 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.793 seconds
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:19 worker_manager.py:353] Main thread loading delta 7 done
+INFO 05-11 22:31:20 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.013 seconds
+INFO 05-11 22:31:20 worker_manager.py:353] Main thread loading delta 7 done
+INFO 05-11 22:31:20 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:20 models.py:268] [prefetching] Lossless Compression Disabled
+INFO 05-11 22:31:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 3.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:31:21 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 8 to prefetching queue: [7, 8]
+INFO 05-11 22:31:21 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:21 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 5 to prefetching queue: [7, 8, 5]
+INFO 05-11 22:31:21 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 6 to prefetching queue: [7, 8, 5, 6]
+INFO 05-11 22:31:21 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:21 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 2 to prefetching queue: [7, 8, 5, 6, 2]
+INFO 05-11 22:31:21 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2]
+WARNING 05-11 22:31:21 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+INFO 05-11 22:31:21 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:21 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 5 to prefetching queue: [8, 5]
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 6 to prefetching queue: [8, 5, 6]
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:21 worker_manager.py:325] Adding delta 2 to prefetching queue: [8, 5, 6, 2]
+(RayWorkerVllm pid=1825431) WARNING 05-11 22:31:21 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:21 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:21 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:31:21 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.287 seconds
+INFO 05-11 22:31:21 worker_manager.py:278] Prefetching delta 7 done
+INFO 05-11 22:31:21 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:22 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.387 seconds
+INFO 05-11 22:31:22 worker_manager.py:353] Main thread loading delta 2 done
+INFO 05-11 22:31:22 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:22 models.py:268] [prefetching] Lossless Compression Disabled
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:22 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.418 seconds
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:22 worker_manager.py:353] Main thread loading delta 2 done
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:22 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:22 models.py:268] [prefetching] Lossless Compression Disabled
+WARNING 05-11 22:31:22 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+INFO 05-11 22:31:22 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:22 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1825431) WARNING 05-11 22:31:22 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:22 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:22 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:31:24 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.897 seconds
+INFO 05-11 22:31:24 worker_manager.py:278] Prefetching delta 8 done
+INFO 05-11 22:31:24 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.865 seconds
+INFO 05-11 22:31:24 worker_manager.py:353] Main thread loading delta 5 done
+INFO 05-11 22:31:24 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:24 models.py:268] [prefetching] Lossless Compression Disabled
+WARNING 05-11 22:31:24 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+INFO 05-11 22:31:24 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:24 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:24 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.181 seconds
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:24 worker_manager.py:353] Main thread loading delta 5 done
+(RayWorkerVllm pid=1825431) WARNING 05-11 22:31:25 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:25 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:25 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:31:25 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 0.967 seconds
+INFO 05-11 22:31:25 worker_manager.py:278] Prefetching delta 5 done
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:25 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 3.053 seconds
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:25 worker_manager.py:278] Prefetching delta 8 done
+INFO 05-11 22:31:26 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.352 seconds
+INFO 05-11 22:31:26 worker_manager.py:353] Main thread loading delta 6 done
+INFO 05-11 22:31:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:26 models.py:268] [prefetching] Lossless Compression Disabled
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:26 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.688 seconds
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:26 worker_manager.py:353] Main thread loading delta 6 done
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:26 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:26 models.py:268] [prefetching] Lossless Compression Disabled
+INFO 05-11 22:31:27 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.809 seconds
+INFO 05-11 22:31:27 worker_manager.py:278] Prefetching delta 6 done
+INFO 05-11 22:31:28 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:28 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:28 metrics.py:276] Avg prompt throughput: 21.3 tokens/s, Avg generation throughput: 1.1 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.3%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:31:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+INFO 05-11 22:31:28 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:28 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:28 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:28 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:28 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5]
+WARNING 05-11 22:31:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+INFO 05-11 22:31:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:31:28 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:28 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+(RayWorkerVllm pid=1825431) WARNING 05-11 22:31:28 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:28 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:31:28 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 0.246 seconds
+INFO 05-11 22:31:28 worker_manager.py:353] Main thread loading delta 4 done
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:29 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.323 seconds
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:29 worker_manager.py:278] Prefetching delta 6 done
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:30 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.569 seconds
+(RayWorkerVllm pid=1825431) INFO 05-11 22:31:30 worker_manager.py:353] Main thread loading delta 4 done
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:31:30 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 6, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:31 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO:     127.0.0.1:53446 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:32 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:32 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:33 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:33 metrics.py:276] Avg prompt throughput: 83.3 tokens/s, Avg generation throughput: 18.5 tokens/s, Running: 20 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 7.4
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:31:33 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:33 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:34 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:34 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:35 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:35 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:36 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:36 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO:     127.0.0.1:53390 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:37 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:37 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:38 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 43.0 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 9.5%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:31:38 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:39 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:39 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:40 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:40 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:41 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:41 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:42 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:42 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:42 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 38.0 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 10.6
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:31:43 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:44 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:44 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:45 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:45 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:46 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:31:46 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4]
+INFO:     127.0.0.1:53520 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:46 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:47 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 7, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:47 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO:     127.0.0.1:53440 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:48 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:48 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 40.1 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 11.5
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:31:48 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:49 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:49 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:49 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:50 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:50 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:51 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:51 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO:     127.0.0.1:53382 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:52 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:31:52 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO:     127.0.0.1:53494 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:53 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:53 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 36.9 tokens/s, Running: 15 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 12.4
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:31:53 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:54 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:54 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:55 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:55 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:56 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:56 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:56 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:57 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:57 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:58 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:58 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 35.5 tokens/s, Running: 14 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 13.0
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:31:58 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO:     127.0.0.1:43736 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:31:59 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:31:59 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:32:00 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:32:00 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:32:01 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:32:01 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 4, 4, 4, 3, 3]
+INFO:     127.0.0.1:43748 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:01 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 4, 4, 4, 3, 3]
+INFO 05-11 22:32:02 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 3, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:03 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 3, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:03 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 3, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:03 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO:     127.0.0.1:53416 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:04 metrics.py:276] Avg prompt throughput: 7.3 tokens/s, Avg generation throughput: 29.8 tokens/s, Running: 14 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 13.5
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:04 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:04 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:05 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:05 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:06 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:06 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:07 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:07 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:08 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:08 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:09 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 30.1 tokens/s, Running: 14 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 15.5
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:09 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:09 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO:     127.0.0.1:53428 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:10 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:10 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:11 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:11 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:12 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:12 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:13 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:13 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:13 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.3 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 15.5
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:14 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:14 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:32:15 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO:     127.0.0.1:53488 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:15 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:32:16 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:32:16 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:32:17 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:32:17 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4]
+INFO:     127.0.0.1:53474 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:18 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4]
+INFO 05-11 22:32:18 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 5, 8, 3, 4]
+INFO:     127.0.0.1:43764 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:19 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 5, 8, 3, 4]
+INFO 05-11 22:32:19 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO:     127.0.0.1:53436 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 25.8 tokens/s, Running: 9 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.9%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:19 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:20 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:20 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:20 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:21 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:21 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:21 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:22 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:22 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:32:23 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO:     127.0.0.1:53404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:23 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:23 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:24 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:24 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 23.5 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.9%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:25 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:25 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:25 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:26 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:26 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:26 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:27 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:27 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:28 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:28 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:28 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:29 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:29 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 19.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 12.0%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:30 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:30 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:31 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:31 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:31 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:32 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:32 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO:     127.0.0.1:43704 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:32 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:33 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:33 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:34 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:34 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:34 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:35 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 19.9 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 11.5%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:35 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:35 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:36 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:36 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:36 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:37 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:37 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:38 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:38 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:38 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:39 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:39 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:39 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:40 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 19.0 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 12.4%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:40 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:40 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:41 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:41 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:42 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:42 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:42 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:43 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:43 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:44 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:44 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO:     127.0.0.1:43696 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:44 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:45 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.5 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 11.3%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:45 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:46 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:46 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:46 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:47 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:47 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:48 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:48 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:49 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:49 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:32:49 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO:     127.0.0.1:53504 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:50 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:50 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:50 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.0 tokens/s, Running: 5 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.8%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:32:50 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:50 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:51 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:51 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:51 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:52 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:52 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:52 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:53 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:53 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:53 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:54 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:54 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:55 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:55 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.9 tokens/s, Running: 5 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.6%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:32:55 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:56 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:56 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:56 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:56 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:57 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:57 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:58 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:58 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:58 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:32:58 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO:     127.0.0.1:43708 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:32:59 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:32:59 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:32:59 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:00 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:00 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:00 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:00 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.8 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.0%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:33:00 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:01 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:01 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:01 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:02 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:02 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:02 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:03 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:03 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:03 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:03 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:04 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:04 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:04 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:05 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:05 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:05 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:05 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:06 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.6 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.7%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:33:06 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:06 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:06 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:07 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:07 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:07 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:08 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:08 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:08 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:09 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:09 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:09 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:09 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:10 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:10 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:10 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:11 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:11 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.9 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.4%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:33:11 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:11 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:12 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:12 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:33:12 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO:     127.0.0.1:43780 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:33:12 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:13 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:13 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:13 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:13 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:14 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:14 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:14 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:14 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:16 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.3 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 8.4%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:33:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.4 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.0%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:33:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:24 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:24 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:24 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.7 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.5%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:33:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:27 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:27 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:33:27 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO:     127.0.0.1:43724 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:33:27 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:27 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:28 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:28 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:28 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:28 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:28 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:32 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.8 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 6.9%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:33:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:33:35 scheduler.py:332] Delta ids in running state: [8]
+INFO:     127.0.0.1:53464 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:36 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 9.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.1%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.6%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:47 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.9%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:33:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.4%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:33:53 scheduler.py:332] Delta ids in running state: []
+INFO:     127.0.0.1:53458 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:33:53 scheduler.py:332] Delta ids in running state: []
+.artifact/scripts/sgs/nvme/policies/run_vllm_server_with_4bit_bitblas_prefetch.sh: line 4: 1820185 Killed                  USE_BITBLAS=1 BITWIDTH=4 python -m vllm.entrypoints.openai.api_serve
+r --model meta-llama/Llama-2-7b-hf --enable-delta --disable-log-requests --gpu-memory-utilization 0.85 --delta-modules delta-1=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.1 delta-2=/scr
+atch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.2 delta-3=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.3 delta-4=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.4 delta-5=/scratch/xiayao
+/models/7b/4bit/4b75s.bitblas.tp_2.5 delta-6=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.6 delta-7=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.7 delta-8=/scratch/xiayao/models/7b/
+4bit/4b75s.bitblas.tp_2.8 --max-deltas 6 --max-cpu-deltas 32 --tensor-parallel-size 2 --enforce-eager --enable-prefetch
+(triteia) ➜  vllm git:(feature/xiaozhe/deltazip) ✗ bash .artifact/scripts/sgs/nvme/policies/run_vllm_server_with_4bit_bitblas_prefetch_policy.sh
+/home/xiayao/.local/lib/python3.10/site-packages/pydantic/_internal/_fields.py:151: UserWarning: Field "model_name_or_path" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO 05-11 22:42:32 api_server.py:212] vLLM API server version 0.3.3
+INFO 05-11 22:42:32 api_server.py:213] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=[
+'*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[Delta(name='delta-1', local_path='/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.1'), Delta(name='delta-2', loca
+l_path='/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.2'), Delta(name='delta-3', local_path='/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.3'), Delta(name='delta-4', local_path='/scra
+tch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.4'), Delta(name='delta-5', local_path='/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.5'), Delta(name='delta-6', local_path='/scratch/xiayao/mo
+dels/7b/4bit/4b75s.bitblas.tp_2.6'), Delta(name='delta-7', local_path='/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.7'), Delta(name='delta-8', local_path='/scratch/xiayao/models/7b/4bit/
+4b75s.bitblas.tp_2.8')], swap_modules=[], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[]
+, model='meta-llama/Llama-2-7b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format=
+'auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=2, max_parallel_loading_workers=None, ray_workers_use_nsi
+ght=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=Fals
+e, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None,
+ enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=True, max_deltas=6, max_cpu_deltas=32, max_delta_bitwidth=4, de
+vice='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=True, scheduler_policy='deltaserve', engi
+ne_use_ray=False, disable_log_requests=True, max_log_len=None)
+2024-05-11 22:42:36,363 INFO worker.py:1743 -- Started a local Ray instance. View the dashboard at 127.0.0.1:8265
+INFO 05-11 22:42:56 llm_engine.py:87] Initializing an LLM engine (v0.3.3) with config: model='meta-llama/Llama-2-7b-hf', tokenizer='meta-llama/Llama-2-7b-hf', tokenizer_mode=auto, revision=No
+ne, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=DeltaConfig(max_deltas=6, max_bitwidth=4, delta_dtype=torch.int8, max_cpu_deltas=32,
+delta_extra_vocab_size=0, pack_factor=Fraction(2, 1), kernel=<QuantKernel.TRITON: 'triton'>), max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=2, disable_custom_all
+_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+INFO 05-11 22:42:56 llm_engine.py:237] ignored verifying delta_config
+Using bitblas
+WARNING 05-11 22:47:45 models.py:48] Using bitblas delta modules
+INFO 05-11 22:47:45 selector.py:16] Using FlashAttention backend.
+(RayWorkerVllm pid=1854870) Using bitblas
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:52:26 models.py:48] Using bitblas delta modules
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:26 selector.py:16] Using FlashAttention backend.
+INFO 05-11 22:52:28 weight_utils.py:187] Using model weights format ['*.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:28 weight_utils.py:187] Using model weights format ['*.safetensors']
+INFO 05-11 22:52:30 model_runner.py:155] Loading model weights took 6.3101 GB
+INFO 05-11 22:52:30 worker_manager.py:293] Starting prefetching thread
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:30 model_runner.py:155] Loading model weights took 6.3101 GB
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:30 worker_manager.py:293] Starting prefetching thread
+WARNING 05-11 22:52:31 quant_linear_triton.py:557] We should warm up the kernel here
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:52:32 quant_linear_triton.py:557] We should warm up the kernel here
+INFO 05-11 22:52:34 ray_gpu_executor.py:266] # GPU blocks: 652, # CPU blocks: 1024
+INFO 05-11 22:52:36 scheduler.py:120] Using DeltaServe policy.
+INFO 05-11 22:52:36 block_manager.py:264] disable automatic prefix caching
+WARNING 05-11 22:52:36 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [1849634]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:36800 - "GET /sysinfo HTTP/1.1" 200 OK
+INFO 05-11 22:52:43 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:52:43 worker_manager.py:325] Adding delta 7 to prefetching queue: [7]
+INFO 05-11 22:52:43 scheduler.py:332] Delta ids in running state: [7]
+WARNING 05-11 22:52:43 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+INFO 05-11 22:52:43 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:52:43 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:43 worker_manager.py:325] Adding delta 7 to prefetching queue: [7]
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:52:43 worker_manager.py:335] Missed prefetch, fall back to loading delta 7 now
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:43 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:43 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:52:45 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.510 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:45 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.442 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:45 worker_manager.py:353] Main thread loading delta 7 done
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:45 worker_manager.py:368] [1715460765.2008653] activating delta
+INFO 05-11 22:52:45 worker_manager.py:353] Main thread loading delta 7 done
+INFO 05-11 22:52:45 worker_manager.py:368] [1715460765.2825089] activating delta
+INFO 05-11 22:52:45 worker_manager.py:373] [1715460765.3250473] CPU -> GPU time: 0.0425
+(RayWorkerVllm pid=1854870) INFO 05-11 22:52:45 worker_manager.py:373] [1715460765.2594223] CPU -> GPU time: 0.0585
+INFO 05-11 22:52:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:52:45 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:45 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:45 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:46 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:47 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:48 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:49 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.6%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:50 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:51 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:52 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:53 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:54 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.1%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:55 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:56 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:57 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:58 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:52:59 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.5%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:00 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:01 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:02 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:03 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:04 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.8%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:05 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:06 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:07 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:08 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:09 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:09 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:09 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:09 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:09 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:09 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:09 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:10 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.3%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:53:10 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:11 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:11 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:11 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:11 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:11 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:11 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:12 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:12 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:12 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:12 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:12 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:12 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:12 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:13 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:14 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:15 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.6%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:16 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:17 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:18 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:19 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:20 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:21 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:22 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:23 scheduler.py:332] Delta ids in running state: []
+INFO:     127.0.0.1:36808 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:53:24 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:24 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:24 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:24 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:24 scheduler.py:332] Delta ids in running state: [7]
+INFO 05-11 22:53:24 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:24 scheduler.py:332] Delta ids in running state: [7, 7]
+INFO 05-11 22:53:24 scheduler.py:332] Delta ids in running state: [7, 7]
+INFO 05-11 22:53:24 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:24 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+INFO 05-11 22:53:24 scheduler.py:332] Delta ids in running state: [7, 7, 8]
+WARNING 05-11 22:53:24 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+INFO 05-11 22:53:24 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:24 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:24 worker_manager.py:325] Adding delta 8 to prefetching queue: [8]
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:53:24 worker_manager.py:335] Missed prefetch, fall back to loading delta 8 now
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:24 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:24 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:53:25 api_server.py:156] requested model is loaded --> continuing...
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:26 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.549 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:26 worker_manager.py:353] Main thread loading delta 8 done
+INFO 05-11 22:53:26 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.073 seconds
+INFO 05-11 22:53:26 worker_manager.py:353] Main thread loading delta 8 done
+INFO 05-11 22:53:27 metrics.py:276] Avg prompt throughput: 7.0 tokens/s, Avg generation throughput: 5.0 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:53:27 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:27 worker_manager.py:325] Adding delta 5 to prefetching queue: [5]
+INFO 05-11 22:53:27 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:27 worker_manager.py:325] Adding delta 6 to prefetching queue: [5, 6]
+INFO 05-11 22:53:27 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:27 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:27 worker_manager.py:325] Adding delta 2 to prefetching queue: [5, 6, 2]
+INFO 05-11 22:53:27 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2]
+WARNING 05-11 22:53:27 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+INFO 05-11 22:53:27 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:27 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:27 worker_manager.py:325] Adding delta 5 to prefetching queue: [5]
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:27 worker_manager.py:325] Adding delta 6 to prefetching queue: [5, 6]
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:27 worker_manager.py:325] Adding delta 2 to prefetching queue: [5, 6, 2]
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:53:27 worker_manager.py:335] Missed prefetch, fall back to loading delta 2 now
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:27 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:27 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:53:27 api_server.py:156] requested model is loaded --> continuing...
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:28 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.694 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:28 worker_manager.py:353] Main thread loading delta 2 done
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:28 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:28 models.py:268] [prefetching] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:53:29 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:53:29 worker_manager.py:344] Discarding prefetching delta 5
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:29 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:29 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:53:29 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.247 seconds
+INFO 05-11 22:53:29 worker_manager.py:353] Main thread loading delta 2 done
+INFO 05-11 22:53:29 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:29 models.py:268] [prefetching] Lossless Compression Disabled
+WARNING 05-11 22:53:29 worker_manager.py:335] Missed prefetch, fall back to loading delta 5 now
+WARNING 05-11 22:53:29 worker_manager.py:344] Discarding prefetching delta 5
+INFO 05-11 22:53:29 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:29 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:31 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.037 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:31 worker_manager.py:353] Main thread loading delta 5 done
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:53:31 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:31 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:31 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:31 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.249 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:31 worker_manager.py:278] Prefetching delta 5 done
+INFO 05-11 22:53:31 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.974 seconds
+INFO 05-11 22:53:31 worker_manager.py:278] Prefetching delta 5 done
+INFO 05-11 22:53:31 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 2.074 seconds
+INFO 05-11 22:53:31 worker_manager.py:353] Main thread loading delta 5 done
+INFO 05-11 22:53:31 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:31 models.py:268] [prefetching] Lossless Compression Disabled
+WARNING 05-11 22:53:31 worker_manager.py:335] Missed prefetch, fall back to loading delta 6 now
+WARNING 05-11 22:53:31 worker_manager.py:344] Discarding prefetching delta 6
+INFO 05-11 22:53:31 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:31 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:53:32 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 0.857 seconds
+INFO 05-11 22:53:32 worker_manager.py:278] Prefetching delta 6 done
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:32 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.447 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:32 worker_manager.py:353] Main thread loading delta 6 done
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:32 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:32 models.py:268] [prefetching] Lossless Compression Disabled
+INFO 05-11 22:53:33 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.160 seconds
+INFO 05-11 22:53:33 worker_manager.py:353] Main thread loading delta 6 done
+INFO 05-11 22:53:33 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:33 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:33 metrics.py:276] Avg prompt throughput: 17.6 tokens/s, Avg generation throughput: 0.9 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.3%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:53:33 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+INFO 05-11 22:53:33 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:33 worker_manager.py:325] Adding delta 3 to prefetching queue: [4, 3]
+INFO 05-11 22:53:33 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:33 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:33 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:33 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7]
+WARNING 05-11 22:53:33 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+INFO 05-11 22:53:33 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:33 models.py:268] [main] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:33 worker_manager.py:325] Adding delta 4 to prefetching queue: [4]
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:33 worker_manager.py:325] Adding delta 3 to prefetching queue: [4, 3]
+(RayWorkerVllm pid=1854870) WARNING 05-11 22:53:33 worker_manager.py:335] Missed prefetch, fall back to loading delta 4 now
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:33 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:33 models.py:268] [main] Lossless Compression Disabled
+INFO 05-11 22:53:33 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 0.152 seconds
+INFO 05-11 22:53:33 worker_manager.py:353] Main thread loading delta 4 done
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:34 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.738 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:34 worker_manager.py:278] Prefetching delta 6 done
+INFO 05-11 22:53:34 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.0.safetensors']
+INFO 05-11 22:53:34 models.py:268] [prefetching] Lossless Compression Disabled
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:34 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 0.929 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:34 worker_manager.py:353] Main thread loading delta 4 done
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:35 models.py:214] Loading from ['bitblas.remain.safetensors', 'bitblas.rank.1.safetensors']
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:35 models.py:268] [prefetching] Lossless Compression Disabled
+INFO 05-11 22:53:35 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.221 seconds
+INFO 05-11 22:53:36 worker_manager.py:278] Prefetching delta 3 done
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 api_server.py:156] requested model is loaded --> continuing...
+INFO 05-11 22:53:36 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 6, 4, 4, 7, 4, 6]
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:36 models.py:324] Disk -> CPU: Loaded 1797.75 MiB in 1.233 seconds
+(RayWorkerVllm pid=1854870) INFO 05-11 22:53:36 worker_manager.py:278] Prefetching delta 3 done
+INFO 05-11 22:53:37 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO:     127.0.0.1:52324 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:53:37 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:38 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:38 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:39 metrics.py:276] Avg prompt throughput: 78.4 tokens/s, Avg generation throughput: 17.4 tokens/s, Running: 20 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 7.4
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:53:39 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:39 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:39 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:40 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:40 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:41 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:41 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:41 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO:     127.0.0.1:52264 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:53:42 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:42 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:43 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:43 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:44 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 45.9 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 9.8%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:53:44 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:44 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:45 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:45 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:46 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:46 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:46 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:47 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:47 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:48 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:48 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:49 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:49 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 43.2 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 11.7
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:53:49 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:49 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:50 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4, 6]
+INFO 05-11 22:53:50 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4]
+INFO:     127.0.0.1:44690 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:53:51 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:51 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 7, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:52 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO:     127.0.0.1:52304 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:53:52 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:53 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:53 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:53 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:54 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:54 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 40.5 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 11.8
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:53:54 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:55 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:55 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 7, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:56 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO:     127.0.0.1:52250 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:53:56 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 7, 4]
+INFO 05-11 22:53:56 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO:     127.0.0.1:44674 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:53:57 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:53:57 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:53:58 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:53:58 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:53:59 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:53:59 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:53:59 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 35.9 tokens/s, Running: 15 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 12.6
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:53:59 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:00 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:00 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:01 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:01 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:02 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:02 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:03 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 5, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:03 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO:     127.0.0.1:52210 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:03 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:04 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 32.0 tokens/s, Running: 14 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 13.8
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:05 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:05 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:05 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 6, 7, 2, 4, 5, 5, 8, 4, 4, 4]
+INFO 05-11 22:54:06 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 4, 4, 4, 3, 3]
+INFO:     127.0.0.1:52214 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:06 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 4, 4, 4, 3, 3]
+INFO 05-11 22:54:07 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 3, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:07 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 3, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:08 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 3, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:08 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO:     127.0.0.1:52280 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:09 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:09 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:09 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:10 metrics.py:276] Avg prompt throughput: 7.2 tokens/s, Avg generation throughput: 29.6 tokens/s, Running: 14 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 14.1
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:10 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:10 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:11 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:11 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:12 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:12 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:12 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:13 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:13 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:14 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO:     127.0.0.1:52282 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:14 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:15 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 32.1 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 14.1
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:15 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:15 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:16 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:16 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:17 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:17 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:18 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:18 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:19 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4, 4]
+INFO 05-11 22:54:19 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO:     127.0.0.1:52356 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:19 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:54:20 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:54:20 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.0 tokens/s, Running: 12 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 14.7
+%, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:20 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:54:21 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4, 4]
+INFO 05-11 22:54:21 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4]
+INFO:     127.0.0.1:52342 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:22 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 7, 2, 4, 5, 8, 3, 4]
+INFO 05-11 22:54:22 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 5, 8, 3, 4]
+INFO:     127.0.0.1:52224 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:23 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 5, 8, 3, 4]
+INFO 05-11 22:54:23 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO:     127.0.0.1:52288 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:23 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:24 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:24 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:25 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:25 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 23.7 tokens/s, Running: 9 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 11.7%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:25 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:26 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:26 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:26 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 4, 8, 3, 4]
+INFO 05-11 22:54:27 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO:     127.0.0.1:52266 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:27 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:27 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:28 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:28 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:28 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:29 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:29 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:30 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:30 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:30 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 23.3 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 11.7%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:31 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:31 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:31 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:32 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:32 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:32 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:33 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:33 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:34 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:34 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:34 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:35 scheduler.py:332] Delta ids in running state: [7, 7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:35 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO:     127.0.0.1:52180 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:35 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 21.9 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.7%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:36 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:36 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:36 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:37 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:37 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:37 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:38 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:38 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:38 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:39 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:39 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:39 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:40 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:40 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:40 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 20.6 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 11.8%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:41 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:41 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:41 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:42 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:42 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:43 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:43 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:43 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:44 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:44 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:44 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:45 scheduler.py:332] Delta ids in running state: [7, 8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:45 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO:     127.0.0.1:52164 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:45 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:46 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 19.5 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.9%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:46 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:46 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:47 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:47 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:48 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:48 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:48 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:49 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:49 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:49 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:50 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:50 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:51 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:51 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3, 4]
+INFO 05-11 22:54:51 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.7 tokens/s, Running: 5 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.8%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:54:51 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO:     127.0.0.1:44682 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:54:52 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:52 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:52 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:53 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:53 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:53 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:54 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:54 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:54 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:55 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:55 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:55 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:55 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:56 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:56 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:56 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:57 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 16.3 tokens/s, Running: 5 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.6%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:54:57 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:57 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:57 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:57 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:58 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:58 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:58 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:59 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:59 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:54:59 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:55:00 scheduler.py:332] Delta ids in running state: [8, 7, 2, 8, 3]
+INFO 05-11 22:55:00 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO:     127.0.0.1:52192 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:55:00 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:01 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:01 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:01 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.8 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.0%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:55:02 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:02 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:02 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:03 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:03 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:03 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:04 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:04 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:04 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:05 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:05 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:05 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:06 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:06 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:06 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:07 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.9 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.7%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:55:07 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:07 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:08 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:08 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:08 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:08 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:09 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:09 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:09 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:10 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:10 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:10 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:11 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:11 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:11 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:11 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:12 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.8 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 10.3%
+, CPU KV cache usage: 0.0%
+INFO 05-11 22:55:12 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:12 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:13 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:13 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:13 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:14 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:14 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:14 scheduler.py:332] Delta ids in running state: [7, 2, 8, 3]
+INFO 05-11 22:55:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO:     127.0.0.1:52236 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:55:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:15 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:16 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:17 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.6 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 8.1%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:55:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:17 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:18 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:19 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:20 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:21 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:22 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.7 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 8.9%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:55:22 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:23 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:24 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:24 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:24 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:25 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:26 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:27 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:27 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:27 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:27 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.7 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 9.5%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:55:27 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:28 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:28 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:28 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:28 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:29 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:29 scheduler.py:332] Delta ids in running state: [7, 8, 3]
+INFO 05-11 22:55:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO:     127.0.0.1:52200 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:55:29 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:30 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:31 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:32 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:33 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.7 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 6.6%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:55:33 scheduler.py:332] Delta ids in running state: [8, 3]
+^[[B^[[B^[[B^[[B^[[B^[[BINFO 05-11 22:55:33 scheduler.py:332] Delta ids in running state: [8, 3]
+^[[B^[[BINFO 05-11 22:55:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:33 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:34 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:35 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:36 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:36 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:36 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:36 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:36 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:36 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:37 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:37 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:37 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:37 scheduler.py:332] Delta ids in running state: [8, 3]
+INFO 05-11 22:55:37 scheduler.py:332] Delta ids in running state: [8]
+INFO:     127.0.0.1:52332 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:55:37 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.1%,
+ CPU KV cache usage: 0.0%
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:38 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:39 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:40 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:41 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:42 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.4%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:43 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:44 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:45 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:46 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:47 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:48 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.9%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:55:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:48 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:49 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:50 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:51 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:52 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.2%,
+CPU KV cache usage: 0.0%
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:53 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:54 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:55 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:55 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:55 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:55 scheduler.py:332] Delta ids in running state: [8]
+INFO 05-11 22:55:55 scheduler.py:332] Delta ids in running state: []
+INFO:     127.0.0.1:52316 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-11 22:55:55 scheduler.py:332] Delta ids in running state: []
+.artifact/scripts/sgs/nvme/policies/run_vllm_server_with_4bit_bitblas_prefetch_policy.sh: line 4: 1849634 Killed                  USE_BITBLAS=1 BITWIDTH=4 python -m vllm.entrypoints.openai.ap
+i_server --model meta-llama/Llama-2-7b-hf --enable-delta --disable-log-requests --gpu-memory-utilization 0.85 --delta-modules delta-1=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.1 delta
+-2=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.2 delta-3=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.3 delta-4=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.4 delta-5=/scratch
+/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.5 delta-6=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.6 delta-7=/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.7 delta-8=/scratch/xiayao/mod
+els/7b/4bit/4b75s.bitblas.tp_2.8 --max-deltas 6 --max-cpu-deltas 32 --tensor-parallel-size 2 --enforce-eager --enable-prefetch --scheduler-policy deltaserve
+(triteia) ➜  vllm git:(feature/xiaozhe/deltazip) ✗ ls
+(triteia) ➜  vllm git:(feature/xiaozhe/deltazip) ✗ capture-pane -S -3000
+zsh: command not found: capture-pane
+(triteia) ➜  vllm git:(feature/xiaozhe/deltazip) ✗
+tmux capture-pane -pS -1000000 > file.out
+
+

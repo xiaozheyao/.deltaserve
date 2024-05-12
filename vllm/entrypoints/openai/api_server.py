@@ -8,8 +8,8 @@ import time
 import fastapi
 import uvicorn
 from fastapi import Request
-from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse, Response, StreamingResponse
 from prometheus_client import make_asgi_app
 
@@ -178,7 +178,7 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
     else:
         response = JSONResponse(content=generator.model_dump())
 
-    if reload_lock.locked() and not engine.engine.has_unfinished_requests():
+    if reload_lock.locked():
         reload_lock.release()
     return response
 
