@@ -29,6 +29,7 @@ from vllm.worker.cache_engine import CacheEngine
 from vllm.worker.model_runner import ModelRunner
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
+from vllm.swap.config import SwapConfig
 from vllm.logger import logging
 
 logger = logging.getLogger(__name__)
@@ -53,6 +54,7 @@ class Worker:
         distributed_init_method: str,
         lora_config: Optional[LoRAConfig] = None,
         delta_config: Optional[DeltaConfig] = None,
+        swap_config: Optional[SwapConfig] = None,
         vision_language_config: Optional[VisionLanguageConfig] = None,
         kv_cache_dtype: Optional[str] = "auto",
         is_driver_worker: bool = False,
@@ -66,6 +68,7 @@ class Worker:
         self.distributed_init_method = distributed_init_method
         self.lora_config = lora_config
         self.delta_config = delta_config
+        self.swap_config = swap_config
         self.is_driver_worker = is_driver_worker
         if self.is_driver_worker:
             assert self.rank == 0, "The driver worker must have rank 0."
@@ -125,8 +128,6 @@ class Worker:
 
     def load_model(self):
         self.model_runner.load_model()
-    
-    
     
     def reload_model_weights(self, model_path_or_name: str) -> None:
         self.model_runner.reload_model(model_path_or_name)

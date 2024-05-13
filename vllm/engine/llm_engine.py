@@ -330,6 +330,7 @@ class LLMEngine:
             raise ValueError(f"Cannot request more than " f"{max_logprobs} logprobs.")
         if arrival_time is None:
             arrival_time = time.time()
+            
         prompt_token_ids = self.encode_request(
             request_id=request_id,
             prompt=prompt,
@@ -351,6 +352,7 @@ class LLMEngine:
             eos_token_id,
             lora_request,
             delta_request,
+            swap_request,
         )
 
         # Defensive copy of SamplingParams, which are used by the sampler,
@@ -369,6 +371,7 @@ class LLMEngine:
             gpu_loading_time,
             lora_request,
             delta_request,
+            swap_request,
             multi_modal_data,
             start_loading_time,
         )

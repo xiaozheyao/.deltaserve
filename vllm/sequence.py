@@ -7,14 +7,13 @@ from typing import TYPE_CHECKING, Dict, List, Optional, Union, Any
 
 from vllm.block import LogicalTokenBlock
 from vllm.lora.request import LoRARequest
+from vllm.swap.request import SwapRequest
 from vllm.delta.request import DeltaRequest
 from vllm.sampling_params import SamplingParams
 
 if TYPE_CHECKING:
     import torch
-
     from vllm.spec_decode.metrics import SpecDecodeWorkerMetrics
-
 
 @dataclass
 class Logprob:
@@ -169,6 +168,8 @@ class Sequence:
         block_size: The block size of the sequence. Should be the same as the
             block size used by the block manager and cache engine.
         lora_request: LoRA request.
+        delta_request: Delta request.
+        swap_request: Swap request.
     """
 
     def __init__(
@@ -180,6 +181,7 @@ class Sequence:
         eos_token_id: Optional[int] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ) -> None:
         self.seq_id = seq_id
         self.prompt = prompt
@@ -187,7 +189,7 @@ class Sequence:
         self.eos_token_id = eos_token_id
         self.lora_request = lora_request
         self.delta_request = delta_request
-
+        self.swap_request = swap_request
         self.data = SequenceData(prompt_token_ids)
         self.output_logprobs: SampleLogprobs = []
         self.output_text = ""
@@ -350,6 +352,8 @@ class SequenceGroup:
         sampling_params: The sampling parameters used to generate the outputs.
         arrival_time: The arrival time of the request.
         lora_request: LoRA request.
+        delta_request: Delta request.
+        swap_request: Swap request.
         multi_modal_data: Multi modal data associated with the request.
     """
 
@@ -362,6 +366,7 @@ class SequenceGroup:
         gpu_loading_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
         start_loading_time: Optional[float] = None,
     ) -> None:
@@ -380,6 +385,7 @@ class SequenceGroup:
         )
         self.lora_request = lora_request
         self.delta_request = delta_request
+        self.swap_request = swap_request
         self.prompt_logprobs: Optional[PromptLogprobs] = None
         self.state = SequenceGroupState()
         self.multi_modal_data = multi_modal_data

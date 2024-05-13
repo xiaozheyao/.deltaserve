@@ -17,7 +17,7 @@ from vllm.sequence import SamplerOutput, SequenceGroupMetadata, SequenceGroup
 from vllm.utils import get_distributed_init_method, get_ip, get_open_port, make_async
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
-
+from vllm.swap.config import SwapConfig
 logger = init_logger(__name__)
 
 
@@ -32,12 +32,14 @@ class GPUExecutor(ExecutorBase):
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
         delta_config: Optional[DeltaConfig],
+        swap_config: Optional[SwapConfig],
         vision_language_config: Optional[VisionLanguageConfig],
     ) -> None:
         self.model_config = model_config
         self.cache_config = cache_config
         self.lora_config = lora_config
         self.delta_config = delta_config
+        self.swap_config = swap_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
         self.device_config = device_config

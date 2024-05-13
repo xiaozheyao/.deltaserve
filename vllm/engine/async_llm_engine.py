@@ -261,6 +261,7 @@ class _AsyncLLMEngine(LLMEngine):
         gpu_loading_time: Optional[float] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
         start_loading_time: Optional[float] = None,
     ) -> None:
@@ -291,6 +292,7 @@ class _AsyncLLMEngine(LLMEngine):
             gpu_loading_time=gpu_loading_time,
             lora_request=lora_request,
             delta_request=delta_request,
+            swap_request=swap_request,
             multi_modal_data=multi_modal_data,
             start_loading_time=start_loading_time,
         )

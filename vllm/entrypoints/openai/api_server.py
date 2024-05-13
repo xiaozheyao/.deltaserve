@@ -140,7 +140,6 @@ async def create_chat_completion(request: ChatCompletionRequest, raw_request: Re
 
 @app.post("/v1/completions")
 async def create_completion(request: CompletionRequest, raw_request: Request):
-    response = None
     arrival_time = time.time()
     # wait until the engine finishes reloading
     generator = await openai_serving_completion.create_completion(
@@ -156,7 +155,6 @@ async def create_completion(request: CompletionRequest, raw_request: Request):
         response = StreamingResponse(content=generator, media_type="text/event-stream")
     else:
         response = JSONResponse(content=generator.model_dump())
-
     return response
 
 

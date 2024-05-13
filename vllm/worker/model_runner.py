@@ -56,6 +56,7 @@ from vllm.utils import (
     make_tensor_with_pad,
     maybe_expand_dim,
 )
+from vllm.swap.config import SwapConfig
 
 logger = init_logger(__name__)
 
@@ -77,6 +78,7 @@ class ModelRunner:
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
         delta_config: Optional[DeltaConfig],
+        swap_config: Optional[SwapConfig],
         kv_cache_dtype: Optional[str] = "auto",
         is_driver_worker: bool = False,
         vision_language_config: Optional[VisionLanguageConfig] = None,
@@ -84,6 +86,7 @@ class ModelRunner:
         self.model_config = model_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
+        self.swap_config = swap_config
         # lora config & delta config cannot be non-None at the same time
         # TODO(xiaozhe): enable both lora and delta at the same time
         assert (lora_config is None) or (
