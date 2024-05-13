@@ -15,7 +15,6 @@ from .models import (
 )
 from vllm.sequence import SequenceGroup
 import threading
-from queue import Queue
 
 logger = init_logger(__name__)
 LOG_TIME = False
