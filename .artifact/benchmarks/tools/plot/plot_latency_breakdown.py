@@ -10,6 +10,7 @@ import plotly.io as pio
 
 pio.kaleido.scope.mathjax = None
 
+
 def plot(args):
     print(args)
     files = [x for x in os.listdir(args.input) if x.endswith(".jsonl")]

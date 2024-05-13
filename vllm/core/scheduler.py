@@ -244,8 +244,14 @@ class Scheduler:
             if self.delta_enabled:
                 most_wanted = self.policy.get_most_wanted(now, seq_groups=self.waiting)
                 # get occurences ranking instead of the actual occurences
-                self.waiting = self.policy.sort_by_priority(now, self.waiting, occurences=None, available_deltas=available_deltas, most_wanted=most_wanted)
-            
+                self.waiting = self.policy.sort_by_priority(
+                    now,
+                    self.waiting,
+                    occurences=None,
+                    available_deltas=available_deltas,
+                    most_wanted=most_wanted,
+                )
+
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0
             while self._passed_delay(now) and self.waiting:
@@ -331,9 +337,9 @@ class Scheduler:
                 scheduled.append(seq_group)
             # print all deltas in the running state
             # if self.delta_enabled:
-                # running_deltas = [seq_group.delta_int_id for seq_group in self.running]
-                # logger.info(f"Delta ids in running state: {running_deltas}")
-                
+            # running_deltas = [seq_group.delta_int_id for seq_group in self.running]
+            # logger.info(f"Delta ids in running state: {running_deltas}")
+
             self.waiting.extendleft(leftover_waiting_sequences)
 
             if scheduled or ignored_seq_groups:
@@ -380,7 +386,7 @@ class Scheduler:
 
         # Swap in the sequence groups in the SWAPPED state if possible.
         self.swapped = self.policy.sort_by_priority(now, self.swapped)
-        
+
         if not preempted:
             num_curr_seqs = sum(
                 seq_group.get_max_num_running_seqs() for seq_group in self.running
@@ -414,7 +420,7 @@ class Scheduler:
                         leftover_swapped.appendleft(seq_group)
                         self.swapped.popleft()
                         continue
-                
+
                 if self.delta_enabled:
                     delta_int_id = seq_group.delta_int_id
                     if (
@@ -469,7 +475,9 @@ class Scheduler:
         )
         return scheduler_outputs
 
-    def schedule(self, available_deltas: List[int]) -> Tuple[List[SequenceGroupMetadata], SchedulerOutputs]:
+    def schedule(
+        self, available_deltas: List[int]
+    ) -> Tuple[List[SequenceGroupMetadata], SchedulerOutputs]:
         # Schedule sequence groups.
         # This function call changes the internal states of the scheduler
         # such as self.running, self.swapped, and self.waiting.

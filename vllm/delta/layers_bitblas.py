@@ -926,9 +926,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        self.weight_stacked[index, :, :].copy_(
-            weight, non_blocking=ASYNC_COPY
-        )
+        self.weight_stacked[index, :, :].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
         self,

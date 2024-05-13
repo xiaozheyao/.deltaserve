@@ -42,9 +42,9 @@ try:
                     engine_config.scheduler_policy
                     == trt_py.SchedulerPolicy.GUARANTEED_NO_EVICT.name
                 ):
-                    params[
-                        "scheduler_policy"
-                    ] = trt_py.SchedulerPolicy.GUARANTEED_NO_EVICT
+                    params["scheduler_policy"] = (
+                        trt_py.SchedulerPolicy.GUARANTEED_NO_EVICT
+                    )
                 else:
                     raise ValueError(
                         f"Unexpected value for trtllm scheduler_policy {engine_config.scheduler_policy}"
@@ -86,14 +86,14 @@ try:
                 params["max_num_sequences"] = engine_config.max_num_sequences
 
             if engine_config.max_tokens_in_paged_kv_cache:
-                params[
-                    "max_tokens_in_paged_kv_cache"
-                ] = engine_config.max_tokens_in_paged_kv_cache
+                params["max_tokens_in_paged_kv_cache"] = (
+                    engine_config.max_tokens_in_paged_kv_cache
+                )
 
             if engine_config.kv_cache_free_gpu_mem_fraction:
-                params[
-                    "kv_cache_free_gpu_mem_fraction"
-                ] = engine_config.kv_cache_free_gpu_mem_fraction
+                params["kv_cache_free_gpu_mem_fraction"] = (
+                    engine_config.kv_cache_free_gpu_mem_fraction
+                )
 
             params["enable_trt_overlap"] = engine_config.enable_trt_overlap
 

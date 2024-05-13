@@ -17,6 +17,7 @@ from vllm.config import ModelConfig
 from vllm.sequence import SequenceGroup
 import threading
 
+
 class AbstractWorkerManager(ABC):
     """Abstract class for managing LoRA/Delta models on the worker side."""
 
@@ -63,7 +64,8 @@ class AbstractWorkerManager(ABC):
 
     @abstractmethod
     def list_deltas(self) -> Set[int]: ...
-    
+
+
 class WorkerSwapManager(AbstractWorkerManager):
     """WorkerSwapManager manages the swaps on the worker side."""
 
@@ -85,11 +87,7 @@ class WorkerSwapManager(AbstractWorkerManager):
         self.embedding_modules = embedding_modules
         self.embedding_padding_modules = embedding_padding_modules
         super().__init__(
-            max_num_seqs,
-            max_num_batched_tokens,
-            vocab_size,
-            model_config,
-            device
+            max_num_seqs, max_num_batched_tokens, vocab_size, model_config, device
         )
 
     @property

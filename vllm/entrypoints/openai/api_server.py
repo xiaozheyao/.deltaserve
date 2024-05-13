@@ -49,7 +49,9 @@ async def lifespan(app: fastapi.FastAPI):
 
     yield
 
+
 app = fastapi.FastAPI(lifespan=lifespan)
+
 
 def parse_args():
     parser = make_arg_parser()
@@ -97,18 +99,14 @@ async def get_sysinfo():
         ],
     }
     engine_info.update(cli_args)
-    engine_info.update({
-        "pid": os.getpid()
-    })
+    engine_info.update({"pid": os.getpid()})
     return JSONResponse(content=engine_info)
 
 
 @app.post("/v1/reload")
 async def reload_model_weights(request: ReloadRequest):
     model_id, found_model = find_swap_model(
-        served_model,
-        request.target,
-        args.swap_modules
+        served_model, request.target, args.swap_modules
     )
     if found_model:
         while engine.engine.has_running_requests():
@@ -125,18 +123,17 @@ async def reload_model_weights(request: ReloadRequest):
             status_code=404,
         )
 
+
 @app.post("/v1/chat/completions")
 async def create_chat_completion(request: ChatCompletionRequest, raw_request: Request):
     generator = await openai_serving_chat.create_chat_completion(request, raw_request)
     if isinstance(generator, ErrorResponse):
-        return JSONResponse(
-            content=generator.model_dump(),
-            status_code=generator.code
-        )
+        return JSONResponse(content=generator.model_dump(), status_code=generator.code)
     if request.stream:
         return StreamingResponse(content=generator, media_type="text/event-stream")
     else:
         return JSONResponse(content=generator.model_dump())
+
 
 @app.post("/v1/completions")
 async def create_completion(request: CompletionRequest, raw_request: Request):

@@ -1019,7 +1019,6 @@ class ModelRunner:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.list_deltas()
 
-
     @torch.inference_mode()
     def capture_model(self, kv_caches: List[torch.Tensor]) -> None:
         """Cuda graph capture a model.

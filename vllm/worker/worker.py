@@ -127,7 +127,7 @@ class Worker:
 
     def load_model(self):
         self.model_runner.load_model()
-    
+
     def reload_model_weights(self, model_path_or_name: str) -> None:
         self.model_runner.reload_model(model_path_or_name)
 
@@ -273,7 +273,7 @@ class Worker:
 
     def list_loaded_deltas(self):
         return self.model_runner.list_loaded_deltas()
-    
+
     def prefetch_delta(self, delta_request: DeltaRequest):
         return self.model_runner.prefetch_delta(delta_request)
 

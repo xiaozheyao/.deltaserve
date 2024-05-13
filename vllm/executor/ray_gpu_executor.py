@@ -347,7 +347,7 @@ class RayGPUExecutor(ExecutorBase):
                 "prefetch_delta",
                 delta_request=delta_request,
             )
-    
+
     def _run_workers(
         self,
         method: str,

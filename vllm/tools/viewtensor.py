@@ -1,5 +1,6 @@
 import safetensors as st
 
+
 def main(args):
     print(args)
     tensor_stats = {}
@@ -13,13 +14,16 @@ def main(args):
                 "std": temp_tensor.float().std().item(),
             }
     for key, value in tensor_stats.items():
-        print(f"key: {key} | size: {value['size']} | dtype: {value['dtype']} | mean: {value['mean']} | std: {value['std']}")
+        print(
+            f"key: {key} | size: {value['size']} | dtype: {value['dtype']} | mean: {value['mean']} | std: {value['std']}"
+        )
 
 
-if __name__=="__main__":
+if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser(description="View tensor")
     parser.add_argument("--ckpt", type=str, help="Path to tensor")
-    
+
     args = parser.parse_args()
     main(args)

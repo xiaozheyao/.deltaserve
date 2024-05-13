@@ -330,7 +330,7 @@ class LLMEngine:
             raise ValueError(f"Cannot request more than " f"{max_logprobs} logprobs.")
         if arrival_time is None:
             arrival_time = time.time()
-            
+
         prompt_token_ids = self.encode_request(
             request_id=request_id,
             prompt=prompt,

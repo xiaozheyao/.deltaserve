@@ -11,6 +11,7 @@ threads = []
 inference_results = []
 ongoing_reload = False
 
+
 def parse_annotation(annotations):
     annos = []
     annotations = annotations.split(",")
@@ -30,13 +31,16 @@ def request_thread(
     global ongoing_reload
     while ongoing_reload:
         time.sleep(0.1)
-    if req['reload']:
+    if req["reload"]:
         ongoing_reload = True
-        res = requests.post(endpoint + "/v1/reload", json={
-            "type": "reload",
-            "target": req["model"],
-            "timestamp": req["timestamp"],
-        })
+        res = requests.post(
+            endpoint + "/v1/reload",
+            json={
+                "type": "reload",
+                "target": req["model"],
+                "timestamp": req["timestamp"],
+            },
+        )
         if res.status_code != 200:
             print(f"Failed to issue reload request: {res.text}", flush=True)
         ongoing_reload = False
@@ -103,6 +107,7 @@ def issue_queries(endpoint, queries):
     end = timer()
     return {"results": inference_results, "total_elapsed": end - start}
 
+
 def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str):
     print("Warming up starts", flush=True)
     if warmup_strategy == "random":
@@ -111,32 +116,37 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     req = copy.deepcopy(req)
     req["timestamp"] = 0
     print(req, flush=True)
-    reload_res = requests.post(endpoint + "/v1/reload", json={
-        "type": "reload",
-        "target": req["model"],
-        "timestamp": 0,
-    })
+    reload_res = requests.post(
+        endpoint + "/v1/reload",
+        json={
+            "type": "reload",
+            "target": req["model"],
+            "timestamp": 0,
+        },
+    )
     print(reload_res)
     res = requests.post(endpoint + "/v1/completions", json=req)
     if res.status_code != 200:
         print(f"Failed to warm up: {res.text}", flush=True)
     print("Warming up ends", flush=True)
-    return req['model']
+    return req["model"]
 
-def prepare_queries(workloads: List, sysinfo: dict, warmup_model:str):
-    swap_modules = sysinfo['swap_modules']
+
+def prepare_queries(workloads: List, sysinfo: dict, warmup_model: str):
+    swap_modules = sysinfo["swap_modules"]
     if len(swap_modules) == 0:
         pass
     else:
         # add reload workload in the middle
         current_model = warmup_model
         for idx, wk in enumerate(workloads):
-            if wk['model'] != current_model:
-                current_model = wk['model']
-                wk['reload'] = True
+            if wk["model"] != current_model:
+                current_model = wk["model"]
+                wk["reload"] = True
             else:
-                wk['reload'] = False
+                wk["reload"] = False
     return workloads
+
 
 def run(
     endpoints: List[str],

@@ -8,9 +8,9 @@ from rayllm.backend.observability.tracing import baggage
 
 # Fast api state context.
 # This may include secrets
-_fastapi_state_context: contextvars.ContextVar[
-    weakref.ReferenceType[State]
-] = contextvars.ContextVar("aviary_fastapi_state")
+_fastapi_state_context: contextvars.ContextVar[weakref.ReferenceType[State]] = (
+    contextvars.ContextVar("aviary_fastapi_state")
+)
 
 
 def set(**kwargs):

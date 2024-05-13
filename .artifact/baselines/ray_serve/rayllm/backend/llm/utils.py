@@ -723,9 +723,11 @@ def decode_stopping_sequences_where_needed(
     if not stopping_sequences:
         return None
     return [
-        decode_tokens(tokenizer, sequence)
-        if not isinstance(sequence, str)
-        else sequence
+        (
+            decode_tokens(tokenizer, sequence)
+            if not isinstance(sequence, str)
+            else sequence
+        )
         for sequence in stopping_sequences
     ]
 

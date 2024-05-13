@@ -99,7 +99,6 @@ def apply_delta(
         scales_stacked,
         g_idx_stacked,
         indices,
-        1.0,
     )
     return output.view_as(org_output)
 
@@ -179,7 +178,7 @@ def apply_delta_uncompressed(
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         inp = x[indices == id]
-        output = torch.matmul(inp, delta_weights[id])
+        output = torch.matmul(inp, delta_weights[id].T)
         base_output[indices == id] += output
     return base_output
 
@@ -207,9 +206,8 @@ def apply_delta_embed(
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
-        output = F.embedding(
-            inp,
-            delta_weights[id].T
-        )
+        print(f"inp: {inp.shape}")
+        print(f"delta_weights[id]: {delta_weights[id].shape}")
+        output = F.embedding(inp, delta_weights[id])
         base_output[idx_mask] += output
     return base_output

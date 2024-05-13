@@ -6,6 +6,7 @@ class SwapRequest:
     """
     Request for a Swappable model.
     """
+
     swap_name: str
     swap_int_id: int
     swap_local_path: str

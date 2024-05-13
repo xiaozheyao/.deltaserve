@@ -217,7 +217,9 @@ class _AsyncLLMEngine(LLMEngine):
         and updates the scheduler with the model outputs. Finally, it decodes
         the sequences and returns the newly generated results.
         """
-        seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule(self.model_executor.list_deltas() if self.delta_config else [])
+        seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule(
+            self.model_executor.list_deltas() if self.delta_config else []
+        )
 
         if not scheduler_outputs.is_empty():
             # Execute the model.
@@ -431,7 +433,7 @@ class AsyncLLMEngine:
         else:
             return self.engine.get_tokenizer()
 
-    async def reload_model(self,model_id, model_name_or_path: str):
+    async def reload_model(self, model_id, model_name_or_path: str):
         if self._current_weight_path == model_id:
             # if it's the same model, no need to reload
             return False
@@ -440,7 +442,7 @@ class AsyncLLMEngine:
         self.engine.reload_model(model_name_or_path)
         self._current_weight_path = model_id
         return True
-    
+
     def start_background_loop(self) -> None:
         """Start the background loop."""
         if self.errored:

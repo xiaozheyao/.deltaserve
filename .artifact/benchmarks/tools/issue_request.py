@@ -5,6 +5,7 @@ import argparse
 from core_queue import run, get_sys_info
 import time
 
+
 def before_benchmark(args):
     with open(args.workload, "r") as f:
         workload = [json.loads(line) for line in f]
@@ -47,7 +48,7 @@ if __name__ == "__main__":
     endpoints, workload, warmup, sysinfo = before_benchmark(args)
     workload_annotation = args.workload.split("/")[-1].split(".")[0]
     annotations = generate_annotation(args.endpoints, sysinfo, workload_annotation)
-    
+
     outputs = run(endpoints, workload, warmup, sysinfo["model"], sysinfo)
     new_unique_name = str(uuid.uuid4())
     output_file = os.path.join(args.output, f"{new_unique_name}.jsonl")
@@ -66,8 +67,8 @@ if __name__ == "__main__":
             f.write(json.dumps(output))
             f.write("\n")
     print(f"Results written to {output_file}", flush=True)
-    
-    pid = sysinfo['pid']
+
+    pid = sysinfo["pid"]
     # print(f"Killing process {pid}...")
     # os.system(f"kill -9 {pid}")
 """

@@ -87,5 +87,4 @@ class VLLMDeploymentImpl:
     health_check_period_s=30,
     health_check_timeout_s=30,
 )
-class VLLMDeployment(VLLMDeploymentImpl):
-    ...
+class VLLMDeployment(VLLMDeploymentImpl): ...

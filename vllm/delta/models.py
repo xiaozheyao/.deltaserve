@@ -176,7 +176,9 @@ class DeltaModel:
         pin_memory = str(device) == "cpu" and not in_wsl()
         # get tp rank here
         tp_rank = get_tensor_model_parallel_rank()
-        logger.debug(f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Loading DeltaModel from {path_or_name}")
+        logger.debug(
+            f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Loading DeltaModel from {path_or_name}"
+        )
         config = AutoConfig.from_pretrained(
             path_or_name, trust_remote=trust_remote_code
         )
@@ -258,7 +260,9 @@ class DeltaModel:
             del lossless_compressor
 
         else:
-            logger.info(f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled")
+            logger.info(
+                f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled"
+            )
             for mtf in model_tensor_filenames:
                 with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
                     keys = f.keys()
@@ -271,7 +275,7 @@ class DeltaModel:
                             prefetch_thread_event.wait()
                         tensors[key] = f.get_tensor(key)
         modules = {}
-        
+
         module_names = set(
             [
                 x.rsplit(".", 1)[0]

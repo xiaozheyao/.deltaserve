@@ -20,10 +20,14 @@ from .layers import ModelMapping
 from .packed import ModelLayerWeights
 from .config import SwapConfig
 from vllm.config import DeviceConfig, ModelConfig
-from vllm.model_executor.model_loader import _get_model_architecture, _set_default_torch_dtype
+from vllm.model_executor.model_loader import (
+    _get_model_architecture,
+    _set_default_torch_dtype,
+)
 
 
 _GLOBAL_MODEL_ID = 0
+
 
 def convert_mapping(
     mapping: ModelMapping,
@@ -68,8 +72,7 @@ def convert_mapping(
     delta_idx = None
     for i in range(len(indices)):
         # TODO index can be slow. optimize
-        delta_idx = delta_index_to_id.index(
-            indices[i]) if indices[i] > 0 else -1
+        delta_idx = delta_index_to_id.index(indices[i]) if indices[i] > 0 else -1
         embedding_indices[i] = delta_idx if indices[i] > 0 else 0
         indices[i] = i
         delta_indices[i] = delta_idx
@@ -77,11 +80,9 @@ def convert_mapping(
     indices = torch.tensor(
         [indices, delta_indices, embedding_indices], dtype=torch.long, device="cuda"
     )
-    prompt_mapping = torch.tensor(
-        prompt_mapping, device="cuda", dtype=torch.long)
+    prompt_mapping = torch.tensor(prompt_mapping, device="cuda", dtype=torch.long)
     embeddings_indices = torch.stack(
-        [indices[2] * extra_vocab_size, indices[2]
-            * (vocab_size + extra_vocab_size)]
+        [indices[2] * extra_vocab_size, indices[2] * (vocab_size + extra_vocab_size)]
     )
     embeddings_indices[embeddings_indices == -1] = max_deltas - 1
     base_indices = indices[1]
@@ -105,7 +106,8 @@ def convert_mapping(
         embeddings_indices,
         indices_len,
     )
-    
+
+
 def get_model_id():
     global _GLOBAL_MODEL_ID
     _GLOBAL_MODEL_ID += 1
@@ -113,11 +115,7 @@ def get_model_id():
 
 
 class SwapModel:
-    def __init__(
-        self,
-        swap_model_id: int,
-        swaps: Dict[str, ModelLayerWeights]
-    ):
+    def __init__(self, swap_model_id: int, swaps: Dict[str, ModelLayerWeights]):
         self.id = swap_model_id
         self.swaps: Dict[str, ModelLayerWeights] = swaps
 
@@ -140,11 +138,13 @@ class SwapModel:
                     model_config.download_dir,
                     model_config.load_format,
                     model_config.revision,
-            )
+                )
         return model.eval()
-    
+
+
 class SwapModelManager:
     """A manager that manages multiple SwapModels."""
+
     def __init__(
         self,
         model,
@@ -152,12 +152,12 @@ class SwapModelManager:
         max_num_batched_tokens: int,
         vocab_size: int,
         swap_config: SwapConfig,
-        model_config: ModelConfig
+        model_config: ModelConfig,
     ):
         self.model_config = model_config
         self.max_num_seqs = max_num_seqs
         self.swap_config = swap_config
-        assert(
+        assert (
             self.capacity >= self.packed_swap_slots
         ), "Capacity must be greater than packed swap slots"
         self.max_num_batched_tokens = math.ceil(max_num_batched_tokens / 8) * 8
@@ -179,8 +179,10 @@ class SwapModelManager:
         self.indices_len = []
         self.model = model
         if hasattr(self.model, "supported_swap_modules"):
-            self.supported_swap_modules = copy.deepcopy(self.model.supported_swap_modules)
-        
+            self.supported_swap_modules = copy.deepcopy(
+                self.model.supported_swap_modules
+            )
+
             self.packed_modules_mapping = copy.deepcopy(
                 self.model.packed_modules_mapping
             )
@@ -191,18 +193,18 @@ class SwapModelManager:
         self._last_mapping = None
         self._create_swap_modules()
         self.model.delta_manager = self
-        
+
     @property
     def packed_swap_slots(self) -> int:
         return self.swap_config.max_packed_model
-    
+
     @property
     def capacity(self) -> int:
         return self.swap_config.max_cpu_model
 
     def __len__(self) -> int:
         return len(self.registered_models)
-    
+
     def _create_swap_modules(self):
         for module_name, module in self.model.named_modules():
             if not self._match_target_modules(module_name):
@@ -220,7 +222,7 @@ class SwapModelManager:
                     self.model.config,
                 ),
             )
-    
+
     def _match_target_modules(self, module_name: str):
         return any(
             re.match(

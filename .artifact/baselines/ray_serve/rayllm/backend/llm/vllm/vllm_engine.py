@@ -277,21 +277,27 @@ class VLLMEngine:
             return VLLMInternalSamplingParams(
                 n=1,
                 best_of=sampling_params.best_of,
-                presence_penalty=sampling_params.presence_penalty
-                if sampling_params.presence_penalty is not None
-                else 0.0,
-                frequency_penalty=sampling_params.frequency_penalty
-                if sampling_params.frequency_penalty is not None
-                else 0.0,
-                temperature=sampling_params.temperature
-                if sampling_params.temperature is not None
-                else 1.0,
-                top_p=sampling_params.top_p
-                if sampling_params.top_p is not None
-                else 1.0,
-                top_k=sampling_params.top_k
-                if sampling_params.top_k is not None
-                else -1,
+                presence_penalty=(
+                    sampling_params.presence_penalty
+                    if sampling_params.presence_penalty is not None
+                    else 0.0
+                ),
+                frequency_penalty=(
+                    sampling_params.frequency_penalty
+                    if sampling_params.frequency_penalty is not None
+                    else 0.0
+                ),
+                temperature=(
+                    sampling_params.temperature
+                    if sampling_params.temperature is not None
+                    else 1.0
+                ),
+                top_p=(
+                    sampling_params.top_p if sampling_params.top_p is not None else 1.0
+                ),
+                top_k=(
+                    sampling_params.top_k if sampling_params.top_k is not None else -1
+                ),
                 use_beam_search=False,
                 stop=sampling_params.stop,
                 ignore_eos=False,

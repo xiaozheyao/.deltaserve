@@ -72,7 +72,7 @@ class EngineArgs:
     scheduler_delay_factor: float = 0.0
     enable_prefetch: bool = False
     scheduler_policy: str = "fcfs"
-    
+
     def __post_init__(self):
         if self.tokenizer is None:
             self.tokenizer = self.model
@@ -466,7 +466,7 @@ class EngineArgs:
             "--scheduler-policy",
             type=str,
             default=EngineArgs.scheduler_policy,
-            help="The scheduling policy to use. "
+            help="The scheduling policy to use. ",
         )
         return parser
 

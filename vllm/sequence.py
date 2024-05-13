@@ -15,6 +15,7 @@ if TYPE_CHECKING:
     import torch
     from vllm.spec_decode.metrics import SpecDecodeWorkerMetrics
 
+
 @dataclass
 class Logprob:
     """Infos for supporting OpenAI compatible logprobs and token ranks.

@@ -6,8 +6,7 @@ color_palette = {
         "#90a0c8",
         "#f19e7b",
         "#72ba9d",
-        "#bfc8c9" 
-        "#f9daad",
+        "#bfc8c9" "#f9daad",
         "#fbe9d8",
     ]
 }
@@ -86,7 +85,7 @@ def extract_key_metadata(metadata):
             "gen_tokens": gen_tokens,
             "is_nvme": is_nvme,
             "enable_prefetch": enable_prefetch,
-            "policy": policy
+            "policy": policy,
         }
     )
     return workload
@@ -236,7 +235,7 @@ def get_title(key_metadata):
         hardware = "\\text{NVMe}"
     else:
         hardware = "\\text{NFS}"
-    sys = "\Large{" + sys +","+ key_metadata['policy'] + "}"
+    sys = "\Large{" + sys + "," + key_metadata["policy"] + "}"
     workload = "\Large{" + workload + "}"
     hardware = "\Large{" + hardware + "}"
     return f"${sys}, {workload}, {hardware}$"
@@ -264,15 +263,19 @@ def get_sys_name(key_metadata):
     hardware = "\Large{" + hardware + "}"
     return f"${sys}, {hardware}$"
 
+
 def get_short_system_name(key_metadata):
     if key_metadata["is_swap"]:
-        return 'Baseline-1', 0
-    if key_metadata["is_delta"] and key_metadata['enable_prefetch'] and key_metadata['policy']=='deltaserve':
-        return '+Policy', 3
-    elif key_metadata["is_delta"] and key_metadata['enable_prefetch']:
-        return '+Prefetch', 2 
+        return "Baseline-1", 0
+    if (
+        key_metadata["is_delta"]
+        and key_metadata["enable_prefetch"]
+        and key_metadata["policy"] == "deltaserve"
+    ):
+        return "+Policy", 3
+    elif key_metadata["is_delta"] and key_metadata["enable_prefetch"]:
+        return "+Prefetch", 2
     elif key_metadata["is_delta"]:
-        return '+Delta', 1
+        return "+Delta", 1
     else:
-        raise ValueError('Unknown system type')
-    
+        raise ValueError("Unknown system type")
