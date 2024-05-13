@@ -7,6 +7,7 @@ use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
 bitwidth = int(os.environ.get("BITWIDTH", "4"))
+
 print(f"Benchmarking with tensor parallel size={tp_size}")
 
 llm = LLM(
@@ -31,7 +32,7 @@ if bitwidth == 4:
         if tp_size == 1:
             delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-unopt-bitblas-1"
         else:
-            delta_path = f"/scratch/xiayao/models/4bit/4b75s.bitblas.tp_2.1"
+            delta_path = f"/scratch/xiayao/models/7b/4bit/4b75s.bitblas.tp_2.1"
     elif use_unoptimized_delta:
         delta_path = f"/scratch/xiayao/models/vicuna-7b-4b0.75s-tp_2-unopt-1"
     else:

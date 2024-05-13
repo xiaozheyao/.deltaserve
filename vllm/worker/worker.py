@@ -72,7 +72,6 @@ class Worker:
         self.is_driver_worker = is_driver_worker
         if self.is_driver_worker:
             assert self.rank == 0, "The driver worker must have rank 0."
-
         self.vision_language_config = vision_language_config
         if self.vision_language_config:
             assert (
@@ -81,7 +80,6 @@ class Worker:
             assert (
                 not self.delta_config
             ), "To be tested: vision language model with delta settings."
-
         self.model_runner = ModelRunner(
             model_config,
             parallel_config,
@@ -89,6 +87,7 @@ class Worker:
             device_config,
             lora_config=self.lora_config,
             delta_config=self.delta_config,
+            swap_config=self.swap_config,
             kv_cache_dtype=kv_cache_dtype,
             is_driver_worker=is_driver_worker,
             vision_language_config=vision_language_config,

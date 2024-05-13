@@ -242,10 +242,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
     ):
         self.device_tensor = device_tensor
         self.reset_delta(index)
-        if self.tp_size > 1:
-            logger.warning(
-                f"qweight.shape: {qweight.shape}, qzeros.shape: {qzeros.shape}, scales.shape: {scales.shape}"
-            )
         self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
         self.qzero_stacked[index, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, :, :].copy_(scales, non_blocking=ASYNC_COPY)
