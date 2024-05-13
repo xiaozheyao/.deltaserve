@@ -23,8 +23,6 @@ def add_delta(
     scales: torch.Tensor,
     g_idx: torch.Tensor,
     indices: torch.LongTensor,
-    layer_idx: int,
-    device_tensor: any,
 ):
     """
     semantics:
@@ -55,7 +53,6 @@ def add_delta_slice(
     y_slice_size: int,
     *,
     buffer: Optional[torch.Tensor] = None,
-    device_tensor: any,
 ):
     """
     semantics:
@@ -89,7 +86,6 @@ def apply_delta(
     g_idx_stacked: torch.Tensor,
     indices: torch.Tensor,
     output: torch.Tensor,
-    device_tensor: Any,
 ):
     org_output = output
     x = x.view(-1, x.shape[-1])
@@ -104,7 +100,6 @@ def apply_delta(
         g_idx_stacked,
         indices,
         1.0,
-        device_tensor=device_tensor,
     )
     return output.view_as(org_output)
 
@@ -118,7 +113,6 @@ def apply_delta_packed_nslice(
     indices: torch.Tensor,
     output: torch.Tensor,
     output_slices: Tuple[int, ...],
-    device_tensor: Any,
 ):
     """
     Applies delta to each input.
@@ -156,7 +150,6 @@ def apply_delta_packed_nslice(
             1.0,
             offset_left,
             output_slices[slice_idx],
-            device_tensor=device_tensor,
         )
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
@@ -183,15 +176,11 @@ def apply_delta_uncompressed(
         (len(delta_weights), base_output.shape[0], base_output.shape[1]),
         device=base_output.device,
     )
-    valid_mask = indices != -1
-    filtered_indices = indices[valid_mask]
-    outputs = torch.matmul(x, delta_weights.mT)
-    
-    base_output[valid_mask] += outputs[
-        filtered_indices,
-        torch.arange(base_output.shape[0], device=base_output.device)[valid_mask],
-        :,
-    ]
+    unique_indices = torch.unique(indices)
+    for id in unique_indices:
+        inp = x[indices == id]
+        output = torch.matmul(inp, delta_weights[id])
+        base_output[indices == id] += output
     return base_output
 
 
@@ -220,7 +209,7 @@ def apply_delta_embed(
         inp = x[idx_mask]
         output = F.embedding(
             inp,
-            delta_weights[id]
+            delta_weights[id].T
         )
         base_output[idx_mask] += output
     return base_output

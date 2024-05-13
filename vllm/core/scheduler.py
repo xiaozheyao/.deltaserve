@@ -330,9 +330,9 @@ class Scheduler:
                 num_curr_seqs += num_new_seqs
                 scheduled.append(seq_group)
             # print all deltas in the running state
-            if self.delta_enabled:
-                running_deltas = [seq_group.delta_int_id for seq_group in self.running]
-                logger.info(f"Delta ids in running state: {running_deltas}")
+            # if self.delta_enabled:
+                # running_deltas = [seq_group.delta_int_id for seq_group in self.running]
+                # logger.info(f"Delta ids in running state: {running_deltas}")
                 
             self.waiting.extendleft(leftover_waiting_sequences)
 

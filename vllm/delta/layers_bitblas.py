@@ -78,7 +78,6 @@ class BaseLayerWithDelta(nn.Module):
         qzeros: torch.Tensor,
         scales: torch.Tensor,
         g_idx: torch.Tensor,
-        device_tensor: Any,
     ):
         """Overwrites delta tensors at index."""
         ...
@@ -99,7 +98,6 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
     def __init__(self, base_layer: VocabParallelEmbedding) -> None:
         super().__init__()
         self.base_layer = base_layer
-        self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
         self.vocab_start_index = self.base_layer.vocab_start_index
@@ -126,7 +124,6 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         index: int,
         bitwidth: int,
         weight: torch.Tensor,
-        device_tensor: Any,
     ):
         self.bitwidth[index] = bitwidth
         shard_size = self.base_layer.org_vocab_size // self.tp_size
@@ -183,7 +180,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         super().__init__()
         self.base_layer = base_layer
         self.tp_size = get_tensor_model_parallel_world_size()
-        self.device_tensor = None
 
     def reset_delta(self, index: int):
         self.qweight_stacked[index] = 0
@@ -238,9 +234,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         qzeros: torch.Tensor,
         scales: torch.Tensor,
         g_idx: torch.Tensor,
-        device_tensor: Any,
     ):
-        self.device_tensor = device_tensor
         self.reset_delta(index)
         self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
         self.qzero_stacked[index, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
@@ -273,7 +267,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
             self.g_idx_stacked,
             self.indices[: self.indices_len[0]],
             output,
-            self.device_tensor,
         )
         return output
 
@@ -317,7 +310,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
         super().__init__(base_layer)
-        self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
 
@@ -405,9 +397,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         qzeros: List[torch.Tensor],
         scales: List[torch.Tensor],
         g_idx: List[torch.Tensor],
-        device_tensor: Any,
     ):
-        self.device_tensor = device_tensor
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
         if self.tp_size > 1:
@@ -461,7 +451,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             self.indices[: self.indices_len[0]],
             output,
             (self.output_dim, self.output_dim),
-            self.device_tensor,
         )
         return output
 
@@ -482,7 +471,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
 class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
         super().__init__(base_layer)
-        self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
 
@@ -622,11 +610,9 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         qzeros: List[torch.Tensor],
         scales: List[torch.Tensor],
         g_idx: List[torch.Tensor],
-        device_tensor: Any,
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        self.device_tensor = device_tensor
         if self.tp_size > 1:
             if qweight[0] is not None:
                 qzeros_q = qzeros[0][
@@ -720,7 +706,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             self.indices[: self.indices_len[0]],
             output,
             self.output_slices,
-            self.device_tensor,
         )
         return output
 
@@ -739,7 +724,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     def __init__(self, base_layer: RowParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
-        self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
 
     def set_mapping(
@@ -808,11 +792,9 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         qzeros: torch.Tensor,
         scales: torch.Tensor,
         g_idx: torch.Tensor,
-        device_tensor: Any,
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        self.device_tensor = device_tensor
         self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
         self.qzeros_stacked[index, :, :].copy_(qzeros, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, :, :].copy_(scales, non_blocking=ASYNC_COPY)
@@ -831,7 +813,6 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
             self.g_idx_stacked,
             self.indices[: self.indices_len[0]],
             output,
-            self.device_tensor,
         )
         return output
 
@@ -889,7 +870,6 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         self.hidden_size = hidden_size
         self.dtype = dtype
         self.device = device
-        self.device_tensor = None
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
 
@@ -943,12 +923,10 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
         index: int,
         bitwidth: int,
         weight: torch.Tensor,
-        device_tensor: Any,
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        self.device_tensor = device_tensor
-        self.weight_stacked[index, : weight.shape[0], : weight.shape[1]].copy_(
+        self.weight_stacked[index, :, :].copy_(
             weight, non_blocking=ASYNC_COPY
         )
 

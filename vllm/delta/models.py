@@ -52,13 +52,6 @@ elif use_bitblas:
         from_layer_logits_processor,
         DeltaMapping,
     )
-elif use_triteia:
-    from .layers_triteia import (
-        BaseLayerWithDelta,
-        from_layer,
-        from_layer_logits_processor,
-        DeltaMapping,
-    )
 else:
     from .layers import (
         BaseLayerWithDelta,
@@ -431,14 +424,12 @@ class DeltaModelManager:
                         module_delta.qzeros,
                         module_delta.scales,
                         module_delta.g_idx,
-                        device_tensor=True,
                     )
                 else:
                     module.set_delta(
                         index,
                         delta_model.bitwidth,
                         module_delta.weight,
-                        device_tensor=True,
                     )
             else:
                 module.reset_delta(index)

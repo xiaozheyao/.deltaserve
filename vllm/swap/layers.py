@@ -90,7 +90,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.vocab_start_index = self.base_layer.vocab_start_index
         self.vocab_end_index = self.base_layer.vocab_end_index
     
-    def reset_packed(self, index: int):
+    def reset_pack(self, index: int):
         self.packed_weights[index] = None
     
     def create_packed_weights(
@@ -106,7 +106,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
             dtype=model_config.torch_dtype,
             device=self.base_layer.weight.device
         )
-    def set_packed(
+    def set_pack(
         self,
         index: int,
         weight: torch.Tensor,
@@ -212,7 +212,354 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     def linear_weights(self):
         return self.base_layer.linear_weights
 
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        swap_config: SwapConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is ColumnParallelLinear or (
+            type(source_layer) is MergedColumnParallelLinear
+            and len(packed_modules_list) == 1
+        )
 
+class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
+    def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
+        super().__init__(base_layer)
+        self.tp_size = get_tensor_model_parallel_world_size()
+        self.tp_rank = get_tensor_model_parallel_rank()
+    
+    def create_packed_weights(
+        self,
+        max_packed: int,
+        swap_config: SwapConfig,
+        model_config: Optional[PretrainedConfig] = None,
+    ) -> None:
+        n_slices = 2
+        if not (
+            len(self.base_layer.output_sizes) == n_slices
+            and self.base_layer.output_sizes[0] == self.base_layer.output_sizes[1]
+        ):
+            raise ValueError(
+                "DeltaColumnParallelLinear2Slice requires 2 slices with "
+                "the same size."
+            )
+        self.weight_stacked = tuple(
+            torch.zeros(
+                max_packed,
+                self.base_layer.weight.shape[0] // 2,
+                self.base_layer.weight.shape[1],
+                dtype=model_config.torch_dtype,
+                device=self.base_layer.weight.device,
+            )
+            for _ in range(n_slices)
+        )
+        self.indices: Optional[torch.Tensor] = None
+        self.output_dim = self.base_layer.weight.shape[0] // 2
+        
+    def reset_pack(self, index: int):
+        self.weight_stacked[0][index] = 0
+        self.weight_stacked[1][index] = 0
+    
+    def set_pack(
+        self,
+        index: int,
+        weight: List[torch.Tensor],
+        ):
+        self.reset_pack(index)
+        if weight[0] is not None:
+            self.weight_stacked[0][index, :, :].copy_(weight[0], non_blocking=ASYNC_COPY)
+        if weight[1] is not None:
+            self.weight_stacked[1][index, :, :].copy_(weight[1], non_blocking=ASYNC_COPY)
+    
+    def apply_weights(
+        self, x: torch.Tensor, bias: Optional[torch.Tensor]
+    ) -> torch.Tensor:
+        # TODO(xiaozhe):
+        pass
+    
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        swap_config: SwapConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return (
+            type(source_layer) is MergedColumnParallelLinear
+            and len(packed_modules_list) == 2
+        )
+
+class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
+    def __init__(self, base_layer: QKVParallelLinear) -> None:
+        super().__init__(base_layer)
+        self.tp_size = get_tensor_model_parallel_world_size()
+        self.tp_rank = get_tensor_model_parallel_rank()
+        
+        self.q_proj_shard_size = self.base_layer.num_heads * self.base_layer.head_size
+        self.kv_proj_shard_size = (
+            self.base_layer.num_kv_heads * self.base_layer.head_size
+        )
+        self.q_shard_id = self.tp_rank
+        self.kv_shard_id = self.tp_rank // self.base_layer.num_kv_head_replicas
+                
+    def create_packed_weights(self, max_packed_model: int, swap_config: SwapConfig, model_config: PretrainedConfig) -> None:
+        self.weight_stacked = (
+            torch.zeros(
+                max_packed_model,
+                self.q_proj_shard_size,
+                self.base_layer.weight.shape[1],
+                dtype=model_config.torch_dtype,
+                device=self.base_layer.weight.device,
+            ),
+            torch.zeros(
+                max_packed_model,
+                self.kv_proj_shard_size,
+                self.base_layer.weight.shape[1],
+                dtype=model_config.torch_dtype,
+                device=self.base_layer.weight.device,
+            ),
+            torch.zeros(
+                max_packed_model,
+                self.kv_proj_shard_size,
+                self.base_layer.weight.shape[1],
+                dtype=model_config.torch_dtype,
+                device=self.base_layer.weight.device,
+            )
+        )
+        self.output_slices = (
+            self.q_proj_shard_size,
+            self.kv_proj_shard_size,
+            self.kv_proj_shard_size,
+        )
+        self.packed_indices: Optional[torch.Tensor] = None
+        self.standard_indices: Optional[torch.Tensor] = None
+        self.indices_len: Optional[List[int]] = None
+
+    def reset_pack(self, index: int):
+        self.weight_stacked[0][index] = 0
+        self.weight_stacked[1][index] = 0
+        self.weight_stacked[2][index] = 0
+
+    def set_pack(
+        self,
+        index: int,
+        weight: List[torch.Tensor],
+    ):
+        self.reset_pack(index)
+        self.weight_stacked[0][index, :, :].copy_(weight[0], non_blocking=ASYNC_COPY)
+        self.weight_stacked[1][index, :, :].copy_(weight[1], non_blocking=ASYNC_COPY)
+        self.weight_stacked[2][index, :, :].copy_(weight[2], non_blocking=ASYNC_COPY)
+    
+    def apply_weights(
+        self, x: torch.Tensor, bias: Optional[torch.Tensor] = None
+    ) -> torch.Tensor:
+        # TODO(xiaozhe): 
+        pass
+    
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        swap_config: SwapConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is QKVParallelLinear and len(packed_modules_list) == 3
+    
+class RowParallelLinearWithPacked(BaseLayerWithPacked):
+    def __init__(self, base_layer: RowParallelLinear) -> None:
+        super().__init__()
+        self.base_layer = base_layer
+        self.tp_size = get_tensor_model_parallel_world_size()
+        self.tp_rank = get_tensor_model_parallel_rank()
+        
+    def set_mapping(
+        self,
+        base_indices: torch.Tensor,
+        sampler_indices: torch.Tensor,
+        sampler_indices_padded: torch.Tensor,
+        embeddings_indices: torch.Tensor,
+        indices_len: List[int],
+    ):
+        self.indices = base_indices
+        self.indices_len = indices_len
+    
+    def create_packed_weights(
+        self,
+        max_packed: int,
+        swap_config: SwapConfig,
+        model_config: Optional[PretrainedConfig] = None,
+    ) -> None:
+        self.weight_stacked = torch.zeros(
+            (
+                max_packed,
+                self.base_layer.weight.shape[0],
+                self.base_layer.weight.shape[1],
+            ),
+            dtype=model_config.torch_dtype,
+            device=self.base_layer.weight.device,            
+        )
+        
+    def reset_pack(self, index: int):
+        self.weight_stacked[index] = 0
+    
+    def set_pack(
+        self,
+        index: int,
+        weight: torch.Tensor,
+    ):
+        self.reset_pack(index)
+
+    def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
+        # TODO(xiaozhe): 
+        pass
+
+    def forward(self, input_):
+        # TODO(xiaozhe): 
+        pass
+
+    @property
+    def weight(self):
+        return self.base_layer.weight
+
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        swap_config: SwapConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        return type(source_layer) is RowParallelLinear
+
+class LogitsProcessorWithPacked(BaseLayerWithPacked):
+    def __init__(
+        self,
+        base_layer: LogitsProcessor,
+        hidden_size: int,
+        dtype: torch.dtype,
+        device: torch.device,
+    ) -> None:
+        super().__init__()
+        self.base_layer = base_layer
+        self.hidden_size = hidden_size
+        self.dtype = dtype
+        self.device = device
+        self.tp_size = get_tensor_model_parallel_world_size()
+        self.tp_rank = get_tensor_model_parallel_rank()
+
+    @property
+    def logits_as_input(self):
+        return self.base_layer.logits_as_input
+
+    @property
+    def vocab_size(self):
+        return self.base_layer.vocab_size
+
+    @property
+    def scale(self):
+        return self.base_layer.scale
+
+    @property
+    def org_vocab_size(self):
+        return self.base_layer.org_vocab_size
+
+    @property
+    def include_gpu_probs_tensor(self):
+        return self.base_layer.include_gpu_probs_tensor
+
+    def create_delta_weights(
+        self,
+        max_deltas: int,
+        swap_config: SwapConfig,
+        model_config: Optional[PretrainedConfig] = None,
+    ) -> None:
+        self.weight_stacked = torch.zeros(
+            (
+                max_deltas,
+                self.base_layer.vocab_size // self.tp_size,
+                self.hidden_size,
+            ),
+            dtype=self.dtype,
+            device=self.device,
+        )
+        self.indices = None
+        self.indices_padded = None
+        self.indices_len = None
+
+    def reset_pack(self, index: int):
+        self.weight_stacked[index] = 0
+
+    def set_pack(
+        self,
+        index: int,
+        weight: torch.Tensor,
+    ):
+        self.reset_delta(index)
+        self.weight_stacked[index, :, :].copy_(
+            weight, non_blocking=ASYNC_COPY
+        )
+
+    def set_mapping(
+        self,
+        base_indices: torch.Tensor,
+        sampler_indices: torch.Tensor,
+        sampler_indices_padded: torch.Tensor,
+        embeddings_indices: torch.Tensor,
+        indices_len: List[int],
+    ):
+        self.indices = sampler_indices
+        self.indices_padded = sampler_indices_padded
+        self.indices_len = indices_len
+
+    def _get_logits(
+        self,
+        hidden_states: torch.Tensor,
+        embedding: torch.Tensor,
+        embedding_bias: Optional[torch.Tensor] = None,
+    ) -> Optional[torch.Tensor]:
+        # Get the logits for the next tokens.
+        logits = torch.matmul(hidden_states, embedding.t())
+        # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
+        if logits is None:
+            return None
+        apply_delta_uncompressed(
+            hidden_states,
+            self.weight_stacked,
+            self.indices[: self.indices_len[1]],
+            logits,
+        )
+        logits = tensor_model_parallel_gather(logits)
+        return logits
+
+    def forward(self, *args, **kwargs):
+        return type(self.base_layer).forward(self, *args, **kwargs)
+
+    @classmethod
+    def can_replace_layer(
+        cls,
+        source_layer: nn.Module,
+        delta_config: DeltaConfig,
+        packed_modules_list: List,
+        model_config: Optional[PretrainedConfig],
+    ) -> bool:
+        # Special handling for the LogitsProcessor.
+        return False
+
+
+_all_delta_classes: Set[Type[BaseLayerWithDelta]] = {
+    cls
+    for cls in globals().values()
+    if inspect.isclass(cls)
+    and issubclass(cls, BaseLayerWithDelta)
+    and cls is not BaseLayerWithDelta
+}
+        
+        
 # def from_layer(
 #     layer: nn.Module,
 #     max_deltas: int,
