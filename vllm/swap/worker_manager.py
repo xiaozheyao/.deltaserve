@@ -20,7 +20,7 @@ logger = init_logger(__name__)
 
 
 class AbstractWorkerManager(ABC):
-    """Abstract class for managing LoRA/Delta models on the worker side."""
+    """Abstract class for managing LoRA/Delta/Swap models on the worker side."""
 
     def __init__(
         self,
@@ -125,22 +125,26 @@ class WorkerSwapManager(AbstractWorkerManager):
         self._swap_manager.set_swap_mapping(swap_mapping)
 
     def _apply_swaps(
-        self, swap_requests: List[SwapRequest], sequence_groups: List[SequenceGroup]
+        self,
+        swap_requests: List[SwapRequest],
+        sequence_groups: List[SequenceGroup]
     ) -> None:
         swaps_that_exist = self.list_swaps()
         swaps_map = {
-            swap_request.delta_id: swap_request for swap_request in swap_requests
+            swap_request.swap_int_id: swap_request for swap_request in swap_requests
         }
-        if len(swaps_map) > self._delta_manager.delta_slots:
+        if len(swaps_map) > self._swap_manager.packed_swap_slots:
             raise RuntimeError(
                 f"Number of requested deltas ({len(swaps_map)}) is greater than the number of GPU delta slots "
-                f"({self._delta_manager.delta_slots})."
+                f"({self._swap_manager.packed_swap_slots})."
             )
-        new_deltas = set(swaps_map)
-        swaps_to_add = new_deltas - swaps_that_exist
-        swaps_to_remove = swaps_that_exist - new_deltas
+
+        new_swaps = set(swaps_map)
+        swaps_to_add = new_swaps - swaps_that_exist
+        swaps_to_remove = swaps_that_exist - new_swaps
+
         for swap_id in swaps_to_remove:
-            self.remove_delta(swap_id)
+            self.remove_swap(swap_id)
 
         for swap_id in swaps_to_add:
             self.add_swap(swaps_map[swap_id], sequence_groups)
@@ -152,15 +156,17 @@ class WorkerSwapManager(AbstractWorkerManager):
             # TODO(xiaozhe): actual loading logic here
             swap = self._swap_model_cls.from_checkpoint(
                 swap_request.swap_local_path,
+                id=swap_request.swap_int_id,
+                model_config=self.model_config,
             )
         except Exception as e:
             logger.error(
-                f"Failed to load delta model from {swap_request.swap_local_path}: {e}"
+                f"Failed to load swap model from {swap_request.swap_local_path}: {e}"
             )
             return None
         return swap
 
-    def add_dummy_delta(self, swap_request: SwapRequest) -> bool:
+    def add_dummy_swap(self, swap_request: SwapRequest) -> bool:
         if swap_request.swap_int_id in self.list_swaps():
             return False
         raise NotImplementedError
@@ -199,7 +205,7 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
             swap_config=self.swap_config,
             max_num_batched_tokens=self.max_num_batched_tokens,
         )
-        self._swpa_manager: LRUCacheSwapModelManager = swap_manager
+        self._swap_manager: LRUCacheSwapModelManager = swap_manager
         return swap_manager.model
 
     def _apply_swaps(
@@ -211,8 +217,8 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
         }
         if len(swap_maps) > self._swap_manager.packed_swap_slots:
             raise RuntimeError(
-                f"Number of requested deltas ({len(swap_maps)}) is greater than the number of GPU delta slots "
-                f"({self._swap_manager.delta_slots})."
+                f"Number of requested swap ({len(swap_maps)}) is greater than the number of GPU swap slots "
+                f"({self._swap_manager.packed_swap_slots})."
             )
         for swap in swap_maps.values():
             self.add_swap(swap, sequence_groups)
@@ -237,7 +243,7 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
     def _activate_swap(self, swap_request: SwapRequest):
         global LOG_TIME
         if not LOG_TIME:
-            logger.info(f"[{time.time()}] activating delta")
+            logger.info(f"[{time.time()}] activating swap")
         start = timer()
         self._swap_manager.activate_swap(swap_request.swap_int_id)
         end = timer()

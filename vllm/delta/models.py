@@ -184,6 +184,7 @@ class DeltaModel:
         )
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
+        
         if use_bitblas:
             model_tensor_filenames = [
                 "bitblas.remain.safetensors",
@@ -258,7 +259,6 @@ class DeltaModel:
             )
             del tensor_dtypes, tensor_shapes
             del lossless_compressor
-
         else:
             logger.info(
                 f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled"
@@ -318,7 +318,7 @@ class DeltaModel:
             )
         end = timer()
         total_bytes = total_bytes_count(tensors)
-        logger.info(
+        logger.debug(
             f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds"
         )
         del tensors

@@ -229,6 +229,7 @@ class ModelRunner:
                 self.model.embedding_modules,
                 self.model.embedding_padding_modules,
             )
+            self.model = self.swap_manager.create_swap_manager(self.model)
         
     def set_block_size(self, block_size: int) -> None:
         self.block_size = block_size

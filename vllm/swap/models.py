@@ -126,23 +126,37 @@ class SwapModel:
     @classmethod
     def from_checkpoint(
         cls,
+        path_or_name,
+        id,
         model_config: ModelConfig,
         device: torch.device,
         trust_remote_code: bool = False,
     ):
+        start = timer()
         model_class = _get_model_architecture(model_config)
         with _set_default_torch_dtype(model_config.dtype):
             with torch.device(device):
                 model = model_class(model_config.hf_config)
                 model.load_weights(
-                    model_config.model,
+                    path_or_name,
                     model_config.download_dir,
                     model_config.load_format,
                     model_config.revision,
                 )
-        return model.eval()
-
-
+        model = model.eval()
+        modules = {}
+        for module_name, module in model.named_modules():
+            modules[module_name] = ModelLayerWeights(
+                module_name=module_name,
+                weight=module.weight,
+                bias = module.bias if hasattr(module, "bias") else None
+            )
+        end = timer()
+        logger.debug(
+            f"Disk -> CPU: Loaded in {end - start:.3f} seconds"
+        )
+        return cls(id, modules)
+    
 class SwapModelManager:
     """A manager that manages multiple SwapModels."""
 
