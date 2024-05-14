@@ -15,9 +15,10 @@ from vllm.sequence import (
     SequenceGroupMetadata,
     SequenceStatus,
 )
+from vllm.swap.config import SwapConfig
+from vllm.swap.request import SwapRequest
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
-
 logger = init_logger(__name__)
 
 
@@ -92,6 +93,9 @@ class SchedulerOutputs:
     def delta_requests(self) -> Set[DeltaRequest]:
         return {g.delta_request for g in self.scheduled_seq_groups}
 
+    @property
+    def swap_requests(self) -> Set[SwapRequest]:
+        return {g.swap_request for g in self.scheduled_seq_groups}
 
 class Scheduler:
 
@@ -101,6 +105,7 @@ class Scheduler:
         cache_config: CacheConfig,
         lora_config: Optional[LoRAConfig],
         delta_config: Optional[DeltaConfig],
+        swap_config: Optional[SwapConfig]
     ) -> None:
         self.scheduler_config = scheduler_config
         self.cache_config = cache_config

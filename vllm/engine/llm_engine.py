@@ -39,6 +39,7 @@ from vllm.transformers_utils.tokenizer_group import (
 )
 from vllm.utils import Counter
 from vllm.swap.request import SwapRequest
+from vllm.swap.config import SwapConfig
 
 logger = init_logger(__name__)
 _LOCAL_LOGGING_INTERVAL_SEC = 5
@@ -81,6 +82,7 @@ class LLMEngine:
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
         delta_config: Optional[DeltaConfig],
+        swap_config: Optional[SwapConfig],
         vision_language_config: Optional["VisionLanguageConfig"],
         executor_class: Type[ExecutorBase],
         log_stats: bool,
@@ -96,6 +98,7 @@ class LLMEngine:
             f"dtype={model_config.dtype}, "
             f"lora_config={lora_config}, "
             f"delta_config={delta_config}, "
+            f"swap_config={swap_config}, "
             f"max_seq_len={model_config.max_model_len}, "
             f"download_dir={model_config.download_dir!r}, "
             f"load_format={model_config.load_format}, "
@@ -114,6 +117,7 @@ class LLMEngine:
         self.cache_config = cache_config
         self.lora_config = lora_config
         self.delta_config = delta_config
+        self.swap_config = swap_config
         self.vision_language_config = vision_language_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
@@ -132,6 +136,7 @@ class LLMEngine:
             device_config,
             lora_config,
             delta_config,
+            swap_config,
             vision_language_config,
         )
 
@@ -142,7 +147,7 @@ class LLMEngine:
         # NOTE: the cache_config here have been updated with the numbers of
         # GPU and CPU blocks, which are profiled in the distributed executor.
         self.scheduler = Scheduler(
-            scheduler_config, cache_config, lora_config, delta_config
+            scheduler_config, cache_config, lora_config, delta_config, swap_config
         )
 
         # Metric Logging.

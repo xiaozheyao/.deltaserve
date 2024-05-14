@@ -573,7 +573,10 @@ class EngineArgs:
             if self.enable_lora
             else None
         )
-        swap_config = SwapConfig(max_packed_model=self.max_swap_slots, max_cpu_model=self.max_cpu_models)
+        swap_config = SwapConfig(
+            max_packed_model=self.max_swap_slots,
+            max_cpu_model=self.max_cpu_models
+        )
         if self.image_input_type:
             if (
                 not self.image_token_id
@@ -611,6 +614,7 @@ class EngineArgs:
             device_config,
             lora_config if self.enable_lora else None,
             delta_config if self.enable_delta else None,
+            swap_config if self.enable_swap else None,
             vision_language_config,
         )
 

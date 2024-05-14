@@ -12,7 +12,8 @@ from vllm.transformers_utils.tokenizer_group.base_tokenizer_group import (
     BaseTokenizerGroup,
 )
 from vllm.transformers_utils.tokenizer_group.tokenizer_group import TokenizerGroup
-
+from vllm.delta.request import DeltaRequest
+from vllm.swap.request import SwapRequest
 
 class RayTokenizerGroupPool(BaseTokenizerGroup):
     """A Ray-based pool of TokenizerGroups for async tokenization."""
@@ -94,6 +95,8 @@ class RayTokenizerGroupPool(BaseTokenizerGroup):
         prompt: str,
         request_id: Optional[str] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ) -> List[int]:
         """Encode a prompt using the tokenizer group.
 
@@ -125,6 +128,8 @@ class RayTokenizerGroupPool(BaseTokenizerGroup):
         prompt: str,
         request_id: Optional[str] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ) -> List[int]:
         """Encode a prompt using the tokenizer group.
 

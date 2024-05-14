@@ -18,6 +18,7 @@ from vllm.utils import get_distributed_init_method, get_ip, get_open_port, make_
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
 from vllm.swap.config import SwapConfig
+from vllm.swap.request import SwapRequest
 
 logger = init_logger(__name__)
 
@@ -72,6 +73,7 @@ class GPUExecutor(ExecutorBase):
             distributed_init_method=distributed_init_method,
             lora_config=self.lora_config,
             delta_config=self.delta_config,
+            swap_config=self.swap_config,
             vision_language_config=self.vision_language_config,
             kv_cache_dtype=self.cache_config.cache_dtype,
             is_driver_worker=True,

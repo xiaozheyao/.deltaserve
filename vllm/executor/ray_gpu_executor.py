@@ -29,6 +29,8 @@ from vllm.utils import (
 )
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
+from vllm.swap.request import SwapRequest
+from vllm.swap.config import SwapConfig
 
 if ray is not None:
     from ray.util.scheduling_strategies import PlacementGroupSchedulingStrategy
@@ -55,12 +57,14 @@ class RayGPUExecutor(ExecutorBase):
         device_config: DeviceConfig,
         lora_config: Optional[LoRAConfig],
         delta_config: Optional[DeltaConfig],
+        swap_config: Optional[SwapConfig],
         vision_language_config: Optional[VisionLanguageConfig],
     ) -> None:
         self.model_config = model_config
         self.cache_config = cache_config
         self.lora_config = lora_config
         self.delta_config = delta_config
+        self.swap_config = swap_config
         self.parallel_config = parallel_config
         self.scheduler_config = scheduler_config
         self.device_config = device_config
@@ -167,8 +171,11 @@ class RayGPUExecutor(ExecutorBase):
         parallel_config = copy.deepcopy(self.parallel_config)
         scheduler_config = copy.deepcopy(self.scheduler_config)
         device_config = copy.deepcopy(self.device_config)
+        
         lora_config = copy.deepcopy(self.lora_config)
         delta_config = copy.deepcopy(self.delta_config)
+        swap_config = copy.deepcopy(self.swap_config)
+        
         kv_cache_dtype = self.cache_config.cache_dtype
 
         # Initialize the actual workers with the Worker class.
@@ -188,6 +195,7 @@ class RayGPUExecutor(ExecutorBase):
                     distributed_init_method,
                     lora_config=lora_config,
                     delta_config=delta_config,
+                    swap_config=swap_config,
                     kv_cache_dtype=kv_cache_dtype,
                 )
             )
@@ -205,6 +213,7 @@ class RayGPUExecutor(ExecutorBase):
             distributed_init_method,
             lora_config=self.lora_config,
             delta_config=self.delta_config,
+            swap_config=self.swap_config,
             vision_language_config=self.vision_language_config,
             kv_cache_dtype=kv_cache_dtype,
             is_driver_worker=True,
