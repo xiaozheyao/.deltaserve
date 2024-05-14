@@ -284,8 +284,8 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        bias = self.base_layer.bias if not self.base_layer.skip_bias_add else None
-        output_parallel = self.apply_weights(x, bias)
+
+        output_parallel = self.apply_weights(x)
         if self.base_layer.gather_output:
             # All-gather across the partitions.
             output = tensor_model_parallel_all_gather(output_parallel)
