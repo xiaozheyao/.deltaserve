@@ -110,6 +110,7 @@ class WorkerSwapManager(AbstractWorkerManager):
             max_num_seqs=self.max_num_seqs,
             vocab_size=self.vocab_size,
             swap_config=self.swap_config,
+            model_config=self.model_config,
             max_num_batched_tokens=self.max_num_batched_tokens,
         )
         self._swap_manager: SwapModelManager = swap_manager
@@ -203,6 +204,7 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
             max_num_seqs=self.max_num_seqs,
             vocab_size=self.vocab_size,
             swap_config=self.swap_config,
+            model_config=self.model_config,
             max_num_batched_tokens=self.max_num_batched_tokens,
         )
         self._swap_manager: LRUCacheSwapModelManager = swap_manager

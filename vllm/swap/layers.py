@@ -80,6 +80,12 @@ class BaseLayerWithPacked(nn.Module):
         embeddings_indices: torch.Tensor,
         indices_len: List[int],
     ): ...
+    
+    def clear_base(self):
+        if hasattr(self, "base_layer"):
+            self.base_layer = None
+        else:
+            logger.warning(f"Trying to clear base layer from {self} but no base layer found.")
 
 
 class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
@@ -146,7 +152,6 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
     ) -> bool:
         return type(source_layer) is VocabParallelEmbedding
 
-
 class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
@@ -156,7 +161,7 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
 
-    def create_pack_weights(
+    def create_packed_weights(
         self,
         max_packed: int,
         swap_config: SwapConfig,
@@ -224,7 +229,6 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
             type(source_layer) is MergedColumnParallelLinear
             and len(packed_modules_list) == 1
         )
-
 
 class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
@@ -485,7 +489,7 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
     def include_gpu_probs_tensor(self):
         return self.base_layer.include_gpu_probs_tensor
 
-    def create_delta_weights(
+    def create_packed_weights(
         self,
         max_deltas: int,
         swap_config: SwapConfig,
@@ -557,7 +561,7 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         return False
 
 
-_all_delta_classes: Set[Type[BaseLayerWithPacked]] = {
+_all_swap_classes: Set[Type[BaseLayerWithPacked]] = {
     cls
     for cls in globals().values()
     if inspect.isclass(cls)
@@ -573,11 +577,11 @@ def from_layer(
     packed_modules_list: List,
     model_config: Optional[PretrainedConfig] = None,
 ) -> nn.Module:
-    for delta_cls in _all_delta_classes:
-        if delta_cls.can_replace_layer(
+    for swap_cls in _all_swap_classes:
+        if swap_cls.can_replace_layer(
             layer, swap_config, packed_modules_list, model_config
         ):
-            ret = delta_cls(layer)
-            ret.create_delta_weights(max_packed_model, swap_config, model_config)
+            ret = swap_cls(layer)
+            ret.create_packed_weights(max_packed_model, swap_config, model_config)
             return ret
     return layer

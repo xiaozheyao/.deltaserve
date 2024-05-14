@@ -229,7 +229,9 @@ class ModelRunner:
                 self.model.embedding_modules,
                 self.model.embedding_padding_modules,
             )
-            self.model = self.swap_manager.create_swap_manager(self.model)
+            self.model = self.swap_manager.create_swap_manager(
+                self.model,
+            )
         
     def set_block_size(self, block_size: int) -> None:
         self.block_size = block_size
@@ -1007,6 +1009,7 @@ class ModelRunner:
                 delta_id = idx + 1
                 # we skip this for now...
                 # TODO(xiaozhe): add dummy delta request
+                
         # Profile memory usage with max_num_sequences sequences and the total
         # number of tokens equal to max_num_batched_tokens.
         seqs: List[SequenceGroupMetadata] = []
@@ -1062,6 +1065,16 @@ class ModelRunner:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.remove_all_deltas()
+
+    def remove_all_swaps(self) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.remove_all_swaps()
+
+    def clear_base(self) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.clear_base()
 
     def set_active_loras(
         self, lora_requests: List[LoRARequest], lora_mapping: LoRAMapping

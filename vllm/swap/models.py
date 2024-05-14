@@ -249,6 +249,10 @@ class SwapModelManager:
                 module.reset_pack(index)
         return True
     
+    def clear_base_module(self):
+        for _, module in self.modules.items():
+            module.clear_base()
+    
     def _deactivate_swap(self, swap_id: int):
         try:
             index = self.swap_index_to_id.index(swap_id)
@@ -400,9 +404,10 @@ class LRUCacheSwapModelManager(SwapModelManager):
         max_num_batched_tokens: int,
         vocab_size: int,
         swap_config: SwapConfig,
+        model_config: ModelConfig,
     ):
         super().__init__(
-            model, max_num_seqs, max_num_batched_tokens, vocab_size, swap_config
+            model, max_num_seqs, max_num_batched_tokens, vocab_size, swap_config, model_config=model_config,
         )
         self._registered_swaps: SwapLRUCache = SwapLRUCache(
             self.capacity, self.deactivate_swap
@@ -452,6 +457,7 @@ def create_swap_manager(
     max_num_batched_tokens: int,
     vocab_size: int,
     swap_config: SwapConfig,
+    model_config: ModelConfig,
     swap_manager_cls: Type[SwapModelManager] = SwapModelManager,
     **kwargs,
 ) -> SwapModelManager:
@@ -464,6 +470,7 @@ def create_swap_manager(
         max_num_batched_tokens=max_num_batched_tokens,
         vocab_size=vocab_size,
         swap_config=swap_config,
+        model_config=model_config,
         **kwargs,
     )
     return swap_manager

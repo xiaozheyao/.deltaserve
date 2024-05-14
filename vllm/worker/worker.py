@@ -154,7 +154,7 @@ class Worker:
         # Execute a forward pass with dummy inputs to profile the memory usage
         # of the model.
         self.model_runner.profile_run()
-
+        
         # Calculate the number of blocks that can be allocated with the
         # profiled peak memory.
         torch.cuda.synchronize()
@@ -179,6 +179,9 @@ class Worker:
             self.model_runner.remove_all_loras()
         if self.model_runner.delta_manager:
             self.model_runner.remove_all_deltas()
+        if self.model_runner.swap_manager():
+            self.model_runner.remove_all_swaps()
+            self.model_runner.clear_base()
         gc.collect()
         torch.cuda.empty_cache()
         return num_gpu_blocks, num_cpu_blocks
