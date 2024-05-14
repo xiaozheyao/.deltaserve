@@ -27,7 +27,7 @@ from vllm.delta.request import DeltaRequest
 from vllm.delta.worker_manager import OverlapLRUCacheWorkerDeltaManager
 
 from vllm.swap.request import SwapRequest
-
+from vllm.swap.worker_manager import LRUCacheWorkerSwapManager
 from vllm.attention import AttentionMetadata, get_attn_backend
 
 from vllm.config import (
@@ -223,6 +223,7 @@ class ModelRunner:
                 self.scheduler_config.max_num_seqs,
                 self.scheduler_config.max_num_batched_tokens,
                 self.vocab_size,
+                self.model_config,
                 self.swap_config,
                 self.device,
                 self.model.embedding_modules,

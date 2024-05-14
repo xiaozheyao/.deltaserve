@@ -27,6 +27,7 @@ class AbstractWorkerManager(ABC):
         max_num_seqs: int,
         max_num_batched_tokens: int,
         vocab_size: int,
+        model_config: ModelConfig,
         swap_config: SwapConfig,
         device: torch.device,
     ):
@@ -34,6 +35,7 @@ class AbstractWorkerManager(ABC):
         self.max_num_batched_tokens = max_num_batched_tokens
         self.vocab_size = vocab_size
         self.device = device
+        self.model_config = model_config
         self.swap_config = swap_config
 
     @property
@@ -78,6 +80,7 @@ class WorkerSwapManager(AbstractWorkerManager):
         max_num_batched_tokens: int,
         vocab_size: int,
         model_config: ModelConfig,
+        swap_config: SwapConfig,
         device: torch.device,
         embedding_modules: Dict[str, str],
         embedding_padding_modules: List[str],
@@ -88,7 +91,12 @@ class WorkerSwapManager(AbstractWorkerManager):
         self.embedding_modules = embedding_modules
         self.embedding_padding_modules = embedding_padding_modules
         super().__init__(
-            max_num_seqs, max_num_batched_tokens, vocab_size, model_config, device
+            max_num_seqs,
+            max_num_batched_tokens,
+            vocab_size,
+            model_config,
+            swap_config,
+            device
         )
 
     @property
