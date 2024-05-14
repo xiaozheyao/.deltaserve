@@ -33,7 +33,7 @@ def apply_swap_slice(
         output_slice = torch.matmul(inp, weight.T)
         output[idx_mask, y_offset:y_offset + y_slice_size] = output_slice
     return output
-        
+
 
 def apply_swap_packed_nslice(
     x: torch.Tensor,
@@ -42,7 +42,7 @@ def apply_swap_packed_nslice(
     output: torch.Tensor,
     output_slices: Tuple[int, ...],
 ):
-    org_output = org_output
+    org_output = output
     x = x.view(-1, x.shape[-1])
     indices = indices.view(-1)
     offset_left = 0
@@ -64,7 +64,9 @@ def apply_swap(
     indices: torch.Tensor,
 ):
     outputs = torch.zeros(
-        x.shape[0], x.shape[1], stacked_weights[0].shape[1], device=x.device
+        x.shape[0], x.shape[1], stacked_weights[0].shape[1], 
+        device=x.device,
+        dtype=torch.float16,
     )
     unique_indices = torch.unique(indices)
     for id in unique_indices:

@@ -31,7 +31,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .ops import apply_swap_embed, apply_swap_packed_nslice
+from .ops import apply_swap_embed, apply_swap_packed_nslice, apply_swap
 ASYNC_COPY = True
 logger = init_logger(__name__)
 
@@ -148,6 +148,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
             masked_input.shape[0],
             self.embedding_dim,
             device=masked_input.device,
+            dtype=torch.float16,
         )
         output_parallel = apply_swap_embed(
             masked_input,
@@ -254,7 +255,8 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         super().__init__(base_layer)
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
-
+        self.outsize = self.base_layer.weight.shape[0]
+        
     def create_packed_weights(
         self,
         max_packed: int,
@@ -305,13 +307,22 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
-        # TODO(xiaozhe):
-        output = apply_swap_packed_nslice(
+        # TODO(xiaozhe): bias is ignored for now.
+        outputs = torch.zeros(
+            x.shape[0],
+            self.outsize,
+            device=x.device,
+            dtype=x.dtype,
+        )
+        outputs = apply_swap_packed_nslice(
             x,
             self.weight_stacked,
-            self.indices[:self.indices_len[0]]
+            self.indices[:self.indices_len[0]],
+            outputs,
+            (self.output_dim, self.output_dim),
         )
-        return output
+        return outputs
+    
     @classmethod
     def can_replace_layer(
         cls,
@@ -338,7 +349,13 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         )
         self.q_shard_id = self.tp_rank
         self.kv_shard_id = self.tp_rank // self.base_layer.num_kv_head_replicas
-
+        self.output_size = self.base_layer.weight.shape[0]
+        self.output_slices = (
+            self.q_proj_shard_size,
+            self.kv_proj_shard_size,
+            self.kv_proj_shard_size,
+        )
+        
     def create_packed_weights(
         self,
         max_packed_model: int,
@@ -368,11 +385,6 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
                 device=self.base_layer.weight.device,
             ),
         )
-        self.output_slices = (
-            self.q_proj_shard_size,
-            self.kv_proj_shard_size,
-            self.kv_proj_shard_size,
-        )
         self.packed_indices: Optional[torch.Tensor] = None
         self.standard_indices: Optional[torch.Tensor] = None
         self.indices_len: Optional[List[int]] = None
@@ -395,11 +407,18 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
-        # TODO(xiaozhe):
+        output = torch.zeros(
+            x.shape[0],
+            self.output_size,
+            device=x.device,
+            dtype=x.dtype,
+        )
         output = apply_swap_packed_nslice(
             x,
             self.weight_stacked,
             self.indices[:self.indices_len[0]],
+            output,
+            self.output_slices,
         )
         return output
 
@@ -420,7 +439,8 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.base_layer = base_layer
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
-
+        self.output_size = self.base_layer.weight.shape[0]
+        
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -459,8 +479,18 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.reset_pack(index)
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
-        # TODO(xiaozhe):
-        pass
+        output = torch.zeros(
+            x.shape[0],
+            self.output_size,
+            device=x.device,
+            dtype=x.dtype,
+        )
+        output = apply_swap(
+            x,
+            self.weight_stacked,
+            self.indices[: self.indices_len[0]],
+        )
+        return output
 
     def forward(self, input_):
         # TODO(xiaozhe):
