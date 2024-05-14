@@ -26,6 +26,8 @@ from vllm.delta.layers import DeltaMapping
 from vllm.delta.request import DeltaRequest
 from vllm.delta.worker_manager import OverlapLRUCacheWorkerDeltaManager
 
+from vllm.swap.request import SwapRequest
+
 from vllm.attention import AttentionMetadata, get_attn_backend
 
 from vllm.config import (
@@ -57,7 +59,7 @@ from vllm.utils import (
     maybe_expand_dim,
 )
 from vllm.swap.config import SwapConfig
-
+from vllm.swap.layers import ModelMapping
 logger = init_logger(__name__)
 
 _PAD_SLOT_ID = -1
@@ -233,6 +235,9 @@ class ModelRunner:
         List[int],
         List[int],
         Set[DeltaRequest],
+        List[int],
+        List[int],
+        Set[SwapRequest],
         torch.Tensor,
     ]:
         assert len(seq_group_metadata_list) > 0
@@ -247,6 +252,10 @@ class ModelRunner:
         delta_prompt_mapping: List[int] = []
         delta_requests: Set[DeltaRequest] = set()
 
+        swap_index_mapping: List[int] = []
+        swap_prompt_mapping: List[int] = []
+        swap_requests: Set[SwapRequest] = set()
+        
         prompt_lens: List[int] = []
         context_lens: List[int] = []
         subquery_lens: List[int] = []
@@ -280,9 +289,9 @@ class ModelRunner:
                 prefix_block_tables.append([])
                 context_len = 0
             # actual prompt lens
+            
             context_lens.append(context_len)
             subquery_lens.append(prompt_len - computed_len)
-
             input_tokens.extend(prompt_tokens)
             # NOTE(woosuk): Here we assume that the first token in the prompt
             # is always the first token in the sequence.
@@ -292,10 +301,13 @@ class ModelRunner:
 
             lora_id = seq_group_metadata.lora_int_id
             delta_id = seq_group_metadata.delta_int_id
+            swap_id = seq_group_metadata.swap_int_id
             if lora_id > 0:
                 lora_requests.add(seq_group_metadata.lora_request)
             if delta_id > 0:
                 delta_requests.add(seq_group_metadata.delta_request)
+            if swap_id > 0:
+                swap_requests.add(seq_group_metadata.swap_request)
 
             lora_index_mapping += [lora_id] * (prompt_len - computed_len)
             lora_prompt_mapping.extend(
@@ -310,6 +322,16 @@ class ModelRunner:
             delta_index_mapping += [delta_id] * (prompt_len - computed_len)
             delta_prompt_mapping.extend(
                 [delta_id]
+                * (
+                    prompt_len - computed_len
+                    if seq_group_metadata.sampling_params.prompt_logprobs
+                    else 1
+                )
+            )
+
+            swap_index_mapping += [swap_id] * (prompt_len - computed_len)
+            swap_prompt_mapping.extend(
+                [swap_id]
                 * (
                     prompt_len - computed_len
                     if seq_group_metadata.sampling_params.prompt_logprobs
@@ -360,8 +382,7 @@ class ModelRunner:
             input_positions, dtype=torch.long, device=self.device
         )
         slot_mapping = torch.tensor(slot_mapping, dtype=torch.long, device=self.device)
-        lora_index_mapping = lora_index_mapping
-        delta_index_mapping = delta_index_mapping
+        
         context_lens_tensor = torch.tensor(
             context_lens, dtype=torch.int, device=self.device
         )
@@ -440,6 +461,9 @@ class ModelRunner:
             delta_index_mapping,
             delta_prompt_mapping,
             delta_requests,
+            swap_index_mapping,
+            swap_prompt_mapping,
+            swap_requests,
             multi_modal_input,
         )
 
@@ -453,6 +477,9 @@ class ModelRunner:
         List[int],
         List[int],
         Set[LoRARequest],
+        List[int],
+        List[int],
+        Set[DeltaRequest],
         List[int],
         List[int],
         Set[DeltaRequest],
@@ -471,16 +498,24 @@ class ModelRunner:
         delta_prompt_mapping: List[int] = []
         delta_requests: Set[DeltaRequest] = set()
 
+        swap_index_mapping: List[int] = []
+        swap_prompt_mapping: List[int] = []
+        swap_requests: Set[SwapRequest] = set()
+        
         for seq_group_metadata in seq_group_metadata_list:
             assert not seq_group_metadata.is_prompt
 
             seq_ids = list(seq_group_metadata.seq_data.keys())
             lora_id = seq_group_metadata.lora_int_id
             delta_id = seq_group_metadata.delta_int_id
+            swap_id = seq_group_metadata.swap_int_id
+            
             if lora_id > 0:
                 lora_requests.add(seq_group_metadata.lora_request)
             if delta_id > 0:
                 delta_requests.add(seq_group_metadata.delta_request)
+            if swap_id > 0:
+                swap_requests.add(seq_group_metadata.swap_request)
 
             for seq_id in seq_ids:
                 seq_data = seq_group_metadata.seq_data[seq_id]
@@ -503,11 +538,15 @@ class ModelRunner:
                 block_offset = position % self.block_size
                 slot = block_number * self.block_size + block_offset
                 slot_mapping.append(slot)
+                
                 lora_index_mapping.append(lora_id)
                 lora_prompt_mapping.append(lora_id)
 
                 delta_index_mapping.append(delta_id)
                 delta_prompt_mapping.append(delta_id)
+                
+                swap_index_mapping.append(swap_id)
+                swap_prompt_mapping.append(swap_id)
 
                 if self.sliding_window is not None:
                     sliding_window_blocks = self.sliding_window // self.block_size
@@ -588,12 +627,18 @@ class ModelRunner:
             input_tokens,
             input_positions,
             attn_metadata,
+            
             lora_index_mapping,
             lora_prompt_mapping,
             lora_requests,
+            
             delta_index_mapping,
             delta_prompt_mapping,
             delta_requests,
+            
+            swap_index_mapping,
+            swap_prompt_mapping,
+            swap_requests,
         )
 
     def _prepare_sample(
@@ -719,6 +764,7 @@ class ModelRunner:
         Set[int],
         LoRAMapping,
         DeltaMapping,
+        ModelMapping, # a.k.a swap mapping
         torch.Tensor,
     ]:
         if self.is_driver_worker:
@@ -739,6 +785,9 @@ class ModelRunner:
                     delta_index_mapping,
                     delta_prompt_mapping,
                     delta_requests,
+                    swap_index_mapping,
+                    swap_prompt_mapping,
+                    swap_requests,
                     multi_modal_input,
                 ) = self._prepare_prompt(seq_group_metadata_list)
             else:
@@ -752,10 +801,14 @@ class ModelRunner:
                     delta_index_mapping,
                     delta_prompt_mapping,
                     delta_requests,
+                    swap_index_mapping,
+                    swap_prompt_mapping,
+                    swap_requests,
                 ) = self._prepare_decode(seq_group_metadata_list)
                 prompt_lens = []
                 subquery_lens = None
                 multi_modal_input = None
+            
             sampling_metadata = self._prepare_sample(
                 seq_group_metadata_list, prompt_lens, subquery_lens
             )
@@ -766,12 +819,21 @@ class ModelRunner:
                     lora_prompt_mapping,
                 )
                 delta_mapping = None
+                swap_mapping = None
             elif self.delta_config:
                 delta_mapping = DeltaMapping(
                     delta_index_mapping,
                     delta_prompt_mapping,
                 )
                 lora_mapping = None
+                swap_mapping = None
+            elif self.swap_config:
+                swap_mapping = ModelMapping(
+                    swap_index_mapping,
+                    swap_prompt_mapping,
+                )
+                lora_mapping = None
+                delta_mapping = None            
             else:
                 lora_mapping = None
                 delta_mapping = None
@@ -784,6 +846,8 @@ class ModelRunner:
                 "lora_mapping": lora_mapping,
                 "delta_requests": delta_requests,
                 "delta_mapping": delta_mapping,
+                "swap_requests": swap_requests,
+                "swap_mapping": swap_mapping,
                 "multi_modal_input": multi_modal_input,
             }
             metadata_dict.update(attn_metadata.asdict_zerocopy())
@@ -797,6 +861,8 @@ class ModelRunner:
             lora_requests = metadata_dict.pop("lora_requests")
             delta_mapping = metadata_dict.pop("delta_mapping")
             delta_requests = metadata_dict.pop("delta_requests")
+            swap_mapping = metadata_dict.pop("swap_mapping")
+            swap_requests = metadata_dict.pop("swap_requests")
             multi_modal_input = metadata_dict.pop("multi_modal_input")
             attn_metadata = self.attn_backend.make_metadata(**metadata_dict)
             sampling_metadata = SamplingMetadata(
@@ -818,6 +884,8 @@ class ModelRunner:
             lora_mapping,
             delta_requests,
             delta_mapping,
+            swap_requests,
+            swap_mapping,
             multi_modal_input,
         )
 
@@ -906,7 +974,11 @@ class ModelRunner:
                 dummy_lora_requests[idx % len(dummy_lora_requests)]
                 for idx in range(max_num_seqs)
             ]
-
+        if self.delta_config:
+            for idx in range(self.delta_config.max_deltas):
+                delta_id = idx + 1
+                # we skip this for now...
+                # TODO(xiaozhe): add dummy delta request
         # Profile memory usage with max_num_sequences sequences and the total
         # number of tokens equal to max_num_batched_tokens.
         seqs: List[SequenceGroupMetadata] = []

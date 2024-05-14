@@ -244,6 +244,7 @@ class LLMEngine:
         prompt_token_ids: Optional[List[int]] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ):
         if prompt_token_ids is None:
             assert prompt is not None
@@ -252,6 +253,7 @@ class LLMEngine:
                 prompt=prompt,
                 lora_request=lora_request,
                 delta_request=delta_request,
+                swap_request=swap_request,
             )
         return prompt_token_ids
 
@@ -337,6 +339,7 @@ class LLMEngine:
             prompt_token_ids=prompt_token_ids,
             lora_request=lora_request,
             delta_request=delta_request,
+            swap_request=swap_request,
         )
 
         # Create the sequences.

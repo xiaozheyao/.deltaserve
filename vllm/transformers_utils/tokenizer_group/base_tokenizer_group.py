@@ -4,8 +4,8 @@ from typing import List, Optional
 from transformers import PreTrainedTokenizer
 
 from vllm.lora.request import LoRARequest
+from vllm.swap.request import SwapRequest
 from vllm.delta.request import DeltaRequest
-
 
 class BaseTokenizerGroup(ABC):
     """A group of tokenizers that can be used for LoRA adapters."""
@@ -29,6 +29,7 @@ class BaseTokenizerGroup(ABC):
         request_id: Optional[str] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ) -> List[int]:
         """Encode a prompt using the tokenizer group."""
         pass
@@ -40,6 +41,7 @@ class BaseTokenizerGroup(ABC):
         request_id: Optional[str] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ) -> List[int]:
         """Encode a prompt using the tokenizer group."""
         pass

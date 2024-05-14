@@ -16,7 +16,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
 )
 from safetensors import safe_open
-from .layers import ModelMapping
+from .layers import ModelMapping, from_layer
 from .packed import ModelLayerWeights
 from .config import SwapConfig
 from vllm.config import DeviceConfig, ModelConfig
@@ -24,6 +24,7 @@ from vllm.model_executor.model_loader import (
     _get_model_architecture,
     _set_default_torch_dtype,
 )
+from .utils import replace_submodule
 
 
 _GLOBAL_MODEL_ID = 0
@@ -31,15 +32,15 @@ _GLOBAL_MODEL_ID = 0
 
 def convert_mapping(
     mapping: ModelMapping,
-    delta_index_to_id: List[Optional[int]],
-    max_deltas: int,
+    model_index_to_id: List[Optional[int]],
+    max_models: int,
     vocab_size: int,
     extra_vocab_size: int,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, List[int]]:
-    """Converts DeltaMapping to index tensors.
+    """Converts ModelMapping to index tensors.
 
     Args:
-        mapping: DeltaMapping mapping rows in a batch to Delta ids.
+        mapping: ModelMapping mapping rows in a batch to model ids.
         delta_index_to_id: List mapping Delta ids to Delta indices.
         max_deltas: Maximum number of Deltas.
         vocab_size: Model vocab size.
@@ -65,30 +66,30 @@ def convert_mapping(
     """
     indices = list(mapping.index_mapping).copy()
     embedding_indices = indices.copy()
-    delta_indices = indices.copy()
+    model_indices = indices.copy()
     prompt_mapping = [
-        delta_index_to_id.index(x) if x > 0 else -1 for x in mapping.prompt_mapping
+        model_index_to_id.index(x) if x > 0 else -1 for x in mapping.prompt_mapping
     ]
     delta_idx = None
     for i in range(len(indices)):
         # TODO index can be slow. optimize
-        delta_idx = delta_index_to_id.index(indices[i]) if indices[i] > 0 else -1
+        delta_idx = model_index_to_id.index(indices[i]) if indices[i] > 0 else -1
         embedding_indices[i] = delta_idx if indices[i] > 0 else 0
         indices[i] = i
-        delta_indices[i] = delta_idx
+        model_indices[i] = delta_idx
 
     indices = torch.tensor(
-        [indices, delta_indices, embedding_indices], dtype=torch.long, device="cuda"
+        [indices, model_indices, embedding_indices], dtype=torch.long, device="cuda"
     )
     prompt_mapping = torch.tensor(prompt_mapping, device="cuda", dtype=torch.long)
     embeddings_indices = torch.stack(
         [indices[2] * extra_vocab_size, indices[2] * (vocab_size + extra_vocab_size)]
     )
-    embeddings_indices[embeddings_indices == -1] = max_deltas - 1
+    embeddings_indices[embeddings_indices == -1] = max_models - 1
     base_indices = indices[1]
     sampler_indices = prompt_mapping
     sampler_indices_padded = sampler_indices.clone()
-    sampler_indices_padded[sampler_indices_padded == -1] = max_deltas - 1
+    sampler_indices_padded[sampler_indices_padded == -1] = max_models - 1
     sampler_indices_padded = torch.arange(
         0, len(sampler_indices_padded), device="cuda", dtype=torch.long
     ) + (sampler_indices_padded * len(sampler_indices_padded))

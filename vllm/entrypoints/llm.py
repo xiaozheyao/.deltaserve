@@ -12,7 +12,7 @@ from vllm.sampling_params import SamplingParams
 from vllm.sequence import MultiModalData
 from vllm.utils import Counter
 from vllm.delta.request import DeltaRequest
-
+from vllm.swap.request import SwapRequest
 
 class LLM:
     """An LLM for generating texts from given prompts and sampling parameters.
@@ -134,6 +134,7 @@ class LLM:
         use_tqdm: bool = True,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
     ) -> List[RequestOutput]:
         """Generates the completions for the input prompts.
@@ -189,6 +190,7 @@ class LLM:
                 token_ids,
                 lora_request=lora_request,
                 delta_request=delta_request,
+                swap_request=swap_request,
                 # Get ith image while maintaining the batch dim.
                 multi_modal_data=(
                     MultiModalData(
@@ -208,6 +210,7 @@ class LLM:
         prompt_token_ids: Optional[List[int]],
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
     ) -> None:
         request_id = str(next(self.request_counter))
@@ -218,6 +221,7 @@ class LLM:
             prompt_token_ids,
             lora_request=lora_request,
             delta_request=delta_request,
+            swap_request=swap_request,
             multi_modal_data=multi_modal_data,
         )
 

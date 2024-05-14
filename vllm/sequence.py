@@ -537,6 +537,7 @@ class SequenceGroupMetadata:
         block_tables: Dict[int, List[int]],
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
         computed_block_nums: Optional[List[int]] = None,
         state: Optional[SequenceGroupState] = None,
         multi_modal_data: Optional[MultiModalData] = None,
@@ -548,6 +549,7 @@ class SequenceGroupMetadata:
         self.block_tables = block_tables
         self.lora_request = lora_request
         self.delta_request = delta_request
+        self.swap_request = swap_request
         self.computed_block_nums = computed_block_nums
         self.multi_modal_data = multi_modal_data
         self.state = SequenceGroupState() if state is None else state
@@ -560,6 +562,9 @@ class SequenceGroupMetadata:
     def delta_int_id(self) -> int:
         return self.delta_request.delta_int_id if self.delta_request else 0
 
+    @property
+    def swap_int_id(self) -> int:
+        return self.swap_request.swap_int_id if self.swap_request else 0
 
 class SequenceOutput:
     """The model output associated with a sequence.
