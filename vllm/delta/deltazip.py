@@ -206,8 +206,6 @@ def apply_delta_embed(
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
-        print(f"inp: {inp.shape}")
-        print(f"delta_weights[id]: {delta_weights[id].shape}")
         output = F.embedding(inp, delta_weights[id])
         base_output[idx_mask] += output
     return base_output

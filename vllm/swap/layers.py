@@ -31,7 +31,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-
+from .ops import apply_swap_embed, apply_swap_packed_nslice
 ASYNC_COPY = True
 logger = init_logger(__name__)
 
@@ -142,7 +142,16 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
             masked_input[input_mask] = 0
         else:
             masked_input = x
-        # TODO(xiaozhe):
+        output_parallel = apply_swap_embed(
+            masked_input,
+            self.packed_weights,
+            indices,
+        )
+        if self.tp_size > 1:
+            output_parallel[input_mask, :] = 0.0
+        # Reduce across all the model parallel GPUs.
+        output = tensor_model_parallel_all_reduce(output_parallel)
+        return output
 
     @classmethod
     def can_replace_layer(
@@ -289,8 +298,12 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
         # TODO(xiaozhe):
-        pass
-
+        output = apply_swap_packed_nslice(
+            x,
+            self.weight_stacked,
+            self.indices[:self.indices_len[0]]
+        )
+        return output
     @classmethod
     def can_replace_layer(
         cls,
@@ -375,7 +388,12 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         self, x: torch.Tensor, bias: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
         # TODO(xiaozhe):
-        pass
+        output = apply_swap_packed_nslice(
+            x,
+            self.weight_stacked,
+            self.indices[:self.indices_len[0]],
+        )
+        return output
 
     @classmethod
     def can_replace_layer(

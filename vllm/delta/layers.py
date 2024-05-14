@@ -159,7 +159,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         output_parallel = F.embedding(masked_input, self.base_layer.weight)
 
         output_parallel = apply_delta_embed(
-            masked_input, self.delta_weights, indices, output_parallel
+            masked_input, self.delta_weights, indices
         )
 
         if self.tp_size > 1:
