@@ -208,6 +208,27 @@ class ModelRunner:
             )
             self.model = self.delta_manager.create_delta_manager(self.model)
 
+        if self.swap_config:
+            assert (
+                hasattr(self.model, "supported_delta_modules")
+                and self.model.supported_delta_modules
+            ), "Model does not support Delta"
+            assert hasattr(
+                self.model, "embedding_modules"
+            ), "Model does not have embedding_modules"
+            assert hasattr(
+                self.model, "embedding_padding_modules"
+            ), "Model does not have embedding_padding_modules"
+            self.swap_manager = LRUCacheWorkerSwapManager(
+                self.scheduler_config.max_num_seqs,
+                self.scheduler_config.max_num_batched_tokens,
+                self.vocab_size,
+                self.swap_config,
+                self.device,
+                self.model.embedding_modules,
+                self.model.embedding_padding_modules,
+            )
+        
     def set_block_size(self, block_size: int) -> None:
         self.block_size = block_size
 
@@ -835,6 +856,7 @@ class ModelRunner:
                 lora_mapping = None
                 delta_mapping = None            
             else:
+                swap_mapping = None
                 lora_mapping = None
                 delta_mapping = None
             # Broadcast the metadata.
@@ -908,6 +930,8 @@ class ModelRunner:
             lora_mapping,
             delta_requests,
             delta_mapping,
+            swap_requests,
+            swap_mapping,
             multi_modal_input,
         ) = self.prepare_input_tensors(seq_group_metadata_list)
 
@@ -915,6 +939,8 @@ class ModelRunner:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
             self.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
+        if self.swap_config:
+            self.set_active_swaps(swap_requests, swap_mapping, sequence_groups)
         # Execute the model.
         if attn_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]
@@ -1056,6 +1082,20 @@ class ModelRunner:
             delta_requests, delta_mapping, sequence_groups
         )
 
+    def set_active_swaps(
+        self,
+        swap_requests: List[SwapRequest],
+        swap_mapping: ModelMapping,
+        sequence_groups: List[SequenceGroup] = None,
+    ):
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        if sequence_groups is None:
+            sequence_groups = []
+        self.swap_manager.set_active_swaps(
+            swap_requests, swap_mapping, sequence_groups
+        )
+    
     def add_lora(self, lora_request: LoRARequest) -> bool:
         if not self.lora_manager:
             raise RuntimeError("LoRA is not enabled.")

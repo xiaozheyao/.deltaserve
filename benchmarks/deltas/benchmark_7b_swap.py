@@ -15,7 +15,9 @@ llm = LLM(
     gpu_memory_utilization=0.9,
     max_context_len_to_capture=64,
     max_model_len=64,
-    max_deltas=1,
+    max_deltas=0,
+    max_swap_slots=1, # swap==1 means only the original model will be swapped
+    enable_swap=True,
 )
 
 sampling_params = SamplingParams(

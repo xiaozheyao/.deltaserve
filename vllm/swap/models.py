@@ -26,9 +26,8 @@ from vllm.model_executor.model_loader import (
 )
 from .utils import replace_submodule
 
-
+logger = init_logger(__name__)
 _GLOBAL_MODEL_ID = 0
-
 
 def convert_mapping(
     mapping: ModelMapping,
@@ -70,13 +69,13 @@ def convert_mapping(
     prompt_mapping = [
         model_index_to_id.index(x) if x > 0 else -1 for x in mapping.prompt_mapping
     ]
-    delta_idx = None
+    swap_idx = None
     for i in range(len(indices)):
         # TODO index can be slow. optimize
-        delta_idx = model_index_to_id.index(indices[i]) if indices[i] > 0 else -1
-        embedding_indices[i] = delta_idx if indices[i] > 0 else 0
+        swap_idx = model_index_to_id.index(indices[i]) if indices[i] > 0 else -1
+        embedding_indices[i] = swap_idx if indices[i] > 0 else 0
         indices[i] = i
-        model_indices[i] = delta_idx
+        model_indices[i] = swap_idx
 
     indices = torch.tensor(
         [indices, model_indices, embedding_indices], dtype=torch.long, device="cuda"
@@ -93,6 +92,7 @@ def convert_mapping(
     sampler_indices_padded = torch.arange(
         0, len(sampler_indices_padded), device="cuda", dtype=torch.long
     ) + (sampler_indices_padded * len(sampler_indices_padded))
+    
     indices_len = (
         base_indices.shape[-1],
         sampler_indices.shape[-1],
@@ -127,12 +127,12 @@ class SwapModel:
     def from_checkpoint(
         cls,
         model_config: ModelConfig,
-        device_config: DeviceConfig,
+        device: torch.device,
         trust_remote_code: bool = False,
     ):
         model_class = _get_model_architecture(model_config)
         with _set_default_torch_dtype(model_config.dtype):
-            with torch.device(device_config.device):
+            with torch.device(device):
                 model = model_class(model_config.hf_config)
                 model.load_weights(
                     model_config.model,
@@ -162,7 +162,7 @@ class SwapModelManager:
             self.capacity >= self.packed_swap_slots
         ), "Capacity must be greater than packed swap slots"
         self.max_num_batched_tokens = math.ceil(max_num_batched_tokens / 8) * 8
-        self.delta_index_to_id: List[Optional[int]] = [None] * self.delta_slots
+        self.swap_index_to_id: List[Optional[int]] = [None] * self.packed_swap_slots
         self.vocab_size = vocab_size
         self.base_indices = torch.empty(
             self.max_num_batched_tokens, dtype=torch.long, device="cuda"
@@ -193,7 +193,7 @@ class SwapModelManager:
         self._activate_swaps: Dict[int, None] = {}
         self._last_mapping = None
         self._create_swap_modules()
-        self.model.delta_manager = self
+        self.model.swap_manager = self
 
     @property
     def packed_swap_slots(self) -> int:
@@ -206,6 +206,111 @@ class SwapModelManager:
     def __len__(self) -> int:
         return len(self.registered_models)
 
+    def activate_swap(self, swap_id: int):
+        if swap_id in self._activate_swaps:
+            return False
+        first_free_slot = next(
+            (
+                (i, swap_id)
+                for i, swap_id in enumerate(self.swap_index_to_id)
+                if swap_id is None
+            ),
+            None,
+        )
+        if first_free_slot is None:
+            raise ValueError("No free swap slots")
+        index, _ = first_free_slot
+        self._activate_swaps[swap_id] = None
+        swap_model = self._registered_swaps[swap_id]
+        self.swap_index_to_id[index] = swap_model.id
+        for module_name, module in self.modules.items():
+            module_swap = swap_model.get_swap(module_name)
+            if module_swap:
+                module.set_pack(
+                    index,
+                    module_swap.weight
+                )
+            else:
+                # TODO(xiaozhe): this might be wrong for swapped model...
+                module.reset_pack(index)
+        return True
+    
+    def _deactivate_swap(self, swap_id: int):
+        try:
+            index = self.swap_index_to_id.index(swap_id)
+            self.swap_index_to_id[index] = None
+        except ValueError:
+            pass
+    
+    def deactivate_swap(self, swap_id: int) -> bool:
+        if swap_id in self._activate_swaps:
+            self._deactivate_swap(swap_id)
+            self._activate_swaps.pop(swap_id)
+            return True
+        return False
+    
+    def _add_swap(self, swap: SwapModel) -> bool:
+        self._create_merged_swap_inplace(swap)
+        self._registered_swaps[swap.id] = swap
+
+    def add_swap(self, swap: SwapModel) -> bool:
+        """Add a SwapModel to the manager CPU cache."""
+        if swap.id not in self._registered_swaps:
+            if len(self._registered_swaps) >= self.capacity:
+                raise RuntimeError("No free swaps slots.")
+            self._add_swap(swap)
+            return True
+        return False
+
+    def remove_swap(self, swap_id: int) -> bool:
+        """Remove a SwapModel from the manager CPU cache."""
+        self.deactivate_swap(swap_id)
+        return bool(self._registered_swaps.pop(swap_id, None))
+
+    # TODO see if this can be vectorized
+    def _set_swap_mapping(self, mapping: ModelMapping) -> None:
+        (
+            base_indices,
+            sampler_indices,
+            sampler_indices_padded,
+            embeddings_indices,
+            indices_len,
+        ) = convert_mapping(
+            mapping,
+            self.swap_index_to_id,
+            self.packed_swap_slots + 1,
+            self.vocab_size,
+            0
+        )
+        self.base_indices[: base_indices.shape[0]].copy_(base_indices)
+        self.sampler_indices[: sampler_indices.shape[0]].copy_(sampler_indices)
+        self.sampler_indices_padded[: sampler_indices_padded.shape[0]].copy_(
+            sampler_indices_padded
+        )
+        self.embeddings_indices[
+            : embeddings_indices.shape[0], : embeddings_indices.shape[1]
+        ].copy_(embeddings_indices)
+        # Maintain the reference
+        self.indices_len[:] = indices_len
+
+    def set_swap_mapping(self, swap_mapping: ModelMapping) -> None:
+        if self._last_mapping != swap_mapping:
+            self._set_swap_mapping(swap_mapping)
+        self._last_mapping = swap_mapping
+
+    def list_swaps(self) -> Dict[int, SwapModel]:
+        """List all registered SwapModels."""
+        return dict(self._registered_swaps)
+
+    def get_swap(self, swap_id: int) -> Optional[SwapModel]:
+        return self._registered_swaps.get(swap_id, None)
+
+    def remove_all_swaps(self) -> bool:
+        """Remove all SwapModels from the manager."""
+        self._registered_swaps.clear()
+        self.delta_index_to_id = [None] * self.packed_swap_slots
+        self._activate_swaps.clear()
+    
     def _create_swap_modules(self):
         for module_name, module in self.model.named_modules():
             if not self._match_target_modules(module_name):
@@ -217,8 +322,8 @@ class SwapModelManager:
                 module_name,
                 from_layer(
                     module,
-                    self.delta_slots,
-                    self.delta_config,
+                    self.packed_swap_slots,
+                    self.swap_config,
                     packed_moduled_list,
                     self.model.config,
                 ),
@@ -230,5 +335,121 @@ class SwapModelManager:
                 r".*\.{target_module}$".format(target_module=target_module), module_name
             )
             or target_module == module_name
-            for target_module in self.supported_delta_modules
+            for target_module in self.supported_swap_modules
         )
+
+    def _register_packed_modules(self, module_full_name: str) -> None:
+        parts = module_full_name.split(".")
+        module_name = parts[-1]
+        replacements = self.packed_modules_mapping.get(module_name)
+        if not replacements:
+            return
+        prefix = ".".join(parts[:-1])
+        self.packed_modules[module_full_name] = [
+            prefix + "." + r if prefix else r for r in replacements
+        ]
+
+    def _create_merged_swap_inplace(self, swap_model: SwapModel) -> None:
+        for module_name, new_module_names in self.packed_modules.items():
+            replacement_swaps = []
+            has_replacement = False
+            for r in new_module_names:
+                model = swap_model.get_swap(r)
+                replacement_swaps.append(model)
+                if model:
+                    has_replacement = True
+            if not has_replacement:
+                continue
+            for i in range(len(replacement_swaps)):
+                if replacement_swaps[i]:
+                    continue
+                replacement_swaps[i] = None
+            swap_model.swaps[module_name] = ModelLayerWeights.pack(
+                replacement_swaps
+            )
+
+class SwapLRUCache(LRUCache):
+    def __init__(self, capacity: int, deactivate_swap_fn: Callable[[Hashable], None]):
+        super().__init__(capacity)
+        self.deactivate_swap_fn = deactivate_swap_fn
+
+    def _on_remove(self, key: Hashable, value: Any):
+        logger.debug(f"Removing swap. int id: {key}")
+        self.deactivate_swap_fn(key)
+        return super()._on_remove(key, value)
+
+class LRUCacheSwapModelManager(SwapModelManager):
+    def __init__(
+        self,
+        model: nn.Module,
+        max_num_seqs: int,
+        max_num_batched_tokens: int,
+        vocab_size: int,
+        swap_config: SwapConfig,
+    ):
+        super().__init__(
+            model, max_num_seqs, max_num_batched_tokens, vocab_size, swap_config
+        )
+        self._registered_swaps: SwapLRUCache = SwapLRUCache(
+            self.capacity, self.deactivate_swap
+        )
+        self._active_swaps: SwapLRUCache = SwapLRUCache(
+            self.packed_swap_slots, self._deactivate_swap
+        )
+
+    def list_swaps(self) -> Dict[int, SwapModel]:
+        """List all registered SwapModels."""
+        return dict(self._registered_swaps.cache)
+
+    def add_delta(self, swap: SwapModel) -> bool:
+        """Add a SwapModel to the manager."""
+        if swap.id not in self._registered_swaps:
+            self._add_swap(swap)
+            was_added = True
+        else:
+            # We always touch to update the LRU cache order
+            self._registered_swaps.touch(swap.id)
+            was_added = False
+        return was_added
+
+    def activate_swap(
+        self,
+        swap_id: int,
+    ) -> bool:
+        if (
+            swap_id not in self._active_swap
+            and len(self._active_swaps) >= self.packed_swap_slots
+        ):
+            self._active_swaps.remove_oldest()
+        result = super().activate_swap(swap_id)
+        # We always touch to update the LRU cache order
+        self._active_swaps.touch(swap_id)
+        return result
+
+    def remove_oldest_swap(self) -> bool:
+        if len(self._registered_swaps) > 0:
+            self._registered_swaps.remove_oldest()
+            return True
+        return False
+
+def create_swap_manager(
+    model: nn.Module,
+    max_num_seqs: int,
+    max_num_batched_tokens: int,
+    vocab_size: int,
+    swap_config: SwapConfig,
+    swap_manager_cls: Type[SwapModelManager] = SwapModelManager,
+    **kwargs,
+) -> SwapModelManager:
+    """Create a Delta adapter for a given model."""
+    if not hasattr(model, "supported_swap_modules"):
+        raise ValueError(f"Model {type(model)} is not supported for Swap.")
+    swap_manager = swap_manager_cls(
+        model=model,
+        max_num_seqs=max_num_seqs,
+        max_num_batched_tokens=max_num_batched_tokens,
+        vocab_size=vocab_size,
+        swap_config=swap_config,
+        **kwargs,
+    )
+    return swap_manager
