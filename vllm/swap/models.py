@@ -16,7 +16,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
 )
 from safetensors import safe_open
-from .layers import ModelMapping, from_layer
+from .layers import ModelMapping, from_layer, from_layer_logits_processor, BaseLayerWithPacked
 from .packed import ModelLayerWeights
 from .config import SwapConfig
 from vllm.config import DeviceConfig, ModelConfig
@@ -346,6 +346,32 @@ class SwapModelManager:
                     self.model.config,
                 ),
             )
+            if "lm_head" in module_name:
+                logits_processor_module = self.model.get_submodule("logits_processor")
+                new_module = replace_submodule(
+                    self.model,
+                    "logits_processor",
+                    from_layer_logits_processor(
+                        logits_processor_module,
+                        module,
+                        self.packed_swap_slots,
+                        self.swap_config,
+                        self.model.config,
+                    ),
+                )
+            self.register_module(module_name, new_module)
+            self._register_packed_modules(module_name)
+            new_module.set_mapping(
+                self.base_indices,
+                self.sampler_indices,
+                self.sampler_indices_padded,
+                self.embeddings_indices,
+                self.indices_len,
+            )
+
+    def register_module(self, module_name: str, module: "BaseLayerWithPacked"):
+        assert isinstance(module, BaseLayerWithPacked)
+        self.modules[module_name] = module
 
     def _match_target_modules(self, module_name: str):
         return any(

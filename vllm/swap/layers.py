@@ -101,7 +101,9 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.packed_weights[index] = None
 
     def create_packed_weights(
-        self, max_packed: int, swap_config: SwapConfig, model_config: PretrainedConfig
+        self, max_packed: int,
+        swap_config: SwapConfig,
+        model_config: PretrainedConfig
     ) -> None:
         self.packed_weights = torch.zeros(
             max_packed,
@@ -585,3 +587,19 @@ def from_layer(
             ret.create_packed_weights(max_packed_model, swap_config, model_config)
             return ret
     return layer
+
+def from_layer_logits_processor(
+    layer: LogitsProcessor,
+    lm_head: ParallelLMHead,
+    max_packs: int,
+    swap_config: SwapConfig,
+    model_config: Optional[PretrainedConfig] = None,
+) -> LogitsProcessorWithPacked:
+    ret = LogitsProcessorWithPacked(
+        layer,
+        lm_head.embedding_dim, 
+        lm_head.weight.dtype,
+        lm_head.weight.device
+    )
+    ret.create_packed_weights(max_packs, swap_config, model_config)
+    return ret
