@@ -1,16 +1,13 @@
 import torch
-from typing import List
+from typing import List, Tuple
 import torch.nn.functional as F
-
 
 def apply_swap_embed(
     x: torch.Tensor,
     packed_weights: List,
     indices: torch.Tensor,
+    outputs: torch.Tensor,
 ):
-    outputs = torch.zeros(
-        x.shape[0], x.shape[1], packed_weights[0].shape[1], device=x.device
-    )
     print(f"outputs.shape: {outputs.shape}")
     unique_indices = torch.unique(indices)
     for id in unique_indices:
@@ -21,7 +18,47 @@ def apply_swap_embed(
         outputs[idx_mask] = output
     return outputs
 
+def apply_swap_slice(
+    output: torch.Tensor,
+    input: torch.Tensor,
+    weight: torch.Tensor,
+    indices: torch.LongTensor,
+    y_offset: int,
+    y_slice_size: int
+):
+    unique_indices = torch.unique(indices)
+    for id in unique_indices:
+        idx_mask = indices == id
+        inp = input[idx_mask]
+        output_slice = torch.matmul(inp, weight.T)
+        output[idx_mask, y_offset:y_offset + y_slice_size] = output_slice
+    return output
+        
+
 def apply_swap_packed_nslice(
+    x: torch.Tensor,
+    stacked_weights: List,
+    indices: torch.Tensor,
+    output: torch.Tensor,
+    output_slices: Tuple[int, ...],
+):
+    org_output = org_output
+    x = x.view(-1, x.shape[-1])
+    indices = indices.view(-1)
+    offset_left = 0
+    for slice_idx in range(len(output_slices)):
+        apply_swap_slice(
+            output,
+            x,
+            stacked_weights[slice_idx],
+            indices,
+            offset_left,
+            output_slices[slice_idx],
+        )
+        offset_left += output_slices[slice_idx]
+    return output.view_as(org_output)
+
+def apply_swap(
     x: torch.Tensor,
     stacked_weights: List,
     indices: torch.Tensor,
@@ -29,12 +66,11 @@ def apply_swap_packed_nslice(
     outputs = torch.zeros(
         x.shape[0], x.shape[1], stacked_weights[0].shape[1], device=x.device
     )
-    print(f"apply_swap_packed_nslice outputs.shape: {outputs.shape}")
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
         output = torch.matmul(inp, stacked_weights[id].T)
-        print(f"apply_swap_packed_nslice output.shape: {output.shape}")
         outputs[idx_mask] = output
     return outputs
+

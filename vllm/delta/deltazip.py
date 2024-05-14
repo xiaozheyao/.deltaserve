@@ -171,10 +171,6 @@ def apply_delta_uncompressed(
         indices:           (batch_size)
         output:            (batch_size, hidden_dim)
     """
-    outputs = torch.zeros(
-        (len(delta_weights), base_output.shape[0], base_output.shape[1]),
-        device=base_output.device,
-    )
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         inp = x[indices == id]

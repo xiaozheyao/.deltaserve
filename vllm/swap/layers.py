@@ -96,7 +96,9 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.tp_rank = get_tensor_model_parallel_rank()
         self.vocab_start_index = self.base_layer.vocab_start_index
         self.vocab_end_index = self.base_layer.vocab_end_index
-
+        self.embedding_dim = self.base_layer.embedding_dim
+        self.vocab_size = self.base_layer.org_vocab_size // self.tp_size
+        
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
 
@@ -142,10 +144,16 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
             masked_input[input_mask] = 0
         else:
             masked_input = x
+        outputs = torch.zeros(
+            masked_input.shape[0],
+            self.embedding_dim,
+            device=masked_input.device,
+        )
         output_parallel = apply_swap_embed(
             masked_input,
             self.packed_weights,
             indices,
+            outputs,
         )
         if self.tp_size > 1:
             output_parallel[input_mask, :] = 0.0
@@ -456,7 +464,31 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
 
     def forward(self, input_):
         # TODO(xiaozhe):
-        pass
+        if self.base_layer.input_is_parallel:
+            input_parallel = input_
+        else:
+            tp_rank = get_tensor_model_parallel_rank()
+            splitted_input = split_tensor_along_last_dim(
+                input_, num_partitions=self.base_layer.tp_size
+            )
+            input_parallel = splitted_input[tp_rank].contiguous()
+
+        output_parallel = self.apply_weights(input_parallel)
+        if self.base_layer.reduce_results and self.base_layer.tp_size > 1:
+            output_ = tensor_model_parallel_all_reduce(output_parallel)
+        else:
+            output_ = output_parallel
+        if not self.base_layer.skip_bias_add:
+            output = (
+                output_ + self.base_layer.bias
+                if self.base_layer.bias is not None
+                else output_
+            )
+            output_bias = None
+        else:
+            output = output_
+            output_bias = self.base_layer.bias
+        return output, output_bias
 
     @property
     def weight(self):
