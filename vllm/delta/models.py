@@ -184,7 +184,7 @@ class DeltaModel:
         )
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
-        
+
         if use_bitblas:
             model_tensor_filenames = [
                 "bitblas.remain.safetensors",

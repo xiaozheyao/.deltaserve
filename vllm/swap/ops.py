@@ -2,21 +2,21 @@ import torch
 from typing import List, Tuple
 import torch.nn.functional as F
 
+
 def apply_swap_embed(
     x: torch.Tensor,
     packed_weights: List,
     indices: torch.Tensor,
     outputs: torch.Tensor,
 ):
-    print(f"outputs.shape: {outputs.shape}")
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
         output = F.embedding(inp, packed_weights[id])
-        print(f"output.shape: {output.shape}")
         outputs[idx_mask] = output
     return outputs
+
 
 def apply_swap_slice(
     output: torch.Tensor,
@@ -24,14 +24,14 @@ def apply_swap_slice(
     weight: torch.Tensor,
     indices: torch.LongTensor,
     y_offset: int,
-    y_slice_size: int
+    y_slice_size: int,
 ):
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         idx_mask = indices == id
         inp = input[idx_mask]
-        output_slice = torch.matmul(inp, weight.T)
-        output[idx_mask, y_offset:y_offset + y_slice_size] = output_slice
+        output_slice = F.linear(inp, weight[id])
+        output[idx_mask, y_offset : y_offset + y_slice_size] = output_slice
     return output
 
 
@@ -58,13 +58,16 @@ def apply_swap_packed_nslice(
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
 
+
 def apply_swap(
     x: torch.Tensor,
     stacked_weights: List,
     indices: torch.Tensor,
 ):
     outputs = torch.zeros(
-        x.shape[0], x.shape[1], stacked_weights[0].shape[1], 
+        x.shape[0],
+        x.shape[1],
+        stacked_weights[0].shape[1],
         device=x.device,
         dtype=torch.float16,
     )
@@ -72,7 +75,6 @@ def apply_swap(
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
-        output = torch.matmul(inp, stacked_weights[id].T)
+        output = F.linear(inp, stacked_weights[id])
         outputs[idx_mask] = output
     return outputs
-

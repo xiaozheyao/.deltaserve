@@ -17,6 +17,7 @@ from vllm.swap.config import SwapConfig
 from vllm.utils import str_to_int_tuple
 from vllm.delta.config import DeltaConfig
 
+
 @dataclass
 class EngineArgs:
     """Arguments for vLLM engine."""
@@ -75,6 +76,7 @@ class EngineArgs:
     max_swap_slots: int = 1
     max_cpu_models: int = 4
     enable_swap: bool = False
+
     def __post_init__(self):
         if self.tokenizer is None:
             self.tokenizer = self.model
@@ -574,8 +576,7 @@ class EngineArgs:
             else None
         )
         swap_config = SwapConfig(
-            max_packed_model=self.max_swap_slots,
-            max_cpu_model=self.max_cpu_models
+            max_packed_model=self.max_swap_slots, max_cpu_model=self.max_cpu_models
         )
         if self.image_input_type:
             if (

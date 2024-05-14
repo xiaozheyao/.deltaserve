@@ -566,6 +566,7 @@ class SequenceGroupMetadata:
     def swap_int_id(self) -> int:
         return self.swap_request.swap_int_id if self.swap_request else 0
 
+
 class SequenceOutput:
     """The model output associated with a sequence.
 

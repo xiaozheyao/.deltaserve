@@ -96,7 +96,7 @@ class WorkerSwapManager(AbstractWorkerManager):
             vocab_size,
             model_config,
             swap_config,
-            device
+            device,
         )
 
     @property
@@ -126,9 +126,7 @@ class WorkerSwapManager(AbstractWorkerManager):
         self._swap_manager.set_swap_mapping(swap_mapping)
 
     def _apply_swaps(
-        self,
-        swap_requests: List[SwapRequest],
-        sequence_groups: List[SequenceGroup]
+        self, swap_requests: List[SwapRequest], sequence_groups: List[SequenceGroup]
     ) -> None:
         swaps_that_exist = self.list_swaps()
         swaps_map = {
@@ -150,9 +148,7 @@ class WorkerSwapManager(AbstractWorkerManager):
         for swap_id in swaps_to_add:
             self.add_swap(swaps_map[swap_id], sequence_groups)
 
-    def _load_swap(
-        self, swap_request: SwapRequest
-    ) -> SwapModel:
+    def _load_swap(self, swap_request: SwapRequest) -> SwapModel:
         try:
             # TODO(xiaozhe): actual loading logic here
             swap = self._swap_model_cls.from_checkpoint(
@@ -214,8 +210,7 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
         self, swap_requests: List[SwapRequest], sequence_groups: List[SequenceGroup]
     ) -> None:
         swap_maps = {
-            swap_request.swap_int_id: swap_request
-            for swap_request in swap_requests
+            swap_request.swap_int_id: swap_request for swap_request in swap_requests
         }
         if len(swap_maps) > self._swap_manager.packed_swap_slots:
             raise RuntimeError(
@@ -224,6 +219,9 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
             )
         for swap in swap_maps.values():
             self.add_swap(swap, sequence_groups)
+
+    def clear_base(self):
+        self._swap_manager.clear_base_module()
 
     def add_swap(
         self, swap_request: SwapRequest, sequence_groups: List[SequenceGroup]

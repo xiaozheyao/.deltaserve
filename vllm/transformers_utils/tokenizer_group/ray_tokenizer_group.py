@@ -15,6 +15,7 @@ from vllm.transformers_utils.tokenizer_group.tokenizer_group import TokenizerGro
 from vllm.delta.request import DeltaRequest
 from vllm.swap.request import SwapRequest
 
+
 class RayTokenizerGroupPool(BaseTokenizerGroup):
     """A Ray-based pool of TokenizerGroups for async tokenization."""
 

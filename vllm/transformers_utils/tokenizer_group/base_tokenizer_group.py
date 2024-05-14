@@ -7,6 +7,7 @@ from vllm.lora.request import LoRARequest
 from vllm.swap.request import SwapRequest
 from vllm.delta.request import DeltaRequest
 
+
 class BaseTokenizerGroup(ABC):
     """A group of tokenizers that can be used for LoRA adapters."""
 

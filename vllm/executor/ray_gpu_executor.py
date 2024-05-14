@@ -171,11 +171,11 @@ class RayGPUExecutor(ExecutorBase):
         parallel_config = copy.deepcopy(self.parallel_config)
         scheduler_config = copy.deepcopy(self.scheduler_config)
         device_config = copy.deepcopy(self.device_config)
-        
+
         lora_config = copy.deepcopy(self.lora_config)
         delta_config = copy.deepcopy(self.delta_config)
         swap_config = copy.deepcopy(self.swap_config)
-        
+
         kv_cache_dtype = self.cache_config.cache_dtype
 
         # Initialize the actual workers with the Worker class.

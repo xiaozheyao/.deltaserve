@@ -16,7 +16,12 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
 )
 from safetensors import safe_open
-from .layers import ModelMapping, from_layer, from_layer_logits_processor, BaseLayerWithPacked
+from .layers import (
+    ModelMapping,
+    from_layer,
+    from_layer_logits_processor,
+    BaseLayerWithPacked,
+)
 from .packed import ModelLayerWeights
 from .config import SwapConfig
 from vllm.config import DeviceConfig, ModelConfig
@@ -28,6 +33,7 @@ from .utils import replace_submodule
 
 logger = init_logger(__name__)
 _GLOBAL_MODEL_ID = 0
+
 
 def convert_mapping(
     mapping: ModelMapping,
@@ -92,7 +98,7 @@ def convert_mapping(
     sampler_indices_padded = torch.arange(
         0, len(sampler_indices_padded), device="cuda", dtype=torch.long
     ) + (sampler_indices_padded * len(sampler_indices_padded))
-    
+
     indices_len = (
         base_indices.shape[-1],
         sampler_indices.shape[-1],
@@ -149,14 +155,13 @@ class SwapModel:
             modules[module_name] = ModelLayerWeights(
                 module_name=module_name,
                 weight=module.weight,
-                bias = module.bias if hasattr(module, "bias") else None
+                bias=module.bias if hasattr(module, "bias") else None,
             )
         end = timer()
-        logger.debug(
-            f"Disk -> CPU: Loaded in {end - start:.3f} seconds"
-        )
+        logger.debug(f"Disk -> CPU: Loaded in {end - start:.3f} seconds")
         return cls(id, modules)
-    
+
+
 class SwapModelManager:
     """A manager that manages multiple SwapModels."""
 
@@ -240,33 +245,30 @@ class SwapModelManager:
         for module_name, module in self.modules.items():
             module_swap = swap_model.get_swap(module_name)
             if module_swap:
-                module.set_pack(
-                    index,
-                    module_swap.weight
-                )
+                module.set_pack(index, module_swap.weight)
             else:
                 # TODO(xiaozhe): this might be wrong for swapped model...
                 module.reset_pack(index)
         return True
-    
+
     def clear_base_module(self):
         for _, module in self.modules.items():
             module.clear_base()
-    
+
     def _deactivate_swap(self, swap_id: int):
         try:
             index = self.swap_index_to_id.index(swap_id)
             self.swap_index_to_id[index] = None
         except ValueError:
             pass
-    
+
     def deactivate_swap(self, swap_id: int) -> bool:
         if swap_id in self._activate_swaps:
             self._deactivate_swap(swap_id)
             self._activate_swaps.pop(swap_id)
             return True
         return False
-    
+
     def _add_swap(self, swap: SwapModel) -> bool:
         self._create_merged_swap_inplace(swap)
         self._registered_swaps[swap.id] = swap
@@ -298,7 +300,7 @@ class SwapModelManager:
             self.swap_index_to_id,
             self.packed_swap_slots + 1,
             self.vocab_size,
-            0
+            0,
         )
         self.base_indices[: base_indices.shape[0]].copy_(base_indices)
         self.sampler_indices[: sampler_indices.shape[0]].copy_(sampler_indices)
@@ -328,7 +330,7 @@ class SwapModelManager:
         self._registered_swaps.clear()
         self.delta_index_to_id = [None] * self.packed_swap_slots
         self._activate_swaps.clear()
-    
+
     def _create_swap_modules(self):
         for module_name, module in self.model.named_modules():
             if not self._match_target_modules(module_name):
@@ -408,9 +410,8 @@ class SwapModelManager:
                 if replacement_swaps[i]:
                     continue
                 replacement_swaps[i] = None
-            swap_model.swaps[module_name] = ModelLayerWeights.pack(
-                replacement_swaps
-            )
+            swap_model.swaps[module_name] = ModelLayerWeights.pack(replacement_swaps)
+
 
 class SwapLRUCache(LRUCache):
     def __init__(self, capacity: int, deactivate_swap_fn: Callable[[Hashable], None]):
@@ -421,6 +422,7 @@ class SwapLRUCache(LRUCache):
         logger.debug(f"Removing swap. int id: {key}")
         self.deactivate_swap_fn(key)
         return super()._on_remove(key, value)
+
 
 class LRUCacheSwapModelManager(SwapModelManager):
     def __init__(
@@ -433,7 +435,12 @@ class LRUCacheSwapModelManager(SwapModelManager):
         model_config: ModelConfig,
     ):
         super().__init__(
-            model, max_num_seqs, max_num_batched_tokens, vocab_size, swap_config, model_config=model_config,
+            model,
+            max_num_seqs,
+            max_num_batched_tokens,
+            vocab_size,
+            swap_config,
+            model_config=model_config,
         )
         self._registered_swaps: SwapLRUCache = SwapLRUCache(
             self.capacity, self.deactivate_swap
@@ -476,6 +483,7 @@ class LRUCacheSwapModelManager(SwapModelManager):
             self._registered_swaps.remove_oldest()
             return True
         return False
+
 
 def create_swap_manager(
     model: nn.Module,

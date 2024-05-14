@@ -32,6 +32,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_world_size,
 )
 from .ops import apply_swap_embed, apply_swap_packed_nslice, apply_swap
+
 ASYNC_COPY = True
 logger = init_logger(__name__)
 
@@ -80,12 +81,14 @@ class BaseLayerWithPacked(nn.Module):
         embeddings_indices: torch.Tensor,
         indices_len: List[int],
     ): ...
-    
+
     def clear_base(self):
         if hasattr(self, "base_layer"):
             self.base_layer = None
         else:
-            logger.warning(f"Trying to clear base layer from {self} but no base layer found.")
+            logger.warning(
+                f"Trying to clear base layer from {self} but no base layer found."
+            )
 
 
 class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
@@ -98,14 +101,12 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.vocab_end_index = self.base_layer.vocab_end_index
         self.embedding_dim = self.base_layer.embedding_dim
         self.vocab_size = self.base_layer.org_vocab_size // self.tp_size
-        
+
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
 
     def create_packed_weights(
-        self, max_packed: int,
-        swap_config: SwapConfig,
-        model_config: PretrainedConfig
+        self, max_packed: int, swap_config: SwapConfig, model_config: PretrainedConfig
     ) -> None:
         self.packed_weights = torch.zeros(
             max_packed,
@@ -171,6 +172,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         model_config: Optional[PretrainedConfig],
     ) -> bool:
         return type(source_layer) is VocabParallelEmbedding
+
 
 class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
@@ -250,13 +252,14 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
             and len(packed_modules_list) == 1
         )
 
+
 class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def __init__(self, base_layer: MergedColumnParallelLinear) -> None:
         super().__init__(base_layer)
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
         self.outsize = self.base_layer.weight.shape[0]
-        
+
     def create_packed_weights(
         self,
         max_packed: int,
@@ -317,12 +320,12 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         outputs = apply_swap_packed_nslice(
             x,
             self.weight_stacked,
-            self.indices[:self.indices_len[0]],
+            self.indices[: self.indices_len[0]],
             outputs,
             (self.output_dim, self.output_dim),
         )
         return outputs
-    
+
     @classmethod
     def can_replace_layer(
         cls,
@@ -355,7 +358,7 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
             self.kv_proj_shard_size,
             self.kv_proj_shard_size,
         )
-        
+
     def create_packed_weights(
         self,
         max_packed_model: int,
@@ -416,7 +419,7 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         output = apply_swap_packed_nslice(
             x,
             self.weight_stacked,
-            self.indices[:self.indices_len[0]],
+            self.indices[: self.indices_len[0]],
             output,
             self.output_slices,
         )
@@ -440,7 +443,7 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
         self.output_size = self.base_layer.weight.shape[0]
-        
+
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -668,6 +671,7 @@ def from_layer(
             return ret
     return layer
 
+
 def from_layer_logits_processor(
     layer: LogitsProcessor,
     lm_head: ParallelLMHead,
@@ -676,10 +680,7 @@ def from_layer_logits_processor(
     model_config: Optional[PretrainedConfig] = None,
 ) -> LogitsProcessorWithPacked:
     ret = LogitsProcessorWithPacked(
-        layer,
-        lm_head.embedding_dim, 
-        lm_head.weight.dtype,
-        lm_head.weight.device
+        layer, lm_head.embedding_dim, lm_head.weight.dtype, lm_head.weight.device
     )
     ret.create_packed_weights(max_packs, swap_config, model_config)
     return ret

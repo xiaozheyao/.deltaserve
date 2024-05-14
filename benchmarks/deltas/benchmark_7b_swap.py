@@ -1,6 +1,7 @@
 import os
 from vllm import LLM, SamplingParams
 from vllm.swap.request import SwapRequest
+
 tp_size = int(os.environ.get("TP_SIZE", "1"))
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
@@ -16,7 +17,7 @@ llm = LLM(
     max_context_len_to_capture=64,
     max_model_len=64,
     max_deltas=0,
-    max_swap_slots=1, # swap==1 means only the original model will be swapped
+    max_swap_slots=1,  # swap==1 means only the original model will be swapped
     enable_swap=True,
 )
 
