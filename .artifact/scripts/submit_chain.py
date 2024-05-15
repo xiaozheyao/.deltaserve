@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-SCRIPT_PATH = ".artifact/scripts/pjlab/chains_2"
+SCRIPT_PATH = ".artifact/scripts/workdir"
 
 scripts = [x for x in os.listdir(SCRIPT_PATH) if x.endswith(".slurm")]
 previous_id = 0
