@@ -1,6 +1,7 @@
 import os
 from vllm import LLM, SamplingParams
 from vllm.swap.request import SwapRequest
+
 tp_size = int(os.environ.get("TP_SIZE", "1"))
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 os.environ["NUMEXPR_MAX_THREADS"] = "32"
@@ -15,7 +16,9 @@ llm = LLM(
     gpu_memory_utilization=0.9,
     max_context_len_to_capture=64,
     max_model_len=64,
-    max_deltas=1,
+    max_deltas=0,
+    max_swap_slots=1,  # swap==1 means only the original model will be swapped
+    enable_swap=True,
 )
 
 sampling_params = SamplingParams(
@@ -31,11 +34,15 @@ prompts = [
     "USER: What is the capital of France?\nASSISTANT:",
     "USER: What is the capital of China?\nASSISTANT:",
 ]
+
+outputs = llm.generate(
+    prompts,
+    sampling_params,
+)
+print(f"without swap: {outputs[0].outputs[0].text}")
+print(outputs)
 outputs = llm.generate(
     prompts, sampling_params, swap_request=SwapRequest("vicuna", 1, swap_model_path)
-)
-outputs = llm.generate(
-    prompts, sampling_params, delta_request=SwapRequest("vicuna", 1, swap_model_path)
 )
 print(f"with swap: {outputs[0].outputs[0].text}")
 print(outputs)

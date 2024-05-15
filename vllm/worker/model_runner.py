@@ -27,7 +27,7 @@ from vllm.delta.request import DeltaRequest
 from vllm.delta.worker_manager import OverlapLRUCacheWorkerDeltaManager
 
 from vllm.swap.request import SwapRequest
-
+from vllm.swap.worker_manager import LRUCacheWorkerSwapManager
 from vllm.attention import AttentionMetadata, get_attn_backend
 
 from vllm.config import (
@@ -60,6 +60,7 @@ from vllm.utils import (
 )
 from vllm.swap.config import SwapConfig
 from vllm.swap.layers import ModelMapping
+
 logger = init_logger(__name__)
 
 _PAD_SLOT_ID = -1
@@ -208,6 +209,31 @@ class ModelRunner:
             )
             self.model = self.delta_manager.create_delta_manager(self.model)
 
+        if self.swap_config:
+            assert (
+                hasattr(self.model, "supported_delta_modules")
+                and self.model.supported_delta_modules
+            ), "Model does not support Delta"
+            assert hasattr(
+                self.model, "embedding_modules"
+            ), "Model does not have embedding_modules"
+            assert hasattr(
+                self.model, "embedding_padding_modules"
+            ), "Model does not have embedding_padding_modules"
+            self.swap_manager = LRUCacheWorkerSwapManager(
+                self.scheduler_config.max_num_seqs,
+                self.scheduler_config.max_num_batched_tokens,
+                self.vocab_size,
+                self.model_config,
+                self.swap_config,
+                self.device,
+                self.model.embedding_modules,
+                self.model.embedding_padding_modules,
+            )
+            self.model = self.swap_manager.create_swap_manager(
+                self.model,
+            )
+
     def set_block_size(self, block_size: int) -> None:
         self.block_size = block_size
 
@@ -255,7 +281,7 @@ class ModelRunner:
         swap_index_mapping: List[int] = []
         swap_prompt_mapping: List[int] = []
         swap_requests: Set[SwapRequest] = set()
-        
+
         prompt_lens: List[int] = []
         context_lens: List[int] = []
         subquery_lens: List[int] = []
@@ -289,7 +315,7 @@ class ModelRunner:
                 prefix_block_tables.append([])
                 context_len = 0
             # actual prompt lens
-            
+
             context_lens.append(context_len)
             subquery_lens.append(prompt_len - computed_len)
             input_tokens.extend(prompt_tokens)
@@ -298,7 +324,6 @@ class ModelRunner:
             input_positions.extend(
                 list(range(computed_len, computed_len + len(prompt_tokens)))
             )
-
             lora_id = seq_group_metadata.lora_int_id
             delta_id = seq_group_metadata.delta_int_id
             swap_id = seq_group_metadata.swap_int_id
@@ -382,7 +407,7 @@ class ModelRunner:
             input_positions, dtype=torch.long, device=self.device
         )
         slot_mapping = torch.tensor(slot_mapping, dtype=torch.long, device=self.device)
-        
+
         context_lens_tensor = torch.tensor(
             context_lens, dtype=torch.int, device=self.device
         )
@@ -501,7 +526,7 @@ class ModelRunner:
         swap_index_mapping: List[int] = []
         swap_prompt_mapping: List[int] = []
         swap_requests: Set[SwapRequest] = set()
-        
+
         for seq_group_metadata in seq_group_metadata_list:
             assert not seq_group_metadata.is_prompt
 
@@ -509,7 +534,7 @@ class ModelRunner:
             lora_id = seq_group_metadata.lora_int_id
             delta_id = seq_group_metadata.delta_int_id
             swap_id = seq_group_metadata.swap_int_id
-            
+
             if lora_id > 0:
                 lora_requests.add(seq_group_metadata.lora_request)
             if delta_id > 0:
@@ -538,13 +563,13 @@ class ModelRunner:
                 block_offset = position % self.block_size
                 slot = block_number * self.block_size + block_offset
                 slot_mapping.append(slot)
-                
+
                 lora_index_mapping.append(lora_id)
                 lora_prompt_mapping.append(lora_id)
 
                 delta_index_mapping.append(delta_id)
                 delta_prompt_mapping.append(delta_id)
-                
+
                 swap_index_mapping.append(swap_id)
                 swap_prompt_mapping.append(swap_id)
 
@@ -627,15 +652,12 @@ class ModelRunner:
             input_tokens,
             input_positions,
             attn_metadata,
-            
             lora_index_mapping,
             lora_prompt_mapping,
             lora_requests,
-            
             delta_index_mapping,
             delta_prompt_mapping,
             delta_requests,
-            
             swap_index_mapping,
             swap_prompt_mapping,
             swap_requests,
@@ -763,8 +785,10 @@ class ModelRunner:
         SamplingMetadata,
         Set[int],
         LoRAMapping,
+        Set[int],
         DeltaMapping,
-        ModelMapping, # a.k.a swap mapping
+        Set[int],
+        ModelMapping,  # a.k.a swap mapping
         torch.Tensor,
     ]:
         if self.is_driver_worker:
@@ -808,7 +832,6 @@ class ModelRunner:
                 prompt_lens = []
                 subquery_lens = None
                 multi_modal_input = None
-            
             sampling_metadata = self._prepare_sample(
                 seq_group_metadata_list, prompt_lens, subquery_lens
             )
@@ -833,8 +856,9 @@ class ModelRunner:
                     swap_prompt_mapping,
                 )
                 lora_mapping = None
-                delta_mapping = None            
+                delta_mapping = None
             else:
+                swap_mapping = None
                 lora_mapping = None
                 delta_mapping = None
             # Broadcast the metadata.
@@ -908,13 +932,17 @@ class ModelRunner:
             lora_mapping,
             delta_requests,
             delta_mapping,
+            swap_requests,
+            swap_mapping,
             multi_modal_input,
         ) = self.prepare_input_tensors(seq_group_metadata_list)
-
         if self.lora_config:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
             self.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
+        if self.swap_config:
+            self.set_active_swaps(swap_requests, swap_mapping, sequence_groups)
+
         # Execute the model.
         if attn_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]
@@ -979,6 +1007,7 @@ class ModelRunner:
                 delta_id = idx + 1
                 # we skip this for now...
                 # TODO(xiaozhe): add dummy delta request
+
         # Profile memory usage with max_num_sequences sequences and the total
         # number of tokens equal to max_num_batched_tokens.
         seqs: List[SequenceGroupMetadata] = []
@@ -1021,6 +1050,9 @@ class ModelRunner:
         # Run the model with the dummy inputs.
         num_layers = self.model_config.get_num_layers(self.parallel_config)
         kv_caches = [None] * num_layers
+        if self.swap_config is not None:
+            self.swap_manager.clear_base()
+            torch.cuda.empty_cache()
         self.execute_model(seqs, kv_caches)
         torch.cuda.synchronize()
         return
@@ -1034,6 +1066,16 @@ class ModelRunner:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.remove_all_deltas()
+
+    def remove_all_swaps(self) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.remove_all_swaps()
+
+    def clear_base(self) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.clear_base()
 
     def set_active_loras(
         self, lora_requests: List[LoRARequest], lora_mapping: LoRAMapping
@@ -1056,6 +1098,18 @@ class ModelRunner:
             delta_requests, delta_mapping, sequence_groups
         )
 
+    def set_active_swaps(
+        self,
+        swap_requests: List[SwapRequest],
+        swap_mapping: ModelMapping,
+        sequence_groups: List[SequenceGroup] = None,
+    ):
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        if sequence_groups is None:
+            sequence_groups = []
+        self.swap_manager.set_active_swaps(swap_requests, swap_mapping, sequence_groups)
+
     def add_lora(self, lora_request: LoRARequest) -> bool:
         if not self.lora_manager:
             raise RuntimeError("LoRA is not enabled.")
@@ -1065,6 +1119,11 @@ class ModelRunner:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.add_delta(delta_request)
+
+    def add_swap(self, swap_request: SwapRequest) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.add_swap(swap_request)
 
     def prefetch_delta(self, delta_request: DeltaRequest, destination="cpu") -> None:
         if not self.delta_manager:
@@ -1081,6 +1140,11 @@ class ModelRunner:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.remove_delta(delta_id)
 
+    def remove_swap(self, swap_id: int) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.remove_swap(swap_id)
+
     def list_loras(self) -> Set[int]:
         if not self.lora_manager:
             raise RuntimeError("LoRA is not enabled.")
@@ -1090,6 +1154,11 @@ class ModelRunner:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.list_deltas()
+
+    def list_swaps(self) -> Set[int]:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.list_swaps()
 
     @torch.inference_mode()
     def capture_model(self, kv_caches: List[torch.Tensor]) -> None:

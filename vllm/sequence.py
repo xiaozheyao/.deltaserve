@@ -411,6 +411,10 @@ class SequenceGroup:
     def delta_int_id(self) -> int:
         return self.delta_request.delta_int_id if self.delta_request else 0
 
+    @property
+    def swap_int_id(self) -> int:
+        return self.swap_request.swap_int_id if self.swap_request else 0
+
     def get_last_latency(self, now: float) -> float:
         """Gets last token latency for Request level timings."""
         latency = now - self.metrics.last_token_time
@@ -565,6 +569,7 @@ class SequenceGroupMetadata:
     @property
     def swap_int_id(self) -> int:
         return self.swap_request.swap_int_id if self.swap_request else 0
+
 
 class SequenceOutput:
     """The model output associated with a sequence.

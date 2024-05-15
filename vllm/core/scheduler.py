@@ -15,6 +15,8 @@ from vllm.sequence import (
     SequenceGroupMetadata,
     SequenceStatus,
 )
+from vllm.swap.config import SwapConfig
+from vllm.swap.request import SwapRequest
 from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
 
@@ -59,11 +61,14 @@ class SchedulerOutputs:
 
         self.num_loras = len(self.lora_requests)
         self.num_deltas = len(self.delta_requests)
+        self.num_swaps = len(self.swap_requests)
 
         if self.num_loras > 0:
             self._sort_by_lora_ids()
         if self.num_deltas > 0:
             self._sort_by_delta_ids()
+        if self.num_swaps > 0:
+            self._sort_by_swap_ids()
 
     def is_empty(self) -> bool:
         # NOTE: We do not consider the ignored sequence groups.
@@ -84,6 +89,11 @@ class SchedulerOutputs:
             self.scheduled_seq_groups, key=lambda g: (g.delta_int_id, g.request_id)
         )
 
+    def _sort_by_swap_ids(self) -> bool:
+        self.scheduled_seq_groups = sorted(
+            self.scheduled_seq_groups, key=lambda g: (g.swap_int_id, g.request_id)
+        )
+
     @property
     def lora_requests(self) -> Set[LoRARequest]:
         return {g.lora_request for g in self.scheduled_seq_groups}
@@ -91,6 +101,10 @@ class SchedulerOutputs:
     @property
     def delta_requests(self) -> Set[DeltaRequest]:
         return {g.delta_request for g in self.scheduled_seq_groups}
+
+    @property
+    def swap_requests(self) -> Set[SwapRequest]:
+        return {g.swap_request for g in self.scheduled_seq_groups}
 
 
 class Scheduler:
@@ -101,6 +115,7 @@ class Scheduler:
         cache_config: CacheConfig,
         lora_config: Optional[LoRAConfig],
         delta_config: Optional[DeltaConfig],
+        swap_config: Optional[SwapConfig],
     ) -> None:
         self.scheduler_config = scheduler_config
         self.cache_config = cache_config
@@ -109,6 +124,7 @@ class Scheduler:
         # LoRAs. This should be improved in the future.
         self.lora_config = lora_config
         self.delta_config = delta_config
+        self.swap_config = swap_config
 
         self.prompt_limit = min(
             self.scheduler_config.max_model_len,
@@ -155,6 +171,10 @@ class Scheduler:
     @property
     def delta_enabled(self) -> bool:
         return bool(self.delta_config)
+
+    @property
+    def swap_enabled(self) -> bool:
+        return bool(self.swap_config)
 
     def add_seq_group(self, seq_group: SequenceGroup) -> None:
         # Add sequence groups to the waiting queue.
@@ -233,6 +253,11 @@ class Scheduler:
                 if self.delta_enabled
                 else None
             )
+            curr_swaps = (
+                set(seq_group.swap_int_id for seq_group in self.running)
+                if self.swap_enabled
+                else None
+            )
 
             seq_lens: List[int] = []
 
@@ -289,6 +314,7 @@ class Scheduler:
 
                 lora_int_id = 0
                 delta_int_id = 0
+                swap_int_id = 0
                 if self.lora_enabled:
                     lora_int_id = seq_group.lora_int_id
                     if (
@@ -315,6 +341,19 @@ class Scheduler:
                         self.waiting.popleft()
                         continue
 
+                if self.swap_enabled:
+                    swap_int_id = seq_group.swap_int_id
+                    if (
+                        swap_int_id > 0
+                        and swap_int_id not in curr_swaps
+                        and len(curr_swaps) >= self.swap_config.max_packed_model
+                    ):
+                        # We don't have a space for another delta, so
+                        # we ignore this request for now.
+                        leftover_waiting_sequences.appendleft(seq_group)
+                        self.waiting.popleft()
+                        continue
+
                 # If the number of batched tokens exceeds the limit, stop.
                 num_batched_tokens += num_prompt_tokens
                 if num_batched_tokens > self.scheduler_config.max_num_batched_tokens:
@@ -330,6 +369,9 @@ class Scheduler:
                     curr_loras.add(lora_int_id)
                 if delta_int_id > 0:
                     curr_deltas.add(delta_int_id)
+                if swap_int_id > 0:
+                    curr_swaps.add(swap_int_id)
+
                 self.waiting.popleft()
                 self._allocate(seq_group)
                 self.running.append(seq_group)
@@ -401,13 +443,18 @@ class Scheduler:
                 if self.delta_enabled
                 else None
             )
-
+            curr_swaps = (
+                set(seq_group.swap_int_id for seq_group in self.running)
+                if self.swap_enabled
+                else None
+            )
             leftover_swapped = deque()
 
             while self.swapped:
                 seq_group = self.swapped[0]
                 lora_int_id = 0
                 delta_int_id = 0
+                swap_int_id = 0
                 if self.lora_enabled:
                     lora_int_id = seq_group.lora_int_id
                     if (
@@ -433,6 +480,20 @@ class Scheduler:
                         leftover_swapped.appendleft(seq_group)
                         self.swapped.popleft()
                         continue
+
+                if self.swap_enabled:
+                    swap_int_id = seq_group.swap_int_id
+                    if (
+                        swap_int_id > 0
+                        and swap_int_id not in curr_swaps
+                        and len(curr_swaps) >= self.swap_config.max_packed_model
+                    ):
+                        # We don't have a space for another delta, so
+                        # we ignore this request for now.
+                        leftover_swapped.appendleft(seq_group)
+                        self.swapped.popleft()
+                        continue
+
                 # If the sequence group cannot be swapped in, stop.
                 if not self.block_manager.can_swap_in(seq_group):
                     break
@@ -447,6 +508,8 @@ class Scheduler:
                     curr_loras.add(lora_int_id)
                 if delta_int_id > 0:
                     curr_deltas.add(delta_int_id)
+                if swap_int_id > 0:
+                    curr_swaps.add(swap_int_id)
 
                 self.swapped.popleft()
                 self._swap_in(seq_group, blocks_to_swap_in)
@@ -506,6 +569,7 @@ class Scheduler:
                 block_tables=block_tables,
                 lora_request=seq_group.lora_request,
                 delta_request=seq_group.delta_request,
+                swap_request=seq_group.swap_request,
                 computed_block_nums=self.block_manager.get_common_computed_block_ids(
                     seq_group
                 ),

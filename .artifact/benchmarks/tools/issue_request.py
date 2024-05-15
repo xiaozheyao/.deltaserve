@@ -2,7 +2,7 @@ import os
 import json
 import uuid
 import argparse
-from core_queue import run, get_sys_info
+from core import run, get_sys_info
 import time
 
 

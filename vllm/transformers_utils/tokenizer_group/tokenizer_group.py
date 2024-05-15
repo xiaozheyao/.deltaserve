@@ -4,6 +4,7 @@ from transformers import PreTrainedTokenizer
 
 from vllm.lora.request import LoRARequest
 from vllm.delta.request import DeltaRequest
+from vllm.swap.request import SwapRequest
 from vllm.transformers_utils.tokenizer import (
     get_lora_tokenizer,
     get_lora_tokenizer_async,
@@ -53,6 +54,7 @@ class TokenizerGroup(BaseTokenizerGroup):
         request_id: Optional[str] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ) -> List[int]:
         tokenizer = self.get_lora_tokenizer(lora_request)
         return tokenizer.encode(prompt)
@@ -62,6 +64,8 @@ class TokenizerGroup(BaseTokenizerGroup):
         prompt: str,
         request_id: Optional[str] = None,
         lora_request: Optional[LoRARequest] = None,
+        delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ) -> List[int]:
         tokenizer = await self.get_lora_tokenizer_async(lora_request)
         return tokenizer.encode(prompt)

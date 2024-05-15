@@ -31,6 +31,12 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
+from .ops import (
+    apply_swap_embed,
+    apply_swap_packed_nslice,
+    apply_swap,
+    apply_swap_logits,
+)
 
 ASYNC_COPY = True
 logger = init_logger(__name__)
@@ -81,6 +87,12 @@ class BaseLayerWithPacked(nn.Module):
         indices_len: List[int],
     ): ...
 
+    def clear_base(self):
+        if hasattr(self, "base_layer"):
+            del self.base_layer
+        else:
+            pass
+
 
 class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
     def __init__(self, base_layer: VocabParallelEmbedding) -> None:
@@ -90,6 +102,9 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.tp_rank = get_tensor_model_parallel_rank()
         self.vocab_start_index = self.base_layer.vocab_start_index
         self.vocab_end_index = self.base_layer.vocab_end_index
+        self.embedding_dim = self.base_layer.embedding_dim
+        self.vocab_size = self.base_layer.org_vocab_size // self.tp_size
+        self.device = self.base_layer.weight.device
 
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
@@ -99,10 +114,10 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
     ) -> None:
         self.packed_weights = torch.zeros(
             max_packed,
-            self.base_layer.org_vocab_size // self.tp_size,
-            self.base_layer.embedding_dim,
+            self.vocab_size,
+            self.embedding_dim,
             dtype=model_config.torch_dtype,
-            device=self.base_layer.weight.device,
+            device=self.device,
         )
 
     def set_pack(
@@ -111,6 +126,8 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
         bias: Optional[torch.Tensor] = None,
     ):
+        # logger.info(f"weight shape: {weight.shape}")
+        # logger.info(f"packed_weights shape: {self.packed_weights.shape}")
         self.packed_weights[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -134,7 +151,23 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
             masked_input[input_mask] = 0
         else:
             masked_input = x
-        # TODO(xiaozhe):
+        outputs = torch.zeros(
+            masked_input.shape[0],
+            self.embedding_dim,
+            device=masked_input.device,
+            dtype=torch.float16,
+        )
+        output_parallel = apply_swap_embed(
+            masked_input,
+            self.packed_weights,
+            indices,
+            outputs,
+        )
+        if self.tp_size > 1:
+            output_parallel[input_mask, :] = 0.0
+        # Reduce across all the model parallel GPUs.
+        output = tensor_model_parallel_all_reduce(output_parallel)
+        return output
 
     @classmethod
     def can_replace_layer(
@@ -151,12 +184,16 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
         self.base_layer = base_layer
+        self.in_features = self.base_layer.weight.shape[1]
+        self.out_features = self.base_layer.weight.shape[0]
         self.tp_size = get_tensor_model_parallel_world_size()
+        self.device = self.base_layer.weight.device
+        self.gather_output = self.base_layer.gather_output
 
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
 
-    def create_pack_weights(
+    def create_packed_weights(
         self,
         max_packed: int,
         swap_config: SwapConfig,
@@ -164,14 +201,13 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     ) -> None:
         self.weights_packed = torch.zeros(
             max_packed,
-            self.base_layer.weight.shape[0],
-            self.base_layer.weight.shape[1],
+            self.out_features,
+            self.in_features,
             dtype=model_config.torch_dtype,
-            device=self.base_layer.weight.device,
+            device=self.device,
         )
         self.indices: Optional[torch.Tensor] = None
         self.indices_len: Optional[List[int]] = None
-        self.output_dim = self.base_layer.weight.shape[0]
 
     def set_pack(
         self,
@@ -199,13 +235,13 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
         pass
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        bias = self.base_layer.bias if not self.base_layer.skip_bias_add else None
+        bias = None
         output_parallel = self.apply_weights(x, bias)
-        if self.base_layer.gather_output:
+        if self.gather_output:
             output = tensor_model_parallel_all_gather(output_parallel)
         else:
             output = output_parallel
-        output_bias = self.base_layer.bias if self.base_layer.skip_bias_add else None
+        output_bias = None
         return output, output_bias
 
     @property
@@ -231,6 +267,11 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         super().__init__(base_layer)
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
+        self.device = self.base_layer.weight.device
+        self.in_features = self.base_layer.weight.shape[1]
+        self.out_features = self.base_layer.weight.shape[0]
+        self.output_sizes = self.base_layer.output_sizes
+        self.output_dim = self.out_features // 2
 
     def create_packed_weights(
         self,
@@ -240,25 +281,24 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     ) -> None:
         n_slices = 2
         if not (
-            len(self.base_layer.output_sizes) == n_slices
-            and self.base_layer.output_sizes[0] == self.base_layer.output_sizes[1]
+            len(self.output_sizes) == n_slices
+            and self.output_sizes[0] == self.output_sizes[1]
         ):
             raise ValueError(
-                "DeltaColumnParallelLinear2Slice requires 2 slices with "
+                "MergedColumnParallelLinearWithPacked requires 2 slices with "
                 "the same size."
             )
         self.weight_stacked = tuple(
             torch.zeros(
                 max_packed,
-                self.base_layer.weight.shape[0] // 2,
-                self.base_layer.weight.shape[1],
+                self.output_dim,
+                self.in_features,
                 dtype=model_config.torch_dtype,
-                device=self.base_layer.weight.device,
+                device=self.device,
             )
             for _ in range(n_slices)
         )
         self.indices: Optional[torch.Tensor] = None
-        self.output_dim = self.base_layer.weight.shape[0] // 2
 
     def reset_pack(self, index: int):
         self.weight_stacked[0][index] = 0
@@ -272,18 +312,31 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         self.reset_pack(index)
         if weight[0] is not None:
             self.weight_stacked[0][index, :, :].copy_(
-                weight[0], non_blocking=ASYNC_COPY
+                weight[: self.output_dim], non_blocking=ASYNC_COPY
             )
         if weight[1] is not None:
             self.weight_stacked[1][index, :, :].copy_(
-                weight[1], non_blocking=ASYNC_COPY
+                weight[self.output_dim :], non_blocking=ASYNC_COPY
             )
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
-        # TODO(xiaozhe):
-        pass
+        # TODO(xiaozhe): bias is ignored for now.
+        outputs = torch.zeros(
+            x.shape[0],
+            self.out_features,
+            device=x.device,
+            dtype=x.dtype,
+        )
+        outputs = apply_swap_packed_nslice(
+            x,
+            self.weight_stacked,
+            self.indices[: self.indices_len[0]],
+            outputs,
+            (self.output_dim, self.output_dim),
+        )
+        return outputs
 
     @classmethod
     def can_replace_layer(
@@ -302,8 +355,8 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
 class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
         super().__init__(base_layer)
-        self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
+        self.tp_size = get_tensor_model_parallel_world_size()
 
         self.q_proj_shard_size = self.base_layer.num_heads * self.base_layer.head_size
         self.kv_proj_shard_size = (
@@ -311,6 +364,17 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         )
         self.q_shard_id = self.tp_rank
         self.kv_shard_id = self.tp_rank // self.base_layer.num_kv_head_replicas
+        self.output_size = self.base_layer.weight.shape[0]
+        self.output_slices = (
+            self.q_proj_shard_size,
+            self.kv_proj_shard_size,
+            self.kv_proj_shard_size,
+        )
+        self.in_features = self.base_layer.weight.shape[1]
+        self.out_features = self.base_layer.weight.shape[0]
+        self.device = self.base_layer.weight.device
+        self.skip_bias_add = self.base_layer.skip_bias_add
+        self.bias = self.base_layer.bias
 
     def create_packed_weights(
         self,
@@ -322,29 +386,24 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
             torch.zeros(
                 max_packed_model,
                 self.q_proj_shard_size,
-                self.base_layer.weight.shape[1],
+                self.in_features,
                 dtype=model_config.torch_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_packed_model,
                 self.kv_proj_shard_size,
-                self.base_layer.weight.shape[1],
+                self.in_features,
                 dtype=model_config.torch_dtype,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_packed_model,
                 self.kv_proj_shard_size,
-                self.base_layer.weight.shape[1],
+                self.in_features,
                 dtype=model_config.torch_dtype,
                 device=self.base_layer.weight.device,
             ),
-        )
-        self.output_slices = (
-            self.q_proj_shard_size,
-            self.kv_proj_shard_size,
-            self.kv_proj_shard_size,
         )
         self.packed_indices: Optional[torch.Tensor] = None
         self.standard_indices: Optional[torch.Tensor] = None
@@ -360,16 +419,45 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         index: int,
         weight: List[torch.Tensor],
     ):
+        # logger.info(f"weight shape: {weight[:self.q_proj_shard_size].shape}")
+        # logger.info(f"weight_stacked shape: {self.weight_stacked[0].shape}")
         self.reset_pack(index)
-        self.weight_stacked[0][index, :, :].copy_(weight[0], non_blocking=ASYNC_COPY)
-        self.weight_stacked[1][index, :, :].copy_(weight[1], non_blocking=ASYNC_COPY)
-        self.weight_stacked[2][index, :, :].copy_(weight[2], non_blocking=ASYNC_COPY)
+
+        self.weight_stacked[0][index, :, :].copy_(
+            weight[: self.q_proj_shard_size], non_blocking=ASYNC_COPY
+        )
+
+        self.weight_stacked[1][index, :, :].copy_(
+            weight[
+                self.q_proj_shard_size : self.q_proj_shard_size
+                + self.kv_proj_shard_size
+            ],
+            non_blocking=ASYNC_COPY,
+        )
+
+        self.weight_stacked[2][index, :, :].copy_(
+            weight[self.q_proj_shard_size + self.kv_proj_shard_size :],
+            non_blocking=ASYNC_COPY,
+        )
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
-        # TODO(xiaozhe):
-        pass
+        assert bias is None, "Bias is not supported for QKVParallelLinear yet."
+        output = torch.zeros(
+            x.shape[0],
+            self.output_size,
+            device=x.device,
+            dtype=x.dtype,
+        )
+        output = apply_swap_packed_nslice(
+            x,
+            self.weight_stacked,
+            self.indices[: self.indices_len[0]],
+            output,
+            self.output_slices,
+        )
+        return output
 
     @classmethod
     def can_replace_layer(
@@ -388,6 +476,11 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.base_layer = base_layer
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
+        self.device = self.base_layer.weight.device
+        self.in_features = self.base_layer.weight.shape[1]  # 4096
+        self.out_features = self.base_layer.weight.shape[0]  # 2048
+        self.input_is_parallel = self.base_layer.input_is_parallel
+        self.reduce_results = self.base_layer.reduce_results
 
     def set_mapping(
         self,
@@ -409,11 +502,11 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.weight_stacked = torch.zeros(
             (
                 max_packed,
-                self.base_layer.weight.shape[0],
-                self.base_layer.weight.shape[1],
+                self.out_features,
+                self.in_features,
             ),
             dtype=model_config.torch_dtype,
-            device=self.base_layer.weight.device,
+            device=self.device,
         )
 
     def reset_pack(self, index: int):
@@ -425,18 +518,41 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
     ):
         self.reset_pack(index)
+        # logger.info(f"weight shape: {weight.shape}")
+        # logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
+        self.weight_stacked[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
-        # TODO(xiaozhe):
-        pass
+        outputs = torch.zeros(
+            x.shape[0],
+            self.out_features,
+            device=x.device,
+            dtype=x.dtype,
+        )
+        outputs = apply_swap(
+            x, self.weight_stacked, self.indices[: self.indices_len[0]], outputs
+        )
+        return outputs
 
     def forward(self, input_):
         # TODO(xiaozhe):
-        pass
-
-    @property
-    def weight(self):
-        return self.base_layer.weight
+        if self.input_is_parallel:
+            input_parallel = input_
+        else:
+            tp_rank = get_tensor_model_parallel_rank()
+            splitted_input = split_tensor_along_last_dim(
+                input_, num_partitions=self.tp_size
+            )
+            input_parallel = splitted_input[tp_rank].contiguous()
+        output_parallel = self.apply_weights(input_parallel)
+        if self.reduce_results and self.tp_size > 1:
+            output_ = tensor_model_parallel_all_reduce(output_parallel)
+        else:
+            output_ = output_parallel
+        # NOTE: Handle bias here.
+        output = output_
+        output_bias = None
+        return output, output_bias
 
     @classmethod
     def can_replace_layer(
@@ -464,28 +580,12 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         self.device = device
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
+        self.vocab_size = self.base_layer.vocab_size
+        self.logits_as_input = self.base_layer.logits_as_input
+        self.scale = self.base_layer.scale
+        self.org_vocab_size = self.base_layer.org_vocab_size
 
-    @property
-    def logits_as_input(self):
-        return self.base_layer.logits_as_input
-
-    @property
-    def vocab_size(self):
-        return self.base_layer.vocab_size
-
-    @property
-    def scale(self):
-        return self.base_layer.scale
-
-    @property
-    def org_vocab_size(self):
-        return self.base_layer.org_vocab_size
-
-    @property
-    def include_gpu_probs_tensor(self):
-        return self.base_layer.include_gpu_probs_tensor
-
-    def create_delta_weights(
+    def create_packed_weights(
         self,
         max_deltas: int,
         swap_config: SwapConfig,
@@ -494,7 +594,7 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         self.weight_stacked = torch.zeros(
             (
                 max_deltas,
-                self.base_layer.vocab_size // self.tp_size,
+                self.vocab_size // self.tp_size,
                 self.hidden_size,
             ),
             dtype=self.dtype,
@@ -512,7 +612,9 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         index: int,
         weight: torch.Tensor,
     ):
-        self.reset_delta(index)
+        self.reset_pack(index)
+        # logger.info(f"weight shape: {weight.shape}")
+        # logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
         self.weight_stacked[index, :, :].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -534,16 +636,26 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         embedding_bias: Optional[torch.Tensor] = None,
     ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
-        logits = torch.matmul(hidden_states, embedding.t())
+        output = torch.zeros(
+            hidden_states.shape[0],
+            self.vocab_size // self.tp_size,
+            device=hidden_states.device,
+            dtype=hidden_states.dtype,
+        )
+        output = apply_swap_logits(
+            hidden_states,
+            self.weight_stacked,
+            self.indices[: self.indices_len[1]],
+            output,
+        )
         # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
-        if logits is None:
+        if output is None:
             return None
-        # (todo)
-        logits = tensor_model_parallel_gather(logits)
+        logits = tensor_model_parallel_gather(output)
         return logits
 
     def forward(self, *args, **kwargs):
-        return type(self.base_layer).forward(self, *args, **kwargs)
+        return LogitsProcessor.forward(self, *args, **kwargs)
 
     @classmethod
     def can_replace_layer(
@@ -557,7 +669,7 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         return False
 
 
-_all_delta_classes: Set[Type[BaseLayerWithPacked]] = {
+_all_swap_classes: Set[Type[BaseLayerWithPacked]] = {
     cls
     for cls in globals().values()
     if inspect.isclass(cls)
@@ -573,11 +685,25 @@ def from_layer(
     packed_modules_list: List,
     model_config: Optional[PretrainedConfig] = None,
 ) -> nn.Module:
-    for delta_cls in _all_delta_classes:
-        if delta_cls.can_replace_layer(
+    for swap_cls in _all_swap_classes:
+        if swap_cls.can_replace_layer(
             layer, swap_config, packed_modules_list, model_config
         ):
-            ret = delta_cls(layer)
-            ret.create_delta_weights(max_packed_model, swap_config, model_config)
+            ret = swap_cls(layer)
+            ret.create_packed_weights(max_packed_model, swap_config, model_config)
             return ret
     return layer
+
+
+def from_layer_logits_processor(
+    layer: LogitsProcessor,
+    lm_head: ParallelLMHead,
+    max_packs: int,
+    swap_config: SwapConfig,
+    model_config: Optional[PretrainedConfig] = None,
+) -> LogitsProcessorWithPacked:
+    ret = LogitsProcessorWithPacked(
+        layer, lm_head.embedding_dim, lm_head.weight.dtype, lm_head.weight.device
+    )
+    ret.create_packed_weights(max_packs, swap_config, model_config)
+    return ret

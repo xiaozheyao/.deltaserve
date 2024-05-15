@@ -242,6 +242,7 @@ class _AsyncLLMEngine(LLMEngine):
         prompt_token_ids: Optional[List[int]] = None,
         lora_request: Optional[LoRARequest] = None,
         delta_request: Optional[DeltaRequest] = None,
+        swap_request: Optional[SwapRequest] = None,
     ):
         if prompt_token_ids is None:
             assert prompt is not None
@@ -250,6 +251,7 @@ class _AsyncLLMEngine(LLMEngine):
                 prompt=prompt,
                 lora_request=lora_request,
                 delta_request=delta_request,
+                swap_request=swap_request,
             )
         return prompt_token_ids
 
@@ -283,6 +285,7 @@ class _AsyncLLMEngine(LLMEngine):
             prompt_token_ids=prompt_token_ids,
             lora_request=lora_request,
             delta_request=delta_request,
+            swap_request=swap_request,
         )
 
         return self.add_request(
@@ -568,6 +571,7 @@ class AsyncLLMEngine:
                     shortened_prompt = shortened_prompt[: self.max_log_len]
                 if shortened_token_ids is not None:
                     shortened_token_ids = shortened_token_ids[: self.max_log_len]
+
             logger.info(
                 f"Received request {request_id}: "
                 f"prompt: {shortened_prompt!r}, "
@@ -729,6 +733,7 @@ class AsyncLLMEngine:
             )
             async for request_output in stream:
                 yield request_output
+
         except (Exception, asyncio.CancelledError) as e:
             # If there is an exception or coroutine is cancelled, abort the
             # request.

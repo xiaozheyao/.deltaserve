@@ -158,9 +158,7 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
             masked_input = x
         output_parallel = F.embedding(masked_input, self.base_layer.weight)
 
-        output_parallel = apply_delta_embed(
-            masked_input, self.delta_weights, indices, output_parallel
-        )
+        output_parallel = apply_delta_embed(masked_input, self.delta_weights, indices)
 
         if self.tp_size > 1:
             output_parallel[input_mask, :] = 0.0
@@ -286,8 +284,8 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         return output
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        bias = self.base_layer.bias if not self.base_layer.skip_bias_add else None
-        output_parallel = self.apply_weights(x, bias)
+
+        output_parallel = self.apply_weights(x)
         if self.base_layer.gather_output:
             # All-gather across the partitions.
             output = tensor_model_parallel_all_gather(output_parallel)
@@ -986,7 +984,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
     ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
         logits = torch.matmul(hidden_states, embedding.t())
-        # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
+        # NOTE(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
         if logits is None:
             return None
         apply_delta_uncompressed(

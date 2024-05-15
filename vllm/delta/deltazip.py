@@ -171,14 +171,10 @@ def apply_delta_uncompressed(
         indices:           (batch_size)
         output:            (batch_size, hidden_dim)
     """
-    outputs = torch.zeros(
-        (len(delta_weights), base_output.shape[0], base_output.shape[1]),
-        device=base_output.device,
-    )
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         inp = x[indices == id]
-        output = torch.matmul(inp, delta_weights[id].T)
+        output = F.linear(inp, delta_weights[id])
         base_output[indices == id] += output
     return base_output
 
@@ -206,8 +202,6 @@ def apply_delta_embed(
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
-        print(f"inp: {inp.shape}")
-        print(f"delta_weights[id]: {delta_weights[id].shape}")
         output = F.embedding(inp, delta_weights[id])
         base_output[idx_mask] += output
     return base_output

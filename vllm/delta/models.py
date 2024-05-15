@@ -184,6 +184,7 @@ class DeltaModel:
         )
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
+
         if use_bitblas:
             model_tensor_filenames = [
                 "bitblas.remain.safetensors",
@@ -258,7 +259,6 @@ class DeltaModel:
             )
             del tensor_dtypes, tensor_shapes
             del lossless_compressor
-
         else:
             logger.info(
                 f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled"
@@ -368,8 +368,10 @@ class DeltaModelManager:
             )
         self.packed_modules: Dict[str, List[str]] = {}
         self.modules: Dict[str, "BaseLayerWithDelta"] = {}
+        
         self._registered_deltas: Dict[int, DeltaModel] = {}
         self._active_deltas: Dict[int, None] = {}
+        
         self._last_mapping = None
         self._create_delta_modules()
         self.model.delta_manager = self
@@ -413,10 +415,12 @@ class DeltaModelManager:
         )
         if first_free_slot is None:
             raise ValueError("No free delta slots")
+        
         index, _ = first_free_slot
         self._active_deltas[delta_id] = None
         delta_model = self._registered_deltas[delta_id]
         self.delta_index_to_id[index] = delta_model.id
+        
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:

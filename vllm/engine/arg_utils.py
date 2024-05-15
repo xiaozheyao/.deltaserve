@@ -13,8 +13,9 @@ from vllm.config import (
     TokenizerPoolConfig,
     VisionLanguageConfig,
 )
-from vllm.delta.config import DeltaConfig
+from vllm.swap.config import SwapConfig
 from vllm.utils import str_to_int_tuple
+from vllm.delta.config import DeltaConfig
 
 
 @dataclass
@@ -72,6 +73,9 @@ class EngineArgs:
     scheduler_delay_factor: float = 0.0
     enable_prefetch: bool = False
     scheduler_policy: str = "fcfs"
+    max_swap_slots: int = 1
+    max_cpu_models: int = 4
+    enable_swap: bool = False
 
     def __post_init__(self):
         if self.tokenizer is None:
@@ -468,6 +472,24 @@ class EngineArgs:
             default=EngineArgs.scheduler_policy,
             help="The scheduling policy to use. ",
         )
+        parser.add_argument(
+            "--max-swap-slots",
+            type=int,
+            default=EngineArgs.max_swap_slots,
+            help="The maximum number of swap slots.",
+        )
+        parser.add_argument(
+            "--max-cpu-models",
+            type=int,
+            default=EngineArgs.max_cpu_models,
+            help="The maximum number of CPU models.",
+        )
+        parser.add_argument(
+            "--enable-swap",
+            action="store_true",
+            default=EngineArgs.enable_swap,
+            help="Enable model swapping.",
+        )
         return parser
 
     @classmethod
@@ -488,6 +510,7 @@ class EngineArgs:
         DeviceConfig,
         Optional[LoRAConfig],
         Optional[DeltaConfig],
+        Optional[SwapConfig],
         Optional[VisionLanguageConfig],
     ]:
         device_config = DeviceConfig(self.device)
@@ -552,7 +575,9 @@ class EngineArgs:
             if self.enable_lora
             else None
         )
-
+        swap_config = SwapConfig(
+            max_packed_model=self.max_swap_slots, max_cpu_model=self.max_cpu_models
+        )
         if self.image_input_type:
             if (
                 not self.image_token_id
@@ -590,6 +615,7 @@ class EngineArgs:
             device_config,
             lora_config if self.enable_lora else None,
             delta_config if self.enable_delta else None,
+            swap_config if self.enable_swap else None,
             vision_language_config,
         )
 
