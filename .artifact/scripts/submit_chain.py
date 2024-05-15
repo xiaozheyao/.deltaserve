@@ -7,7 +7,7 @@ scripts = [x for x in os.listdir(SCRIPT_PATH) if x.endswith(".slurm")]
 previous_id = 0
 for idx, script in enumerate(scripts):
     print(f"Previous ID: {previous_id}")
-    if idx == 0:
+    if idx == 0 and previous_id == 0:
         job = f"sbatch {os.path.join(SCRIPT_PATH, script)}"
     else:
         job = f"sbatch --dependency=afterany:{previous_id} {os.path.join(SCRIPT_PATH, script)}"
