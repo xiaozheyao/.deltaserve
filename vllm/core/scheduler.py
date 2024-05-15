@@ -133,7 +133,7 @@ class Scheduler:
 
         # Instantiate the scheduling policy.
         if self.delta_enabled:
-            logger.info("Using DeltaServe policy.")
+            logger.info(f"Using {self.scheduler_config.scheduler_policy} policy.")
             self.policy = PolicyFactory.get_policy(
                 policy_name=self.scheduler_config.scheduler_policy
             )
