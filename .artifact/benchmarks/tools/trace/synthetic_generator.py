@@ -10,24 +10,12 @@ from typing import Union
 
 enc = tiktoken.get_encoding("cl100k_base")
 
-to_eval_models = [
-    "base-model",
-    "delta-1",
-    "delta-2",
-    "delta-3",
-    "delta-4",
-    "delta-5",
-    "delta-6",
-    "delta-7",
-    "delta-8",
-]
 
 
 def format_lmsys(prompt):
     return f"USER: {prompt}\nASSISTANT:"
 
-
-def generate_model_distribution(distribution, num_queries):
+def generate_model_distribution(distribution, num_queries, to_eval_models):
     if distribution == "uniform":
         return np.random.choice(to_eval_models, num_queries)
     if distribution.startswith("zipf"):
@@ -56,7 +44,6 @@ def generate_model_distribution(distribution, num_queries):
         # convert to probabilities
         total_calls = sum([x[1] for x in models])
         probs = [x[1] / total_calls for x in models]
-        print(probs)
         return np.random.choice(to_eval_models, num_queries, p=probs)
     raise ValueError("Invalid distribution")
 
@@ -73,13 +60,25 @@ def get_dialogs():
 
 def generate_synthetic(args):
     print(args)
+    to_eval_models = [
+        "base-model",
+    ]
+    for i in range(1, args.num_models+1, 1):
+        to_eval_models.append(f"delta-{i}")
+    print("Models to evaluate:", to_eval_models)
+    
     poisson_ticks = PoissonProcess(args.arrival_rate).generate_arrivals(
         start=0, duration=args.duration
     )
     logger.info(f"Using Poisson arrival process, total_requests={len(poisson_ticks)}")
+    
     traces_data = []
     dialogs, response_tokens = get_dialogs()
-    models = generate_model_distribution(args.distribution, len(poisson_ticks))
+    models = generate_model_distribution(
+        args.distribution,
+        len(poisson_ticks),
+        to_eval_models,
+    )
 
     for idx in range(len(poisson_ticks)):
         traces_data.append(
@@ -102,25 +101,26 @@ def generate_synthetic(args):
         )
     output_file = os.path.join(
         args.output,
-        f"distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl",
+        f"models={args.num_models},distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl",
     )
     with open(output_file, "w") as fp:
         for datum in traces_data:
             json.dump(datum, fp)
             fp.write("\n")
 
-
 def main(args):
     generate_synthetic(args)
 
-
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    
     parser.add_argument("--distribution", type=str, default="uniform")
     parser.add_argument("--output", type=str, default="")
     parser.add_argument("--gen-tokens", default=512)
     parser.add_argument("--arrival-rate", type=float, default=0)
     parser.add_argument("--duration", type=float, default=0)
+    parser.add_argument("--num-models", type=int, default=8)
+    
     args = parser.parse_args()
     main(args)
 
