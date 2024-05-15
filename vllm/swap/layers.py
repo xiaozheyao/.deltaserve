@@ -126,8 +126,8 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
         bias: Optional[torch.Tensor] = None,
     ):
-        logger.info(f"weight shape: {weight.shape}")
-        logger.info(f"packed_weights shape: {self.packed_weights.shape}")
+        # logger.info(f"weight shape: {weight.shape}")
+        # logger.info(f"packed_weights shape: {self.packed_weights.shape}")
         self.packed_weights[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -419,8 +419,8 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         index: int,
         weight: List[torch.Tensor],
     ):
-        logger.info(f"weight shape: {weight[:self.q_proj_shard_size].shape}")
-        logger.info(f"weight_stacked shape: {self.weight_stacked[0].shape}")
+        # logger.info(f"weight shape: {weight[:self.q_proj_shard_size].shape}")
+        # logger.info(f"weight_stacked shape: {self.weight_stacked[0].shape}")
         self.reset_pack(index)
 
         self.weight_stacked[0][index, :, :].copy_(
@@ -518,8 +518,8 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
     ):
         self.reset_pack(index)
-        logger.info(f"weight shape: {weight.shape}")
-        logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
+        # logger.info(f"weight shape: {weight.shape}")
+        # logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
         self.weight_stacked[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
@@ -613,8 +613,8 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
     ):
         self.reset_pack(index)
-        logger.info(f"weight shape: {weight.shape}")
-        logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
+        # logger.info(f"weight shape: {weight.shape}")
+        # logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
         self.weight_stacked[index, :, :].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(

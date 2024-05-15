@@ -243,8 +243,6 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
 
     def _activate_swap(self, swap_request: SwapRequest):
         global LOG_TIME
-        if not LOG_TIME:
-            logger.info(f"[{time.time()}] activating swap")
         start = timer()
         self._swap_manager.activate_swap(swap_request.swap_int_id)
         end = timer()

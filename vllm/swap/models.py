@@ -141,7 +141,7 @@ class SwapModel:
         start = timer()
         model_class = _get_model_architecture(model_config)
         with _set_default_torch_dtype(model_config.dtype):
-            with torch.device(device):
+            with torch.device("cpu"):
                 model = model_class(model_config.hf_config)
                 model.load_weights(
                     path_or_name,
@@ -161,9 +161,8 @@ class SwapModel:
                 bias=module.bias if hasattr(module, "bias") else None,
             )
         end = timer()
-        logger.debug(f"Disk -> CPU: Loaded in {end - start:.3f} seconds")
+        logger.info(f"Disk -> CPU: Loaded in {end - start:.3f} seconds")
         return cls(id, modules)
-
 
 class SwapModelManager:
     """A manager that manages multiple SwapModels."""
@@ -211,8 +210,10 @@ class SwapModelManager:
             )
         self.packed_modules: Dict[str, List[str]] = {}
         self.modules: Dict[str, "ModelLayerWeights"] = {}
+        
         self._registered_swaps: Dict[str, "SwapModel"] = {}
-        self._activate_swaps: Dict[int, None] = {}
+        self._active_swaps: Dict[int, None] = {}
+        
         self._last_mapping = None
         self._create_swap_modules()
         self.model.swap_manager = self
@@ -229,7 +230,7 @@ class SwapModelManager:
         return len(self._registered_swaps)
 
     def activate_swap(self, swap_id: int):
-        if swap_id in self._activate_swaps:
+        if swap_id in self._active_swaps:
             return False
         first_free_slot = next(
             (
@@ -241,10 +242,12 @@ class SwapModelManager:
         )
         if first_free_slot is None:
             raise ValueError("No free swap slots")
+        
         index, _ = first_free_slot
-        self._activate_swaps[swap_id] = None
+        self._active_swaps[swap_id] = None
         swap_model = self._registered_swaps[swap_id]
         self.swap_index_to_id[index] = swap_model.id
+        
         for module_name, module in self.modules.items():
             module_swap = swap_model.get_swap(module_name)
             if module_swap:
@@ -265,9 +268,9 @@ class SwapModelManager:
             pass
 
     def deactivate_swap(self, swap_id: int) -> bool:
-        if swap_id in self._activate_swaps:
+        if swap_id in self._active_swaps:
             self._deactivate_swap(swap_id)
-            self._activate_swaps.pop(swap_id)
+            self._active_swaps.pop(swap_id)
             return True
         return False
 
@@ -330,8 +333,8 @@ class SwapModelManager:
     def remove_all_swaps(self) -> bool:
         """Remove all SwapModels from the manager."""
         self._registered_swaps.clear()
-        self.delta_index_to_id = [None] * self.packed_swap_slots
-        self._activate_swaps.clear()
+        self.swap_index_to_id = [None] * self.packed_swap_slots
+        self._active_swaps.clear()
 
     def _create_swap_modules(self):
         for module_name, module in self.model.named_modules():
@@ -421,7 +424,6 @@ class SwapLRUCache(LRUCache):
         self.deactivate_swap_fn = deactivate_swap_fn
 
     def _on_remove(self, key: Hashable, value: Any):
-        logger.debug(f"Removing swap. int id: {key}")
         self.deactivate_swap_fn(key)
         return super()._on_remove(key, value)
 
@@ -455,7 +457,7 @@ class LRUCacheSwapModelManager(SwapModelManager):
         """List all registered SwapModels."""
         return dict(self._registered_swaps.cache)
 
-    def add_delta(self, swap: SwapModel) -> bool:
+    def add_swap(self, swap: SwapModel) -> bool:
         """Add a SwapModel to the manager."""
         if swap.id not in self._registered_swaps:
             self._add_swap(swap)
@@ -477,8 +479,7 @@ class LRUCacheSwapModelManager(SwapModelManager):
             self._active_swaps.remove_oldest()
         result = super().activate_swap(swap_id)
         # We always touch to update the LRU cache order
-        # TODO!!! fix this
-        # self._active_swaps.touch(swap_id)
+        self._active_swaps.touch(swap_id)
         return result
 
     def remove_oldest_swap(self) -> bool:
@@ -486,7 +487,6 @@ class LRUCacheSwapModelManager(SwapModelManager):
             self._registered_swaps.remove_oldest()
             return True
         return False
-
 
 def create_swap_manager(
     model: nn.Module,
@@ -498,7 +498,6 @@ def create_swap_manager(
     swap_manager_cls: Type[SwapModelManager] = SwapModelManager,
     **kwargs,
 ) -> SwapModelManager:
-    """Create a Delta adapter for a given model."""
     if not hasattr(model, "supported_swap_modules"):
         raise ValueError(f"Model {type(model)} is not supported for Swap.")
     swap_manager = swap_manager_cls(

@@ -318,7 +318,7 @@ class DeltaModel:
             )
         end = timer()
         total_bytes = total_bytes_count(tensors)
-        logger.debug(
+        logger.info(
             f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds"
         )
         del tensors
@@ -368,8 +368,10 @@ class DeltaModelManager:
             )
         self.packed_modules: Dict[str, List[str]] = {}
         self.modules: Dict[str, "BaseLayerWithDelta"] = {}
+        
         self._registered_deltas: Dict[int, DeltaModel] = {}
         self._active_deltas: Dict[int, None] = {}
+        
         self._last_mapping = None
         self._create_delta_modules()
         self.model.delta_manager = self
@@ -413,10 +415,12 @@ class DeltaModelManager:
         )
         if first_free_slot is None:
             raise ValueError("No free delta slots")
+        
         index, _ = first_free_slot
         self._active_deltas[delta_id] = None
         delta_model = self._registered_deltas[delta_id]
         self.delta_index_to_id[index] = delta_model.id
+        
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:
