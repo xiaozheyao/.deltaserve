@@ -112,7 +112,7 @@ class ModelRunner:
         self.block_size = None  # Set after initial profiling.
         self.lora_manager = None
         self.delta_manager = None
-
+        self.swap_manager = None
         self.graph_runners: Dict[int, CUDAGraphRunner] = {}
         self.graph_memory_pool = None  # Set during graph capture.
 
