@@ -1,0 +1,1606 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-05-12 16:04:39,199 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-05-12 16:04:39,200 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-05-12 16:04:39,200 - INFO - NumExpr defaulting to 8 threads.
+2024-05-12 16:04:40,155	INFO scripts.py:1182 -- Did not find any active Ray processes.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c48e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5270>: Failed to establish a new connection: [Errno 111] Connection refused'))
+/usr/local/lib/python3.10/dist-packages/pydantic/_internal/_fields.py:160: UserWarning: Field "model_name_or_path" has conflict with protected namespace "model_".
+
+You may be able to resolve this warning by setting `model_config['protected_namespaces'] = ()`.
+  warnings.warn(
+INFO 05-12 16:04:57 api_server.py:220] vLLM API server version 0.3.3
+INFO 05-12 16:04:57 api_server.py:221] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[], swap_modules=[SwapModule(name='delta-1', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-1'), SwapModule(name='delta-2', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-2'), SwapModule(name='delta-3', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-3'), SwapModule(name='delta-4', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-4'), SwapModule(name='delta-5', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-5'), SwapModule(name='delta-6', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-6'), SwapModule(name='delta-7', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-7'), SwapModule(name='delta-8', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-8')], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=4, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=False, max_deltas=0, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=False, scheduler_policy='fcfs', engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5330>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-05-12 16:05:00,824	INFO worker.py:1749 -- Started a local Ray instance.
+INFO 05-12 16:05:03 llm_engine.py:87] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=None, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=4, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4040>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5b40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6410>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6ce0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6ad0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6200>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5930>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4250>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5360>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e71b7c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c42b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5960>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6230>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6b00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c75b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6d40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6770>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5ea0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c47c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7280>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c40a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5b70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6440>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6f80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6830>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c79d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7160>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6620>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5d50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4f10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7340>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5960>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6230>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6b00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7730>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7ac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7ac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7730>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6b00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6230>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c43d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7e80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4490>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6080>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c78e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c77f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4e80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7490>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6ef0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6dd0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7040>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5a80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c49a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5b10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c63e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6b90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7a00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-12 16:14:45 selector.py:16] Using FlashAttention backend.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7ee0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=36120)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7f6d7f920f70>
+[36m(RayWorkerVllm pid=36120)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=36120)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=36120)[0m     self.remove()
+[36m(RayWorkerVllm pid=36120)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=36120)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=36120)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=35578)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7efcee9c4f70>
+[36m(RayWorkerVllm pid=35578)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=35578)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=35578)[0m     self.remove()
+[36m(RayWorkerVllm pid=35578)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=35578)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=35578)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+[36m(RayWorkerVllm pid=35578)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7efcee9c4f70>
+[36m(RayWorkerVllm pid=35578)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=35578)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=35578)[0m     self.remove()
+[36m(RayWorkerVllm pid=35578)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=35578)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=35578)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7d90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5000>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6ec0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5bd0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4280>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e4087c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c70d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6b60>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7460>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5150>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e408370>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7e50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7d60>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c73a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6da0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c43a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e4080d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6b30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6800>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7790>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4fa0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e408a00>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c52a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c77f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c78e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c70d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4790>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e4090c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6050>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6c20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7a30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5750>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e408580>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c68f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7c40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7670>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6fb0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c44c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c58d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7040>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7640>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c64a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5690>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=35578)[0m Exception ignored in: <function TempDirectory.__del__ at 0x7efcee9c4f70>
+[36m(RayWorkerVllm pid=35578)[0m Traceback (most recent call last):
+[36m(RayWorkerVllm pid=35578)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 145, in __del__
+[36m(RayWorkerVllm pid=35578)[0m     self.remove()
+[36m(RayWorkerVllm pid=35578)[0m   File "/usr/local/lib/python3.10/dist-packages/bitblas/3rdparty/tvm/python/tvm/contrib/utils.py", line 121, in remove
+[36m(RayWorkerVllm pid=35578)[0m     if self.temp_dir:
+[36m(RayWorkerVllm pid=35578)[0m AttributeError: 'TempDirectory' object has no attribute 'temp_dir'
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5690>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c64a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7640>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c59c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4b80>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6410>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c75b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6f20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4c40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5060>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7f40>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7c10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c57b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c78b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7970>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e4087f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7310>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c71c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7e50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c40a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e408730>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6110>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6710>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c4ca0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6ad0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7040>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e408880>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c64a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5690>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5780>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7d30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e4091b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c56c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5330>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7730>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6ef0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e4099c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5b10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7af0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7ac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7ee0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e4085b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7f70>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c5450>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c68f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c71f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c52d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e408280>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c69b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c6da0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=35578)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=35578)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=36120)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=36120)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=35578)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=35578)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/c96df0f34eb23be516ef0126651d4e78b151337f28ebc87cc5492d79d135855f/tvm_rt_mod'
+[36m(RayWorkerVllm pid=35578)[0m BitBLAS Operator not loaded, retrying in 5 seconds...
+[36m(RayWorkerVllm pid=35578)[0m Error: [Errno 17] File exists: '/home/xiayao/.cache/bitblas/nvidia/nvidia-a100/7ea55673f7efef119202e51c5cc34cfdc5461919f118891ab85f74af28addc09/tvm_rt_mod'
+[36m(RayWorkerVllm pid=35882)[0m INFO 05-12 16:23:29 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=36120)[0m INFO 05-12 16:23:36 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=35578)[0m INFO 05-12 16:30:44 selector.py:16] Using FlashAttention backend.
+INFO 05-12 16:30:57 model_runner.py:155] Loading model weights took 6.1114 GB
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c73a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=35578)[0m INFO 05-12 16:30:58 model_runner.py:155] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=35882)[0m INFO 05-12 16:30:58 model_runner.py:155] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=36120)[0m INFO 05-12 16:30:58 model_runner.py:155] Loading model weights took 6.1114 GB
+INFO 05-12 16:31:10 ray_gpu_executor.py:266] # GPU blocks: 19075, # CPU blocks: 1310
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f274e3c7d60>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-12 16:31:13 block_manager.py:264] disable automatic prefix caching
+WARNING 05-12 16:31:13 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [25784]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     ::1:52266 - "GET /sysinfo HTTP/1.1" 200 OK
+Translating from base-model to /vllm/.idea/full_models/Llama-2-13b-hf
+Warming up starts
+{'id': 53, 'prompt': 'USER: Invent a convincing Perpetuum mobile Illusion\nASSISTANT:', 'timestamp': 0, 'model': 'delta-1', 'min_tokens': 318, 'max_tokens': 318}
+INFO 05-12 16:31:22 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:22 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:31:26 api_server.py:155] waiting for model...
+INFO 05-12 16:31:26 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 0 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:31:31 metrics.py:276] Avg prompt throughput: 4.2 tokens/s, Avg generation throughput: 27.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:31:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:31:37 api_server.py:182] release reload lock
+INFO:     ::1:52268 - "POST /v1/completions HTTP/1.1" 200 OK
+Warming up ends
+Issuing queries
+sending 1 queries at 0.2
+sending 1 queries at 0.4
+sending 1 queries at 0.5
+sending 1 queries at 0.7000000000000001
+sending 1 queries at 0.8
+sending 1 queries at 0.9
+sending 1 queries at 1.0
+sending 1 queries at 1.4000000000000001
+sending 2 queries at 2.0
+sending 1 queries at 2.3000000000000003
+sending 1 queries at 2.4000000000000004
+sending 1 queries at 2.6
+sending 4 queries at 3.0
+sending 1 queries at 3.3000000000000003
+sending 1 queries at 3.6
+sending 1 queries at 3.9000000000000004
+sending 1 queries at 4.6000000000000005
+sending 1 queries at 4.800000000000001
+sending 1 queries at 4.9
+sending 2 queries at 5.2
+sending 2 queries at 5.4
+sending 1 queries at 5.9
+sending 1 queries at 6.0
+sending 2 queries at 6.1000000000000005
+sending 1 queries at 6.4
+sending 1 queries at 6.5
+sending 2 queries at 6.6000000000000005
+sending 1 queries at 6.800000000000001
+sending 1 queries at 7.0
+sending 1 queries at 7.1000000000000005
+sending 1 queries at 7.6000000000000005
+sending 1 queries at 7.800000000000001
+sending 1 queries at 7.9
+sending 1 queries at 8.0
+sending 2 queries at 8.200000000000001
+sending 1 queries at 8.4
+sending 1 queries at 8.5
+sending 2 queries at 8.6
+sending 2 queries at 8.700000000000001
+sending 1 queries at 8.9
+sending 1 queries at 9.0
+sending 2 queries at 9.700000000000001
+sending 2 queries at 9.8
+sending 2 queries at 10.0
+sending 1 queries at 10.100000000000001
+sending 3 queries at 10.200000000000001
+sending 2 queries at 10.4
+sending 2 queries at 10.5
+sending 2 queries at 10.8
+sending 2 queries at 11.200000000000001
+sending 1 queries at 11.8
+sending 1 queries at 11.9
+sending 1 queries at 12.5
+sending 1 queries at 12.700000000000001
+sending 2 queries at 12.9
+sending 3 queries at 13.0
+sending 2 queries at 13.100000000000001
+sending 2 queries at 13.200000000000001
+sending 1 queries at 13.4
+sending 2 queries at 13.600000000000001
+sending 1 queries at 13.700000000000001
+sending 1 queries at 13.8
+sending 1 queries at 13.9
+sending 1 queries at 14.3
+sending 1 queries at 14.4
+sending 2 queries at 14.600000000000001
+sending 1 queries at 14.8
+sending 2 queries at 14.9
+sending 2 queries at 15.100000000000001
+sending 2 queries at 15.4
+sending 1 queries at 15.5
+sending 1 queries at 15.600000000000001
+sending 1 queries at 15.8
+sending 2 queries at 16.400000000000002
+sending 1 queries at 16.6
+sending 1 queries at 16.7
+sending 2 queries at 16.900000000000002
+sending 1 queries at 17.400000000000002
+sending 1 queries at 17.5
+sending 1 queries at 17.8
+sending 1 queries at 18.0
+sending 1 queries at 18.1
+sending 2 queries at 18.400000000000002
+sending 1 queries at 18.8
+sending 1 queries at 18.900000000000002
+sending 1 queries at 19.3
+sending 1 queries at 19.5
+sending 1 queries at 19.700000000000003
+sending 1 queries at 19.8
+sending 1 queries at 20.3
+sending 1 queries at 20.5
+sending 1 queries at 20.6
+sending 3 queries at 20.8
+sending 1 queries at 21.0
+sending 1 queries at 21.1
+sending 1 queries at 21.200000000000003
+sending 2 queries at 21.3
+sending 1 queries at 21.400000000000002
+sending 1 queries at 21.5
+sending 1 queries at 21.700000000000003
+sending 1 queries at 21.8
+sending 1 queries at 22.0
+sending 1 queries at 22.200000000000003
+sending 1 queries at 22.3
+sending 2 queries at 22.700000000000003
+sending 1 queries at 22.8
+sending 1 queries at 23.200000000000003
+sending 1 queries at 23.5
+sending 2 queries at 23.700000000000003
+sending 1 queries at 24.1
+sending 1 queries at 24.3
+sending 1 queries at 25.400000000000002
+sending 1 queries at 25.5
+sending 2 queries at 25.8
+sending 2 queries at 26.0
+sending 1 queries at 26.3
+sending 1 queries at 26.6
+sending 2 queries at 26.8
+sending 1 queries at 26.900000000000002
+sending 1 queries at 27.0
+sending 1 queries at 27.200000000000003
+sending 1 queries at 27.400000000000002
+sending 1 queries at 27.700000000000003
+sending 1 queries at 28.3
+sending 2 queries at 28.6
+sending 1 queries at 28.700000000000003
+sending 1 queries at 28.900000000000002
+sending 1 queries at 29.0
+sending 4 queries at 29.1
+sending 2 queries at 29.400000000000002
+sending 1 queries at 29.5
+sending 1 queries at 30.0
+INFO 05-12 16:31:37 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:37 async_llm_engine.py:437] Reloading model to /vllm/.idea/full_models/Llama-2-13b-hf
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:155] waiting for model...
+INFO 05-12 16:31:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:42 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:43 metrics.py:276] Avg prompt throughput: 3.3 tokens/s, Avg generation throughput: 5.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:52340 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:43 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:43 api_server.py:155] waiting for model...
+INFO 05-12 16:31:43 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52328 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52371 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:43 api_server.py:155] waiting for model...
+INFO 05-12 16:31:43 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:43 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:43 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:43 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:44 api_server.py:155] waiting for model...
+INFO 05-12 16:31:44 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:44 api_server.py:155] waiting for model...
+INFO 05-12 16:31:44 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:44 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:44 api_server.py:155] waiting for model...
+INFO 05-12 16:31:44 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52357 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52380 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52382 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:44 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52338 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52386 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:44 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:44 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52322 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52350 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:45 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:45 api_server.py:155] waiting for model...
+INFO 05-12 16:31:45 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:45 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:45 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:45 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:45 api_server.py:155] waiting for model...
+INFO 05-12 16:31:45 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:46 api_server.py:155] waiting for model...
+INFO 05-12 16:31:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:46 api_server.py:155] waiting for model...
+INFO 05-12 16:31:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:46 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:46 api_server.py:155] waiting for model...
+INFO 05-12 16:31:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:46 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:46 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:46 api_server.py:155] waiting for model...
+INFO 05-12 16:31:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:46 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52400 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52410 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52346 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52318 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:47 api_server.py:155] waiting for model...
+INFO 05-12 16:31:47 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:47 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:47 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:47 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:47 api_server.py:155] waiting for model...
+INFO 05-12 16:31:47 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:47 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:47 api_server.py:155] waiting for model...
+INFO 05-12 16:31:47 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:47 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:47 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:47 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:48 metrics.py:276] Avg prompt throughput: 126.0 tokens/s, Avg generation throughput: 217.7 tokens/s, Running: 11 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-12 16:31:48 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:48 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:48 api_server.py:155] waiting for model...
+INFO 05-12 16:31:48 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:48 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:48 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:48 api_server.py:155] waiting for model...
+INFO 05-12 16:31:48 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52308 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:48 api_server.py:155] waiting for model...
+INFO 05-12 16:31:48 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:48 api_server.py:155] waiting for model...
+INFO 05-12 16:31:48 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52412 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:49 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:49 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52442 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52372 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52306 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:50 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:50 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:50 api_server.py:155] waiting for model...
+INFO 05-12 16:31:50 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:50 api_server.py:155] waiting for model...
+INFO 05-12 16:31:50 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52424 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:50 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:50 api_server.py:155] waiting for model...
+INFO 05-12 16:31:50 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:50 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:50 api_server.py:155] waiting for model...
+INFO 05-12 16:31:50 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:50 api_server.py:155] waiting for model...
+INFO 05-12 16:31:50 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:50 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:50 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52478 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:51 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52408 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:51 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:51 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:51 api_server.py:155] waiting for model...
+INFO 05-12 16:31:51 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:51 api_server.py:155] waiting for model...
+INFO 05-12 16:31:51 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:51 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:52 api_server.py:155] waiting for model...
+INFO 05-12 16:31:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:52 api_server.py:155] waiting for model...
+INFO 05-12 16:31:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:52 api_server.py:155] waiting for model...
+INFO 05-12 16:31:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:52 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:52 api_server.py:155] waiting for model...
+INFO 05-12 16:31:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:52 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:52 api_server.py:155] waiting for model...
+INFO 05-12 16:31:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:52 api_server.py:155] waiting for model...
+INFO 05-12 16:31:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:52 api_server.py:155] waiting for model...
+INFO 05-12 16:31:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:53 metrics.py:276] Avg prompt throughput: 156.0 tokens/s, Avg generation throughput: 310.7 tokens/s, Running: 21 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.8%, CPU KV cache usage: 0.0%
+INFO 05-12 16:31:53 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:53 api_server.py:155] waiting for model...
+INFO 05-12 16:31:53 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:53 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:53 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:53 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:54 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:54 api_server.py:155] waiting for model...
+INFO 05-12 16:31:54 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52486 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52482 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:54 api_server.py:155] waiting for model...
+INFO 05-12 16:31:54 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:54 api_server.py:155] waiting for model...
+INFO 05-12 16:31:54 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:54 api_server.py:155] waiting for model...
+INFO 05-12 16:31:54 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:54 api_server.py:155] waiting for model...
+INFO 05-12 16:31:54 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:55 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:55 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52430 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52454 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:55 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52344 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52508 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:55 api_server.py:155] waiting for model...
+INFO 05-12 16:31:55 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:55 api_server.py:155] waiting for model...
+INFO 05-12 16:31:55 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:56 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:56 api_server.py:155] waiting for model...
+INFO 05-12 16:31:56 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52519 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52570 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52416 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:56 api_server.py:155] waiting for model...
+INFO 05-12 16:31:56 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52466 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:56 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:57 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:57 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52550 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:57 api_server.py:155] waiting for model...
+INFO 05-12 16:31:57 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:57 api_server.py:155] waiting for model...
+INFO 05-12 16:31:57 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52460 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:58 metrics.py:276] Avg prompt throughput: 162.6 tokens/s, Avg generation throughput: 519.4 tokens/s, Running: 21 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:31:58 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52578 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:58 api_server.py:155] waiting for model...
+INFO 05-12 16:31:58 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:58 api_server.py:155] waiting for model...
+INFO 05-12 16:31:58 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52527 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:58 api_server.py:155] waiting for model...
+INFO 05-12 16:31:58 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:58 api_server.py:155] waiting for model...
+INFO 05-12 16:31:58 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:58 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52552 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52548 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:58 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:58 api_server.py:155] waiting for model...
+INFO 05-12 16:31:58 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:58 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:59 api_server.py:155] waiting for model...
+INFO 05-12 16:31:59 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:59 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:59 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:59 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52464 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:31:59 api_server.py:155] waiting for model...
+INFO 05-12 16:31:59 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:31:59 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:59 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:31:59 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:00 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52620 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:00 api_server.py:155] waiting for model...
+INFO 05-12 16:32:00 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:00 api_server.py:155] waiting for model...
+INFO 05-12 16:32:00 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:00 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52476 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:00 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52532 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52554 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:01 api_server.py:155] waiting for model...
+INFO 05-12 16:32:01 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52592 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:01 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:01 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52488 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52588 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52438 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:01 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52616 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:02 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52500 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52604 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52556 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:03 metrics.py:276] Avg prompt throughput: 106.1 tokens/s, Avg generation throughput: 486.5 tokens/s, Running: 14 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:03 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:03 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52602 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:03 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:03 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:03 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:03 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:04 api_server.py:155] waiting for model...
+INFO 05-12 16:32:04 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52676 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:04 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52568 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:04 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:04 api_server.py:155] waiting for model...
+INFO 05-12 16:32:04 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:04 api_server.py:155] waiting for model...
+INFO 05-12 16:32:04 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52650 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:04 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:04 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:05 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52510 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:05 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52628 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52684 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52610 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:06 api_server.py:155] waiting for model...
+INFO 05-12 16:32:06 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:06 api_server.py:134] Waiting for reload lock...
+INFO 05-12 16:32:07 api_server.py:155] waiting for model...
+INFO 05-12 16:32:07 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:07 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52712 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:07 api_server.py:155] waiting for model...
+INFO 05-12 16:32:07 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO:     ::1:52512 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52728 - "POST /v1/completions HTTP/1.1" 200 OK
+total threads: 178
+INFO 05-12 16:32:07 api_server.py:134] Waiting for reload lock...
+INFO:     ::1:52574 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:08 metrics.py:276] Avg prompt throughput: 22.3 tokens/s, Avg generation throughput: 296.3 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:52682 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52523 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52528 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52502 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52640 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:13 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 140.1 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:52638 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:52608 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:18 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 45.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:23 api_server.py:182] release reload lock
+INFO:     ::1:52724 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:23 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:32:27 api_server.py:155] waiting for model...
+INFO 05-12 16:32:27 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:28 metrics.py:276] Avg prompt throughput: 4.0 tokens/s, Avg generation throughput: 3.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:33 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:34 api_server.py:182] release reload lock
+INFO:     ::1:52310 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:34 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:32:39 api_server.py:155] waiting for model...
+INFO 05-12 16:32:39 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:39 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:44 metrics.py:276] Avg prompt throughput: 4.0 tokens/s, Avg generation throughput: 28.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:49 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:50 api_server.py:182] release reload lock
+INFO:     ::1:52312 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:50 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:32:55 api_server.py:155] waiting for model...
+INFO 05-12 16:32:55 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:32:55 metrics.py:276] Avg prompt throughput: 2.5 tokens/s, Avg generation throughput: 5.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:32:57 api_server.py:182] release reload lock
+INFO:     ::1:52314 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:32:57 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:33:02 api_server.py:155] waiting for model...
+INFO 05-12 16:33:02 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:33:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:04 api_server.py:182] release reload lock
+INFO:     ::1:52316 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:33:04 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:33:08 api_server.py:155] waiting for model...
+INFO 05-12 16:33:08 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:33:08 metrics.py:276] Avg prompt throughput: 5.8 tokens/s, Avg generation throughput: 10.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:13 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:17 api_server.py:182] release reload lock
+INFO:     ::1:52320 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:33:17 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:33:22 api_server.py:155] waiting for model...
+INFO 05-12 16:33:22 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:33:22 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:22 api_server.py:182] release reload lock
+INFO:     ::1:52324 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:33:22 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:33:27 api_server.py:155] waiting for model...
+INFO 05-12 16:33:27 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:33:27 metrics.py:276] Avg prompt throughput: 8.3 tokens/s, Avg generation throughput: 2.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:31 api_server.py:182] release reload lock
+INFO:     ::1:52326 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:33:31 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:33:36 api_server.py:155] waiting for model...
+INFO 05-12 16:33:36 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:33:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:39 api_server.py:182] release reload lock
+INFO:     ::1:52332 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:33:39 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:33:43 api_server.py:155] waiting for model...
+INFO 05-12 16:33:43 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:33:43 metrics.py:276] Avg prompt throughput: 12.3 tokens/s, Avg generation throughput: 11.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:47 api_server.py:182] release reload lock
+INFO:     ::1:52337 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:33:47 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:33:51 api_server.py:155] waiting for model...
+INFO 05-12 16:33:51 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:33:51 metrics.py:276] Avg prompt throughput: 7.5 tokens/s, Avg generation throughput: 13.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:33:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:01 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:06 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:09 api_server.py:182] release reload lock
+INFO:     ::1:52342 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:34:09 api_server.py:155] waiting for model...
+INFO 05-12 16:34:09 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:34:11 metrics.py:276] Avg prompt throughput: 4.6 tokens/s, Avg generation throughput: 28.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:12 api_server.py:182] release reload lock
+INFO:     ::1:52348 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:34:12 api_server.py:155] waiting for model...
+INFO 05-12 16:34:12 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:34:16 metrics.py:276] Avg prompt throughput: 4.0 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:18 api_server.py:182] release reload lock
+INFO:     ::1:52355 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:34:18 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:34:23 api_server.py:155] waiting for model...
+INFO 05-12 16:34:23 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:34:23 metrics.py:276] Avg prompt throughput: 2.3 tokens/s, Avg generation throughput: 9.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:28 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:28 api_server.py:182] release reload lock
+INFO:     ::1:52362 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:34:28 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:34:32 api_server.py:155] waiting for model...
+INFO 05-12 16:34:32 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:34:33 metrics.py:276] Avg prompt throughput: 4.8 tokens/s, Avg generation throughput: 4.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:42 api_server.py:182] release reload lock
+INFO:     ::1:52365 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:34:42 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:34:46 api_server.py:155] waiting for model...
+INFO 05-12 16:34:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:34:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:51 metrics.py:276] Avg prompt throughput: 5.8 tokens/s, Avg generation throughput: 29.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:34:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:00 api_server.py:182] release reload lock
+INFO:     ::1:52369 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:35:00 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:35:05 api_server.py:155] waiting for model...
+INFO 05-12 16:35:05 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:35:05 metrics.py:276] Avg prompt throughput: 3.4 tokens/s, Avg generation throughput: 14.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:05 api_server.py:182] release reload lock
+INFO:     ::1:52375 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:35:05 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:35:09 api_server.py:155] waiting for model...
+INFO 05-12 16:35:09 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:35:10 metrics.py:276] Avg prompt throughput: 3.0 tokens/s, Avg generation throughput: 3.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:19 api_server.py:182] release reload lock
+INFO:     ::1:52376 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:35:19 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:35:24 api_server.py:155] waiting for model...
+INFO 05-12 16:35:24 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:35:24 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:24 api_server.py:182] release reload lock
+INFO:     ::1:52379 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:35:24 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:35:28 api_server.py:155] waiting for model...
+INFO 05-12 16:35:28 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:35:29 api_server.py:182] release reload lock
+INFO:     ::1:52384 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:35:29 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:35:33 api_server.py:155] waiting for model...
+INFO 05-12 16:35:33 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:35:33 metrics.py:276] Avg prompt throughput: 7.5 tokens/s, Avg generation throughput: 2.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:36 api_server.py:182] release reload lock
+INFO:     ::1:52388 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:35:36 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:35:41 api_server.py:155] waiting for model...
+INFO 05-12 16:35:41 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:35:41 metrics.py:276] Avg prompt throughput: 5.2 tokens/s, Avg generation throughput: 13.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:47 api_server.py:182] release reload lock
+INFO:     ::1:52393 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:35:47 api_server.py:155] waiting for model...
+INFO 05-12 16:35:47 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:35:51 metrics.py:276] Avg prompt throughput: 5.8 tokens/s, Avg generation throughput: 29.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:35:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:00 api_server.py:182] release reload lock
+INFO:     ::1:52394 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:36:00 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:36:05 api_server.py:155] waiting for model...
+INFO 05-12 16:36:05 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:36:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:05 api_server.py:182] release reload lock
+INFO:     ::1:52398 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:36:05 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:36:09 api_server.py:155] waiting for model...
+INFO 05-12 16:36:09 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:36:10 metrics.py:276] Avg prompt throughput: 8.0 tokens/s, Avg generation throughput: 3.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:12 api_server.py:182] release reload lock
+INFO:     ::1:52402 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:36:12 api_server.py:155] waiting for model...
+INFO 05-12 16:36:12 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:36:15 metrics.py:276] Avg prompt throughput: 4.8 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:20 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:24 api_server.py:182] release reload lock
+INFO:     ::1:52404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:36:24 async_llm_engine.py:437] Reloading model to delta-8
+INFO 05-12 16:36:29 api_server.py:155] waiting for model...
+INFO 05-12 16:36:29 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:36:29 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:34 metrics.py:276] Avg prompt throughput: 4.4 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:39 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:41 api_server.py:182] release reload lock
+INFO:     ::1:52406 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:36:41 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:36:45 api_server.py:155] waiting for model...
+INFO 05-12 16:36:45 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:36:45 metrics.py:276] Avg prompt throughput: 3.0 tokens/s, Avg generation throughput: 7.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:50 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:50 api_server.py:182] release reload lock
+INFO:     ::1:52414 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:36:50 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:36:55 api_server.py:155] waiting for model...
+INFO 05-12 16:36:55 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:36:55 metrics.py:276] Avg prompt throughput: 3.4 tokens/s, Avg generation throughput: 3.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:36:56 api_server.py:182] release reload lock
+INFO:     ::1:52418 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:36:56 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:37:00 api_server.py:155] waiting for model...
+INFO 05-12 16:37:00 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:37:00 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 6.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:05 metrics.py:276] Avg prompt throughput: 3.8 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:07 api_server.py:182] release reload lock
+INFO:     ::1:52420 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:37:07 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:37:11 api_server.py:155] waiting for model...
+INFO 05-12 16:37:11 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:37:11 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:16 metrics.py:276] Avg prompt throughput: 18.0 tokens/s, Avg generation throughput: 28.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:19 api_server.py:182] release reload lock
+INFO:     ::1:52426 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:37:19 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:37:24 api_server.py:155] waiting for model...
+INFO 05-12 16:37:24 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:37:24 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:29 metrics.py:276] Avg prompt throughput: 4.2 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:34 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:35 api_server.py:182] release reload lock
+INFO:     ::1:52432 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:37:35 async_llm_engine.py:437] Reloading model to delta-8
+INFO 05-12 16:37:39 api_server.py:155] waiting for model...
+INFO 05-12 16:37:39 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:37:39 metrics.py:276] Avg prompt throughput: 7.5 tokens/s, Avg generation throughput: 5.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:44 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:48 api_server.py:182] release reload lock
+INFO:     ::1:52434 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:37:48 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:37:52 api_server.py:155] waiting for model...
+INFO 05-12 16:37:52 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:37:52 metrics.py:276] Avg prompt throughput: 13.2 tokens/s, Avg generation throughput: 12.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:37:54 api_server.py:182] release reload lock
+INFO:     ::1:52436 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:37:54 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:37:58 api_server.py:155] waiting for model...
+INFO 05-12 16:37:58 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:37:58 metrics.py:276] Avg prompt throughput: 3.3 tokens/s, Avg generation throughput: 8.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:01 api_server.py:182] release reload lock
+INFO:     ::1:52440 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:38:01 api_server.py:155] waiting for model...
+INFO 05-12 16:38:01 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:38:03 metrics.py:276] Avg prompt throughput: 4.8 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:08 api_server.py:182] release reload lock
+INFO:     ::1:52444 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:38:08 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:38:13 api_server.py:155] waiting for model...
+INFO 05-12 16:38:13 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:38:13 metrics.py:276] Avg prompt throughput: 2.1 tokens/s, Avg generation throughput: 15.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:17 api_server.py:182] release reload lock
+INFO:     ::1:52446 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:38:17 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:38:21 api_server.py:155] waiting for model...
+INFO 05-12 16:38:21 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:38:21 metrics.py:276] Avg prompt throughput: 5.7 tokens/s, Avg generation throughput: 14.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:28 api_server.py:182] release reload lock
+INFO:     ::1:52448 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:38:28 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:38:33 api_server.py:155] waiting for model...
+INFO 05-12 16:38:33 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:38:33 metrics.py:276] Avg prompt throughput: 5.3 tokens/s, Avg generation throughput: 8.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:41 api_server.py:182] release reload lock
+INFO:     ::1:52450 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:38:41 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:38:46 api_server.py:155] waiting for model...
+INFO 05-12 16:38:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:38:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:48 api_server.py:182] release reload lock
+INFO:     ::1:52452 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:38:48 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:38:53 api_server.py:155] waiting for model...
+INFO 05-12 16:38:53 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:38:53 metrics.py:276] Avg prompt throughput: 5.5 tokens/s, Avg generation throughput: 11.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:38:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:04 api_server.py:182] release reload lock
+INFO:     ::1:52456 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:39:04 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:39:09 api_server.py:155] waiting for model...
+INFO 05-12 16:39:09 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:39:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:11 api_server.py:182] release reload lock
+INFO:     ::1:52458 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:39:11 async_llm_engine.py:437] Reloading model to delta-8
+INFO 05-12 16:39:16 api_server.py:155] waiting for model...
+INFO 05-12 16:39:16 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:39:16 metrics.py:276] Avg prompt throughput: 4.4 tokens/s, Avg generation throughput: 9.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:23 api_server.py:182] release reload lock
+INFO:     ::1:52468 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:39:23 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:39:28 api_server.py:155] waiting for model...
+INFO 05-12 16:39:28 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:39:28 metrics.py:276] Avg prompt throughput: 40.1 tokens/s, Avg generation throughput: 11.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:33 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:36 api_server.py:182] release reload lock
+INFO:     ::1:52470 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:39:36 api_server.py:155] waiting for model...
+INFO 05-12 16:39:36 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:39:37 api_server.py:182] release reload lock
+INFO:     ::1:52472 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:39:37 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:39:42 api_server.py:155] waiting for model...
+INFO 05-12 16:39:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:39:42 metrics.py:276] Avg prompt throughput: 4.3 tokens/s, Avg generation throughput: 14.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:42 api_server.py:182] release reload lock
+INFO:     ::1:52474 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:39:42 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:39:46 api_server.py:155] waiting for model...
+INFO 05-12 16:39:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:39:47 metrics.py:276] Avg prompt throughput: 7.4 tokens/s, Avg generation throughput: 3.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:57 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:39:59 api_server.py:182] release reload lock
+INFO:     ::1:52480 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:39:59 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:40:04 api_server.py:155] waiting for model...
+INFO 05-12 16:40:04 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:40:04 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:05 api_server.py:182] release reload lock
+INFO:     ::1:52484 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:40:05 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:40:10 api_server.py:155] waiting for model...
+INFO 05-12 16:40:10 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:40:10 metrics.py:276] Avg prompt throughput: 10.4 tokens/s, Avg generation throughput: 7.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:16 api_server.py:182] release reload lock
+INFO:     ::1:52490 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:40:16 async_llm_engine.py:437] Reloading model to delta-8
+INFO 05-12 16:40:21 api_server.py:155] waiting for model...
+INFO 05-12 16:40:21 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:40:21 metrics.py:276] Avg prompt throughput: 3.2 tokens/s, Avg generation throughput: 8.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:36 api_server.py:182] release reload lock
+INFO:     ::1:52492 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:40:36 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:40:40 api_server.py:155] waiting for model...
+INFO 05-12 16:40:40 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:40:40 metrics.py:276] Avg prompt throughput: 1.7 tokens/s, Avg generation throughput: 15.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:42 api_server.py:182] release reload lock
+INFO:     ::1:52494 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:40:42 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:40:46 api_server.py:155] waiting for model...
+INFO 05-12 16:40:46 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:40:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 6.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:46 api_server.py:182] release reload lock
+INFO:     ::1:52496 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:40:46 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:40:51 api_server.py:155] waiting for model...
+INFO 05-12 16:40:51 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:40:51 metrics.py:276] Avg prompt throughput: 7.2 tokens/s, Avg generation throughput: 4.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:52 api_server.py:182] release reload lock
+INFO:     ::1:52498 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:40:52 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:40:57 api_server.py:155] waiting for model...
+INFO 05-12 16:40:57 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:40:57 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 6.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:40:58 api_server.py:182] release reload lock
+INFO:     ::1:52506 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:40:58 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:41:02 api_server.py:155] waiting for model...
+INFO 05-12 16:41:02 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:41:02 metrics.py:276] Avg prompt throughput: 8.2 tokens/s, Avg generation throughput: 4.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:16 api_server.py:182] release reload lock
+INFO:     ::1:52514 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:41:16 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:41:20 api_server.py:155] waiting for model...
+INFO 05-12 16:41:20 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:41:20 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:25 metrics.py:276] Avg prompt throughput: 3.6 tokens/s, Avg generation throughput: 29.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:28 api_server.py:182] release reload lock
+INFO:     ::1:52521 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:41:28 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:41:32 api_server.py:155] waiting for model...
+INFO 05-12 16:41:32 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:41:32 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:35 api_server.py:182] release reload lock
+INFO:     ::1:52531 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:41:35 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:41:39 api_server.py:155] waiting for model...
+INFO 05-12 16:41:39 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:41:39 metrics.py:276] Avg prompt throughput: 5.4 tokens/s, Avg generation throughput: 10.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:44 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:45 api_server.py:182] release reload lock
+INFO:     ::1:52535 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:41:45 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:41:49 api_server.py:155] waiting for model...
+INFO 05-12 16:41:49 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:41:49 metrics.py:276] Avg prompt throughput: 9.5 tokens/s, Avg generation throughput: 3.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:49 api_server.py:182] release reload lock
+INFO:     ::1:52538 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:41:49 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:41:54 api_server.py:155] waiting for model...
+INFO 05-12 16:41:54 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:41:54 metrics.py:276] Avg prompt throughput: 7.0 tokens/s, Avg generation throughput: 3.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:41:59 api_server.py:182] release reload lock
+INFO:     ::1:52540 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:41:59 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:42:03 api_server.py:155] waiting for model...
+INFO 05-12 16:42:03 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:03 metrics.py:276] Avg prompt throughput: 5.5 tokens/s, Avg generation throughput: 14.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:08 api_server.py:182] release reload lock
+INFO:     ::1:52546 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:08 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:42:12 api_server.py:155] waiting for model...
+INFO 05-12 16:42:12 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:12 metrics.py:276] Avg prompt throughput: 4.6 tokens/s, Avg generation throughput: 15.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:16 api_server.py:182] release reload lock
+INFO:     ::1:52560 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:16 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:42:20 api_server.py:155] waiting for model...
+INFO 05-12 16:42:20 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:20 metrics.py:276] Avg prompt throughput: 3.5 tokens/s, Avg generation throughput: 13.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:25 api_server.py:182] release reload lock
+INFO:     ::1:52562 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:25 api_server.py:155] waiting for model...
+INFO 05-12 16:42:25 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:25 metrics.py:276] Avg prompt throughput: 4.4 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:32 api_server.py:182] release reload lock
+INFO:     ::1:52566 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:32 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:42:36 api_server.py:155] waiting for model...
+INFO 05-12 16:42:36 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:37 api_server.py:182] release reload lock
+INFO:     ::1:52572 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:37 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:42:41 api_server.py:155] waiting for model...
+INFO 05-12 16:42:41 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:41 metrics.py:276] Avg prompt throughput: 5.7 tokens/s, Avg generation throughput: 4.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:43 api_server.py:182] release reload lock
+INFO:     ::1:52580 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:43 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:42:47 api_server.py:155] waiting for model...
+INFO 05-12 16:42:47 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:47 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:52 metrics.py:276] Avg prompt throughput: 3.6 tokens/s, Avg generation throughput: 29.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:54 api_server.py:182] release reload lock
+INFO:     ::1:52584 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:54 api_server.py:155] waiting for model...
+INFO 05-12 16:42:54 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:42:57 metrics.py:276] Avg prompt throughput: 4.6 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:42:57 api_server.py:182] release reload lock
+INFO:     ::1:52586 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:42:57 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:43:02 api_server.py:155] waiting for model...
+INFO 05-12 16:43:02 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:43:02 metrics.py:276] Avg prompt throughput: 3.2 tokens/s, Avg generation throughput: 3.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:05 api_server.py:182] release reload lock
+INFO:     ::1:52598 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:43:05 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:43:09 api_server.py:155] waiting for model...
+INFO 05-12 16:43:09 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:43:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:14 metrics.py:276] Avg prompt throughput: 11.1 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:17 api_server.py:182] release reload lock
+INFO:     ::1:52612 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:43:17 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:43:21 api_server.py:155] waiting for model...
+INFO 05-12 16:43:21 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:43:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 9.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:26 metrics.py:276] Avg prompt throughput: 4.6 tokens/s, Avg generation throughput: 29.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:37 api_server.py:182] release reload lock
+INFO:     ::1:52614 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:43:37 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:43:42 api_server.py:155] waiting for model...
+INFO 05-12 16:43:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:43:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 7.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:44 api_server.py:182] release reload lock
+INFO:     ::1:52618 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:43:44 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:43:49 api_server.py:155] waiting for model...
+INFO 05-12 16:43:49 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:43:49 metrics.py:276] Avg prompt throughput: 5.7 tokens/s, Avg generation throughput: 10.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:54 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:43:59 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:04 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:04 api_server.py:182] release reload lock
+INFO:     ::1:52622 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:04 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:44:09 api_server.py:155] waiting for model...
+INFO 05-12 16:44:09 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:44:09 metrics.py:276] Avg prompt throughput: 8.0 tokens/s, Avg generation throughput: 3.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:14 api_server.py:182] release reload lock
+INFO:     ::1:52624 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:14 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:44:18 api_server.py:155] waiting for model...
+INFO 05-12 16:44:18 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:44:18 metrics.py:276] Avg prompt throughput: 2.1 tokens/s, Avg generation throughput: 14.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:22 api_server.py:182] release reload lock
+INFO:     ::1:52626 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:22 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:44:26 api_server.py:155] waiting for model...
+INFO 05-12 16:44:26 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:44:27 metrics.py:276] Avg prompt throughput: 2.0 tokens/s, Avg generation throughput: 14.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:27 api_server.py:182] release reload lock
+INFO:     ::1:52630 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:27 api_server.py:155] waiting for model...
+INFO 05-12 16:44:27 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:44:27 api_server.py:182] release reload lock
+INFO:     ::1:52632 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:27 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:44:32 api_server.py:155] waiting for model...
+INFO 05-12 16:44:32 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:44:32 metrics.py:276] Avg prompt throughput: 4.4 tokens/s, Avg generation throughput: 4.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:37 metrics.py:276] Avg prompt throughput: 3.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:38 api_server.py:182] release reload lock
+INFO:     ::1:52634 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:38 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:44:42 api_server.py:155] waiting for model...
+INFO 05-12 16:44:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:44:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:47 metrics.py:276] Avg prompt throughput: 4.0 tokens/s, Avg generation throughput: 29.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:51 api_server.py:182] release reload lock
+INFO:     ::1:52636 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:51 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:44:56 api_server.py:155] waiting for model...
+INFO 05-12 16:44:56 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:44:56 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:44:58 api_server.py:182] release reload lock
+INFO:     ::1:52644 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:44:58 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:45:02 api_server.py:155] waiting for model...
+INFO 05-12 16:45:02 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:45:02 metrics.py:276] Avg prompt throughput: 12.0 tokens/s, Avg generation throughput: 8.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:14 api_server.py:182] release reload lock
+INFO:     ::1:52646 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:45:14 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:45:19 api_server.py:155] waiting for model...
+INFO 05-12 16:45:19 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:45:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 9.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:19 api_server.py:182] release reload lock
+INFO:     ::1:52652 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:45:19 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:45:24 api_server.py:155] waiting for model...
+INFO 05-12 16:45:24 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:45:24 metrics.py:276] Avg prompt throughput: 6.7 tokens/s, Avg generation throughput: 4.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:29 api_server.py:182] release reload lock
+INFO:     ::1:52654 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:45:29 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:45:33 api_server.py:155] waiting for model...
+INFO 05-12 16:45:33 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:45:33 metrics.py:276] Avg prompt throughput: 2.5 tokens/s, Avg generation throughput: 15.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:33 api_server.py:182] release reload lock
+INFO:     ::1:52659 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:45:33 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:45:38 api_server.py:155] waiting for model...
+INFO 05-12 16:45:38 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:45:38 metrics.py:276] Avg prompt throughput: 5.0 tokens/s, Avg generation throughput: 2.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:45 api_server.py:182] release reload lock
+INFO:     ::1:52663 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:45:45 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:45:49 api_server.py:155] waiting for model...
+INFO 05-12 16:45:49 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:45:49 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 8.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:54 metrics.py:276] Avg prompt throughput: 7.6 tokens/s, Avg generation throughput: 29.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:45:59 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:02 api_server.py:182] release reload lock
+INFO:     ::1:52665 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:02 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:46:07 api_server.py:155] waiting for model...
+INFO 05-12 16:46:07 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:46:07 metrics.py:276] Avg prompt throughput: 4.0 tokens/s, Avg generation throughput: 11.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:08 api_server.py:182] release reload lock
+INFO:     ::1:52667 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:08 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:46:12 api_server.py:155] waiting for model...
+INFO 05-12 16:46:12 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:46:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 6.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:13 api_server.py:182] release reload lock
+INFO:     ::1:52669 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:13 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:46:17 api_server.py:155] waiting for model...
+INFO 05-12 16:46:17 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:46:17 metrics.py:276] Avg prompt throughput: 6.6 tokens/s, Avg generation throughput: 3.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:20 api_server.py:182] release reload lock
+INFO:     ::1:52671 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:20 async_llm_engine.py:437] Reloading model to delta-3
+INFO 05-12 16:46:25 api_server.py:155] waiting for model...
+INFO 05-12 16:46:25 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:46:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:30 metrics.py:276] Avg prompt throughput: 13.6 tokens/s, Avg generation throughput: 28.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:45 api_server.py:182] release reload lock
+INFO:     ::1:52673 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:45 api_server.py:155] waiting for model...
+INFO 05-12 16:46:45 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:46:46 api_server.py:182] release reload lock
+INFO:     ::1:52674 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:46 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:46:50 api_server.py:155] waiting for model...
+INFO 05-12 16:46:50 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:46:50 metrics.py:276] Avg prompt throughput: 5.2 tokens/s, Avg generation throughput: 6.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:50 api_server.py:182] release reload lock
+INFO:     ::1:52678 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:50 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:46:55 api_server.py:155] waiting for model...
+INFO 05-12 16:46:55 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:46:55 metrics.py:276] Avg prompt throughput: 6.4 tokens/s, Avg generation throughput: 3.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:46:58 api_server.py:182] release reload lock
+INFO:     ::1:52680 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:46:58 async_llm_engine.py:437] Reloading model to delta-4
+INFO 05-12 16:47:02 api_server.py:155] waiting for model...
+INFO 05-12 16:47:02 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:47:02 metrics.py:276] Avg prompt throughput: 2.2 tokens/s, Avg generation throughput: 11.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:08 api_server.py:182] release reload lock
+INFO:     ::1:52687 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:47:08 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:47:13 api_server.py:155] waiting for model...
+INFO 05-12 16:47:13 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:47:13 metrics.py:276] Avg prompt throughput: 4.8 tokens/s, Avg generation throughput: 5.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:13 api_server.py:182] release reload lock
+INFO:     ::1:52688 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:47:13 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:47:17 api_server.py:155] waiting for model...
+INFO 05-12 16:47:17 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:47:18 metrics.py:276] Avg prompt throughput: 3.8 tokens/s, Avg generation throughput: 3.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:26 api_server.py:182] release reload lock
+INFO:     ::1:52690 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:47:26 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:47:31 api_server.py:155] waiting for model...
+INFO 05-12 16:47:31 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:47:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:36 metrics.py:276] Avg prompt throughput: 84.1 tokens/s, Avg generation throughput: 28.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:41 api_server.py:182] release reload lock
+INFO:     ::1:52693 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:47:41 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:47:45 api_server.py:155] waiting for model...
+INFO 05-12 16:47:45 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:47:46 metrics.py:276] Avg prompt throughput: 6.6 tokens/s, Avg generation throughput: 3.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:47:51 api_server.py:182] release reload lock
+INFO:     ::1:52698 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:47:51 async_llm_engine.py:437] Reloading model to delta-7
+INFO 05-12 16:47:55 api_server.py:155] waiting for model...
+INFO 05-12 16:47:55 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:47:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:00 metrics.py:276] Avg prompt throughput: 6.8 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:00 api_server.py:182] release reload lock
+INFO:     ::1:52700 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:48:00 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:48:04 api_server.py:155] waiting for model...
+INFO 05-12 16:48:04 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:48:05 metrics.py:276] Avg prompt throughput: 11.0 tokens/s, Avg generation throughput: 3.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:09 api_server.py:182] release reload lock
+INFO:     ::1:52702 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:48:09 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:48:13 api_server.py:155] waiting for model...
+INFO 05-12 16:48:13 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:48:13 metrics.py:276] Avg prompt throughput: 4.2 tokens/s, Avg generation throughput: 13.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:17 api_server.py:182] release reload lock
+INFO:     ::1:52704 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:48:17 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:48:21 api_server.py:155] waiting for model...
+INFO 05-12 16:48:21 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:48:21 metrics.py:276] Avg prompt throughput: 9.9 tokens/s, Avg generation throughput: 12.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:28 api_server.py:182] release reload lock
+INFO:     ::1:52706 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:48:28 async_llm_engine.py:437] Reloading model to delta-6
+INFO 05-12 16:48:33 api_server.py:155] waiting for model...
+INFO 05-12 16:48:33 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:48:33 metrics.py:276] Avg prompt throughput: 3.0 tokens/s, Avg generation throughput: 9.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:45 api_server.py:182] release reload lock
+INFO:     ::1:52708 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:48:45 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:48:50 api_server.py:155] waiting for model...
+INFO 05-12 16:48:50 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:48:50 metrics.py:276] Avg prompt throughput: 6.8 tokens/s, Avg generation throughput: 9.3 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:48:53 api_server.py:182] release reload lock
+INFO:     ::1:52710 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:48:53 async_llm_engine.py:437] Reloading model to delta-2
+INFO 05-12 16:48:58 api_server.py:155] waiting for model...
+INFO 05-12 16:48:58 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:48:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:03 metrics.py:276] Avg prompt throughput: 3.6 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:08 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:08 api_server.py:182] release reload lock
+INFO:     ::1:52714 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:49:08 async_llm_engine.py:437] Reloading model to delta-1
+INFO 05-12 16:49:13 api_server.py:155] waiting for model...
+INFO 05-12 16:49:13 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:49:13 metrics.py:276] Avg prompt throughput: 121.3 tokens/s, Avg generation throughput: 5.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:18 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.5 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:28 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.4%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:31 api_server.py:182] release reload lock
+INFO:     ::1:52716 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:49:31 api_server.py:155] waiting for model...
+INFO 05-12 16:49:31 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:49:33 metrics.py:276] Avg prompt throughput: 3.4 tokens/s, Avg generation throughput: 28.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:37 api_server.py:182] release reload lock
+INFO:     ::1:52726 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-12 16:49:37 async_llm_engine.py:437] Reloading model to delta-5
+INFO 05-12 16:49:42 api_server.py:155] waiting for model...
+INFO 05-12 16:49:42 api_server.py:163] requested model is loaded --> continuing...
+Prefetching is disabled
+INFO 05-12 16:49:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:47 metrics.py:276] Avg prompt throughput: 8.4 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-12 16:49:47 api_server.py:182] release reload lock
+INFO:     ::1:52730 - "POST /v1/completions HTTP/1.1" 200 OK
+Results written to .artifact/benchmarks/results/a66c2aef-8901-4dba-a70b-cb7221aa1cee.jsonl
+Killing process 25784...
+/var/spool/slurmd/job3671410/slurm_script: line 42: 25750 Killed                  apptainer run --nv --home /mnt/petrelfs/huqinghao/xzyao/:/home/xiayao --bind /mnt/petrelfs/huqinghao/xzyao/code/vllm:/vllm --bind /mnt/petrelfs/huqinghao/xzyao/code/triteia:/triteia --env PYTHONPATH=/vllm:/triteia --env CUDA_LAUNCH_BLOCKING=1 --env TVM_TARGET=nvidia/nvidia-a100 --env BITBLAS_TARGET=nvidia/nvidia-a100 --env RAY_DEDUP_LOGS=0 --workdir /vllm /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif python3 /vllm/vllm/entrypoints/openai/api_server.py --model /vllm/.idea/full_models/Llama-2-13b-hf --disable-log-requests --gpu-memory-utilization 0.85 --swap-modules delta-1=/vllm/.idea/full_models/Llama-2-13b-hf-1 delta-2=/vllm/.idea/full_models/Llama-2-13b-hf-2 delta-3=/vllm/.idea/full_models/Llama-2-13b-hf-3 delta-4=/vllm/.idea/full_models/Llama-2-13b-hf-4 delta-5=/vllm/.idea/full_models/Llama-2-13b-hf-5 delta-6=/vllm/.idea/full_models/Llama-2-13b-hf-6 delta-7=/vllm/.idea/full_models/Llama-2-13b-hf-7 delta-8=/vllm/.idea/full_models/Llama-2-13b-hf-8 --tensor-parallel-size 4 --enforce-eager --max-deltas 0
