@@ -9,7 +9,6 @@ from timeit import default_timer as timer
 s = sched.scheduler(time.monotonic, time.sleep)
 threads = []
 inference_results = []
-ongoing_reload = False
 
 
 def parse_annotation(annotations):
@@ -28,22 +27,6 @@ def request_thread(
     global_start_time,
 ):
     global inference_results
-    global ongoing_reload
-    while ongoing_reload:
-        time.sleep(0.1)
-    if req["reload"]:
-        ongoing_reload = True
-        res = requests.post(
-            endpoint + "/v1/reload",
-            json={
-                "type": "reload",
-                "target": req["model"],
-                "timestamp": req["timestamp"],
-            },
-        )
-        if res.status_code != 200:
-            print(f"Failed to issue reload request: {res.text}", flush=True)
-        ongoing_reload = False
     res = requests.post(endpoint + "/v1/completions", json=req)
     end_time = timer()
     if res.status_code != 200:
@@ -116,36 +99,10 @@ def warmup(endpoint: str, workload: List, base_model: str, warmup_strategy: str)
     req = copy.deepcopy(req)
     req["timestamp"] = 0
     print(req, flush=True)
-    reload_res = requests.post(
-        endpoint + "/v1/reload",
-        json={
-            "type": "reload",
-            "target": req["model"],
-            "timestamp": 0,
-        },
-    )
-    print(reload_res)
     res = requests.post(endpoint + "/v1/completions", json=req)
     if res.status_code != 200:
         print(f"Failed to warm up: {res.text}", flush=True)
     print("Warming up ends", flush=True)
-    return req["model"]
-
-
-def prepare_queries(workloads: List, sysinfo: dict, warmup_model: str):
-    swap_modules = sysinfo["swap_modules"]
-    if len(swap_modules) == 0:
-        pass
-    else:
-        # add reload workload in the middle
-        current_model = warmup_model
-        for idx, wk in enumerate(workloads):
-            if wk["model"] != current_model:
-                current_model = wk["model"]
-                wk["reload"] = True
-            else:
-                wk["reload"] = False
-    return workloads
 
 
 def run(
@@ -156,10 +113,7 @@ def run(
     sysinfo: dict,
 ):
     global inference_results
-    selected_model = warmup(endpoints[0], workload, base_model, warmup_strategy)
-    workload = prepare_queries(workload, sysinfo, selected_model)
-    for wk in workload:
-        print(wk)
+    warmup(endpoints[0], workload, base_model, warmup_strategy)
     issue_queries(endpoints[0], workload)
     return inference_results
 

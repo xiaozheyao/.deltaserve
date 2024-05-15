@@ -1,7 +1,7 @@
-import asyncio
-import importlib
-import inspect
 import os
+import asyncio
+import inspect
+import importlib
 from contextlib import asynccontextmanager
 from http import HTTPStatus
 import time
@@ -23,10 +23,10 @@ from vllm.entrypoints.openai.protocol import (
     ErrorResponse,
     ReloadRequest,
 )
-from vllm.entrypoints.openai.utils import find_swap_model
 from vllm.entrypoints.openai.serving_chat import OpenAIServingChat
 from vllm.entrypoints.openai.serving_completion import OpenAIServingCompletion
 from vllm.logger import init_logger
+from vllm.swap.request import find_swap_model
 
 TIMEOUT_KEEP_ALIVE = 5  # seconds
 

@@ -340,6 +340,7 @@ class Scheduler:
                         leftover_waiting_sequences.appendleft(seq_group)
                         self.waiting.popleft()
                         continue
+
                 if self.swap_enabled:
                     swap_int_id = seq_group.swap_int_id
                     if (

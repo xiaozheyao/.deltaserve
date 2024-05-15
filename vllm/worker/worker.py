@@ -175,10 +175,12 @@ class Worker:
         num_cpu_blocks = int(cpu_swap_space // cache_block_size)
         num_gpu_blocks = max(num_gpu_blocks, 0)
         num_cpu_blocks = max(num_cpu_blocks, 0)
+        
         if self.model_runner.lora_manager:
             self.model_runner.remove_all_loras()
         if self.model_runner.delta_manager:
             self.model_runner.remove_all_deltas()
+            
         if self.model_runner.swap_manager:
             self.model_runner.remove_all_swaps()
             self.model_runner.clear_base()
