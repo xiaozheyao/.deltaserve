@@ -179,7 +179,7 @@ class Worker:
             self.model_runner.remove_all_loras()
         if self.model_runner.delta_manager:
             self.model_runner.remove_all_deltas()
-        if self.model_runner.swap_manager():
+        if self.model_runner.swap_manager:
             self.model_runner.remove_all_swaps()
             self.model_runner.clear_base()
         gc.collect()

@@ -174,7 +174,7 @@ def apply_delta_uncompressed(
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         inp = x[indices == id]
-        output = torch.matmul(inp, delta_weights[id].T)
+        output = F.linear(inp, delta_weights[id])
         base_output[indices == id] += output
     return base_output
 

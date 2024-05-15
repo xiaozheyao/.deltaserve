@@ -31,7 +31,7 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .ops import apply_swap_embed, apply_swap_packed_nslice, apply_swap
+from .ops import apply_swap_embed, apply_swap_packed_nslice, apply_swap, apply_swap_logits
 
 ASYNC_COPY = True
 logger = init_logger(__name__)
@@ -84,7 +84,7 @@ class BaseLayerWithPacked(nn.Module):
 
     def clear_base(self):
         if hasattr(self, "base_layer"):
-            self.base_layer = None
+            del self.base_layer
         else:
             logger.warning(
                 f"Trying to clear base layer from {self} but no base layer found."
@@ -97,6 +97,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.base_layer = base_layer
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
+        
         self.vocab_start_index = self.base_layer.vocab_start_index
         self.vocab_end_index = self.base_layer.vocab_end_index
         self.embedding_dim = self.base_layer.embedding_dim
@@ -107,7 +108,10 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.packed_weights[index] = None
 
     def create_packed_weights(
-        self, max_packed: int, swap_config: SwapConfig, model_config: PretrainedConfig
+        self, 
+        max_packed: int, 
+        swap_config: SwapConfig, 
+        model_config: PretrainedConfig
     ) -> None:
         self.packed_weights = torch.zeros(
             max_packed,
@@ -174,7 +178,6 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
     ) -> bool:
         return type(source_layer) is VocabParallelEmbedding
 
-
 class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
@@ -182,8 +185,8 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
         self.in_features = self.base_layer.weight.shape[1]
         self.out_features = self.base_layer.weight.shape[0]
         self.tp_size = get_tensor_model_parallel_world_size()
-        self.device = self.device
-
+        self.device = self.base_layer.weight.device
+        self.gather_output = self.base_layer.gather_output
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
 
@@ -229,13 +232,13 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
         pass
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        bias = self.base_layer.bias if not self.base_layer.skip_bias_add else None
+        bias= None
         output_parallel = self.apply_weights(x, bias)
-        if self.base_layer.gather_output:
+        if self.gather_output:
             output = tensor_model_parallel_all_gather(output_parallel)
         else:
             output = output_parallel
-        output_bias = self.base_layer.bias if self.base_layer.skip_bias_add else None
+        output_bias = None
         return output, output_bias
 
     @property
@@ -308,6 +311,7 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
             self.weight_stacked[0][index, :, :].copy_(
                 weight[0], non_blocking=ASYNC_COPY
             )
+        logger.info(f"weight[1]: {weight[1]}")
         if weight[1] is not None:
             self.weight_stacked[1][index, :, :].copy_(
                 weight[1], non_blocking=ASYNC_COPY
@@ -345,7 +349,6 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
             and len(packed_modules_list) == 2
         )
 
-
 class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
         super().__init__(base_layer)
@@ -380,7 +383,7 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
             torch.zeros(
                 max_packed_model,
                 self.q_proj_shard_size,
-                self.in_feautres,
+                self.in_features,
                 dtype=model_config.torch_dtype,
                 device=self.base_layer.weight.device,
             ),
@@ -421,6 +424,7 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor] = None
     ) -> torch.Tensor:
+        assert bias is None, "Bias is not supported for QKVParallelLinear yet."
         output = torch.zeros(
             x.shape[0],
             self.output_size,
@@ -454,11 +458,11 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
         self.device = self.base_layer.weight.device
-        self.in_features = self.base_layer.weight.shape[1]
-        self.out_features = self.base_layer.weight.shape[0]
+        self.in_features = self.base_layer.weight.shape[1] # 4096
+        self.out_features = self.base_layer.weight.shape[0] # 2048
         self.input_is_parallel = self.base_layer.input_is_parallel
         self.reduce_results = self.base_layer.reduce_results
-
+        
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -497,18 +501,19 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.reset_pack(index)
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
-        output = torch.zeros(
+        outputs = torch.zeros(
             x.shape[0],
             self.out_features,
             device=x.device,
             dtype=x.dtype,
         )
-        output = apply_swap(
+        outputs = apply_swap(
             x,
             self.weight_stacked,
             self.indices[: self.indices_len[0]],
+            outputs
         )
-        return output
+        return outputs
 
     def forward(self, input_):
         # TODO(xiaozhe):
@@ -526,17 +531,10 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
             output_ = tensor_model_parallel_all_reduce(output_parallel)
         else:
             output_ = output_parallel
-        if not self.skip_bias_add:
-            output = output_ + self.bias if self.bias is not None else output_
-            output_bias = None
-        else:
-            output = output_
-            output_bias = self.bias
+        # NOTE: Handle bias here.
+        output = output_
+        output_bias = None
         return output, output_bias
-
-    @property
-    def weight(self):
-        return self.base_layer.weight
 
     @classmethod
     def can_replace_layer(
@@ -564,26 +562,10 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         self.device = device
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
-
-    @property
-    def logits_as_input(self):
-        return self.base_layer.logits_as_input
-
-    @property
-    def vocab_size(self):
-        return self.base_layer.vocab_size
-
-    @property
-    def scale(self):
-        return self.base_layer.scale
-
-    @property
-    def org_vocab_size(self):
-        return self.base_layer.org_vocab_size
-
-    @property
-    def include_gpu_probs_tensor(self):
-        return self.base_layer.include_gpu_probs_tensor
+        self.vocab_size = self.base_layer.vocab_size
+        self.logits_as_input = self.base_layer.logits_as_input
+        self.scale = self.base_layer.scale
+        self.org_vocab_size = self.base_layer.org_vocab_size
 
     def create_packed_weights(
         self,
@@ -594,7 +576,7 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         self.weight_stacked = torch.zeros(
             (
                 max_deltas,
-                self.base_layer.vocab_size // self.tp_size,
+                self.vocab_size // self.tp_size,
                 self.hidden_size,
             ),
             dtype=self.dtype,
@@ -612,7 +594,7 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         index: int,
         weight: torch.Tensor,
     ):
-        self.reset_delta(index)
+        self.reset_pack(index)
         self.weight_stacked[index, :, :].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -627,6 +609,8 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         self.indices_padded = sampler_indices_padded
         self.indices_len = indices_len
 
+    
+
     def _get_logits(
         self,
         hidden_states: torch.Tensor,
@@ -634,16 +618,27 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         embedding_bias: Optional[torch.Tensor] = None,
     ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
-        logits = torch.matmul(hidden_states, embedding.t())
+        output = torch.zeros(
+            hidden_states.shape[0],
+            self.vocab_size // self.tp_size,
+            device=hidden_states.device,
+            dtype=hidden_states.dtype,
+        )
+        output = apply_swap_logits(
+            hidden_states,
+            self.weight_stacked,
+            self.indices[: self.indices_len[1]],
+            output,
+        )
         # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
-        if logits is None:
+        if output is None:
             return None
         # (todo)
-        logits = tensor_model_parallel_gather(logits)
+        logits = tensor_model_parallel_gather(output)
         return logits
 
     def forward(self, *args, **kwargs):
-        return type(self.base_layer).forward(self, *args, **kwargs)
+        return LogitsProcessor.forward(self, *args, **kwargs)
 
     @classmethod
     def can_replace_layer(

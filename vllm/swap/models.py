@@ -151,7 +151,10 @@ class SwapModel:
                 )
         model = model.eval()
         modules = {}
+        
         for module_name, module in model.named_modules():
+            if not hasattr(module, "weight"):
+                continue
             modules[module_name] = ModelLayerWeights(
                 module_name=module_name,
                 weight=module.weight,
@@ -223,7 +226,7 @@ class SwapModelManager:
         return self.swap_config.max_cpu_model
 
     def __len__(self) -> int:
-        return len(self.registered_models)
+        return len(self._registered_swaps)
 
     def activate_swap(self, swap_id: int):
         if swap_id in self._activate_swaps:
@@ -252,7 +255,8 @@ class SwapModelManager:
         return True
 
     def clear_base_module(self):
-        for _, module in self.modules.items():
+        for module_name, module in self.modules.items():
+            logger.info(f"Clearing base module: {module_name}")
             module.clear_base()
 
     def _deactivate_swap(self, swap_id: int):
@@ -469,7 +473,7 @@ class LRUCacheSwapModelManager(SwapModelManager):
         swap_id: int,
     ) -> bool:
         if (
-            swap_id not in self._active_swap
+            swap_id not in self._active_swaps
             and len(self._active_swaps) >= self.packed_swap_slots
         ):
             self._active_swaps.remove_oldest()

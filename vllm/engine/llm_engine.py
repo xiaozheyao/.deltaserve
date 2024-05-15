@@ -729,7 +729,7 @@ class LLMEngine:
             >>>         break
         """
         seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule(
-            self.list_deltas()
+            self.list_deltas() if self.delta_config is not None else [],
         )
         if not scheduler_outputs.is_empty() and not self.reload_lock:
             output = self.model_executor.execute_model(
@@ -872,6 +872,9 @@ class LLMEngine:
     def add_lora(self, lora_request: LoRARequest) -> bool:
         return self.model_executor.add_lora(lora_request)
 
+    def add_swap(self, swap_request: SwapRequest) -> bool:
+        return self.model_executor.add_swap(swap_request)
+
     def add_delta(self, delta_request: DeltaRequest) -> bool:
         return self.model_executor.add_delta(delta_request)
 
@@ -881,6 +884,9 @@ class LLMEngine:
     def remove_lora(self, lora_id: int) -> bool:
         return self.model_executor.remove_lora(lora_id)
 
+    def remove_swap(self, swap_id: int) -> bool:
+        return self.model_executor.remove_swap(swap_id)
+
     def remove_delta(self, delta_id: int) -> bool:
         return self.model_executor.remove_delta(delta_id)
 
@@ -889,6 +895,9 @@ class LLMEngine:
 
     def list_deltas(self) -> List[int]:
         return self.model_executor.list_deltas()
+
+    def list_swaps(self) -> List[int]:
+        return self.model_executor.list_swaps()
 
     def check_health(self) -> None:
         self.model_executor.check_health()

@@ -17,6 +17,7 @@ from vllm.config import ModelConfig
 from vllm.sequence import SequenceGroup
 
 logger = init_logger(__name__)
+LOG_TIME = False
 
 
 class AbstractWorkerManager(ABC):
@@ -137,14 +138,13 @@ class WorkerSwapManager(AbstractWorkerManager):
                 f"Number of requested deltas ({len(swaps_map)}) is greater than the number of GPU delta slots "
                 f"({self._swap_manager.packed_swap_slots})."
             )
-
         new_swaps = set(swaps_map)
         swaps_to_add = new_swaps - swaps_that_exist
         swaps_to_remove = swaps_that_exist - new_swaps
 
         for swap_id in swaps_to_remove:
             self.remove_swap(swap_id)
-
+        
         for swap_id in swaps_to_add:
             self.add_swap(swaps_map[swap_id], sequence_groups)
 
@@ -155,6 +155,7 @@ class WorkerSwapManager(AbstractWorkerManager):
                 swap_request.swap_local_path,
                 id=swap_request.swap_int_id,
                 model_config=self.model_config,
+                device=self.device,
             )
         except Exception as e:
             logger.error(
@@ -209,6 +210,7 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
     def _apply_swaps(
         self, swap_requests: List[SwapRequest], sequence_groups: List[SequenceGroup]
     ) -> None:
+        logger.info(f"Applying swaps: {swap_requests}")
         swap_maps = {
             swap_request.swap_int_id: swap_request for swap_request in swap_requests
         }
@@ -224,7 +226,9 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
         self._swap_manager.clear_base_module()
 
     def add_swap(
-        self, swap_request: SwapRequest, sequence_groups: List[SequenceGroup]
+        self, 
+        swap_request: SwapRequest, 
+        sequence_groups: List[SequenceGroup]
     ) -> bool:
         if swap_request.swap_int_id not in self.list_swaps():
             if len(self._swap_manager) + 1 > self._swap_manager.capacity:

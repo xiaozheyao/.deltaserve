@@ -163,6 +163,17 @@ class GPUExecutor(ExecutorBase):
     def list_deltas(self) -> List[int]:
         return self.driver_worker.list_deltas()
 
+    def add_swap(self, swap_request: SwapRequest) -> bool:
+        assert swap_request.swap_int_id > 0, "swap_id must be greater than 0."
+        return self.driver_worker.add_swap(swap_request)
+
+    def remove_delta(self, swap_id: int) -> bool:
+        assert swap_id > 0, "swap_id must be greater than 0."
+        return self.driver_worker.remove_swap(swap_id)
+
+    def list_swaps(self) -> List[int]:
+        return self.driver_worker.list_swaps()
+
     def check_health(self) -> None:
         # GPUExecutor will always be healthy as long as
         # it's running.

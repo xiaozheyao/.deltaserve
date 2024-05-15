@@ -31,7 +31,7 @@ def apply_swap_slice(
         idx_mask = indices == id
         inp = input[idx_mask]
         output_slice = F.linear(inp, weight[id])
-        output[idx_mask, y_offset : y_offset + y_slice_size] = output_slice
+        output[idx_mask, y_offset : y_offset + y_slice_size] += output_slice
     return output
 
 
@@ -63,18 +63,27 @@ def apply_swap(
     x: torch.Tensor,
     stacked_weights: List,
     indices: torch.Tensor,
+    outputs: torch.Tensor,
 ):
-    outputs = torch.zeros(
-        x.shape[0],
-        x.shape[1],
-        stacked_weights[0].shape[1],
-        device=x.device,
-        dtype=torch.float16,
-    )
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
+        # (2048, 2048) * (4096, 2048).T
+        # (2048, 4096)
         output = F.linear(inp, stacked_weights[id])
-        outputs[idx_mask] = output
+        outputs[idx_mask] += output
     return outputs
+
+def apply_swap_logits(
+    x: torch.Tensor,
+    swap_weights: torch.Tensor,
+    indices: torch.Tensor,
+    base_output: torch.Tensor,
+):
+    unique_indices = torch.unique(indices)
+    for id in unique_indices:
+        inp = x[indices == id]
+        output = F.linear(inp, swap_weights[id])
+        base_output[indices==id] += output
+    return base_output        

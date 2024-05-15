@@ -357,6 +357,23 @@ class RayGPUExecutor(ExecutorBase):
                 delta_request=delta_request,
             )
 
+    def add_swap(self, swap_request: SwapRequest) -> bool:
+        assert swap_request.delta_int_id > 0, "delta_id must be greater than 0."
+        return self._run_workers(
+            "add_swap",
+            swap_request=swap_request,
+        )
+
+    def remove_swap(self, swap_id: int) -> bool:
+        assert swap_id > 0, "swap_id must be greater than 0."
+        return self._run_workers(
+            "remove_swap",
+            swap_id=swap_id,
+        )
+
+    def list_swaps(self) -> List[int]:
+        return self._run_workers("list_swaps")
+
     def _run_workers(
         self,
         method: str,

@@ -324,7 +324,6 @@ class ModelRunner:
             input_positions.extend(
                 list(range(computed_len, computed_len + len(prompt_tokens)))
             )
-
             lora_id = seq_group_metadata.lora_int_id
             delta_id = seq_group_metadata.delta_int_id
             swap_id = seq_group_metadata.swap_int_id
@@ -786,7 +785,9 @@ class ModelRunner:
         SamplingMetadata,
         Set[int],
         LoRAMapping,
+        Set[int],
         DeltaMapping,
+        Set[int],
         ModelMapping,  # a.k.a swap mapping
         torch.Tensor,
     ]:
@@ -802,12 +803,15 @@ class ModelRunner:
                     attn_metadata,
                     prompt_lens,
                     subquery_lens,
+                    
                     lora_index_mapping,
                     lora_prompt_mapping,
                     lora_requests,
+                    
                     delta_index_mapping,
                     delta_prompt_mapping,
                     delta_requests,
+                    
                     swap_index_mapping,
                     swap_prompt_mapping,
                     swap_requests,
@@ -831,7 +835,6 @@ class ModelRunner:
                 prompt_lens = []
                 subquery_lens = None
                 multi_modal_input = None
-
             sampling_metadata = self._prepare_sample(
                 seq_group_metadata_list, prompt_lens, subquery_lens
             )
@@ -936,13 +939,13 @@ class ModelRunner:
             swap_mapping,
             multi_modal_input,
         ) = self.prepare_input_tensors(seq_group_metadata_list)
-
         if self.lora_config:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:
             self.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
         if self.swap_config:
             self.set_active_swaps(swap_requests, swap_mapping, sequence_groups)
+        
         # Execute the model.
         if attn_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]
@@ -1120,6 +1123,11 @@ class ModelRunner:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.add_delta(delta_request)
 
+    def add_swap(self, swap_request: SwapRequest) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.add_swap(swap_request)
+
     def prefetch_delta(self, delta_request: DeltaRequest, destination="cpu") -> None:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
@@ -1134,6 +1142,11 @@ class ModelRunner:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.remove_delta(delta_id)
+    
+    def remove_swap(self, swap_id: int) -> bool:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.remove_swap(swap_id)
 
     def list_loras(self) -> Set[int]:
         if not self.lora_manager:
@@ -1144,6 +1157,11 @@ class ModelRunner:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.list_deltas()
+
+    def list_swaps(self) -> Set[int]:
+        if not self.swap_manager:
+            raise RuntimeError("Swap is not enabled.")
+        return self.swap_manager.list_swaps()
 
     @torch.inference_mode()
     def capture_model(self, kv_caches: List[torch.Tensor]) -> None:

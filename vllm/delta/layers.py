@@ -984,7 +984,7 @@ class LogitsProcessorWithDelta(BaseLayerWithDelta):
     ) -> Optional[torch.Tensor]:
         # Get the logits for the next tokens.
         logits = torch.matmul(hidden_states, embedding.t())
-        # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
+        # NOTE(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
         if logits is None:
             return None
         apply_delta_uncompressed(
