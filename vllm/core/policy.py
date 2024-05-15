@@ -60,8 +60,9 @@ class FCFS(Policy):
         available_deltas: list = None,
         most_wanted=None,
     ) -> float:
-        return now - seq_group.metrics.arrival_time
-
+        priority = now - seq_group.metrics.arrival_time
+        logger.info(f'fcfs priority: {priority}')
+        return priority
 
 class DeltaServe(Policy):
     def get_priority(
