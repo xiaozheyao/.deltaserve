@@ -39,7 +39,6 @@ logger = init_logger(__name__)
 if TYPE_CHECKING:
     pass
 
-
 @dataclass
 class ModelMapping:
     # Per every token in input_ids:
@@ -95,7 +94,6 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.base_layer = base_layer
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
-        
         self.vocab_start_index = self.base_layer.vocab_start_index
         self.vocab_end_index = self.base_layer.vocab_end_index
         self.embedding_dim = self.base_layer.embedding_dim
@@ -125,6 +123,8 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
         bias: Optional[torch.Tensor] = None,
     ):
+        logger.info(f"weight shape: {weight.shape}")
+        logger.info(f"packed_weights shape: {self.packed_weights.shape}")
         self.packed_weights[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -185,6 +185,7 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
         self.tp_size = get_tensor_model_parallel_world_size()
         self.device = self.base_layer.weight.device
         self.gather_output = self.base_layer.gather_output
+        
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
 
@@ -413,12 +414,20 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         index: int,
         weight: List[torch.Tensor],
     ):
-        logger.info(f"weight shape: {weight.shape}")
+        logger.info(f"weight shape: {weight[:self.q_proj_shard_size].shape}")
         logger.info(f"weight_stacked shape: {self.weight_stacked[0].shape}")
         self.reset_pack(index)
+        
         self.weight_stacked[0][index, :, :].copy_(weight[:self.q_proj_shard_size], non_blocking=ASYNC_COPY)
-        self.weight_stacked[1][index, :, :].copy_(weight[self.q_proj_shard_size: self.q_proj_shard_size + self.kv_proj_shard_size], non_blocking=ASYNC_COPY)
-        self.weight_stacked[2][index, :, :].copy_(weight[self.q_proj_shard_size + self.kv_proj_shard_size:], non_blocking=ASYNC_COPY)
+        
+        self.weight_stacked[1][index, :, :].copy_(
+            weight[self.q_proj_shard_size: self.q_proj_shard_size + self.kv_proj_shard_size],
+            non_blocking=ASYNC_COPY)
+        
+        self.weight_stacked[2][index, :, :].copy_(
+            weight[self.q_proj_shard_size + self.kv_proj_shard_size:],
+            non_blocking=ASYNC_COPY
+        )
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor] = None
@@ -498,6 +507,9 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
     ):
         self.reset_pack(index)
+        logger.info(f"weight shape: {weight.shape}")
+        logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
+        self.weight_stacked[index].copy_(weight, non_blocking=ASYNC_COPY)
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
         outputs = torch.zeros(
@@ -524,7 +536,6 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
                 input_, num_partitions=self.tp_size
             )
             input_parallel = splitted_input[tp_rank].contiguous()
-
         output_parallel = self.apply_weights(input_parallel)
         if self.reduce_results and self.tp_size > 1:
             output_ = tensor_model_parallel_all_reduce(output_parallel)
@@ -594,6 +605,8 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         weight: torch.Tensor,
     ):
         self.reset_pack(index)
+        logger.info(f"weight shape: {weight.shape}")
+        logger.info(f"weight_stacked shape: {self.weight_stacked.shape}")
         self.weight_stacked[index, :, :].copy_(weight, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -632,7 +645,6 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         # TODO(xiaozhe): for now we assume there's no additional token added, so this simply performs additional matmuls on delta.
         if output is None:
             return None
-        # (todo)
         logits = tensor_model_parallel_gather(output)
         return logits
 

@@ -34,6 +34,13 @@ prompts = [
     "USER: What is the capital of France?\nASSISTANT:",
     "USER: What is the capital of China?\nASSISTANT:",
 ]
+
+outputs = llm.generate(
+    prompts,
+    sampling_params,
+)
+print(f"without swap: {outputs[0].outputs[0].text}")
+print(outputs)
 outputs = llm.generate(
     prompts, sampling_params, 
     swap_request=SwapRequest("vicuna", 1, swap_model_path)

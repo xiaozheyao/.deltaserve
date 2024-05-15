@@ -160,7 +160,6 @@ class SwapModel:
                 weight=module.weight,
                 bias=module.bias if hasattr(module, "bias") else None,
             )
-            logger.info(f"module_name: {module_name}, weight shape: {module.weight.shape}")
         end = timer()
         logger.debug(f"Disk -> CPU: Loaded in {end - start:.3f} seconds")
         return cls(id, modules)
