@@ -6,7 +6,6 @@ from vllm.logger import init_logger
 
 logger = init_logger(__name__)
 
-
 class Policy:
     def get_priority(
         self,
