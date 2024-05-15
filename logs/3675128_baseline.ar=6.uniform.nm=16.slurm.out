@@ -1,0 +1,532 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-05-15 21:38:24,166 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-05-15 21:38:24,166 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-05-15 21:38:24,166 - INFO - NumExpr defaulting to 8 threads.
+2024-05-15 21:38:25,084	INFO scripts.py:1182 -- Did not find any active Ray processes.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3932f98ac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3932f99450>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-15 21:38:41 api_server.py:191] vLLM API server version 0.3.3
+INFO 05-15 21:38:41 api_server.py:192] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[], swap_modules=[SwapModule(name='/vllm/.idea/full_models/Llama-2-13b-hf', local_path='/vllm/.idea/full_models/Llama-2-13b-hf'), SwapModule(name='delta-1', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-1'), SwapModule(name='delta-2', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-2'), SwapModule(name='delta-3', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-3'), SwapModule(name='delta-4', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-4'), SwapModule(name='delta-5', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-5'), SwapModule(name='delta-6', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-6'), SwapModule(name='delta-7', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-7'), SwapModule(name='delta-8', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-8'), SwapModule(name='delta-9', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-9'), SwapModule(name='delta-10', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-10'), SwapModule(name='delta-11', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-11'), SwapModule(name='delta-12', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-12'), SwapModule(name='delta-13', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-13'), SwapModule(name='delta-14', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-14'), SwapModule(name='delta-15', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-15'), SwapModule(name='delta-16', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-16')], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=4, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=False, max_deltas=0, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=False, scheduler_policy='fcfs', max_swap_slots=8, max_cpu_models=32, enable_swap=True, engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+2024-05-15 21:38:44,367	INFO worker.py:1749 -- Started a local Ray instance.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3932f992d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-15 21:38:46 llm_engine.py:90] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=None, swap_config=SwapConfig(max_packed_model=8, max_cpu_model=32), max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=4, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3932f982b0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-15 21:38:58 selector.py:16] Using FlashAttention backend.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3932f99d20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:39:00 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:39:00 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:39:00 selector.py:16] Using FlashAttention backend.
+INFO 05-15 21:39:13 model_runner.py:161] Loading model weights took 6.1114 GB
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3932f9a5f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3932f9aec0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:39:15 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:39:15 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:39:15 model_runner.py:161] Loading model weights took 6.1114 GB
+INFO 05-15 21:39:27 ray_gpu_executor.py:275] # GPU blocks: 3146, # CPU blocks: 1310
+INFO 05-15 21:39:30 block_manager.py:264] disable automatic prefix caching
+WARNING 05-15 21:39:30 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [81009]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     ::1:42292 - "GET /sysinfo HTTP/1.1" 200 OK
+Translating from base-model to /vllm/.idea/full_models/Llama-2-13b-hf
+Warming up starts
+{'id': 164, 'prompt': "USER: Are vegans dangerous because they eat the animal's food? The animals won't have any food left?\n\nASSISTANT:", 'timestamp': 0, 'model': 'delta-10', 'min_tokens': 148, 'max_tokens': 148}
+Prefetching is disabled
+INFO 05-15 21:39:37 models.py:164] Disk -> CPU: Loaded in 1.396 seconds
+INFO 05-15 21:39:37 worker_manager.py:250] [1715780377.9184515] CPU -> GPU time: 0.8484
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:39:41 models.py:164] Disk -> CPU: Loaded in 5.453 seconds
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:39:41 models.py:164] Disk -> CPU: Loaded in 5.453 seconds
+INFO 05-15 21:39:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:39:41 models.py:164] Disk -> CPU: Loaded in 5.453 seconds
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:39:41 worker_manager.py:250] [1715780381.8936799] CPU -> GPU time: 0.7660
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:39:42 worker_manager.py:250] [1715780382.2786] CPU -> GPU time: 1.1503
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:39:42 worker_manager.py:250] [1715780382.402811] CPU -> GPU time: 1.2745
+INFO 05-15 21:39:47 metrics.py:276] Avg prompt throughput: 6.6 tokens/s, Avg generation throughput: 5.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 05-15 21:39:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 05-15 21:39:57 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-15 21:40:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO 05-15 21:40:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:42294 - "POST /v1/completions HTTP/1.1" 200 OK
+Warming up ends
+Issuing queries
+sending 1 queries at 0.2
+sending 1 queries at 0.4
+sending 1 queries at 0.5
+sending 1 queries at 0.7000000000000001
+sending 1 queries at 0.8
+sending 1 queries at 0.9
+sending 1 queries at 1.0
+sending 1 queries at 1.4000000000000001
+sending 2 queries at 2.0
+sending 1 queries at 2.3000000000000003
+sending 1 queries at 2.4000000000000004
+sending 1 queries at 2.6
+sending 4 queries at 3.0
+sending 1 queries at 3.3000000000000003
+sending 1 queries at 3.6
+sending 1 queries at 3.9000000000000004
+sending 1 queries at 4.6000000000000005
+sending 1 queries at 4.800000000000001
+sending 1 queries at 4.9
+sending 2 queries at 5.2
+sending 2 queries at 5.4
+sending 1 queries at 5.9
+sending 1 queries at 6.0
+sending 2 queries at 6.1000000000000005
+sending 1 queries at 6.4
+sending 1 queries at 6.5
+sending 2 queries at 6.6000000000000005
+sending 1 queries at 6.800000000000001
+sending 1 queries at 7.0
+sending 1 queries at 7.1000000000000005
+sending 1 queries at 7.6000000000000005
+sending 1 queries at 7.800000000000001
+sending 1 queries at 7.9
+sending 1 queries at 8.0
+sending 2 queries at 8.200000000000001
+sending 1 queries at 8.4
+sending 1 queries at 8.5
+sending 2 queries at 8.6
+sending 2 queries at 8.700000000000001
+sending 1 queries at 8.9
+sending 1 queries at 9.0
+sending 2 queries at 9.700000000000001
+sending 2 queries at 9.8
+sending 2 queries at 10.0
+sending 1 queries at 10.100000000000001
+sending 3 queries at 10.200000000000001
+sending 2 queries at 10.4
+sending 2 queries at 10.5
+sending 2 queries at 10.8
+sending 2 queries at 11.200000000000001
+sending 1 queries at 11.8
+sending 1 queries at 11.9
+sending 1 queries at 12.5
+sending 1 queries at 12.700000000000001
+sending 2 queries at 12.9
+sending 3 queries at 13.0
+sending 2 queries at 13.100000000000001
+sending 2 queries at 13.200000000000001
+sending 1 queries at 13.4
+sending 2 queries at 13.600000000000001
+sending 1 queries at 13.700000000000001
+sending 1 queries at 13.8
+sending 1 queries at 13.9
+sending 1 queries at 14.3
+sending 1 queries at 14.4
+sending 2 queries at 14.600000000000001
+sending 1 queries at 14.8
+sending 2 queries at 14.9
+sending 2 queries at 15.100000000000001
+sending 2 queries at 15.4
+sending 1 queries at 15.5
+sending 1 queries at 15.600000000000001
+sending 1 queries at 15.8
+sending 2 queries at 16.400000000000002
+sending 1 queries at 16.6
+sending 1 queries at 16.7
+sending 2 queries at 16.900000000000002
+sending 1 queries at 17.400000000000002
+sending 1 queries at 17.5
+sending 1 queries at 17.8
+sending 1 queries at 18.0
+sending 1 queries at 18.1
+sending 2 queries at 18.400000000000002
+sending 1 queries at 18.8
+sending 1 queries at 18.900000000000002
+sending 1 queries at 19.3
+sending 1 queries at 19.5
+sending 1 queries at 19.700000000000003
+sending 1 queries at 19.8
+sending 1 queries at 20.3
+sending 1 queries at 20.5
+sending 1 queries at 20.6
+sending 3 queries at 20.8
+sending 1 queries at 21.0
+sending 1 queries at 21.1
+sending 1 queries at 21.200000000000003
+sending 2 queries at 21.3
+sending 1 queries at 21.400000000000002
+sending 1 queries at 21.5
+sending 1 queries at 21.700000000000003
+sending 1 queries at 21.8
+sending 1 queries at 22.0
+sending 1 queries at 22.200000000000003
+sending 1 queries at 22.3
+sending 2 queries at 22.700000000000003
+sending 1 queries at 22.8
+sending 1 queries at 23.200000000000003
+sending 1 queries at 23.5
+sending 2 queries at 23.700000000000003
+sending 1 queries at 24.1
+sending 1 queries at 24.3
+sending 1 queries at 25.400000000000002
+sending 1 queries at 25.5
+sending 2 queries at 25.8
+sending 2 queries at 26.0
+sending 1 queries at 26.3
+sending 1 queries at 26.6
+sending 2 queries at 26.8
+sending 1 queries at 26.900000000000002
+sending 1 queries at 27.0
+sending 1 queries at 27.200000000000003
+sending 1 queries at 27.400000000000002
+sending 1 queries at 27.700000000000003
+sending 1 queries at 28.3
+sending 2 queries at 28.6
+sending 1 queries at 28.700000000000003
+sending 1 queries at 28.900000000000002
+sending 1 queries at 29.0
+sending 4 queries at 29.1
+sending 2 queries at 29.400000000000002
+sending 1 queries at 29.5
+sending 1 queries at 30.0
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:10 models.py:164] Disk -> CPU: Loaded in 1.481 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:16 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:40:14 models.py:164] Disk -> CPU: Loaded in 5.514 seconds
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:40:14 models.py:164] Disk -> CPU: Loaded in 5.518 seconds
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:40:14 models.py:164] Disk -> CPU: Loaded in 5.557 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:18 models.py:164] Disk -> CPU: Loaded in 1.457 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:20 models.py:164] Disk -> CPU: Loaded in 1.389 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:40:22 models.py:164] Disk -> CPU: Loaded in 6.018 seconds
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:40:22 models.py:164] Disk -> CPU: Loaded in 6.002 seconds
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:22 models.py:164] Disk -> CPU: Loaded in 1.490 seconds
+Prefetching is disabled
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:40:22 models.py:164] Disk -> CPU: Loaded in 6.204 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:25 models.py:164] Disk -> CPU: Loaded in 1.494 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:26 metrics.py:276] Avg prompt throughput: 2.1 tokens/s, Avg generation throughput: 0.1 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 9 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:27 models.py:164] Disk -> CPU: Loaded in 1.426 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:40:28 models.py:164] Disk -> CPU: Loaded in 5.531 seconds
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:40:29 models.py:164] Disk -> CPU: Loaded in 5.667 seconds
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:29 models.py:164] Disk -> CPU: Loaded in 1.405 seconds
+total threads: 178
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:40:30 models.py:164] Disk -> CPU: Loaded in 5.717 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 05-15 21:40:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 9 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:40:35 models.py:164] Disk -> CPU: Loaded in 5.269 seconds
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:40:36 models.py:164] Disk -> CPU: Loaded in 5.314 seconds
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:40:36 models.py:164] Disk -> CPU: Loaded in 5.216 seconds
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:40:41 models.py:164] Disk -> CPU: Loaded in 5.171 seconds
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:40:42 models.py:164] Disk -> CPU: Loaded in 5.128 seconds
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:40:43 models.py:164] Disk -> CPU: Loaded in 5.255 seconds
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:40:47 models.py:164] Disk -> CPU: Loaded in 5.131 seconds
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:40:48 models.py:164] Disk -> CPU: Loaded in 5.138 seconds
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:40:49 models.py:164] Disk -> CPU: Loaded in 5.228 seconds
+[36m(RayWorkerVllm pid=89126)[0m INFO 05-15 21:40:52 models.py:164] Disk -> CPU: Loaded in 5.105 seconds
+[36m(RayWorkerVllm pid=89533)[0m INFO 05-15 21:40:53 models.py:164] Disk -> CPU: Loaded in 5.056 seconds
+[36m(RayWorkerVllm pid=89378)[0m INFO 05-15 21:40:54 models.py:164] Disk -> CPU: Loaded in 5.194 seconds
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:42834 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43128 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42882 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:00 metrics.py:276] Avg prompt throughput: 874.6 tokens/s, Avg generation throughput: 61.1 tokens/s, Running: 102 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 11.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:42874 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42814 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42890 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:06 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 90.8 tokens/s, Running: 99 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 11.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:42980 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43104 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42892 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42804 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 86.5 tokens/s, Running: 94 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 11.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:43058 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43138 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:17 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 81.4 tokens/s, Running: 93 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 13.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:43124 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 81.6 tokens/s, Running: 90 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 13.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:43062 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43006 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:29 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 80.3 tokens/s, Running: 90 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 14.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:42906 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42974 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43162 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:34 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 78.1 tokens/s, Running: 87 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 15.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:42832 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 74.9 tokens/s, Running: 85 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 15.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:43136 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42926 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 63.3 tokens/s, Running: 84 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 15.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:42802 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42854 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42946 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:51 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 84.5 tokens/s, Running: 81 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 16.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:42940 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:41:57 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 71.0 tokens/s, Running: 80 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 17.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:43118 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 68.4 tokens/s, Running: 79 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 17.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:42784 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:08 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 68.3 tokens/s, Running: 78 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 18.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:43066 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43026 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42908 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42788 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 68.8 tokens/s, Running: 74 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 18.5%, CPU KV cache usage: 0.0%
+INFO 05-15 21:42:20 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 65.1 tokens/s, Running: 73 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 18.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:43090 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43092 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 51.2 tokens/s, Running: 72 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 19.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:42988 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:31 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 72.9 tokens/s, Running: 71 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:42822 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:37 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 63.6 tokens/s, Running: 70 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:43076 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:42 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 61.8 tokens/s, Running: 69 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:43042 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43070 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43080 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42846 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:48 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 51.2 tokens/s, Running: 65 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:43072 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 56.7 tokens/s, Running: 63 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:43038 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43184 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42792 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42830 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:42:59 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 53.3 tokens/s, Running: 60 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.0%, CPU KV cache usage: 0.0%
+INFO 05-15 21:43:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 54.2 tokens/s, Running: 60 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:42812 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:10 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 51.9 tokens/s, Running: 59 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:43100 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 46.2 tokens/s, Running: 58 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.2%, CPU KV cache usage: 0.0%
+INFO 05-15 21:43:21 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 56.2 tokens/s, Running: 58 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:42914 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43022 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:26 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 50.0 tokens/s, Running: 56 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 22.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:43180 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:32 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 49.1 tokens/s, Running: 55 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:42762 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 47.3 tokens/s, Running: 54 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 22.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:43035 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 46.8 tokens/s, Running: 53 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 22.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:43176 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43182 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42880 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:49 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 45.7 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:43044 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42922 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:43:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 42.4 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:42868 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43102 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:01 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 40.3 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.3%, CPU KV cache usage: 0.0%
+INFO 05-15 21:44:06 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 40.4 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.6%, CPU KV cache usage: 0.0%
+INFO 05-15 21:44:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 40.6 tokens/s, Running: 45 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:42758 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:18 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 39.0 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:42898 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42968 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 38.1 tokens/s, Running: 43 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:42934 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43028 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:29 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 37.1 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:43046 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 35.4 tokens/s, Running: 40 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:42924 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 34.6 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.3%, CPU KV cache usage: 0.0%
+INFO 05-15 21:44:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 34.4 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:42948 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:42992 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 33.2 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 21.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:43086 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:43056 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:44:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 31.4 tokens/s, Running: 35 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:42767 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 05-15 21:45:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 30.3 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.1%, CPU KV cache usage: 0.0%
+INFO 05-15 21:45:09 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.7 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 73 reqs, GPU KV cache usage: 20.6%, CPU KV cache usage: 0.0%
