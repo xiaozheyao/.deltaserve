@@ -11,7 +11,7 @@ def peek_perf(args):
     for type in types:
         # average over all runs
         type_results = results[results["type"]==type]
-        type_results = type_results['time'].mean()
+        type_results = type_results['time'].max()
         print(f"{type}    \t{type_results:.2f} sec")
         
         
