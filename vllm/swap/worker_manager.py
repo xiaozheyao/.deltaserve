@@ -210,7 +210,6 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
     def _apply_swaps(
         self, swap_requests: List[SwapRequest], sequence_groups: List[SequenceGroup]
     ) -> None:
-        logger.info(f"Applying swaps: {swap_requests}")
         swap_maps = {
             swap_request.swap_int_id: swap_request for swap_request in swap_requests
         }

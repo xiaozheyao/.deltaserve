@@ -86,9 +86,7 @@ class BaseLayerWithPacked(nn.Module):
         if hasattr(self, "base_layer"):
             del self.base_layer
         else:
-            logger.warning(
-                f"Trying to clear base layer from {self} but no base layer found."
-            )
+            pass
 
 
 class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
@@ -309,12 +307,11 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         self.reset_pack(index)
         if weight[0] is not None:
             self.weight_stacked[0][index, :, :].copy_(
-                weight[0], non_blocking=ASYNC_COPY
+                weight[:self.output_dim], non_blocking=ASYNC_COPY
             )
-        logger.info(f"weight[1]: {weight[1]}")
         if weight[1] is not None:
             self.weight_stacked[1][index, :, :].copy_(
-                weight[1], non_blocking=ASYNC_COPY
+                weight[self.output_dim:], non_blocking=ASYNC_COPY
             )
 
     def apply_weights(
@@ -416,10 +413,12 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         index: int,
         weight: List[torch.Tensor],
     ):
+        logger.info(f"weight shape: {weight.shape}")
+        logger.info(f"weight_stacked shape: {self.weight_stacked[0].shape}")
         self.reset_pack(index)
-        self.weight_stacked[0][index, :, :].copy_(weight[0], non_blocking=ASYNC_COPY)
-        self.weight_stacked[1][index, :, :].copy_(weight[1], non_blocking=ASYNC_COPY)
-        self.weight_stacked[2][index, :, :].copy_(weight[2], non_blocking=ASYNC_COPY)
+        self.weight_stacked[0][index, :, :].copy_(weight[:self.q_proj_shard_size], non_blocking=ASYNC_COPY)
+        self.weight_stacked[1][index, :, :].copy_(weight[self.q_proj_shard_size: self.q_proj_shard_size + self.kv_proj_shard_size], non_blocking=ASYNC_COPY)
+        self.weight_stacked[2][index, :, :].copy_(weight[self.q_proj_shard_size + self.kv_proj_shard_size:], non_blocking=ASYNC_COPY)
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor] = None

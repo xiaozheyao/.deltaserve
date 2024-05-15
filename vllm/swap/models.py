@@ -160,6 +160,7 @@ class SwapModel:
                 weight=module.weight,
                 bias=module.bias if hasattr(module, "bias") else None,
             )
+            logger.info(f"module_name: {module_name}, weight shape: {module.weight.shape}")
         end = timer()
         logger.debug(f"Disk -> CPU: Loaded in {end - start:.3f} seconds")
         return cls(id, modules)
@@ -250,13 +251,11 @@ class SwapModelManager:
             if module_swap:
                 module.set_pack(index, module_swap.weight)
             else:
-                # TODO(xiaozhe): this might be wrong for swapped model...
                 module.reset_pack(index)
         return True
 
     def clear_base_module(self):
         for module_name, module in self.modules.items():
-            logger.info(f"Clearing base module: {module_name}")
             module.clear_base()
 
     def _deactivate_swap(self, swap_id: int):
@@ -479,7 +478,8 @@ class LRUCacheSwapModelManager(SwapModelManager):
             self._active_swaps.remove_oldest()
         result = super().activate_swap(swap_id)
         # We always touch to update the LRU cache order
-        self._active_swaps.touch(swap_id)
+        # TODO!!! fix this
+        # self._active_swaps.touch(swap_id)
         return result
 
     def remove_oldest_swap(self) -> bool:
