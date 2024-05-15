@@ -31,13 +31,19 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .ops import apply_swap_embed, apply_swap_packed_nslice, apply_swap, apply_swap_logits
+from .ops import (
+    apply_swap_embed,
+    apply_swap_packed_nslice,
+    apply_swap,
+    apply_swap_logits,
+)
 
 ASYNC_COPY = True
 logger = init_logger(__name__)
 
 if TYPE_CHECKING:
     pass
+
 
 @dataclass
 class ModelMapping:
@@ -104,10 +110,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.packed_weights[index] = None
 
     def create_packed_weights(
-        self, 
-        max_packed: int, 
-        swap_config: SwapConfig, 
-        model_config: PretrainedConfig
+        self, max_packed: int, swap_config: SwapConfig, model_config: PretrainedConfig
     ) -> None:
         self.packed_weights = torch.zeros(
             max_packed,
@@ -176,6 +179,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
     ) -> bool:
         return type(source_layer) is VocabParallelEmbedding
 
+
 class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
     def __init__(self, base_layer: ColumnParallelLinear) -> None:
         super().__init__()
@@ -185,7 +189,7 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
         self.tp_size = get_tensor_model_parallel_world_size()
         self.device = self.base_layer.weight.device
         self.gather_output = self.base_layer.gather_output
-        
+
     def reset_pack(self, index: int):
         self.packed_weights[index] = None
 
@@ -231,7 +235,7 @@ class ColumnParallelLinearWithPacked(BaseLayerWithPacked):
         pass
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        bias= None
+        bias = None
         output_parallel = self.apply_weights(x, bias)
         if self.gather_output:
             output = tensor_model_parallel_all_gather(output_parallel)
@@ -308,11 +312,11 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         self.reset_pack(index)
         if weight[0] is not None:
             self.weight_stacked[0][index, :, :].copy_(
-                weight[:self.output_dim], non_blocking=ASYNC_COPY
+                weight[: self.output_dim], non_blocking=ASYNC_COPY
             )
         if weight[1] is not None:
             self.weight_stacked[1][index, :, :].copy_(
-                weight[self.output_dim:], non_blocking=ASYNC_COPY
+                weight[self.output_dim :], non_blocking=ASYNC_COPY
             )
 
     def apply_weights(
@@ -346,6 +350,7 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
             type(source_layer) is MergedColumnParallelLinear
             and len(packed_modules_list) == 2
         )
+
 
 class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
@@ -417,16 +422,22 @@ class MergedQKVParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         logger.info(f"weight shape: {weight[:self.q_proj_shard_size].shape}")
         logger.info(f"weight_stacked shape: {self.weight_stacked[0].shape}")
         self.reset_pack(index)
-        
-        self.weight_stacked[0][index, :, :].copy_(weight[:self.q_proj_shard_size], non_blocking=ASYNC_COPY)
-        
+
+        self.weight_stacked[0][index, :, :].copy_(
+            weight[: self.q_proj_shard_size], non_blocking=ASYNC_COPY
+        )
+
         self.weight_stacked[1][index, :, :].copy_(
-            weight[self.q_proj_shard_size: self.q_proj_shard_size + self.kv_proj_shard_size],
-            non_blocking=ASYNC_COPY)
-        
+            weight[
+                self.q_proj_shard_size : self.q_proj_shard_size
+                + self.kv_proj_shard_size
+            ],
+            non_blocking=ASYNC_COPY,
+        )
+
         self.weight_stacked[2][index, :, :].copy_(
-            weight[self.q_proj_shard_size + self.kv_proj_shard_size:],
-            non_blocking=ASYNC_COPY
+            weight[self.q_proj_shard_size + self.kv_proj_shard_size :],
+            non_blocking=ASYNC_COPY,
         )
 
     def apply_weights(
@@ -466,11 +477,11 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
         self.tp_size = get_tensor_model_parallel_world_size()
         self.tp_rank = get_tensor_model_parallel_rank()
         self.device = self.base_layer.weight.device
-        self.in_features = self.base_layer.weight.shape[1] # 4096
-        self.out_features = self.base_layer.weight.shape[0] # 2048
+        self.in_features = self.base_layer.weight.shape[1]  # 4096
+        self.out_features = self.base_layer.weight.shape[0]  # 2048
         self.input_is_parallel = self.base_layer.input_is_parallel
         self.reduce_results = self.base_layer.reduce_results
-        
+
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -519,10 +530,7 @@ class RowParallelLinearWithPacked(BaseLayerWithPacked):
             dtype=x.dtype,
         )
         outputs = apply_swap(
-            x,
-            self.weight_stacked,
-            self.indices[: self.indices_len[0]],
-            outputs
+            x, self.weight_stacked, self.indices[: self.indices_len[0]], outputs
         )
         return outputs
 
@@ -620,8 +628,6 @@ class LogitsProcessorWithPacked(BaseLayerWithPacked):
         self.indices = sampler_indices
         self.indices_padded = sampler_indices_padded
         self.indices_len = indices_len
-
-    
 
     def _get_logits(
         self,

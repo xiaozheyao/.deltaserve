@@ -75,6 +75,7 @@ def apply_swap(
         outputs[idx_mask] += output
     return outputs
 
+
 def apply_swap_logits(
     x: torch.Tensor,
     swap_weights: torch.Tensor,
@@ -85,5 +86,5 @@ def apply_swap_logits(
     for id in unique_indices:
         inp = x[indices == id]
         output = F.linear(inp, swap_weights[id])
-        base_output[indices==id] += output
-    return base_output        
+        base_output[indices == id] += output
+    return base_output

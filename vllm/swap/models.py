@@ -151,7 +151,7 @@ class SwapModel:
                 )
         model = model.eval()
         modules = {}
-        
+
         for module_name, module in model.named_modules():
             if not hasattr(module, "weight"):
                 continue

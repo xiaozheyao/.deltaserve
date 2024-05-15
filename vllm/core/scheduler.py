@@ -88,7 +88,7 @@ class SchedulerOutputs:
         self.scheduled_seq_groups = sorted(
             self.scheduled_seq_groups, key=lambda g: (g.delta_int_id, g.request_id)
         )
-    
+
     def _sort_by_swap_ids(self) -> bool:
         self.scheduled_seq_groups = sorted(
             self.scheduled_seq_groups, key=lambda g: (g.swap_int_id, g.request_id)
@@ -480,7 +480,7 @@ class Scheduler:
                         leftover_swapped.appendleft(seq_group)
                         self.swapped.popleft()
                         continue
-                
+
                 if self.swap_enabled:
                     swap_int_id = seq_group.swap_int_id
                     if (

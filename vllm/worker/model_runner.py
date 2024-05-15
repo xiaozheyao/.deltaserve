@@ -803,15 +803,12 @@ class ModelRunner:
                     attn_metadata,
                     prompt_lens,
                     subquery_lens,
-                    
                     lora_index_mapping,
                     lora_prompt_mapping,
                     lora_requests,
-                    
                     delta_index_mapping,
                     delta_prompt_mapping,
                     delta_requests,
-                    
                     swap_index_mapping,
                     swap_prompt_mapping,
                     swap_requests,
@@ -945,7 +942,7 @@ class ModelRunner:
             self.set_active_deltas(delta_requests, delta_mapping, sequence_groups)
         if self.swap_config:
             self.set_active_swaps(swap_requests, swap_mapping, sequence_groups)
-        
+
         # Execute the model.
         if attn_metadata.use_cuda_graph:
             graph_batch_size = input_tokens.shape[0]
@@ -1142,7 +1139,7 @@ class ModelRunner:
         if not self.delta_manager:
             raise RuntimeError("Delta is not enabled.")
         return self.delta_manager.remove_delta(delta_id)
-    
+
     def remove_swap(self, swap_id: int) -> bool:
         if not self.swap_manager:
             raise RuntimeError("Swap is not enabled.")

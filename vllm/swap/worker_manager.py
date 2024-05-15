@@ -144,7 +144,7 @@ class WorkerSwapManager(AbstractWorkerManager):
 
         for swap_id in swaps_to_remove:
             self.remove_swap(swap_id)
-        
+
         for swap_id in swaps_to_add:
             self.add_swap(swaps_map[swap_id], sequence_groups)
 
@@ -225,9 +225,7 @@ class LRUCacheWorkerSwapManager(WorkerSwapManager):
         self._swap_manager.clear_base_module()
 
     def add_swap(
-        self, 
-        swap_request: SwapRequest, 
-        sequence_groups: List[SequenceGroup]
+        self, swap_request: SwapRequest, sequence_groups: List[SequenceGroup]
     ) -> bool:
         if swap_request.swap_int_id not in self.list_swaps():
             if len(self._swap_manager) + 1 > self._swap_manager.capacity:
