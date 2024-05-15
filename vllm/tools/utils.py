@@ -91,7 +91,7 @@ def extract_key_metadata(metadata):
     return workload
 
 
-def parse_delta_compute(data):
+def _parse_data(data):
     results = []
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
@@ -141,76 +141,14 @@ def parse_delta_compute(data):
                 "type": "Queueing",
             }
         )
-
     return results
-
-
-def parse_swap(data):
-    results = []
-    for id, x in enumerate(data):
-        metric = x["response"]["metrics"][0]
-        cpu_loading_time = 0
-        e2e_latency = metric["finished_time"] - metric["arrival_time"]
-        first_token_latency = metric["first_token_time"] - metric["arrival_time"]
-        if metric["start_loading_time"] is None:
-            gpu_loading_time = 0
-            queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
-        else:
-            gpu_loading_time = metric["gpu_loading_time"] - metric["start_loading_time"]
-            queuing_time = metric["start_loading_time"] - metric["arrival_time"]
-        inference_time = metric["finished_time"] - metric["first_scheduled_time"]
-        results.append(
-            {
-                "id": id,
-                "model": x["response"]["model"],
-                "time": e2e_latency,
-                "type": "E2E Latency",
-            }
-        )
-        results.append(
-            {
-                "id": id,
-                "model": x["response"]["model"],
-                "time": first_token_latency,
-                "type": "TTFT",
-            }
-        )
-        results.append(
-            {
-                "id": id,
-                "model": x["response"]["model"],
-                "time": gpu_loading_time,
-                "type": "Loading",
-            }
-        )
-        results.append(
-            {
-                "id": id,
-                "model": x["response"]["model"],
-                "time": inference_time,
-                "type": "Inference",
-            }
-        )
-        results.append(
-            {
-                "id": id,
-                "model": x["response"]["model"],
-                "time": queuing_time,
-                "type": "Queueing",
-            }
-        )
-    return results
-
 
 def parse_data(input_file):
     with open(input_file, "r") as fp:
         data = [json.loads(line) for line in fp]
     metadata = data.pop(0)
     key_metadata = extract_key_metadata(metadata)
-    if key_metadata["is_delta"]:
-        results = parse_delta_compute(data)
-    elif key_metadata["is_swap"]:
-        results = parse_swap(data)
+    results = _parse_data(data)
     return key_metadata, results
 
 

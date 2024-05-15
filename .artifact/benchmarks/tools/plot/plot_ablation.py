@@ -2,7 +2,7 @@ import os
 import argparse
 import pandas as pd
 from dstool.plot.style import set_font, set_plotly_theme
-from utils import parse_data, get_sys_name, color_palette, get_short_system_name
+from vllm.tools.utils import parse_data, get_sys_name, color_palette, get_short_system_name
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots

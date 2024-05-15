@@ -2,7 +2,7 @@ import os
 import argparse
 import pandas as pd
 from dstool.plot.style import set_plotly_theme
-from utils import parse_data, get_title, color_palette
+from vllm.tools.utils import parse_data, get_title, color_palette
 from style import set_font
 import plotly.express as px
 import plotly.graph_objects as go
