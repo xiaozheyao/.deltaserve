@@ -9,7 +9,7 @@ def peek_perf(args):
         inputs = [os.path.join(args.input, f) for f in os.listdir(args.input) if f.endswith(".jsonl")]
     else:
         inputs = [args.input]
-    for input_file in inputs:    
+    for input_file in inputs:
         metadata, results = parse_data(input_file)
         short_sys_name = get_short_system_name(metadata)
         print(f"--- {short_sys_name} ---")
@@ -18,8 +18,9 @@ def peek_perf(args):
         for type in types:
             # average over all runs
             type_results = results[results["type"]==type]
-            type_results = type_results['time'].max()
-            print(f"{type}    \t{type_results:.2f} sec")
+            mean = type_results['time'].mean()
+            max = type_results['time'].max()
+            print(f"{type}    \t{mean:.2f} - {max:.2f} sec")
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
