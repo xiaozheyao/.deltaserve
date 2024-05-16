@@ -4,11 +4,20 @@ from vllm.tools.utils import parse_data, get_short_system_name
 
 DEFAULT_PATH=".artifact/benchmarks/results/pjlab/ready"
 
+import os
+def walk_through_files(path, file_extension='.jsonl'):
+   for (dirpath, dirnames, filenames) in os.walk(path):
+      for filename in filenames:
+         if filename.endswith(file_extension): 
+            yield os.path.join(dirpath, filename)
+
 def prepare_df(input_file):
     if os.path.isdir(input_file):
-        inputs = [os.path.join(input_file, f) for f in os.listdir(input_file) if f.endswith(".jsonl")]
+        # walk through the directory and get all the jsonl files, including the subdirectories
+        inputs = list(walk_through_files(input_file))
     else:
         inputs = [input_file]
+    inputs = list(set(inputs))
     results_df = pd.DataFrame([])
     for input_file in inputs:
         metadata, results = parse_data(input_file)
