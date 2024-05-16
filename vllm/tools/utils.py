@@ -101,6 +101,7 @@ def _parse_data(data):
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
+        
         results.append(
             {
                 "id": id,

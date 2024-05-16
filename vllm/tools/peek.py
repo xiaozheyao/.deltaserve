@@ -20,7 +20,8 @@ def peek_perf(args):
             type_results = results[results["type"]==type]
             mean = type_results['time'].mean()
             max = type_results['time'].max()
-            print(f"{type}    \t{mean:.2f} - {max:.2f} sec")
+            median = type_results['time'].median()
+            print(f"{type}    \t{mean:.2f} - {max:.2f}, {median:.2f} sec")
 
 if __name__=="__main__":
     parser = argparse.ArgumentParser()
