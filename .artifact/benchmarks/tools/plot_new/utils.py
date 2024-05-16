@@ -2,6 +2,7 @@ import pandas as pd
 from glob import glob
 from pathlib import Path
 from typing import List
+import numpy as np
 
 def autolabel(rects, ax, prec=1):
     """Attach a text label above each bar in *rects*, displaying its height."""

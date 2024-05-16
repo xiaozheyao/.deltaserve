@@ -48,6 +48,9 @@ def extract_key_metadata(metadata):
     tp_size = metadata["sys_info"]["tensor_parallel_size"]
     is_swap = len(metadata["sys_info"]["swap_modules"]) > 0
     is_delta = len(metadata["sys_info"]["delta_modules"]) > 0
+    total_models = len(metadata["sys_info"]["delta_modules"]) + len(metadata['sys_info']['swap_modules'])
+    if is_delta:
+        total_models = total_models + 1
     enable_prefetch = True
     bitwidth = 4
     if "enable_prefetch" in metadata["sys_info"]:
@@ -86,6 +89,7 @@ def extract_key_metadata(metadata):
             "is_nvme": is_nvme,
             "enable_prefetch": enable_prefetch,
             "policy": policy,
+            "total_models": total_models,
         }
     )
     return workload
@@ -101,7 +105,6 @@ def _parse_data(data):
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
-        
         results.append(
             {
                 "id": id,
