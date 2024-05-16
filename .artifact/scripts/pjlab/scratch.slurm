@@ -48,6 +48,7 @@ apptainer run --nv \
 apptainer shell --nv \
     --home /mnt/petrelfs/huqinghao/xzyao/:/home/xiayao \
     --bind /mnt/petrelfs/huqinghao/xzyao/code/vllm:/vllm \
+    --bind /mnt/petrelfs/huqinghao/xzyao/code/deltazip:/deltazip \
     --bind /mnt/petrelfs/huqinghao/xzyao/code/triteia:/triteia \
     --env PYTHONPATH=/vllm:/triteia \
     --env CUDA_LAUNCH_BLOCKING=1 \
