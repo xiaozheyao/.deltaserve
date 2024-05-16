@@ -61,7 +61,6 @@ class FCFS(Policy):
         most_wanted=None,
     ) -> float:
         priority = now - seq_group.metrics.arrival_time
-        logger.info(f'fcfs priority: {priority}')
         return priority
 
 class DeltaServe(Policy):
@@ -89,10 +88,6 @@ class DeltaServe(Policy):
         else:
             most_wanted_bonus = 0
         # available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
-        logger.info(f"[scheduler]: most wanted bonus: {most_wanted_bonus} ")
-        logger.info(
-            f"[scheduler]: priority: {now - seq_group.metrics.arrival_time}"
-        )
         return now - seq_group.metrics.arrival_time + most_wanted_bonus
 
 
