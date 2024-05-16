@@ -10,14 +10,14 @@ from typing import Union
 
 enc = tiktoken.get_encoding("cl100k_base")
 
-
-
 def format_lmsys(prompt):
     return f"USER: {prompt}\nASSISTANT:"
 
 def generate_model_distribution(distribution, num_queries, to_eval_models):
     if distribution == "uniform":
         return np.random.choice(to_eval_models, num_queries)
+    if distribution == "distinct":
+        return to_eval_models
     if distribution.startswith("zipf"):
         alpha = float(distribution.split(":")[1])
         assert alpha > 1, "alpha must be greater than 1"
@@ -26,7 +26,6 @@ def generate_model_distribution(distribution, num_queries, to_eval_models):
         return np.random.choice(to_eval_models, num_queries, p=probs)
     if distribution == "azure":
         import pandas as pd
-
         print("Using azure trace, loading...")
         df = pd.read_csv(
             "https://huggingface.co/datasets/xzyao/traces/resolve/main/AzureFunctionsInvocationTraceForTwoWeeksJan2021.txt"
@@ -79,9 +78,9 @@ def generate_synthetic(args):
         len(poisson_ticks),
         to_eval_models,
     )
-
-    for idx in range(len(poisson_ticks)):
-        traces_data.append(
+    if args.distribution == "distinct":
+        for idx in range(len(models)):
+            traces_data.append(
             {
                 "id": idx,
                 "prompt": dialogs[idx],
@@ -99,6 +98,26 @@ def generate_synthetic(args):
                 ),
             }
         )
+    else:
+        for idx in range(len(poisson_ticks)):
+            traces_data.append(
+                {
+                    "id": idx,
+                    "prompt": dialogs[idx],
+                    "timestamp": poisson_ticks[idx],
+                    "model": models[idx],
+                    "min_tokens": (
+                        args.gen_tokens
+                        if args.gen_tokens != "auto"
+                        else response_tokens[idx]
+                    ),
+                    "max_tokens": (
+                        args.gen_tokens
+                        if args.gen_tokens != "auto"
+                        else response_tokens[idx]
+                    ),
+                }
+            )
     output_file = os.path.join(
         args.output,
         f"models={args.num_models},distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl",
