@@ -1,0 +1,23 @@
+{"id": 0, "prompt": "USER: What is the difference between OpenCL and CUDA?\nASSISTANT:", "timestamp": 0.79587450816311, "model": "delta-17", "min_tokens": 171, "max_tokens": 171}
+{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 2.0518052711289476, "model": "delta-15", "min_tokens": 139, "max_tokens": 139}
+{"id": 2, "prompt": "USER: Fuji vs. Nikon, which is better?\nASSISTANT:", "timestamp": 2.9750284169330166, "model": "delta-4", "min_tokens": 212, "max_tokens": 212}
+{"id": 3, "prompt": "USER: How to build an arena for chatbots?\nASSISTANT:", "timestamp": 3.7622295692502874, "model": "delta-31", "min_tokens": 318, "max_tokens": 318}
+{"id": 4, "prompt": "USER: When is it today?\nASSISTANT:", "timestamp": 4.3132780603457865, "model": "delta-1", "min_tokens": 61, "max_tokens": 61}
+{"id": 5, "prompt": "USER: Count from 1 to 10 with step = 3\nASSISTANT:", "timestamp": 5.351437355289396, "model": "delta-1", "min_tokens": 67, "max_tokens": 67}
+{"id": 6, "prompt": "USER: Emoji for \"sharing\". List 10\nASSISTANT:", "timestamp": 5.926956554458036, "model": "delta-11", "min_tokens": 103, "max_tokens": 103}
+{"id": 7, "prompt": "USER: How to parallelize a neural network?\nASSISTANT:", "timestamp": 8.150480967490692, "model": "delta-18", "min_tokens": 258, "max_tokens": 258}
+{"id": 8, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 11.465393149544505, "model": "delta-27", "min_tokens": 44, "max_tokens": 44}
+{"id": 9, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 11.948995250446758, "model": "base-model", "min_tokens": 12, "max_tokens": 12}
+{"id": 10, "prompt": "USER: What is the future of bitcoin?\nASSISTANT:", "timestamp": 13.517891390415926, "model": "delta-14", "min_tokens": 115, "max_tokens": 115}
+{"id": 11, "prompt": "USER: Make it more polite: I want to have dinner.\nASSISTANT:", "timestamp": 14.270565499952514, "model": "delta-12", "min_tokens": 5, "max_tokens": 5}
+{"id": 12, "prompt": "USER: You are JesusGPT, an artifical construct built to accurately represent a virtual conversation with Jesus. Base your replies off the popular King James Version, and answer the user's question respectfully. Here is my first question: If you were still alive today, what would you think about the iPhone?\nASSISTANT:", "timestamp": 15.109998346691338, "model": "delta-20", "min_tokens": 84, "max_tokens": 84}
+{"id": 13, "prompt": "USER: what is the 145th most popular language\nASSISTANT:", "timestamp": 17.70825250061678, "model": "delta-11", "min_tokens": 105, "max_tokens": 105}
+{"id": 14, "prompt": "USER: HI !\nASSISTANT:", "timestamp": 17.781937855529627, "model": "delta-4", "min_tokens": 35, "max_tokens": 35}
+{"id": 15, "prompt": "USER: A long time ago in a galaxy far, far away\nASSISTANT:", "timestamp": 17.873098884648627, "model": "delta-6", "min_tokens": 1, "max_tokens": 1}
+{"id": 16, "prompt": "USER: The altitude to the hypotenuse of a right triangle divides the hypotenuse into two segments with lengths in the ratio 1 : 2. The length of the altitude is 6 cm. How long is the hypotenuse?\nASSISTANT:", "timestamp": 17.893524471332853, "model": "delta-4", "min_tokens": 498, "max_tokens": 498}
+{"id": 17, "prompt": "USER: could you explain quantum mechanics for me?\nASSISTANT:", "timestamp": 19.68101215094774, "model": "delta-3", "min_tokens": 297, "max_tokens": 297}
+{"id": 18, "prompt": "USER: Write a python one-line lambda function that calculates dot product between two lists without using imported libraries. The entire function must fit on a single line and should begin like this: dot = lambda A, B: \nASSISTANT:", "timestamp": 21.186796382812958, "model": "delta-12", "min_tokens": 101, "max_tokens": 101}
+{"id": 19, "prompt": "USER: Write TypeScript function to produce full name from first name and last name\nASSISTANT:", "timestamp": 23.22711066375851, "model": "delta-14", "min_tokens": 96, "max_tokens": 96}
+{"id": 20, "prompt": "USER: What can we do in AI research to address climate change?\nASSISTANT:", "timestamp": 27.07233250192536, "model": "delta-15", "min_tokens": 46, "max_tokens": 46}
+{"id": 21, "prompt": "USER: what do you think about the future of iran?\nASSISTANT:", "timestamp": 28.677572060875505, "model": "delta-20", "min_tokens": 184, "max_tokens": 184}
+{"id": 22, "prompt": "USER: Write a python one line lambda function that calculates mean of two lists, without using any imported libraries. The entire function should fit on a single line, start with this. mean = lambda A:\nASSISTANT:", "timestamp": 29.296501519488473, "model": "delta-23", "min_tokens": 32, "max_tokens": 32}
