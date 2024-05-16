@@ -73,7 +73,7 @@ class DeltaServe(Policy):
         available_deltas: list = None,
         most_wanted=None,
     ) -> float:
-        if occurences is None:
+        if occurences is None and most_wanted is None:
             # fall back to fcfs
             return now - seq_group.metrics.arrival_time
         if available_deltas is None:
@@ -89,9 +89,9 @@ class DeltaServe(Policy):
         else:
             most_wanted_bonus = 0
         # available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
-        logger.info("[scheduler]: most wanted bonus: ", most_wanted_bonus)
+        logger.info(f"[scheduler]: most wanted bonus: {most_wanted_bonus} ")
         logger.info(
-            "[scheduler]: fcfs priority: ", now - seq_group.metrics.arrival_time
+            f"[scheduler]: priority: {now - seq_group.metrics.arrival_time}"
         )
         return now - seq_group.metrics.arrival_time + most_wanted_bonus
 
