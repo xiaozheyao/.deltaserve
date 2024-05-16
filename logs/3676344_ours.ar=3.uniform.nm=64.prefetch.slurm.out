@@ -1482,3 +1482,4 @@ INFO 05-17 05:22:01 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg gen
 INFO 05-17 05:22:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 6.0 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 35 reqs, GPU KV cache usage: 4.4%, CPU KV cache usage: 0.0%
 INFO:     ::1:54326 - "POST /v1/completions HTTP/1.1" 200 OK
 INFO:     ::1:54426 - "POST /v1/completions HTTP/1.1" 200 OK
+                                                                                                                                                                                                                                  
