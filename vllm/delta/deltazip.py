@@ -173,9 +173,11 @@ def apply_delta_uncompressed(
     """
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        inp = x[indices == id]
-        output = F.linear(inp, delta_weights[id])
-        base_output[indices == id] += output
+        with torch.cuda.stream(torch.cuda.Stream()):
+            inp = x[indices == id]
+            output = F.linear(inp, delta_weights[id])
+            base_output[indices == id] += output
+    torch.cuda.synchronize()
     return base_output
 
 
@@ -200,8 +202,10 @@ def apply_delta_embed(
     """
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        idx_mask = indices == id
-        inp = x[idx_mask]
-        output = F.embedding(inp, delta_weights[id])
-        base_output[idx_mask] += output
+        with torch.cuda.stream(torch.cuda.Stream()):
+            idx_mask = indices == id
+            inp = x[idx_mask]
+            output = F.embedding(inp, delta_weights[id])
+            base_output[idx_mask] += output
+    torch.cuda.synchronize()
     return base_output
