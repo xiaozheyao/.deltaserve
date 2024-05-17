@@ -13,11 +13,18 @@ def plot(args):
     metadata, data = parse_data(args.input)
     title = get_title(metadata)
     filename = args.input.split("/")[-1].removesuffix(".jsonl")
-    except_e2e = [x for x in data if x["type"] not in ["E2E Latency", "TTFT"]]
+    except_e2e = [x for x in data if x["type"] not in ["E2E Latency", "TTFT", "Arrival", "Finish"]]
     e2e_latency = [x for x in data if x["type"] == "E2E Latency"]
     df = pd.DataFrame(except_e2e)
     e2e_df = pd.DataFrame(e2e_latency)
+    # sort df by arrival time
+    e2e_df = e2e_df.sort_values(by="arrival_time")
+    df = df.sort_values(by="arrival_time")
     df["Time Spent On"] = df["type"]
+    # rewrite id
+    # map arrival_time to id, in ascending order
+    id_map = {v: i for i, v in enumerate(e2e_df["id"])}
+    df["id"] = df["id"].map(id_map)
     fig = px.bar(
         df,
         x="id",
@@ -26,15 +33,6 @@ def plot(args):
         title=title,
         color_discrete_sequence=color_palette["general"],
     )
-    # fig.add_trace(
-    #     go.Scatter(
-    #         x=e2e_df.id,
-    #         y=e2e_df.time,
-    #         mode="lines",
-    #         name="E2E Latency",
-    #     )
-    # )
-    # set title font
     fig.update_yaxes(title_text="Time (s)")
     fig.update_xaxes(title_text="Request ID")
     fig.update_layout(title_x=0.5)

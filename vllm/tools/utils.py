@@ -6,7 +6,7 @@ color_palette = {
         "#90a0c8",
         "#f19e7b",
         "#72ba9d",
-        "#bfc8c9" 
+        "#bfc8c9",
         "#f9daad",
         "#fbe9d8",
     ]
@@ -124,6 +124,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": e2e_latency,
                 "type": "E2E Latency",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -132,6 +133,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": first_token_latency,
                 "type": "TTFT",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -140,6 +142,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": gpu_loading_time + cpu_loading_time,
                 "type": "Loading",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -148,6 +151,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": inference_time,
                 "type": "Inference",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -156,6 +160,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": queuing_time,
                 "type": "Queueing",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -164,6 +169,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": arrival_time,
                 "type": "Arrival",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -172,6 +178,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": finish_time,
                 "type": "Finish",
+                "arrival_time": arrival_time,
             }
         )
     return results
@@ -201,7 +208,8 @@ def get_title(key_metadata):
             sys += "\\text{+Prefetch}"
     workload = ""
     # workload = "\\text{<>}, ".replace("<>", key_metadata["distribution"])
-    workload += f"\lambda={key_metadata['ar']}"
+    if 'ar' in key_metadata:
+        workload += f"\lambda={key_metadata['ar']}"
     if key_metadata["is_nvme"]:
         hardware = "\\text{NVMe}"
     else:

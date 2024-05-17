@@ -30,5 +30,3 @@ for dist in distributions:
                 # compute average, median and max
                 print(f"System: {system}, Distribution: {dist}, AR: {ar}")
                 print(f"MEDIAN: {sub_df_sys['time'].median():.2f}, MAX: {sub_df_sys['time'].max():.2f}, MEAN: {sub_df_sys['time'].mean():.2f}")
-                
-                
