@@ -3,7 +3,7 @@ from data_utils import prepare_df, DEFAULT_PATH
 
 df = prepare_df(DEFAULT_PATH)
 
-total_models = 65
+total_models = 33
 total_max_deltas = 24
 
 df = df[df['type'] == "E2E Latency"]
@@ -25,7 +25,7 @@ for dist in distributions:
                     sub_df_sys = sub_df_sys[sub_df_sys['max_deltas'] == 0]
                 else:
                     sub_df_sys = sub_df_sys[sub_df_sys['max_deltas'] == total_max_deltas]
-                    
+
                 # generate slo for each system
                 # compute average, median and max
                 print(f"System: {system}, Distribution: {dist}, AR: {ar}")

@@ -1,0 +1,151 @@
+import pandas as pd
+from data_utils import prepare_df, DEFAULT_PATH
+from utils import autolabel
+import matplotlib.pyplot as plt
+import seaborn as sns
+import numpy as np
+import matplotlib
+
+SAVEPATH = ".artifact/benchmarks/figures"
+
+pd.set_option("display.max_columns", 500)
+
+sns.set_style("ticks")
+font = {
+    "font.family": "Roboto",
+    "font.size": 12,
+}
+sns.set_style(font)
+paper_rc = {
+    "lines.linewidth": 3,
+    "lines.markersize": 10,
+}
+sns.set_context("paper", font_scale=2, rc=paper_rc)
+cmp = sns.color_palette("tab10")
+
+matplotlib.rcParams["pdf.fonttype"] = 42
+matplotlib.rcParams["ps.fonttype"] = 42
+
+full_df = prepare_df(DEFAULT_PATH)
+
+total_models = 33
+total_max_deltas = 24
+
+metrics = ["E2E Latency", "TTFT"]
+result_df = []
+for metric in metrics:
+    df = full_df[full_df['type'] == metric]
+    df = df[df['total_models'] == total_models]
+    # for each row, if max_deltas>0, then choose the row with max_deltas
+
+    distributions = df['distribution'].unique()
+    ars = df['ar'].unique()
+    for dist in distributions:
+        if dist != "zipf:1.5" and dist != "distinct":
+            for ar in ars:
+                sub_df = df[df['distribution'] == dist]
+                sub_df = sub_df[sub_df['ar'] == ar]
+                systems = sub_df['sys_name'].unique()
+                max_deltas = sub_df['max_deltas'].unique()
+                for system in systems:
+                    sub_df_sys = sub_df[sub_df['sys_name'] == system]
+                    if system == "Baseline-1":
+                        sub_df_sys = sub_df_sys[sub_df_sys['max_deltas'] == 0]
+                    else:
+                        sub_df_sys = sub_df_sys[sub_df_sys['max_deltas'] == total_max_deltas]
+                    result_df.append({
+                        "system": system,
+                        "distribution": dist,
+                        "ar": ar,
+                        "mean": sub_df_sys['time'].mean(),
+                        "metric": metric,
+                    })
+                    
+result_df = pd.DataFrame(result_df)
+wanted_distribution = "uniform"
+result_df = result_df[result_df['distribution'] == wanted_distribution]
+baseline_df = result_df[result_df['system'] == "Baseline-1"]
+delta_df = result_df[result_df['system'] == "+Delta"]
+
+# set index as ar and mean
+baseline_df = baseline_df.set_index(["ar", "metric"])["mean"].unstack()
+delta_df = delta_df.set_index(["ar", "metric"])["mean"].unstack()
+print(baseline_df)
+grid_params = dict(width_ratios=[1, 1])
+fig, (ax1, ax2) = plt.subplots(ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75))
+
+x = np.arange(1, 3)
+width = 0.22
+p1 = ax1.bar(
+    x - width,
+    baseline_df.loc[["3.0", "6.0", "9.0"], "mean"] * 100,
+    width,
+    label="Baseline",
+    alpha=0.8,
+    linewidth=1,
+    edgecolor="k",
+)
+p2 = ax1.bar(
+    x, df.loc[["Seren", "Kalos"], "cancel_rate_gpu"] * 100, width, label="Canceled", alpha=0.8, linewidth=1, edgecolor="k"
+)
+p3 = ax1.bar(
+    x + width, df.loc[["Seren", "Kalos"], "fail_rate_gpu"] * 100, width, label="Failed", alpha=0.8, linewidth=1, edgecolor="k"
+)
+
+p4 = ax2.bar(
+    x - width,
+    df.loc[["Seren", "Kalos"], "complete_rate_gpu_time"] * 100,
+    width,
+    label="Completed",
+    alpha=0.8,
+    linewidth=1,
+    edgecolor="k",
+)
+p5 = ax2.bar(
+    x, df.loc[["Seren", "Kalos"], "cancel_rate_gpu_time"] * 100, width, label="Canceled", alpha=0.8, linewidth=1, edgecolor="k"
+)
+p6 = ax2.bar(
+    x + width,
+    df.loc[["Seren", "Kalos"], "fail_rate_gpu_time"] * 100,
+    width,
+    label="Failed",
+    alpha=0.8,
+    linewidth=1,
+    edgecolor="k",
+)
+
+autolabel(p1, ax1)
+autolabel(p2, ax1)
+autolabel(p3, ax1)
+autolabel(p4, ax2)
+autolabel(p5, ax2)
+autolabel(p6, ax2)
+
+ax1.set_xlabel(f"(a) Job Count")
+ax1.set_ylabel(f"Fraction (%)")
+ax1.set_xticks(x)
+ax1.set_xticklabels(["Seren", "Kalos"])
+ax1.set_xlim(0.5, 2.5)
+ax1.set_ylim(0, 100)
+ax1.grid(axis="y", linestyle=":")
+
+ax2.set_xlabel(f"(b) GPU Time")
+ax2.set_ylabel(f"Fraction (%)")
+ax2.set_xticks(x)
+ax2.set_xticklabels(["Seren", "Kalos"])
+ax2.set_xlim(0.5, 2.5)
+ax2.set_ylim(0, 100)
+ax2.grid(axis="y", linestyle=":")
+
+handles, labels = ax1.get_legend_handles_labels()
+fig.legend(
+    handles=handles,
+    labels=labels,
+    ncols=5,
+    bbox_to_anchor=(0.18, 1.145),
+    loc=2,
+    #   columnspacing=1, handletextpad=0.2
+)
+
+sns.despine()
+fig.savefig(f"{SAVEPATH}/bar_job_state.pdf", bbox_inches="tight")
