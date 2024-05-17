@@ -9,7 +9,7 @@ USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 if USE_BITBLAS:
     print("Using bitblas")
     from triteia.ao.ops.linalg.select_matmul.select_bmm import (
-        ibmm as quant_select_bmm_248,
+        vectorized_ibmm as quant_select_bmm_248,
     )
 else:
     from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
