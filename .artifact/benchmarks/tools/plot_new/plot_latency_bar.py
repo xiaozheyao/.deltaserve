@@ -62,6 +62,13 @@ for metric in metrics:
                     })
                     
 result_df = pd.DataFrame(result_df)
+baseline_df = result_df[result_df['system'] == "Baseline-1"]
+# normalize to baseline
+result_df = result_df.merge(baseline_df, on=["distribution", "ar", "metric"], suffixes=("", "_baseline"))
+print(result_df)
+# calculate relative mean
+result_df['mean'] =result_df['mean'] / result_df['mean_baseline']
+
 wanted_distribution = "uniform"
 result_df = result_df[result_df['distribution'] == wanted_distribution]
 baseline_df = result_df[result_df['system'] == "Baseline-1"]
@@ -70,15 +77,17 @@ delta_df = result_df[result_df['system'] == "+Delta"]
 # set index as ar and mean
 baseline_df = baseline_df.set_index(["ar", "metric"])["mean"].unstack()
 delta_df = delta_df.set_index(["ar", "metric"])["mean"].unstack()
-print(baseline_df)
+
+
 grid_params = dict(width_ratios=[1, 1])
 fig, (ax1, ax2) = plt.subplots(ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75))
 
 x = np.arange(1, 3)
+print(x)
 width = 0.22
 p1 = ax1.bar(
     x - width,
-    baseline_df.loc[["3.0", "6.0", "9.0"], "mean"] * 100,
+    baseline_df.loc[["3.0", "9.0"], "E2E Latency"],
     width,
     label="Baseline",
     alpha=0.8,
@@ -86,55 +95,55 @@ p1 = ax1.bar(
     edgecolor="k",
 )
 p2 = ax1.bar(
-    x, df.loc[["Seren", "Kalos"], "cancel_rate_gpu"] * 100, width, label="Canceled", alpha=0.8, linewidth=1, edgecolor="k"
+    x, delta_df.loc[["3.0", "9.0"], "E2E Latency"], width, label="+Delta", alpha=0.8, linewidth=1, edgecolor="k"
 )
-p3 = ax1.bar(
-    x + width, df.loc[["Seren", "Kalos"], "fail_rate_gpu"] * 100, width, label="Failed", alpha=0.8, linewidth=1, edgecolor="k"
-)
+# p3 = ax1.bar(
+#     x + width, df.loc[["Seren", "Kalos"], "fail_rate_gpu"] * 100, width, label="Failed", alpha=0.8, linewidth=1, edgecolor="k"
+# )
 
 p4 = ax2.bar(
     x - width,
-    df.loc[["Seren", "Kalos"], "complete_rate_gpu_time"] * 100,
+    baseline_df.loc[["3.0", "9.0"], "TTFT"],
     width,
-    label="Completed",
+    label="+Delta",
     alpha=0.8,
     linewidth=1,
     edgecolor="k",
 )
 p5 = ax2.bar(
-    x, df.loc[["Seren", "Kalos"], "cancel_rate_gpu_time"] * 100, width, label="Canceled", alpha=0.8, linewidth=1, edgecolor="k"
+    x, delta_df.loc[["3.0", "9.0"], "TTFT"], width, label="+Delta", alpha=0.8, linewidth=1, edgecolor="k"
 )
-p6 = ax2.bar(
-    x + width,
-    df.loc[["Seren", "Kalos"], "fail_rate_gpu_time"] * 100,
-    width,
-    label="Failed",
-    alpha=0.8,
-    linewidth=1,
-    edgecolor="k",
-)
+# p6 = ax2.bar(
+#     x + width,
+#     df.loc[["Seren", "Kalos"], "fail_rate_gpu_time"] * 100,
+#     width,
+#     label="Failed",
+#     alpha=0.8,
+#     linewidth=1,
+#     edgecolor="k",
+# )
 
 autolabel(p1, ax1)
 autolabel(p2, ax1)
-autolabel(p3, ax1)
+# autolabel(p3, ax1)
 autolabel(p4, ax2)
 autolabel(p5, ax2)
-autolabel(p6, ax2)
+# autolabel(p6, ax2)
 
 ax1.set_xlabel(f"(a) Job Count")
 ax1.set_ylabel(f"Fraction (%)")
 ax1.set_xticks(x)
-ax1.set_xticklabels(["Seren", "Kalos"])
+ax1.set_xticklabels(["3", "9"])
 ax1.set_xlim(0.5, 2.5)
-ax1.set_ylim(0, 100)
+# ax1.set_ylim(0, 100)
 ax1.grid(axis="y", linestyle=":")
 
 ax2.set_xlabel(f"(b) GPU Time")
 ax2.set_ylabel(f"Fraction (%)")
 ax2.set_xticks(x)
-ax2.set_xticklabels(["Seren", "Kalos"])
+ax2.set_xticklabels(["3", "9"])
 ax2.set_xlim(0.5, 2.5)
-ax2.set_ylim(0, 100)
+# ax2.set_ylim(0, 100)
 ax2.grid(axis="y", linestyle=":")
 
 handles, labels = ax1.get_legend_handles_labels()
