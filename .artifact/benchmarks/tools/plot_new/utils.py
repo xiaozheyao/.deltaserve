@@ -77,7 +77,5 @@ def calculate_sum_cdf_customized_xaxis(df: pd.DataFrame, x_axis: List, key: str,
         data["new"] = data[key]
     data.dropna(inplace=True)
     sum = data["new"].sum()
-
     y = [data[data[key] <= x]["new"].sum() / sum * 100 for x in x_axis]
-
     return y

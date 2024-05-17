@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from vllm.tools.utils import parse_data, get_short_system_name
 
-DEFAULT_PATH=".artifact/benchmarks/results/pjlab/ready"
+DEFAULT_PATH=".artifact/benchmarks/results/pjlab/ready2"
 
 import os
 def walk_through_files(path, file_extension='.jsonl'):

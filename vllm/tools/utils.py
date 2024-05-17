@@ -116,6 +116,8 @@ def _parse_data(data):
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
+        arrival_time = metric["arrival_time"]
+        finish_time = metric["finished_time"]
         results.append(
             {
                 "id": id,
@@ -154,6 +156,22 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": queuing_time,
                 "type": "Queueing",
+            }
+        )
+        results.append(
+            {
+                "id": id,
+                "model": x["response"]["model"],
+                "time": arrival_time,
+                "type": "Arrival",
+            }
+        )
+        results.append(
+            {
+                "id": id,
+                "model": x["response"]["model"],
+                "time": finish_time,
+                "type": "Finish",
             }
         )
     return results
