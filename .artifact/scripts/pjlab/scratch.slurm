@@ -44,7 +44,7 @@ apptainer run --nv \
     --workdir /vllm \
     /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif \
     ls /vllm
-    
+
 apptainer shell --nv \
     --home /mnt/petrelfs/huqinghao/xzyao/:/home/xiayao \
     --bind /mnt/petrelfs/huqinghao/xzyao/code/vllm:/vllm \
