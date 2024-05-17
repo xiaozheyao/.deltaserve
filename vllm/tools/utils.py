@@ -6,7 +6,8 @@ color_palette = {
         "#90a0c8",
         "#f19e7b",
         "#72ba9d",
-        "#bfc8c9" "#f9daad",
+        "#bfc8c9" 
+        "#f9daad",
         "#fbe9d8",
     ]
 }
@@ -24,7 +25,8 @@ def get_system_name(sys):
     return "Unknown"
 
 
-system_color_mapping = {"Baseline-1": "#90a0c8", "Ours": "#f19e7b", "Ours+": "#72ba9d"}
+system_color_mapping = {
+    "Baseline-1": "#90a0c8", "Ours": "#f19e7b", "Ours+": "#72ba9d"}
 
 
 def parse_annotations(annotations: str):
@@ -49,6 +51,11 @@ def extract_key_metadata(metadata):
     is_swap = len(metadata["sys_info"]["swap_modules"]) > 0
     is_delta = len(metadata["sys_info"]["delta_modules"]) > 0
     total_models = len(metadata["sys_info"]["delta_modules"]) + len(metadata['sys_info']['swap_modules'])
+    max_deltas = metadata["sys_info"]['max_deltas']
+    max_swaps = metadata["sys_info"]['max_swap_slots']
+    max_cpu_swaps = metadata["sys_info"]["max_cpu_models"]
+    max_cpu_deltas = metadata["sys_info"]["max_cpu_deltas"]
+    
     if is_delta:
         total_models = total_models + 1
     enable_prefetch = True
@@ -80,6 +87,10 @@ def extract_key_metadata(metadata):
 
     workload.update(
         {
+            "max_deltas": max_deltas,
+            "max_swaps": max_swaps,
+            "max_cpu_swaps": max_cpu_swaps,
+            "max_cpu_deltas": max_cpu_deltas,
             "bitwidth": bitwidth,
             "tp_size": tp_size,
             "is_swap": is_swap,

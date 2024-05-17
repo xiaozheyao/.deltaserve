@@ -56,7 +56,7 @@ apptainer shell --nv \
     --env BITBLAS_TARGET=nvidia/nvidia-a100 \
     --env RAY_DEDUP_LOGS=0 \
     --workdir /vllm \
-    /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif
+    /mnt/petrelfs/huqinghao/xzyao/images/vllm-0.4.1.sif
 
 
 python3 vllm/tools/optimize_io_bitblas.py --input .idea/models/llama2-chat-70b.4b75s128g-bitblas-unopt-1 --tp-size 8
