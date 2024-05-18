@@ -11,12 +11,10 @@ def apply_swap_embed(
 ):
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        with torch.cuda.stream(torch.cuda.Stream()):
-            idx_mask = indices == id
-            inp = x[idx_mask]
-            output = F.embedding(inp, packed_weights[id])
-            outputs[idx_mask] = output
-    torch.cuda.synchronize()
+        idx_mask = indices == id
+        inp = x[idx_mask]
+        output = F.embedding(inp, packed_weights[id])
+        outputs[idx_mask] = output
     return outputs
 
 
@@ -30,12 +28,10 @@ def apply_swap_slice(
 ):
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        with torch.cuda.stream(torch.cuda.Stream()):
-            idx_mask = indices == id
-            inp = input[idx_mask]
-            output_slice = F.linear(inp, weight[id])
-            output[idx_mask, y_offset : y_offset + y_slice_size] += output_slice
-    torch.cuda.synchronize()
+        idx_mask = indices == id
+        inp = input[idx_mask]
+        output_slice = F.linear(inp, weight[id])
+        output[idx_mask, y_offset : y_offset + y_slice_size] += output_slice
     return output
 
 
@@ -71,14 +67,10 @@ def apply_swap(
 ):
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        with torch.cuda.stream(torch.cuda.Stream()):
-            idx_mask = indices == id
-            inp = x[idx_mask]
-            # (2048, 2048) * (4096, 2048).T
-            # (2048, 4096)
-            output = F.linear(inp, stacked_weights[id])
-            outputs[idx_mask] += output
-    torch.cuda.synchronize()
+        idx_mask = indices == id
+        inp = x[idx_mask]
+        output = F.linear(inp, stacked_weights[id])
+        outputs[idx_mask] += output
     return outputs
 
 
@@ -90,9 +82,7 @@ def apply_swap_logits(
 ):
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        with torch.cuda.stream(torch.cuda.Stream()):
-            inp = x[indices == id]
-            output = F.linear(inp, swap_weights[id])
-            base_output[indices == id] += output
-    torch.cuda.synchronize()
+        inp = x[indices == id]
+        output = F.linear(inp, swap_weights[id])
+        base_output[indices == id] += output
     return base_output

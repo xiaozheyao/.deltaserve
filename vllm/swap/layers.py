@@ -107,7 +107,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.device = self.base_layer.weight.device
 
     def reset_pack(self, index: int):
-        self.packed_weights[index] = None
+        self.packed_weights[index] = 0
 
     def create_packed_weights(
         self, max_packed: int, swap_config: SwapConfig, model_config: PretrainedConfig
