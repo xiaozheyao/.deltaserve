@@ -1,30 +1,13 @@
 import pandas as pd
 from data_utils import prepare_df, DEFAULT_PATH
-from utils import autolabel
+from utils import autolabel, set_matplotlib_style
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import matplotlib
 
 SAVEPATH = ".artifact/benchmarks/figures"
-
-pd.set_option("display.max_columns", 500)
-
-sns.set_style("ticks")
-font = {
-    "font.family": "Roboto",
-    "font.size": 12,
-}
-sns.set_style(font)
-paper_rc = {
-    "lines.linewidth": 3,
-    "lines.markersize": 10,
-}
-sns.set_context("paper", font_scale=2, rc=paper_rc)
-cmp = sns.color_palette("tab10")
-
-matplotlib.rcParams["pdf.fonttype"] = 42
-matplotlib.rcParams["ps.fonttype"] = 42
+set_matplotlib_style()
 
 full_df = prepare_df(DEFAULT_PATH)
 

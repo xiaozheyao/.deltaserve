@@ -183,12 +183,42 @@ def _parse_data(data):
         )
     return results
 
-def parse_data(input_file):
+def _parse_data_order(data):
+    results = []
+    for id, x in enumerate(data):
+        metric = x["response"]["metrics"][0]
+        e2e_latency = metric["finished_time"] - metric["arrival_time"]
+        first_token_latency = metric["first_token_time"] - metric["arrival_time"]
+        queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
+        gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
+        cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
+        inference_time = metric["finished_time"] - metric["gpu_loading_time"]
+        arrival_time = metric["arrival_time"]
+        finish_time = metric["finished_time"]
+        
+        results.append({
+            "id": id,
+            "arrival": arrival_time,
+            "queueing_start": arrival_time,
+            "queueing_end": metric["first_scheduled_time"],
+            "loading_start": metric["first_scheduled_time"],
+            "loading_end": metric["gpu_loading_time"],
+            "first_token_start": metric["gpu_loading_time"],
+            "first_token_end": metric["first_token_time"],
+            "inference_start": metric["first_token_time"],
+            "inference_end": metric["finished_time"],
+        })
+    return results
+
+def parse_data(input_file, order=False):
     with open(input_file, "r") as fp:
         data = [json.loads(line) for line in fp]
     metadata = data.pop(0)
     key_metadata = extract_key_metadata(metadata)
-    results = _parse_data(data)
+    if order:
+        results = _parse_data_order(data)
+    else:
+        results = _parse_data(data)
     return key_metadata, results
 
 

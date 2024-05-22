@@ -312,11 +312,11 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         self.reset_pack(index)
         if weight[0] is not None:
             self.weight_stacked[0][index, :, :].copy_(
-                weight[: self.output_dim], non_blocking=ASYNC_COPY
+                weight[:self.output_dim ], non_blocking=ASYNC_COPY
             )
         if weight[1] is not None:
             self.weight_stacked[1][index, :, :].copy_(
-                weight[self.output_dim :], non_blocking=ASYNC_COPY
+                weight[self.output_dim: ], non_blocking=ASYNC_COPY
             )
 
     def apply_weights(
