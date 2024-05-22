@@ -6,7 +6,8 @@ color_palette = {
         "#90a0c8",
         "#f19e7b",
         "#72ba9d",
-        "#bfc8c9" "#f9daad",
+        "#bfc8c9",
+        "#f9daad",
         "#fbe9d8",
     ]
 }
@@ -24,7 +25,8 @@ def get_system_name(sys):
     return "Unknown"
 
 
-system_color_mapping = {"Baseline-1": "#90a0c8", "Ours": "#f19e7b", "Ours+": "#72ba9d"}
+system_color_mapping = {
+    "Baseline-1": "#90a0c8", "Ours": "#f19e7b", "Ours+": "#72ba9d"}
 
 
 def parse_annotations(annotations: str):
@@ -48,6 +50,14 @@ def extract_key_metadata(metadata):
     tp_size = metadata["sys_info"]["tensor_parallel_size"]
     is_swap = len(metadata["sys_info"]["swap_modules"]) > 0
     is_delta = len(metadata["sys_info"]["delta_modules"]) > 0
+    total_models = len(metadata["sys_info"]["delta_modules"]) + len(metadata['sys_info']['swap_modules'])
+    max_deltas = metadata["sys_info"]['max_deltas']
+    max_swaps = metadata["sys_info"]['max_swap_slots']
+    max_cpu_swaps = metadata["sys_info"]["max_cpu_models"]
+    max_cpu_deltas = metadata["sys_info"]["max_cpu_deltas"]
+    
+    if is_delta:
+        total_models = total_models + 1
     enable_prefetch = True
     bitwidth = 4
     if "enable_prefetch" in metadata["sys_info"]:
@@ -77,6 +87,10 @@ def extract_key_metadata(metadata):
 
     workload.update(
         {
+            "max_deltas": max_deltas,
+            "max_swaps": max_swaps,
+            "max_cpu_swaps": max_cpu_swaps,
+            "max_cpu_deltas": max_cpu_deltas,
             "bitwidth": bitwidth,
             "tp_size": tp_size,
             "is_swap": is_swap,
@@ -86,6 +100,7 @@ def extract_key_metadata(metadata):
             "is_nvme": is_nvme,
             "enable_prefetch": enable_prefetch,
             "policy": policy,
+            "total_models": total_models,
         }
     )
     return workload
@@ -101,12 +116,15 @@ def _parse_data(data):
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
+        arrival_time = metric["arrival_time"]
+        finish_time = metric["finished_time"]
         results.append(
             {
                 "id": id,
                 "model": x["response"]["model"],
                 "time": e2e_latency,
                 "type": "E2E Latency",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -115,6 +133,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": first_token_latency,
                 "type": "TTFT",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -123,6 +142,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": gpu_loading_time + cpu_loading_time,
                 "type": "Loading",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -131,6 +151,7 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": inference_time,
                 "type": "Inference",
+                "arrival_time": arrival_time,
             }
         )
         results.append(
@@ -139,16 +160,65 @@ def _parse_data(data):
                 "model": x["response"]["model"],
                 "time": queuing_time,
                 "type": "Queueing",
+                "arrival_time": arrival_time,
+            }
+        )
+        results.append(
+            {
+                "id": id,
+                "model": x["response"]["model"],
+                "time": arrival_time,
+                "type": "Arrival",
+                "arrival_time": arrival_time,
+            }
+        )
+        results.append(
+            {
+                "id": id,
+                "model": x["response"]["model"],
+                "time": finish_time,
+                "type": "Finish",
+                "arrival_time": arrival_time,
             }
         )
     return results
 
-def parse_data(input_file):
+def _parse_data_order(data):
+    results = []
+    for id, x in enumerate(data):
+        metric = x["response"]["metrics"][0]
+        e2e_latency = metric["finished_time"] - metric["arrival_time"]
+        first_token_latency = metric["first_token_time"] - metric["arrival_time"]
+        queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
+        gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
+        cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
+        inference_time = metric["finished_time"] - metric["gpu_loading_time"]
+        arrival_time = metric["arrival_time"]
+        finish_time = metric["finished_time"]
+        
+        results.append({
+            "id": id,
+            "arrival": arrival_time,
+            "queueing_start": arrival_time,
+            "queueing_end": metric["first_scheduled_time"],
+            "loading_start": metric["first_scheduled_time"],
+            "loading_end": metric["gpu_loading_time"],
+            "first_token_start": metric["gpu_loading_time"],
+            "first_token_end": metric["first_token_time"],
+            "inference_start": metric["first_token_time"],
+            "inference_end": metric["finished_time"],
+        })
+    return results
+
+def parse_data(input_file, order=False):
     with open(input_file, "r") as fp:
         data = [json.loads(line) for line in fp]
     metadata = data.pop(0)
     key_metadata = extract_key_metadata(metadata)
-    results = _parse_data(data)
+    if order:
+        results = _parse_data_order(data)
+    else:
+        results = _parse_data(data)
     return key_metadata, results
 
 
@@ -168,7 +238,8 @@ def get_title(key_metadata):
             sys += "\\text{+Prefetch}"
     workload = ""
     # workload = "\\text{<>}, ".replace("<>", key_metadata["distribution"])
-    workload += f"\lambda={key_metadata['ar']}"
+    if 'ar' in key_metadata:
+        workload += f"\lambda={key_metadata['ar']}"
     if key_metadata["is_nvme"]:
         hardware = "\\text{NVMe}"
     else:

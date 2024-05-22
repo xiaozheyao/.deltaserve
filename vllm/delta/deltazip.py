@@ -9,7 +9,7 @@ USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 if USE_BITBLAS:
     print("Using bitblas")
     from triteia.ao.ops.linalg.select_matmul.select_bmm import (
-        ibmm as quant_select_bmm_248,
+        vectorized_ibmm as quant_select_bmm_248,
     )
 else:
     from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
@@ -173,9 +173,11 @@ def apply_delta_uncompressed(
     """
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        inp = x[indices == id]
-        output = F.linear(inp, delta_weights[id])
-        base_output[indices == id] += output
+        with torch.cuda.stream(torch.cuda.Stream()):
+            inp = x[indices == id]
+            output = F.linear(inp, delta_weights[id])
+            base_output[indices == id] += output
+    torch.cuda.synchronize()
     return base_output
 
 
@@ -200,8 +202,10 @@ def apply_delta_embed(
     """
     unique_indices = torch.unique(indices)
     for id in unique_indices:
-        idx_mask = indices == id
-        inp = x[idx_mask]
-        output = F.embedding(inp, delta_weights[id])
-        base_output[idx_mask] += output
+        with torch.cuda.stream(torch.cuda.Stream()):
+            idx_mask = indices == id
+            inp = x[idx_mask]
+            output = F.embedding(inp, delta_weights[id])
+            base_output[idx_mask] += output
+    torch.cuda.synchronize()
     return base_output

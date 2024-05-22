@@ -107,7 +107,7 @@ class VocabParallelEmbeddingWithPacked(BaseLayerWithPacked):
         self.device = self.base_layer.weight.device
 
     def reset_pack(self, index: int):
-        self.packed_weights[index] = None
+        self.packed_weights[index] = 0
 
     def create_packed_weights(
         self, max_packed: int, swap_config: SwapConfig, model_config: PretrainedConfig
@@ -312,11 +312,11 @@ class MergedColumnParallelLinearWithPacked(ColumnParallelLinearWithPacked):
         self.reset_pack(index)
         if weight[0] is not None:
             self.weight_stacked[0][index, :, :].copy_(
-                weight[: self.output_dim], non_blocking=ASYNC_COPY
+                weight[:self.output_dim ], non_blocking=ASYNC_COPY
             )
         if weight[1] is not None:
             self.weight_stacked[1][index, :, :].copy_(
-                weight[self.output_dim :], non_blocking=ASYNC_COPY
+                weight[self.output_dim: ], non_blocking=ASYNC_COPY
             )
 
     def apply_weights(

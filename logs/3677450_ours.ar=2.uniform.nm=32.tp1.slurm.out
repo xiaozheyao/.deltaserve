@@ -1,0 +1,90 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-05-18 01:28:18,541 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-05-18 01:28:18,541 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-05-18 01:28:18,541 - INFO - NumExpr defaulting to 8 threads.
+2024-05-18 01:28:20,152	INFO scripts.py:1182 -- Did not find any active Ray processes.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ac6d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ad450>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-18 01:28:35 api_server.py:191] vLLM API server version 0.3.3
+INFO 05-18 01:28:35 api_server.py:192] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[Delta(name='delta-1', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-1'), Delta(name='delta-2', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-2'), Delta(name='delta-3', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-3'), Delta(name='delta-4', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-4'), Delta(name='delta-5', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-5'), Delta(name='delta-6', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-6'), Delta(name='delta-7', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-7'), Delta(name='delta-8', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-8'), Delta(name='delta-9', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-9'), Delta(name='delta-10', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-10'), Delta(name='delta-11', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-11'), Delta(name='delta-12', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-12'), Delta(name='delta-13', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-13'), Delta(name='delta-14', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-14'), Delta(name='delta-15', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-15'), Delta(name='delta-16', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-16'), Delta(name='delta-17', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-17'), Delta(name='delta-18', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-18'), Delta(name='delta-19', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-19'), Delta(name='delta-20', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-20'), Delta(name='delta-21', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-21'), Delta(name='delta-22', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-22'), Delta(name='delta-23', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-23'), Delta(name='delta-24', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-24'), Delta(name='delta-25', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-25'), Delta(name='delta-26', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-26'), Delta(name='delta-27', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-27'), Delta(name='delta-28', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-28'), Delta(name='delta-29', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-29'), Delta(name='delta-30', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-30'), Delta(name='delta-31', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-31'), Delta(name='delta-32', local_path='/vllm/.idea/models/13b/lmsys.vicuna-13b-v1.5.4b75s128g-32')], swap_modules=[], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=1, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=True, max_deltas=24, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=False, scheduler_policy='fcfs', max_swap_slots=1, max_cpu_models=4, enable_swap=False, engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+INFO 05-18 01:28:35 llm_engine.py:90] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=DeltaConfig(max_deltas=24, max_bitwidth=4, delta_dtype=torch.int8, max_cpu_deltas=32, delta_extra_vocab_size=0, pack_factor=Fraction(2, 1), kernel=<QuantKernel.TRITON: 'triton'>), swap_config=None, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=1, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+INFO 05-18 01:28:35 llm_engine.py:243] ignored verifying delta_config
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4add20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ad150>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ac880>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ae5f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4aeec0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4af790>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ae9e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ae110>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ac3d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ad390>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d1500a0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4afb20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ad3f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Using bitblas
+WARNING 05-18 01:30:45 models.py:48] Using bitblas delta modules
+INFO 05-18 01:30:45 selector.py:16] Using FlashAttention backend.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ac370>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 05-18 01:30:58 model_runner.py:161] Loading model weights took 24.2840 GB
+INFO 05-18 01:30:58 worker_manager.py:297] Starting prefetching thread
+Traceback (most recent call last):
+  File "/vllm/vllm/entrypoints/openai/api_server.py", line 200, in <module>
+    engine = AsyncLLMEngine.from_engine_args(engine_args)
+  File "/vllm/vllm/engine/async_llm_engine.py", line 394, in from_engine_args
+    engine = cls(
+  File "/vllm/vllm/engine/async_llm_engine.py", line 353, in __init__
+    self.engine = self._init_engine(*args, **kwargs)
+  File "/vllm/vllm/engine/async_llm_engine.py", line 483, in _init_engine
+    return engine_class(*args, **kwargs)
+  File "/vllm/vllm/engine/llm_engine.py", line 131, in __init__
+    self.model_executor = executor_class(
+  File "/vllm/vllm/executor/gpu_executor.py", line 51, in __init__
+    self._init_worker()
+  File "/vllm/vllm/executor/gpu_executor.py", line 82, in _init_worker
+    self.driver_worker.load_model()
+  File "/vllm/vllm/worker/worker.py", line 129, in load_model
+    self.model_runner.load_model()
+  File "/vllm/vllm/worker/model_runner.py", line 210, in load_model
+    self.model = self.delta_manager.create_delta_manager(self.model)
+  File "/vllm/vllm/delta/worker_manager.py", line 299, in create_delta_manager
+    delta_manager = create_delta_manager(
+  File "/vllm/vllm/delta/models.py", line 689, in create_delta_manager
+    delta_manager = delta_manager_cls(
+  File "/vllm/vllm/delta/models.py", line 631, in __init__
+    super().__init__(
+  File "/vllm/vllm/delta/models.py", line 376, in __init__
+    self._create_delta_modules()
+  File "/vllm/vllm/delta/models.py", line 533, in _create_delta_modules
+    from_layer(
+  File "/vllm/vllm/delta/layers_bitblas.py", line 999, in from_layer
+    ret.create_delta_weights(max_deltas, delta_config, model_config)
+  File "/vllm/vllm/delta/layers_bitblas.py", line 748, in create_delta_weights
+    self.qweight_stacked = torch.zeros(
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 300.00 MiB. GPU 0 has a total capacty of 79.33 GiB of which 189.81 MiB is free. Including non-PyTorch memory, this process has 79.13 GiB memory in use. Of the allocated memory 78.50 GiB is allocated by PyTorch, and 5.52 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ae140>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4af310>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4aea10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f958d4ae800>: Failed to establish a new connection: [Errno 111] Connection refused'))
+slurmstepd: error: *** JOB 3677450 ON HOST-10-140-60-2 CANCELLED AT 2024-05-18T01:31:32 ***

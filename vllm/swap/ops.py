@@ -69,8 +69,6 @@ def apply_swap(
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
-        # (2048, 2048) * (4096, 2048).T
-        # (2048, 4096)
         output = F.linear(inp, stacked_weights[id])
         outputs[idx_mask] += output
     return outputs
