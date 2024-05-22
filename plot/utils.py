@@ -264,6 +264,28 @@ def get_sys_name(key_metadata):
     return f"${sys}, {hardware}$"
 
 
+def get_sys_name_wo_format(key_metadata):
+    sys = "Unknown"
+    hardware = "Unknown"
+    if key_metadata["is_swap"]:
+        sys = "vLLM"
+    if key_metadata["is_delta"]:
+        sys = "DeltaServe"
+        sys += "+" + str(key_metadata["bitwidth"]) + "bit"
+        if key_metadata["is_unoptimized_delta"]:
+            pass
+        if key_metadata["is_delta"] and not key_metadata["is_unoptimized_delta"]:
+            sys += "+I/O"
+        if key_metadata["enable_prefetch"]:
+            sys += "+Prefetch"
+    if key_metadata["is_nvme"]:
+        hardware = "NVMe"
+    else:
+        hardware = "NFS"
+    # return f"${sys}, {hardware}$"
+    return sys
+
+
 def get_short_system_name(key_metadata):
     if key_metadata["is_swap"]:
         return "Baseline-1", 0
