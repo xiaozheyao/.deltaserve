@@ -38,7 +38,6 @@ class PreemptionMode(enum.Enum):
 
 
 class SchedulerOutputs:
-
     def __init__(
         self,
         scheduled_seq_groups: Iterable[SequenceGroup],

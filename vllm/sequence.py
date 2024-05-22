@@ -437,12 +437,10 @@ class SequenceGroup:
             self.metrics.time_in_queue = time - self.metrics.arrival_time
 
     def maybe_set_cpu_loading_time(self, time: Optional[float]) -> None:
-        if self.metrics.cpu_loading_time is None:
-            self.metrics.cpu_loading_time = time
+        self.metrics.cpu_loading_time = time
 
     def maybe_set_gpu_loading_time(self, time: Optional[float]) -> None:
-        if self.metrics.gpu_loading_time is None:
-            self.metrics.gpu_loading_time = time
+        self.metrics.gpu_loading_time = time
 
     def set_finished_time(self, time: Optional[float]) -> None:
         """Sets the finished time for Request level timings."""

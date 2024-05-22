@@ -16,6 +16,7 @@ def plot(args):
     min_arrival = df["arrival"].min()
     df.loc[:, df.columns != 'id'] -= min_arrival
     # select df where type is not in Arrival and Finish
+    print(df)
     df = df.sort_values(by="arrival")
     # rewrite id in ascending order
     id_map = {v: i for i, v in enumerate(df["id"].unique())}
@@ -28,8 +29,9 @@ def plot(args):
     type_colors = {
         k: v for k, v in zip(types, cmp)
     }
-    print(df)
+
     for index, row in df.iterrows():
+        print(row)
         plt.barh(
             y=row['id'],
             width=row['queueing_end'] - row['queueing_start'],
@@ -51,7 +53,7 @@ def plot(args):
         plt.barh(
             y=row['id'],
             width=row['inference_end'] - row['inference_start'],
-            left=row['first_token_end'],
+            left=row['inference_start'],
             color=type_colors['Inference']
         )
     plt.title("Time Breakdown",fontsize=15)
