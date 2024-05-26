@@ -31,32 +31,34 @@ full_df = prepare_df(DEFAULT_PATH)
 total_models = 33
 total_max_deltas = 24
 wanted_distribution = "azure"
-wanted_columns = ['Arrival', 'Finish']
-df = full_df[full_df['total_models'] == total_models]
+wanted_columns = ["Arrival", "Finish"]
+df = full_df[full_df["total_models"] == total_models]
 
-distributions = df['distribution'].unique()
-df = df[df['distribution'] == wanted_distribution]
-systems = df['sys_name'].unique()
-ars = df['ar'].unique()
+distributions = df["distribution"].unique()
+df = df[df["distribution"] == wanted_distribution]
+systems = df["sys_name"].unique()
+ars = df["ar"].unique()
 
 print(ars)
 for system in systems:
     for ar in ars:
-        sub_df = df[df['ar'] == ar]
-        sub_df = sub_df[sub_df['sys_name'] == system]
-        max_deltas = sub_df['max_deltas'].unique()
+        sub_df = df[df["ar"] == ar]
+        sub_df = sub_df[sub_df["sys_name"] == system]
+        max_deltas = sub_df["max_deltas"].unique()
         if system == "Baseline-1":
-            sub_df = sub_df[sub_df['max_deltas'] == 0]
+            sub_df = sub_df[sub_df["max_deltas"] == 0]
         else:
-            sub_df = sub_df[sub_df['max_deltas'] == total_max_deltas]
+            sub_df = sub_df[sub_df["max_deltas"] == total_max_deltas]
         print(f"System: {system}")
-        sub_df = sub_df[sub_df['type'].isin(wanted_columns)]
+        sub_df = sub_df[sub_df["type"].isin(wanted_columns)]
         # minimal arrival time
-        min_arrival = sub_df[sub_df['type'] == 'Arrival']['time'].min()
-        max_finish = sub_df[sub_df['type'] == 'Finish']['time'].max()
+        min_arrival = sub_df[sub_df["type"] == "Arrival"]["time"].min()
+        max_finish = sub_df[sub_df["type"] == "Finish"]["time"].max()
         total_span = max_finish - min_arrival
         total_requests = len(sub_df) // 2
-        print(f"AR: {ar}, Total Requests: {total_requests}, Total Span: {total_span:.2f}, Throughput: {100 * total_requests / total_span:.2f}")
+        print(
+            f"AR: {ar}, Total Requests: {total_requests}, Total Span: {total_span:.2f}, Throughput: {100 * total_requests / total_span:.2f}"
+        )
 
 # result_df = pd.DataFrame(result_df)
 # baseline_df = result_df[result_df['system'] == "Baseline-1"]

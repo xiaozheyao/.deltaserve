@@ -12,6 +12,7 @@ class DeltaLayerWeights:
         qweight: Optional[torch.Tensor] = None,
         qzeros: Optional[torch.Tensor] = None,
         scales: Optional[torch.Tensor] = None,
+        meta: Optional[torch.Tensor] = None,
         g_idx: Optional[torch.Tensor] = None,
         compress_config: Optional[CompressionConfig] = None,
         weight: Optional[torch.Tensor] = None,
@@ -27,6 +28,7 @@ class DeltaLayerWeights:
         self.module_name = module_name
         self.config = compress_config
         self.qweight = qweight
+        self.meta = meta
         self.qzeros = qzeros
         self.scales = scales
         self.g_idx = g_idx
@@ -42,6 +44,7 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         qweight: List[torch.Tensor],
         qzeros: List[torch.Tensor],
         scales: List[torch.Tensor],
+        meta: List[torch.Tensor],
         g_idx: List[torch.Tensor],
         compress_config: CompressionConfig,
     ) -> None:
@@ -50,6 +53,7 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
             qweight=qweight,
             qzeros=qzeros,
             scales=scales,
+            meta=meta,
             g_idx=g_idx,
             compress_config=compress_config,
         )

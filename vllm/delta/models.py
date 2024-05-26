@@ -35,10 +35,19 @@ _GLOBAL_DELTA_ID = 0
 use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 use_triteia = os.environ.get("USE_TRITEIA", "0") == "1"
+use_marlin = os.environ.get("USE_MARLIN", "0") == "1"
 
 if use_unoptimized_delta:
     logger.warning("Using unoptimized delta modules")
     from .layers_unoptimized import (
+        BaseLayerWithDelta,
+        from_layer,
+        from_layer_logits_processor,
+        DeltaMapping,
+    )
+elif use_marlin:
+    logger.info("Using marlin delta modules")
+    from .layers_marlin import (
         BaseLayerWithDelta,
         from_layer,
         from_layer_logits_processor,
@@ -173,7 +182,7 @@ class DeltaModel:
         discard_prefetching_event: threading.Event = None,
     ) -> "DeltaModel":
         use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
-        pin_memory = str(device) == "cpu" and not in_wsl()
+        use_marlin = os.environ.get("USE_MARLIN", "0") == "1"
         # get tp rank here
         tp_rank = get_tensor_model_parallel_rank()
         logger.debug(
@@ -197,6 +206,8 @@ class DeltaModel:
                     f"cannot find {os.path.join(path_or_name, model_tensor_filenames[0])}"
                 )
                 model_tensor_filenames = ["bitblas.safetensors"]
+        elif use_marlin:
+            model_tensor_filenames = ["model.safetensors"]
         else:
             model_tensor_filenames = [
                 "deltazip-compressed-remain.safetensors",
@@ -293,6 +304,14 @@ class DeltaModel:
                     scales=tensors[module + ".scales"].pin_memory(),
                     compress_config=compress_config,
                 )
+            elif use_marlin:
+                modules[module] = DeltaLayerWeights(
+                    module_name=module,
+                    qweight=tensors[module + ".qweight"].pin_memory(),
+                    scales=tensors[module + ".scales"].pin_memory(),
+                    meta=tensors[module + ".meta"].pin_memory(),
+                    compress_config=compress_config,
+                )
             else:
                 modules[module] = DeltaLayerWeights(
                     module_name=module,
@@ -303,7 +322,6 @@ class DeltaModel:
                     compress_config=compress_config,
                 )
 
-        # now handling remaining modules
         remaining_module_names = set(
             [
                 x.rsplit(".", 1)[0]
@@ -368,10 +386,10 @@ class DeltaModelManager:
             )
         self.packed_modules: Dict[str, List[str]] = {}
         self.modules: Dict[str, "BaseLayerWithDelta"] = {}
-        
+
         self._registered_deltas: Dict[int, DeltaModel] = {}
         self._active_deltas: Dict[int, None] = {}
-        
+
         self._last_mapping = None
         self._create_delta_modules()
         self.model.delta_manager = self
@@ -415,12 +433,12 @@ class DeltaModelManager:
         )
         if first_free_slot is None:
             raise ValueError("No free delta slots")
-        
+
         index, _ = first_free_slot
         self._active_deltas[delta_id] = None
         delta_model = self._registered_deltas[delta_id]
         self.delta_index_to_id[index] = delta_model.id
-        
+
         for module_name, module in self.modules.items():
             module_delta = delta_model.get_delta(module_name)
             if module_delta:

@@ -94,17 +94,17 @@ def parse_delta_compute(data):
     results = []
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
-        
+
         e2e_latency = metric["finished_time"] - metric["arrival_time"]
-        
+
         first_token_latency = metric["first_token_time"] - metric["arrival_time"]
-        
+
         queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
-        
+
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
-        
+
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
-        
+
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
         results.append(
             {
@@ -149,6 +149,7 @@ def parse_delta_compute(data):
 
     return results
 
+
 def parse_data(input_file):
     with open(input_file, "r") as fp:
         data = [json.loads(line) for line in fp]
@@ -156,6 +157,7 @@ def parse_data(input_file):
     key_metadata = extract_key_metadata(metadata)
     results = parse_delta_compute(data)
     return key_metadata, results
+
 
 def get_title(key_metadata):
     sys = "Unknown"

@@ -164,6 +164,7 @@ class SwapModel:
         logger.info(f"Disk -> CPU: Loaded in {end - start:.3f} seconds")
         return cls(id, modules)
 
+
 class SwapModelManager:
     """A manager that manages multiple SwapModels."""
 
@@ -210,10 +211,10 @@ class SwapModelManager:
             )
         self.packed_modules: Dict[str, List[str]] = {}
         self.modules: Dict[str, "ModelLayerWeights"] = {}
-        
+
         self._registered_swaps: Dict[str, "SwapModel"] = {}
         self._active_swaps: Dict[int, None] = {}
-        
+
         self._last_mapping = None
         self._create_swap_modules()
         self.model.swap_manager = self
@@ -242,12 +243,12 @@ class SwapModelManager:
         )
         if first_free_slot is None:
             raise ValueError("No free swap slots")
-        
+
         index, _ = first_free_slot
         self._active_swaps[swap_id] = None
         swap_model = self._registered_swaps[swap_id]
         self.swap_index_to_id[index] = swap_model.id
-        
+
         for module_name, module in self.modules.items():
             module_swap = swap_model.get_swap(module_name)
             if module_swap:
@@ -487,6 +488,7 @@ class LRUCacheSwapModelManager(SwapModelManager):
             self._registered_swaps.remove_oldest()
             return True
         return False
+
 
 def create_swap_manager(
     model: nn.Module,

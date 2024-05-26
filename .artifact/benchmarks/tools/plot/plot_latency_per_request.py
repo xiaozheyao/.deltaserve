@@ -13,7 +13,9 @@ def plot(args):
     metadata, data = parse_data(args.input)
     title = get_title(metadata)
     filename = args.input.split("/")[-1].removesuffix(".jsonl")
-    except_e2e = [x for x in data if x["type"] not in ["E2E Latency", "TTFT", "Arrival", "Finish"]]
+    except_e2e = [
+        x for x in data if x["type"] not in ["E2E Latency", "TTFT", "Arrival", "Finish"]
+    ]
     e2e_latency = [x for x in data if x["type"] == "E2E Latency"]
     df = pd.DataFrame(except_e2e)
     e2e_df = pd.DataFrame(e2e_latency)

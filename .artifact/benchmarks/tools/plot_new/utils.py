@@ -6,6 +6,7 @@ from glob import glob
 from typing import List
 from pathlib import Path
 
+
 def set_matplotlib_style():
     pd.set_option("display.max_columns", 500)
 
@@ -84,7 +85,9 @@ def calculate_num_cdf_customized_xaxis(df: pd.DataFrame, x_axis: List, key: str)
     return y
 
 
-def calculate_sum_cdf_customized_xaxis(df: pd.DataFrame, x_axis: List, key: str, key_to_time=None):
+def calculate_sum_cdf_customized_xaxis(
+    df: pd.DataFrame, x_axis: List, key: str, key_to_time=None
+):
     """
     Calculate sum CDF with customized threshold of x-axis, y-axis: 0-100%,
     """

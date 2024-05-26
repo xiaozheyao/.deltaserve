@@ -25,8 +25,7 @@ def get_system_name(sys):
     return "Unknown"
 
 
-system_color_mapping = {
-    "Baseline-1": "#90a0c8", "Ours": "#f19e7b", "Ours+": "#72ba9d"}
+system_color_mapping = {"Baseline-1": "#90a0c8", "Ours": "#f19e7b", "Ours+": "#72ba9d"}
 
 
 def parse_annotations(annotations: str):
@@ -50,12 +49,14 @@ def extract_key_metadata(metadata):
     tp_size = metadata["sys_info"]["tensor_parallel_size"]
     is_swap = len(metadata["sys_info"]["swap_modules"]) > 0
     is_delta = len(metadata["sys_info"]["delta_modules"]) > 0
-    total_models = len(metadata["sys_info"]["delta_modules"]) + len(metadata['sys_info']['swap_modules'])
-    max_deltas = metadata["sys_info"]['max_deltas']
-    max_swaps = metadata["sys_info"]['max_swap_slots']
+    total_models = len(metadata["sys_info"]["delta_modules"]) + len(
+        metadata["sys_info"]["swap_modules"]
+    )
+    max_deltas = metadata["sys_info"]["max_deltas"]
+    max_swaps = metadata["sys_info"]["max_swap_slots"]
     max_cpu_swaps = metadata["sys_info"]["max_cpu_models"]
     max_cpu_deltas = metadata["sys_info"]["max_cpu_deltas"]
-    
+
     if is_delta:
         total_models = total_models + 1
     enable_prefetch = True
@@ -113,11 +114,11 @@ def _parse_data(data):
         e2e_latency = metric["finished_time"] - metric["arrival_time"]
         first_token_latency = metric["first_token_time"] - metric["arrival_time"]
         queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
-        
+
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
-        
+
         arrival_time = metric["arrival_time"]
         finish_time = metric["finished_time"]
         results.append(
@@ -185,27 +186,28 @@ def _parse_data(data):
         )
     return results
 
+
 def _parse_data_order(data):
     results = []
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
         arrival_time = metric["arrival_time"]
-        results.append({
-            "id": id,
-            "arrival": arrival_time,
-            "queueing_start": arrival_time,
-            "queueing_end": metric["first_scheduled_time"],
-            
-            "loading_start": metric["first_scheduled_time"],
-            "loading_end": metric["gpu_loading_time"],
-            
-            "first_token_start": metric["gpu_loading_time"],
-            "first_token_end": metric["first_token_time"],
-            
-            "inference_start": metric["first_token_time"],
-            "inference_end": metric["finished_time"],
-        })
+        results.append(
+            {
+                "id": id,
+                "arrival": arrival_time,
+                "queueing_start": arrival_time,
+                "queueing_end": metric["first_scheduled_time"],
+                "loading_start": metric["first_scheduled_time"],
+                "loading_end": metric["gpu_loading_time"],
+                "first_token_start": metric["gpu_loading_time"],
+                "first_token_end": metric["first_token_time"],
+                "inference_start": metric["first_token_time"],
+                "inference_end": metric["finished_time"],
+            }
+        )
     return results
+
 
 def parse_data(input_file, order=False):
     with open(input_file, "r") as fp:
@@ -235,7 +237,7 @@ def get_title(key_metadata):
             sys += "\\text{+Prefetch}"
     workload = ""
     # workload = "\\text{<>}, ".replace("<>", key_metadata["distribution"])
-    if 'ar' in key_metadata:
+    if "ar" in key_metadata:
         workload += f"\lambda={key_metadata['ar']}"
     if key_metadata["is_nvme"]:
         hardware = "\\text{NVMe}"

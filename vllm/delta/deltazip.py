@@ -5,11 +5,15 @@ import torch.nn.functional as F
 
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
+USE_MARLIN = os.environ.get("USE_MARLIN", "0") == "1"
 
 if USE_BITBLAS:
-    print("Using bitblas")
     from triteia.ao.ops.ibmm.ibmm_wrapper import (
         ibmm as quant_select_bmm_248,
+    )
+elif USE_MARLIN:
+    from triteia.ao.ops.ibmm.ibmm_marlin import (
+        ibmm_sparse_marlin as quant_select_bmm_248,
     )
 else:
     from triteia.ao.ops.ibmm.ibmm_wrapper import quant_select_bmm_248
@@ -23,6 +27,7 @@ def add_delta(
     scales: torch.Tensor,
     g_idx: torch.Tensor,
     indices: torch.LongTensor,
+    meta: Optional[torch.Tensor] = None,
 ):
     """
     semantics:
@@ -35,7 +40,7 @@ def add_delta(
         g_idx = g_idx.repeat(qweight.shape[0], 1)
         g_idx = g_idx.to(qweight.device)
     quant_select_bmm_248(
-        BITWIDTH, indices, y, x, qweight, qzeros, scales, g_idx, bias=None
+        BITWIDTH, indices, meta, y, x, qweight, qzeros, scales, g_idx, bias=None
     )
     return y
 
@@ -53,6 +58,7 @@ def add_delta_slice(
     y_slice_size: int,
     *,
     buffer: Optional[torch.Tensor] = None,
+    meta: Optional[torch.Tensor] = None,
 ):
     """
     semantics:
@@ -67,6 +73,7 @@ def add_delta_slice(
     quant_select_bmm_248(
         BITWIDTH,
         indices,
+        meta,
         y[:, y_offset : y_offset + y_slice_size],
         x,
         qweight,

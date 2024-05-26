@@ -10,8 +10,10 @@ from typing import Union
 
 enc = tiktoken.get_encoding("cl100k_base")
 
+
 def format_lmsys(prompt):
     return f"USER: {prompt}\nASSISTANT:"
+
 
 def generate_model_distribution(distribution, num_queries, to_eval_models):
     if distribution == "uniform":
@@ -26,6 +28,7 @@ def generate_model_distribution(distribution, num_queries, to_eval_models):
         return np.random.choice(to_eval_models, num_queries, p=probs)
     if distribution == "azure":
         import pandas as pd
+
         print("Using azure trace, loading...")
         df = pd.read_csv(
             "https://huggingface.co/datasets/xzyao/traces/resolve/main/AzureFunctionsInvocationTraceForTwoWeeksJan2021.txt"
@@ -62,15 +65,15 @@ def generate_synthetic(args):
     to_eval_models = [
         "base-model",
     ]
-    for i in range(1, args.num_models+1, 1):
+    for i in range(1, args.num_models + 1, 1):
         to_eval_models.append(f"delta-{i}")
     print("Models to evaluate:", to_eval_models)
-    
+
     poisson_ticks = PoissonProcess(args.arrival_rate).generate_arrivals(
         start=0, duration=args.duration
     )
     logger.info(f"Using Poisson arrival process, total_requests={len(poisson_ticks)}")
-    
+
     traces_data = []
     dialogs, response_tokens = get_dialogs()
     models = generate_model_distribution(
@@ -81,23 +84,23 @@ def generate_synthetic(args):
     if args.distribution == "distinct":
         for idx in range(len(models)):
             traces_data.append(
-            {
-                "id": idx,
-                "prompt": dialogs[idx],
-                "timestamp": poisson_ticks[idx],
-                "model": models[idx],
-                "min_tokens": (
-                    args.gen_tokens
-                    if args.gen_tokens != "auto"
-                    else response_tokens[idx]
-                ),
-                "max_tokens": (
-                    args.gen_tokens
-                    if args.gen_tokens != "auto"
-                    else response_tokens[idx]
-                ),
-            }
-        )
+                {
+                    "id": idx,
+                    "prompt": dialogs[idx],
+                    "timestamp": poisson_ticks[idx],
+                    "model": models[idx],
+                    "min_tokens": (
+                        args.gen_tokens
+                        if args.gen_tokens != "auto"
+                        else response_tokens[idx]
+                    ),
+                    "max_tokens": (
+                        args.gen_tokens
+                        if args.gen_tokens != "auto"
+                        else response_tokens[idx]
+                    ),
+                }
+            )
     else:
         for idx in range(len(poisson_ticks)):
             traces_data.append(
@@ -127,19 +130,21 @@ def generate_synthetic(args):
             json.dump(datum, fp)
             fp.write("\n")
 
+
 def main(args):
     generate_synthetic(args)
 
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    
+
     parser.add_argument("--distribution", type=str, default="uniform")
     parser.add_argument("--output", type=str, default="")
     parser.add_argument("--gen-tokens", default=512)
     parser.add_argument("--arrival-rate", type=float, default=0)
     parser.add_argument("--duration", type=float, default=0)
     parser.add_argument("--num-models", type=int, default=8)
-    
+
     args = parser.parse_args()
     main(args)
 

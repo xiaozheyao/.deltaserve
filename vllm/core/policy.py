@@ -6,6 +6,7 @@ from vllm.logger import init_logger
 
 logger = init_logger(__name__)
 
+
 class Policy:
     def get_priority(
         self,
@@ -62,6 +63,7 @@ class FCFS(Policy):
     ) -> float:
         priority = now - seq_group.metrics.arrival_time
         return priority
+
 
 class DeltaServe(Policy):
     def get_priority(

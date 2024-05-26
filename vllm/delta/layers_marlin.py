@@ -330,23 +330,13 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 "DeltaColumnParallelLinear2Slice requires 2 slices with "
                 "the same size."
             )
-
         self.qweight_stacked = tuple(
             torch.zeros(
                 max_deltas,
-                self.base_layer.weight.shape[0] // 2,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
-                dtype=delta_config.delta_dtype,
-                device=self.base_layer.weight.device,
-            )
-            for _ in range(n_slices)
-        )
-        self.qzeros_stacked = tuple(
-            torch.zeros(
-                max_deltas,
-                self.base_layer.weight.shape[0] // 2 // delta_config.pack_factor,
-                1,
-                dtype=delta_config.delta_dtype,
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
+                self.base_layer.weight.shape[0] * 2,
+                dtype=torch.int32,
                 device=self.base_layer.weight.device,
             )
             for _ in range(n_slices)
@@ -354,39 +344,34 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.scales_stacked = tuple(
             torch.zeros(
                 max_deltas,
-                self.base_layer.weight.shape[0] // 2,
                 1,
+                self.base_layer.weight.shape[0] // 2,
                 dtype=torch.float16,
                 device=self.base_layer.weight.device,
             )
             for _ in range(n_slices)
         )
-        self.g_idx = [
-            torch.tensor(
-                [
-                    i // self.base_layer.weight.shape[1]
-                    for i in range(self.base_layer.weight.shape[1])
-                ],
-                dtype=torch.int32,
-            ),
-            torch.tensor(
-                [
-                    i // self.base_layer.weight.shape[1]
-                    for i in range(self.base_layer.weight.shape[1])
-                ],
-                dtype=torch.int32,
-            ),
-        ]
+        self.meta_stacked = tuple(
+            torch.zeros(
+                max_deltas,
+                self.base_layer.weight.shape[0],
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor),
+                dtype=torch.int16,
+                device=self.base_layer.weight.device,
+            )
+            for _ in range(n_slices)
+        )
         self.indices: Optional[torch.Tensor] = None
         self.output_dim = self.base_layer.weight.shape[0] // 2
 
     def reset_delta(self, index: int):
         self.qweight_stacked[0][index] = 0
         self.qweight_stacked[1][index] = 0
-        self.qzeros_stacked[0][index] = 0
-        self.qzeros_stacked[1][index] = 0
         self.scales_stacked[0][index] = 0
         self.scales_stacked[1][index] = 0
+        self.meta_stacked[0][index] = 0
+        self.meta_stacked[1][index] = 0
         self.bitwidth[index] = 0
 
     def set_delta(
@@ -394,9 +379,8 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         index: int,
         bitwidth: int,
         qweight: List[torch.Tensor],
-        qzeros: List[torch.Tensor],
         scales: List[torch.Tensor],
-        g_idx: List[torch.Tensor],
+        meta: List[torch.Tensor],
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
@@ -406,35 +390,23 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             end_idx = (self.tp_rank + 1) * shard_size
 
             if qweight[0] is not None:
-                qzeros_0 = qzeros[0][
-                    start_idx // self.pack_factor : end_idx // self.pack_factor, :
-                ]
                 scales_0 = scales[0][start_idx:end_idx, :]
             if qweight[1] is not None:
-                qzeros_1 = qzeros[1][
-                    start_idx // self.pack_factor : end_idx // self.pack_factor, :
-                ]
                 scales_1 = scales[1][start_idx:end_idx, :]
         else:
-            qzeros_0 = qzeros[0]
             scales_0 = scales[0]
-            qzeros_1 = qzeros[1]
             scales_1 = scales[1]
         if qweight[0] is not None:
             self.qweight_stacked[0][index, :, :].copy_(
                 qweight[0], non_blocking=ASYNC_COPY
             )
-            self.qzeros_stacked[0][index, :, :].copy_(qzeros_0, non_blocking=ASYNC_COPY)
             self.scales_stacked[0][index, :, :].copy_(scales_0, non_blocking=ASYNC_COPY)
-            self.g_idx[0] = g_idx[0]
 
         if qweight[1] is not None:
             self.qweight_stacked[1][index, :, :].copy_(
                 qweight[1], non_blocking=ASYNC_COPY
             )
-            self.qzeros_stacked[1][index, :, :].copy_(qzeros_1, non_blocking=ASYNC_COPY)
             self.scales_stacked[1][index, :, :].copy_(scales_1, non_blocking=ASYNC_COPY)
-            self.g_idx[1] = g_idx[1]
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
@@ -491,95 +463,78 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.qweight_stacked = (
             torch.zeros(
                 max_deltas,
-                self.q_proj_shard_size,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
-                dtype=delta_config.delta_dtype,
+                self.q_proj_shard_size * 2,
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
+                dtype=torch.int32,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
-                self.kv_proj_shard_size,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
-                dtype=delta_config.delta_dtype,
+                self.kv_proj_shard_size * 2,
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
+                dtype=torch.int32,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
-                self.kv_proj_shard_size,
-                self.base_layer.weight.shape[1] // delta_config.pack_factor,
-                dtype=delta_config.delta_dtype,
-                device=self.base_layer.weight.device,
-            ),
-        )
-        self.qzeros_stacked = (
-            torch.zeros(
-                max_deltas,
-                self.q_proj_shard_size // delta_config.pack_factor,
-                1,
-                dtype=delta_config.delta_dtype,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                self.kv_proj_shard_size // delta_config.pack_factor,
-                1,
-                dtype=delta_config.delta_dtype,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                self.kv_proj_shard_size // delta_config.pack_factor,
-                1,
-                dtype=delta_config.delta_dtype,
+                self.kv_proj_shard_size * 2,
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
+                dtype=torch.int32,
                 device=self.base_layer.weight.device,
             ),
         )
         self.scales_stacked = (
             torch.zeros(
                 max_deltas,
+                1,
                 self.q_proj_shard_size,
-                1,
                 dtype=torch.float16,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
-                self.kv_proj_shard_size,
                 1,
+                self.kv_proj_shard_size,
                 dtype=torch.float16,
                 device=self.base_layer.weight.device,
             ),
             torch.zeros(
                 max_deltas,
-                self.kv_proj_shard_size,
                 1,
+                self.kv_proj_shard_size,
                 dtype=torch.float16,
                 device=self.base_layer.weight.device,
             ),
         )
-        self.g_idx_stacked = [
-            torch.tensor(
-                [
-                    i // self.base_layer.weight.shape[1]
-                    for i in range(self.base_layer.weight.shape[1])
-                ],
-                dtype=torch.int32,
+        self.meta_stacked = (
+            torch.zeros(
+                max_deltas,
+                self.q_proj_shard_size,
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor),
+                dtype=torch.int16,
+                device=self.base_layer.weight.device,
             ),
-            torch.tensor(
-                [
-                    i // self.base_layer.weight.shape[1]
-                    for i in range(self.base_layer.weight.shape[1])
-                ],
-                dtype=torch.int32,
+            torch.zeros(
+                max_deltas,
+                self.kv_proj_shard_size,
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor),
+                dtype=torch.int16,
+                device=self.base_layer.weight.device,
             ),
-            torch.tensor(
-                [
-                    i // self.base_layer.weight.shape[1]
-                    for i in range(self.base_layer.weight.shape[1])
-                ],
-                dtype=torch.int32,
+            torch.zeros(
+                max_deltas,
+                self.kv_proj_shard_size,
+                self.base_layer.weight.shape[1]
+                // (delta_config.pack_factor * delta_config.sparse_factor),
+                dtype=torch.int16,
+                device=self.base_layer.weight.device,
             ),
-        ]
+        )
         self.output_slices = (
             self.q_proj_shard_size,
             self.kv_proj_shard_size,
@@ -594,12 +549,12 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.qweight_stacked[0][index] = 0
         self.qweight_stacked[1][index] = 0
         self.qweight_stacked[2][index] = 0
-        self.qzeros_stacked[0][index] = 0
-        self.qzeros_stacked[1][index] = 0
-        self.qzeros_stacked[2][index] = 0
         self.scales_stacked[0][index] = 0
         self.scales_stacked[1][index] = 0
         self.scales_stacked[2][index] = 0
+        self.meta_stacked[0][index] = 0
+        self.meta_stacked[1][index] = 0
+        self.meta_stacked[2][index] = 0
         self.bitwidth[index] = 0
 
     def set_delta(

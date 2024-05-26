@@ -83,6 +83,7 @@ class DeltaConfig:
     max_cpu_deltas: Optional[int] = None
     delta_extra_vocab_size: int = 0
     pack_factor: Fraction = field(default=Fraction(32, 1))
+    sparse_factor: Fraction = field(default=Fraction(2, 1))
     kernel: QuantKernel = QuantKernel.TRITON
 
     def __post_init__(self):
