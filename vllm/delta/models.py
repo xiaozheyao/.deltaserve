@@ -240,51 +240,20 @@ class DeltaModel:
         tensors = {}
         start = timer()
         bitwidth = compress_config.bits
-        if compress_config.lossless != "none":
-            raise NotImplementedError("Lossless Compression support is deprecated.")
-            # lossless_compressor = LosslessCompressor(
-            #     compress_config.lossless, device_id=0
-            # )
-            # TODO(xiaozhe): fix this later...
-            metadata = None
-            with safe_open(
-                os.path.join(path_or_name, model_tensor_filenames), "numpy"
-            ) as f:
-                metadata = f.metadata()
+        logger.info(
+            f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled"
+        )
+        for mtf in model_tensor_filenames:
+            with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
                 keys = f.keys()
                 for key in keys:
+                    if discard_prefetching_event is not None:
+                        if discard_prefetching_event.is_set():
+                            logger.info("Discarding prefetching")
+                            return None
+                    if prefetch_thread_event is not None:
+                        prefetch_thread_event.wait()
                     tensors[key] = f.get_tensor(key)
-            tensor_dtypes = json.loads(metadata["dtype"])
-            tensor_shapes = json.loads(metadata["shape"])
-
-            with cp.cuda.Device(0):
-                for key in tensors.keys():
-                    tensors[key] = cp.array(tensors[key], copy=False)
-
-            tensors = lossless_compressor.decompress_state_dict(
-                tensors,
-                tensor_shapes,
-                tensor_dtypes,
-                use_bfloat16=False,
-                target_device="cuda:0",
-            )
-            del tensor_dtypes, tensor_shapes
-            del lossless_compressor
-        else:
-            logger.info(
-                f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled"
-            )
-            for mtf in model_tensor_filenames:
-                with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
-                    keys = f.keys()
-                    for key in keys:
-                        if discard_prefetching_event is not None:
-                            if discard_prefetching_event.is_set():
-                                logger.info("Discarding prefetching")
-                                return None
-                        if prefetch_thread_event is not None:
-                            prefetch_thread_event.wait()
-                        tensors[key] = f.get_tensor(key)
         modules = {}
 
         module_names = set(
@@ -451,7 +420,6 @@ class DeltaModelManager:
                         module_delta.scales,
                         module_delta.g_idx,
                         module_delta.meta,
-
                     )
                 else:
                     module.set_delta(

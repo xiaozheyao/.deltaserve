@@ -12,8 +12,8 @@ class DeltaLayerWeights:
         qweight: Optional[torch.Tensor] = None,
         qzeros: Optional[torch.Tensor] = None,
         scales: Optional[torch.Tensor] = None,
-        meta: Optional[torch.Tensor] = None,
         g_idx: Optional[torch.Tensor] = None,
+        meta: Optional[torch.Tensor] = None,
         compress_config: Optional[CompressionConfig] = None,
         weight: Optional[torch.Tensor] = None,
     ) -> None:
@@ -44,8 +44,8 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         qweight: List[torch.Tensor],
         qzeros: List[torch.Tensor],
         scales: List[torch.Tensor],
-        meta: List[torch.Tensor],
         g_idx: List[torch.Tensor],
+        meta: List[torch.Tensor],
         compress_config: CompressionConfig,
     ) -> None:
         super().__init__(
@@ -53,8 +53,8 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
             qweight=qweight,
             qzeros=qzeros,
             scales=scales,
-            meta=meta,
             g_idx=g_idx,
+            meta=meta,
             compress_config=compress_config,
         )
 
@@ -68,11 +68,12 @@ class PackedDeltaLayerWeights(DeltaLayerWeights):
         module_name = first_delta.module_name
         obj = cls(
             module_name,
-            [delta.qweight if delta is not None else None for delta in deltas],
-            [delta.qzeros if delta is not None else None for delta in deltas],
-            [delta.scales if delta is not None else None for delta in deltas],
-            [delta.g_idx if delta is not None else None for delta in deltas],
-            first_delta.config,
+            qweight=[delta.qweight if delta is not None else None for delta in deltas],
+            qzeros=[delta.qzeros if delta is not None else None for delta in deltas],
+            scales=[delta.scales if delta is not None else None for delta in deltas],
+            g_idx=[delta.g_idx if delta is not None else None for delta in deltas],
+            meta=[delta.meta if delta is not None else None for delta in deltas],
+            compress_config=first_delta.config,
         )
         return obj
 

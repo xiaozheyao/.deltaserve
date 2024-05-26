@@ -4,6 +4,7 @@ from typing import Optional, Tuple, List, Any
 import torch.nn.functional as F
 
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
+
 from triteia.ao.ops.ibmm.ibmm_marlin import (
     ibmm_sparse_marlin as quant_select_bmm_248,
 )
@@ -153,7 +154,7 @@ def apply_delta_uncompressed(
     """
     base_output = torch.zeros(
         x.shape[0], 
-        delta_weights[0].shape[1], 
+        delta_weights[0].shape[0], 
         dtype=x.dtype, 
         device=x.device,
     )
