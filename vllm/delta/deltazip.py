@@ -8,11 +8,11 @@ USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 
 if USE_BITBLAS:
     print("Using bitblas")
-    from triteia.ao.ops.linalg.select_matmul.select_bmm import (
-        vectorized_ibmm as quant_select_bmm_248,
+    from triteia.ao.ops.ibmm.ibmm_wrapper import (
+        ibmm as quant_select_bmm_248,
     )
 else:
-    from triteia.ao.ops.linalg.select_matmul.select_bmm import quant_select_bmm_248
+    from triteia.ao.ops.ibmm.ibmm_wrapper import quant_select_bmm_248
 
 
 def add_delta(
