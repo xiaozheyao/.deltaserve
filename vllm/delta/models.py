@@ -450,6 +450,8 @@ class DeltaModelManager:
                         module_delta.qzeros,
                         module_delta.scales,
                         module_delta.g_idx,
+                        module_delta.meta,
+
                     )
                 else:
                     module.set_delta(
