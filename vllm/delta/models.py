@@ -12,18 +12,16 @@ from .config import DeltaConfig, CompressionConfig
 import threading
 from .utils import (
     replace_submodule,
-    calculate_fixed_scratch_size,
-    ExLlamaV2DeviceTensors,
 )
 from timeit import default_timer as timer
 
-# from .compressor import LosslessCompressor
 import transformers
 from transformers import AutoConfig
 from vllm.logger import init_logger
-from vllm.utils import LRUCache, in_wsl, total_bytes_count
+from vllm.utils import LRUCache, total_bytes_count
 from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
+    get_tensor_model_parallel_world_size,
 )
 from safetensors import safe_open
 from .config import QuantKernel
@@ -185,6 +183,7 @@ class DeltaModel:
         use_marlin = os.environ.get("USE_MARLIN", "0") == "1"
         # get tp rank here
         tp_rank = get_tensor_model_parallel_rank()
+        tp_size = get_tensor_model_parallel_world_size()
         logger.debug(
             f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Loading DeltaModel from {path_or_name}"
         )
@@ -207,7 +206,7 @@ class DeltaModel:
                 )
                 model_tensor_filenames = ["bitblas.safetensors"]
         elif use_marlin:
-            model_tensor_filenames = ["model.safetensors"]
+            model_tensor_filenames = [f"model.tp{tp_size}.safetensors"]
         else:
             model_tensor_filenames = [
                 "deltazip-compressed-remain.safetensors",
@@ -243,71 +242,66 @@ class DeltaModel:
         logger.info(
             f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled"
         )
+        modules = {}
         for mtf in model_tensor_filenames:
             with safe_open(os.path.join(path_or_name, mtf), "torch") as f:
                 keys = f.keys()
-                for key in keys:
-                    if discard_prefetching_event is not None:
-                        if discard_prefetching_event.is_set():
-                            logger.info("Discarding prefetching")
-                            return None
-                    if prefetch_thread_event is not None:
-                        prefetch_thread_event.wait()
-                    tensors[key] = f.get_tensor(key)
-        modules = {}
-
-        module_names = set(
-            [
-                x.rsplit(".", 1)[0]
-                for x in tensors.keys()
-                if all([y not in x for y in ignore_modules])
-            ]
-        )
-
-        for module in module_names:
-            if use_bitblas:
-                modules[module] = DeltaLayerWeights(
-                    module_name=module,
-                    qweight=tensors[module + ".qweight"].pin_memory(),
-                    qzeros=tensors[module + ".zeros"].pin_memory(),
-                    scales=tensors[module + ".scales"].pin_memory(),
-                    compress_config=compress_config,
+                if discard_prefetching_event is not None:
+                    if discard_prefetching_event.is_set():
+                        logger.info("Discarding prefetching")
+                        return None
+                if prefetch_thread_event is not None:
+                    prefetch_thread_event.wait()
+                module_names = set(
+                    [
+                        x.rsplit(".", 2)[0]
+                        for x in keys
+                        if all([y not in x for y in ignore_modules])
+                    ]
                 )
-            elif use_marlin:
-                modules[module] = DeltaLayerWeights(
-                    module_name=module,
-                    qweight=tensors[module + ".qweight"].pin_memory(),
-                    scales=tensors[module + ".scales"].pin_memory(),
-                    meta=tensors[module + ".meta"].pin_memory(),
-                    compress_config=compress_config,
+                for module in module_names:
+                    if use_bitblas:
+                        modules[module] = DeltaLayerWeights(
+                            module_name=module,
+                            qweight=tensors[module + ".qweight"].pin_memory(),
+                            qzeros=tensors[module + ".zeros"].pin_memory(),
+                            scales=tensors[module + ".scales"].pin_memory(),
+                            compress_config=compress_config,
+                        )
+                    elif use_marlin:
+                        modules[module] = DeltaLayerWeights(
+                            module_name=module,
+                            qweight=f.get_tensor(f"{module}.{tp_rank}.qweight").pin_memory(),
+                            scales=f.get_tensor(f"{module}.{tp_rank}.scales").pin_memory(),
+                            meta=f.get_tensor(f"{module}.{tp_rank}.meta").pin_memory(),
+                            compress_config=compress_config,
+                        )
+                    else:
+                        modules[module] = DeltaLayerWeights(
+                            module_name=module,
+                            qweight=tensors[module + ".qweight"].pin_memory(),
+                            qzeros=tensors[module + ".qzeros"].pin_memory(),
+                            scales=tensors[module + ".scales"].pin_memory(),
+                            g_idx=tensors[module + ".g_idx"].pin_memory(),
+                            compress_config=compress_config,
+                        )
+                remaining_module_names = set(
+                    [
+                        x.rsplit(".", 2)[0]
+                        for x in keys
+                        if any([y in x for y in ignore_modules])
+                    ]
                 )
-            else:
-                modules[module] = DeltaLayerWeights(
-                    module_name=module,
-                    qweight=tensors[module + ".qweight"].pin_memory(),
-                    qzeros=tensors[module + ".qzeros"].pin_memory(),
-                    scales=tensors[module + ".scales"].pin_memory(),
-                    g_idx=tensors[module + ".g_idx"].pin_memory(),
-                    compress_config=compress_config,
-                )
-
-        remaining_module_names = set(
-            [
-                x.rsplit(".", 1)[0]
-                for x in tensors.keys()
-                if any([y in x for y in ignore_modules])
-            ]
-        )
-        for module in remaining_module_names:
-            modules[module] = DeltaLayerWeights(
-                module_name=module,
-                weight=tensors[module + ".weight"].pin_memory(),
-            )
+                for module in remaining_module_names:
+                    modules[module] = DeltaLayerWeights(
+                        module_name=module,
+                        weight=f.get_tensor(f"{module}.{tp_rank}.weight").pin_memory(),
+                    )
         end = timer()
-        total_bytes = total_bytes_count(tensors)
-        logger.info(
-            f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds"
-        )
+        # total_bytes = total_bytes_count(tensors)
+        # logger.info(
+        #     f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds"
+        # )
         del tensors
         return cls(id, bitwidth, modules)
 

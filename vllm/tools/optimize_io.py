@@ -13,7 +13,6 @@ def main(args):
         "mlp.gate_proj.qweight",
         "mlp.up_proj.qweight",
     ]
-
     row_chunking_modules = [
         "self_attn.o_proj.qweight",
         "mlp.down_proj.qweight",

@@ -50,6 +50,7 @@ def add_delta_slice(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
+    # print(f"meta.shape: {meta.shape}, y.shape: {y.shape}, x.shape: {x.shape}, scales.shape: {scales.shape}, qweight.shape: {qweight.shape}")
     quant_select_bmm_248(
         BITWIDTH,
         indices,
@@ -140,6 +141,7 @@ def apply_delta_uncompressed(
     x: torch.Tensor,
     delta_weights: torch.Tensor,
     indices: torch.Tensor,
+    base_embedding: torch.Tensor,
 ):
     """
     Applies delta to each input.
@@ -161,8 +163,12 @@ def apply_delta_uncompressed(
     unique_indices = torch.unique(indices)
     for id in unique_indices:
         inp = x[indices == id]
-        output = F.linear(inp, delta_weights[id])
-        base_output[indices == id] += output
+        if id == -1:
+            w = base_embedding
+        else:
+            w = delta_weights[id]
+        output = F.linear(inp, w)
+        base_output[indices == id] = output
     return base_output
 
 
@@ -170,6 +176,7 @@ def apply_delta_embed(
     x: torch.Tensor,
     delta_weights: List,
     indices: torch.Tensor,
+    base_weight: torch.Tensor,
 ):
     """
     Applies delta to each input.
@@ -190,5 +197,9 @@ def apply_delta_embed(
     for id in unique_indices:
         idx_mask = indices == id
         inp = x[idx_mask]
-        base_output[idx_mask] = F.embedding(inp, delta_weights[id])
+        if id == -1:
+            w = base_weight
+        else:
+            w = delta_weights[id]
+        base_output[idx_mask] = F.embedding(inp, w)
     return base_output
