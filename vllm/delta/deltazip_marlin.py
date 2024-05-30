@@ -6,7 +6,7 @@ import torch.nn.functional as F
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
 from triteia.ao.ops.ibmm.ibmm_marlin import (
-    ibmm_sparse_marlin as quant_select_bmm_248,
+    ibmm_sparse_marlin_stream as quant_select_bmm_248,
 )
 
 def add_delta(
@@ -51,17 +51,25 @@ def add_delta_slice(
         ).squeeze(0)
     """
     # print(f"meta.shape: {meta.shape}, y.shape: {y.shape}, x.shape: {x.shape}, scales.shape: {scales.shape}, qweight.shape: {qweight.shape}")
-    quant_select_bmm_248(
-        BITWIDTH,
-        indices,
-        meta,
-        y[:, y_offset : y_offset + y_slice_size],
-        x,
-        qweight,
-        scales,
-        g_idx=None,
-        bias=None,
-    )
+    try:
+        quant_select_bmm_248(
+            BITWIDTH,
+            indices,
+            meta,
+            y[:, y_offset : y_offset + y_slice_size],
+            x,
+            qweight,
+            scales,
+            g_idx=None,
+            bias=None,
+        )
+    except Exception as e:
+        print(e)
+        print(f"x.shape: {x.shape}")
+        print(f"qweight.shape: {qweight.shape}")
+        print(f"scales.shape: {scales.shape}")
+        print(f"indices.shape: {indices.shape}")
+        raise e
     return y
 
 
@@ -122,17 +130,21 @@ def apply_delta_packed_nslice(
     indices = indices.view(-1)
     offset_left = 0
     for slice_idx in range(len(output_slices)):
-        add_delta_slice(
-            output,
-            x,
-            qweight_stacked[slice_idx],
-            scales_stacked[slice_idx],
-            indices,
-            1.0,
-            offset_left,
-            output_slices[slice_idx],
-            meta=meta_stacked[slice_idx],
-        )
+        try:
+            add_delta_slice(
+                output,
+                x,
+                qweight_stacked[slice_idx],
+                scales_stacked[slice_idx],
+                indices,
+                1.0,
+                offset_left,
+                output_slices[slice_idx],
+                meta=meta_stacked[slice_idx],
+            )
+        except Exception as e:
+            print(f"qweight_stacked[slice_idx].shape: {qweight_stacked[slice_idx].shape}")
+            raise e
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
 

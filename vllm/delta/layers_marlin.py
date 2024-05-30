@@ -367,22 +367,18 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        # if self.tp_size > 1:
-        #     shard_size = self.output_dim
-        #     start_idx = self.tp_rank * shard_size
-        #     end_idx = (self.tp_rank + 1) * shard_size
-        #     if qweight[0] is not None:
-        #         scales[0] = scales[0][start_idx:end_idx, :]
-        #     if qweight[1] is not None:
-        #         scales[1] = scales[1][start_idx:end_idx, :]
-        
+        print(f"scales[0].shape: {scales[0].shape}")
+        print(f"scales[1].shape: {scales[1].shape}")
+        print(f"scales_stacked[0].shape: {self.scales_stacked[0].shape}")
+        print(f"scales_stacked[1].shape: {self.scales_stacked[1].shape}")
+        print(f"base_layer.weight.shape: {self.base_layer.weight.shape}")
         if qweight[0] is not None:
             self.qweight_stacked[0][index, :, :].copy_(
                 qweight[0], non_blocking=ASYNC_COPY
             )
             self.scales_stacked[0][index, :, :].copy_(scales[0], non_blocking=ASYNC_COPY)
             self.meta_stacked[0][index, :, :].copy_(meta[0], non_blocking=ASYNC_COPY)
-        
+
         if qweight[1] is not None:
             self.qweight_stacked[1][index, :, :].copy_(
                 qweight[1], non_blocking=ASYNC_COPY
@@ -581,9 +577,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
         )
-        # print(f"x.shape: {x.shape}, output.shape: {output.shape}")
-        # print(f"qweight_stacked[0].shape: {self.qweight_stacked[0].shape}, scales_stacked[0].shape: {self.scales_stacked[0].shape}, meta_stacked[0].shape: {self.meta_stacked[0].shape}")
-        # print(f"qweight_stacked: {self.qweight_stacked[0]}, scales_stacked: {self.scales_stacked[0]}, meta_stacked: {self.meta_stacked[0]}")
         output = apply_delta_packed_nslice(
             x,
             self.qweight_stacked,
@@ -683,14 +676,20 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         output = self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x
         )
-        output = apply_delta(
-            x,
-            self.qweight_stacked,
-            self.scales_stacked,
-            self.meta_stacked,
-            self.indices[: self.indices_len[0]],
-            output,
-        )
+        try:
+            output = apply_delta(
+                x,
+                self.qweight_stacked,
+                self.scales_stacked,
+                self.meta_stacked,
+                self.indices[: self.indices_len[0]],
+                output,
+            )
+        except Exception as e:
+            print(f"row parallel linear with delta: x.shape: {x.shape}")
+            print(f"base_layer.weight.shape: {self.base_layer.weight.shape}")
+            print(f"qweight_stacked.shape: {self.qweight_stacked.shape}")
+            exit(1)
         return output
 
     def forward(self, input_):
