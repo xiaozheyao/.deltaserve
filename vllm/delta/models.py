@@ -179,8 +179,7 @@ class DeltaModel:
         prefetch_thread_event: threading.Event = None,
         discard_prefetching_event: threading.Event = None,
     ) -> "DeltaModel":
-        use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
-        use_marlin = os.environ.get("USE_MARLIN", "0") == "1"
+        use_marlin = True
         # get tp rank here
         tp_rank = get_tensor_model_parallel_rank()
         tp_size = get_tensor_model_parallel_world_size()
@@ -192,31 +191,10 @@ class DeltaModel:
         )
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
-
-        if use_bitblas:
-            model_tensor_filenames = [
-                "bitblas.remain.safetensors",
-                f"bitblas.rank.{tp_rank}.safetensors",
-            ]
-            if not os.path.exists(
-                os.path.join(path_or_name, model_tensor_filenames[0])
-            ):
-                logger.info(
-                    f"cannot find {os.path.join(path_or_name, model_tensor_filenames[0])}"
-                )
-                model_tensor_filenames = ["bitblas.safetensors"]
-        elif use_marlin:
+        if use_marlin:
             model_tensor_filenames = [f"model.tp{tp_size}.safetensors"]
         else:
-            model_tensor_filenames = [
-                "deltazip-compressed-remain.safetensors",
-                f"rank.{tp_rank}.safetensors",
-            ]
-            if not os.path.exists(
-                os.path.join(path_or_name, model_tensor_filenames[0])
-            ):
-                # no optimized ckpt found
-                model_tensor_filenames = ["deltazip-compressed.safetensors"]
+            raise ValueError("Only Marlin is supported for now")
         logger.info(f"Loading from {model_tensor_filenames}")
 
         def skip(*args, **kwargs):
@@ -228,16 +206,14 @@ class DeltaModel:
         transformers.modeling_utils._init_weights = False
 
         # TODO(xiaozhe): this should be specified by each model
-        ignore_modules = [
+        uncompressed_modules = [
             "lm_head",
             "model.embed_tokens",
             "model.norm",
             "input_layernorm",
             "post_attention_layernorm",
         ]
-
         tensors = {}
-        start = timer()
         bitwidth = compress_config.bits
         logger.info(
             f"[{'main' if prefetch_thread_event is None else 'prefetching'}] Lossless Compression Disabled"
@@ -256,19 +232,11 @@ class DeltaModel:
                     [
                         x.rsplit(".", 2)[0]
                         for x in keys
-                        if all([y not in x for y in ignore_modules])
+                        if all([y not in x for y in uncompressed_modules])
                     ]
                 )
                 for module in module_names:
-                    if use_bitblas:
-                        modules[module] = DeltaLayerWeights(
-                            module_name=module,
-                            qweight=tensors[module + ".qweight"].pin_memory(),
-                            qzeros=tensors[module + ".zeros"].pin_memory(),
-                            scales=tensors[module + ".scales"].pin_memory(),
-                            compress_config=compress_config,
-                        )
-                    elif use_marlin:
+                    if use_marlin:
                         modules[module] = DeltaLayerWeights(
                             module_name=module,
                             qweight=f.get_tensor(f"{module}.{tp_rank}.qweight").pin_memory(),
@@ -276,20 +244,11 @@ class DeltaModel:
                             meta=f.get_tensor(f"{module}.{tp_rank}.meta").pin_memory(),
                             compress_config=compress_config,
                         )
-                    else:
-                        modules[module] = DeltaLayerWeights(
-                            module_name=module,
-                            qweight=tensors[module + ".qweight"].pin_memory(),
-                            qzeros=tensors[module + ".qzeros"].pin_memory(),
-                            scales=tensors[module + ".scales"].pin_memory(),
-                            g_idx=tensors[module + ".g_idx"].pin_memory(),
-                            compress_config=compress_config,
-                        )
                 remaining_module_names = set(
                     [
                         x.rsplit(".", 2)[0]
                         for x in keys
-                        if any([y in x for y in ignore_modules])
+                        if any([y in x for y in uncompressed_modules])
                     ]
                 )
                 for module in remaining_module_names:
@@ -297,14 +256,12 @@ class DeltaModel:
                         module_name=module,
                         weight=f.get_tensor(f"{module}.{tp_rank}.weight").pin_memory(),
                     )
-        end = timer()
         # total_bytes = total_bytes_count(tensors)
         # logger.info(
         #     f"Disk -> CPU: Loaded {total_bytes/1024/1024:.2f} MiB in {end - start:.3f} seconds"
         # )
         del tensors
         return cls(id, bitwidth, modules)
-
 
 class DeltaModelManager:
     """A manager that manages multiple full-fine-tuned models."""
@@ -568,23 +525,25 @@ class DeltaModelManager:
         ]
 
     def _create_merged_deltas_inplace(self, delta_model: DeltaModel) -> None:
-        for module_name, new_module_names in self.packed_modules.items():
-            replacement_deltas = []
-            has_replacement = False
-            for r in new_module_names:
-                delta = delta_model.get_delta(r)
-                replacement_deltas.append(delta)
-                if delta:
-                    has_replacement = True
-            if not has_replacement:
-                continue
-            for i in range(len(replacement_deltas)):
-                if replacement_deltas[i]:
-                    continue
-                replacement_deltas[i] = None
-            delta_model.deltas[module_name] = PackedDeltaLayerWeights.pack(
-                replacement_deltas
-            )
+        print(f"create merged deltas inplace...")
+        # for module_name, new_module_names in self.packed_modules.items():
+        #     print(f"module_name: {module_name} new_module_names: {new_module_names}")
+        #     replacement_deltas = []
+        #     has_replacement = False
+        #     for r in new_module_names:
+        #         delta = delta_model.get_delta(r)
+        #         replacement_deltas.append(delta)
+        #         if delta:
+        #             has_replacement = True
+        #     if not has_replacement:
+        #         continue
+        #     for i in range(len(replacement_deltas)):
+        #         if replacement_deltas[i]:
+        #             continue
+        #         replacement_deltas[i] = None
+        #     delta_model.deltas[module_name] = PackedDeltaLayerWeights.pack(
+        #         replacement_deltas
+        #     )
 
 
 class DeltaLRUCache(LRUCache):

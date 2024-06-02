@@ -24,7 +24,7 @@ def add_delta(
             @ qweight[indices[i], :, :].transpose(-1, -2)
         ).squeeze(0)
     """
-    quant_select_bmm_248(
+    y = quant_select_bmm_248(
         BITWIDTH, indices, meta, y, x, qweight, scales, None, bias=None
     )
     return y
@@ -81,11 +81,7 @@ def apply_delta(
     indices: torch.Tensor,
     output: torch.Tensor,
 ):
-    org_output = output
-    x = x.view(-1, x.shape[-1])
-    output = output.view(-1, output.shape[-1])
-    indices = indices.view(-1)
-    add_delta(
+    return add_delta(
         output,
         x,
         qweight_stacked,
@@ -93,7 +89,6 @@ def apply_delta(
         meta_stacked,
         indices,
     )
-    return output.view_as(org_output)
 
 
 def apply_delta_packed_nslice(
@@ -130,21 +125,17 @@ def apply_delta_packed_nslice(
     indices = indices.view(-1)
     offset_left = 0
     for slice_idx in range(len(output_slices)):
-        try:
-            add_delta_slice(
-                output,
-                x,
-                qweight_stacked[slice_idx],
-                scales_stacked[slice_idx],
-                indices,
-                1.0,
-                offset_left,
-                output_slices[slice_idx],
-                meta=meta_stacked[slice_idx],
-            )
-        except Exception as e:
-            print(f"qweight_stacked[slice_idx].shape: {qweight_stacked[slice_idx].shape}")
-            raise e
+        add_delta_slice(
+            output,
+            x,
+            qweight_stacked[slice_idx],
+            scales_stacked[slice_idx],
+            indices,
+            1.0,
+            offset_left,
+            output_slices[slice_idx],
+            meta=meta_stacked[slice_idx],
+        )
         offset_left += output_slices[slice_idx]
     return output.view_as(org_output)
 

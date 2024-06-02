@@ -43,6 +43,7 @@ logger = init_logger(__name__)
 if TYPE_CHECKING:
     pass
 
+
 @dataclass
 class DeltaMapping:
     # Per every token in input_ids:
@@ -146,7 +147,8 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         indices = self.indices[: self.indices_len[0]]
         if self.tp_size > 1:
             # Build the mask.
-            input_mask = (x < self.vocab_start_index) | (x >= self.vocab_end_index)
+            input_mask = (x < self.vocab_start_index) | (
+                x >= self.vocab_end_index)
             # Mask the input.
             masked_input = x.clone() - self.vocab_start_index
             masked_input[input_mask] = 0
@@ -219,7 +221,8 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         g_idx: torch.Tensor,
     ):
         self.reset_delta(index)
-        self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
+        self.qweight_stacked[index, :, :].copy_(
+            qweight, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, :, :].copy_(scales, non_blocking=ASYNC_COPY)
 
     def set_mapping(
@@ -311,81 +314,58 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
                 "DeltaColumnParallelLinear2Slice requires 2 slices with "
                 "the same size."
             )
-        self.qweight_stacked = tuple(
-            torch.zeros(
-                max_deltas,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
-                self.base_layer.weight.shape[0],
-                dtype=torch.int32,
-                device=self.base_layer.weight.device,
-            )
-            for _ in range(n_slices)
+        self.qweight_stacked = torch.zeros(
+            max_deltas,
+            self.base_layer.weight.shape[1]
+            // (delta_config.pack_factor * delta_config.sparse_factor * 2),
+            self.base_layer.weight.shape[0] * 2,
+            dtype=torch.int32,
+            device=self.base_layer.weight.device,
         )
-        self.scales_stacked = tuple(
-            torch.zeros(
-                max_deltas,
-                1,
-                self.base_layer.weight.shape[0] // 2,
-                dtype=torch.float16,
-                device=self.base_layer.weight.device,
-            )
-            for _ in range(n_slices)
+        self.scales_stacked = torch.zeros(
+            max_deltas,
+            1,
+            self.base_layer.weight.shape[0],
+            dtype=torch.float16,
+            device=self.base_layer.weight.device,
         )
-        self.meta_stacked = tuple(
-            torch.zeros(
-                max_deltas,
-                self.base_layer.weight.shape[0] // 2,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor),
-                dtype=torch.int16,
-                device=self.base_layer.weight.device,
-            )
-            for _ in range(n_slices)
+        self.meta_stacked = torch.zeros(
+            max_deltas,
+            self.base_layer.weight.shape[0],
+            self.base_layer.weight.shape[1]
+            // (delta_config.pack_factor * delta_config.sparse_factor),
+            dtype=torch.int16,
+            device=self.base_layer.weight.device,
         )
         self.indices: Optional[torch.Tensor] = None
         self.output_dim = self.base_layer.weight.shape[0] // 2
 
     def reset_delta(self, index: int):
-        self.qweight_stacked[0][index] = 0
-        self.qweight_stacked[1][index] = 0
-        self.scales_stacked[0][index] = 0
-        self.scales_stacked[1][index] = 0
-        self.meta_stacked[0][index] = 0
-        self.meta_stacked[1][index] = 0
         self.bitwidth[index] = 0
+        self.qweight_stacked[index] = 0
+        self.scales_stacked[index] = 0
+        self.meta_stacked[index] = 0
 
     def set_delta(
         self,
         index: int,
         bitwidth: int,
-        qweight: List[torch.Tensor],
-        qzeros: List[torch.Tensor],
-        scales: List[torch.Tensor],
-        g_idx: List[torch.Tensor],
-        meta: List[torch.Tensor],
+        qweight: torch.Tensor,
+        qzeros: torch.Tensor,
+        scales: torch.Tensor,
+        g_idx: torch.Tensor,
+        meta: torch.Tensor,
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        print(f"scales[0].shape: {scales[0].shape}")
-        print(f"scales[1].shape: {scales[1].shape}")
-        print(f"scales_stacked[0].shape: {self.scales_stacked[0].shape}")
-        print(f"scales_stacked[1].shape: {self.scales_stacked[1].shape}")
-        print(f"base_layer.weight.shape: {self.base_layer.weight.shape}")
-        if qweight[0] is not None:
-            self.qweight_stacked[0][index, :, :].copy_(
-                qweight[0], non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[0][index, :, :].copy_(scales[0], non_blocking=ASYNC_COPY)
-            self.meta_stacked[0][index, :, :].copy_(meta[0], non_blocking=ASYNC_COPY)
+        self.qweight_stacked[index].copy_(
+            qweight, non_blocking=ASYNC_COPY
+        )
+        self.scales_stacked[index].copy_(
+            scales, non_blocking=ASYNC_COPY)
+        self.meta_stacked[index].copy_(
+            meta, non_blocking=ASYNC_COPY)
 
-        if qweight[1] is not None:
-            self.qweight_stacked[1][index, :, :].copy_(
-                qweight[1], non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[1][index, :, :].copy_(scales[1], non_blocking=ASYNC_COPY)
-            self.meta_stacked[1][index, :, :].copy_(meta[1], non_blocking=ASYNC_COPY)
-    
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
@@ -395,14 +375,13 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             device=x.device,
             dtype=x.dtype,
         )
-        apply_delta_packed_nslice(
+        apply_delta(
             x,
             self.qweight_stacked,
             self.scales_stacked,
             self.meta_stacked,
             self.indices[: self.indices_len[0]],
             output,
-            (self.output_dim, self.output_dim),
         )
         output += self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x, bias
@@ -421,6 +400,7 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             type(source_layer) is MergedColumnParallelLinear
             and len(packed_modules_list) == 2
         )
+
 
 class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def __init__(self, base_layer: QKVParallelLinear) -> None:
@@ -442,80 +422,28 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.kv_shard_id = self.tp_rank // self.base_layer.num_kv_head_replicas
 
         self.pack_factor = delta_config.pack_factor
-        self.qweight_stacked = (
-            torch.zeros(
-                max_deltas,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
-                self.q_proj_shard_size * 2,
-                dtype=torch.int32,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
-                self.kv_proj_shard_size * 2,
-                dtype=torch.int32,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor * 2),
-                self.kv_proj_shard_size * 2,
-                dtype=torch.int32,
-                device=self.base_layer.weight.device,
-            ),
+        self.qweight_stacked = torch.zeros(
+            max_deltas,
+            self.base_layer.weight.shape[1]
+            // (delta_config.pack_factor * delta_config.sparse_factor * 2),
+            (self.q_proj_shard_size + self.kv_proj_shard_size * 2) * 2,
+            dtype=torch.int32,
+            device=self.base_layer.weight.device,
         )
-        self.scales_stacked = (
-            torch.zeros(
-                max_deltas,
-                1,
-                self.q_proj_shard_size,
-                dtype=torch.float16,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                1,
-                self.kv_proj_shard_size,
-                dtype=torch.float16,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                1,
-                self.kv_proj_shard_size,
-                dtype=torch.float16,
-                device=self.base_layer.weight.device,
-            ),
+        self.scales_stacked = torch.zeros(
+            max_deltas,
+            1,
+            self.q_proj_shard_size + self.kv_proj_shard_size * 2,
+            dtype=torch.float16,
+            device=self.base_layer.weight.device,
         )
-        self.meta_stacked = (
-            torch.zeros(
-                max_deltas,
-                self.q_proj_shard_size,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor),
-                dtype=torch.int16,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                self.kv_proj_shard_size,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor),
-                dtype=torch.int16,
-                device=self.base_layer.weight.device,
-            ),
-            torch.zeros(
-                max_deltas,
-                self.kv_proj_shard_size,
-                self.base_layer.weight.shape[1]
-                // (delta_config.pack_factor * delta_config.sparse_factor),
-                dtype=torch.int16,
-                device=self.base_layer.weight.device,
-            ),
+        self.meta_stacked = torch.zeros(
+            max_deltas,
+            self.q_proj_shard_size + self.kv_proj_shard_size * 2,
+            self.base_layer.weight.shape[1]
+            // (delta_config.pack_factor * delta_config.sparse_factor),
+            dtype=torch.int16,
+            device=self.base_layer.weight.device,
         )
         self.output_slices = (
             self.q_proj_shard_size,
@@ -528,63 +456,48 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.bitwidth = [0] * max_deltas
 
     def reset_delta(self, index: int):
-        self.qweight_stacked[0][index] = 0
-        self.qweight_stacked[1][index] = 0
-        self.qweight_stacked[2][index] = 0
-        self.scales_stacked[0][index] = 0
-        self.scales_stacked[1][index] = 0
-        self.scales_stacked[2][index] = 0
-        self.meta_stacked[0][index] = 0
-        self.meta_stacked[1][index] = 0
-        self.meta_stacked[2][index] = 0
         self.bitwidth[index] = 0
+        self.qweight_stacked[index] = 0
+        self.meta_stacked[index] = 0
+        self.scales_stacked[index] = 0
 
     def set_delta(
         self,
         index: int,
         bitwidth: int,
-        qweight: List[torch.Tensor],
-        qzeros: List[torch.Tensor],
-        scales: List[torch.Tensor],
-        g_idx: List[torch.Tensor],
-        meta: List[torch.Tensor],
+        qweight: torch.Tensor,
+        qzeros: torch.Tensor,
+        scales: torch.Tensor,
+        g_idx: torch.Tensor,
+        meta: torch.Tensor,
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        if qweight[0] is not None:
-            self.qweight_stacked[0][index].copy_(
-                qweight[0], non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[0][index].copy_(scales[0], non_blocking=ASYNC_COPY)
-            self.meta_stacked[0][index].copy_(meta[0], non_blocking=ASYNC_COPY)
-        
-        if qweight[1] is not None:
-            self.qweight_stacked[1][index].copy_(
-                qweight[1], non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[1][index].copy_(scales[1], non_blocking=ASYNC_COPY)
-            self.meta_stacked[1][index].copy_(meta[1], non_blocking=ASYNC_COPY)
-        if qweight[2] is not None:
-            self.qweight_stacked[2][index].copy_(
-                qweight[2], non_blocking=ASYNC_COPY
-            )
-            self.scales_stacked[2][index].copy_(scales[2], non_blocking=ASYNC_COPY)
-            self.meta_stacked[2][index].copy_(meta[2], non_blocking=ASYNC_COPY)
+        self.qweight_stacked[index].copy_(
+            qweight, non_blocking=ASYNC_COPY
+        )
+        self.scales_stacked[index].copy_(scales, non_blocking=ASYNC_COPY)
+        self.meta_stacked[index].copy_(meta, non_blocking=ASYNC_COPY)
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
-        output = self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x, bias
+        output = torch.zeros(
+            x.shape[0],
+            self.base_layer.weight.shape[0],
+            device=x.device,
+            dtype=x.dtype,
         )
-        output = apply_delta_packed_nslice(
+        output = apply_delta(
             x,
             self.qweight_stacked,
             self.scales_stacked,
             self.meta_stacked,
             self.indices[: self.indices_len[0]],
             output,
-            self.output_slices,
+        )
+        output += self.base_layer.linear_method.apply_weights(
+            self.base_layer.linear_weights, x, bias
         )
         return output
 
@@ -627,7 +540,8 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.qweight_stacked = torch.zeros(
             (
                 max_deltas,
-                self.base_layer.weight.shape[1] // (delta_config.pack_factor * delta_config.sparse_factor * 2),
+                self.base_layer.weight.shape[1] // (
+                    delta_config.pack_factor * delta_config.sparse_factor * 2),
                 self.base_layer.weight.shape[0] * 2,
             ),
             dtype=delta_config.delta_dtype,
@@ -643,16 +557,17 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         self.meta_stacked = torch.zeros(
             max_deltas,
             self.base_layer.weight.shape[0],
-            self.base_layer.weight.shape[1] // (delta_config.pack_factor * delta_config.sparse_factor),
+            self.base_layer.weight.shape[1] // (
+                delta_config.pack_factor * delta_config.sparse_factor),
             dtype=torch.int16,
             device=self.base_layer.weight.device,
         )
 
     def reset_delta(self, index: int):
         self.qweight_stacked[index] = 0
-        self.scales_stacked[index]  = 0
-        self.meta_stacked[index]    = 0
-        self.bitwidth[index]        = 0
+        self.scales_stacked[index] = 0
+        self.meta_stacked[index] = 0
+        self.bitwidth[index] = 0
 
     def set_delta(
         self,
@@ -666,30 +581,32 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
     ):
         self.reset_delta(index)
         self.bitwidth[index] = bitwidth
-        self.qweight_stacked[index, :, :].copy_(qweight, non_blocking=ASYNC_COPY)
+        self.qweight_stacked[index, :, :].copy_(
+            qweight, non_blocking=ASYNC_COPY)
         self.scales_stacked[index, :, :].copy_(scales, non_blocking=ASYNC_COPY)
         self.meta_stacked[index, :, :].copy_(meta, non_blocking=ASYNC_COPY)
 
     def apply_weights(self, x: torch.Tensor) -> torch.Tensor:
         if self.base_layer.bias is not None:
-            raise ValueError("RowParallelLinearWithDelta does not support bias yet.")
-        output = self.base_layer.linear_method.apply_weights(
+            raise ValueError(
+                "RowParallelLinearWithDelta does not support bias yet.")
+        output = torch.zeros(
+            x.shape[0],
+            self.base_layer.weight.shape[0],
+            device=x.device,
+            dtype=x.dtype,
+        )
+        output = apply_delta(
+            x,
+            self.qweight_stacked,
+            self.scales_stacked,
+            self.meta_stacked,
+            self.indices[: self.indices_len[0]],
+            output,
+        )
+        output += self.base_layer.linear_method.apply_weights(
             self.base_layer.linear_weights, x
         )
-        try:
-            output = apply_delta(
-                x,
-                self.qweight_stacked,
-                self.scales_stacked,
-                self.meta_stacked,
-                self.indices[: self.indices_len[0]],
-                output,
-            )
-        except Exception as e:
-            print(f"row parallel linear with delta: x.shape: {x.shape}")
-            print(f"base_layer.weight.shape: {self.base_layer.weight.shape}")
-            print(f"qweight_stacked.shape: {self.qweight_stacked.shape}")
-            exit(1)
         return output
 
     def forward(self, input_):
@@ -870,7 +787,6 @@ def from_layer(
             ret.create_delta_weights(max_deltas, delta_config, model_config)
             return ret
     return layer
-
 
 def from_layer_logits_processor(
     layer: LogitsProcessor,
