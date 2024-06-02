@@ -1,4 +1,4 @@
 USE_MARLIN=1 python -m vllm.entrypoints.openai.api_server --model meta-llama/Llama-2-7b-hf --enable-delta --disable-log-requests --gpu-memory-utilization 0.85 \
 --delta-modules delta-1=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.1 delta-2=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.2 delta-3=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.3 delta-4=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.4 delta-5=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.5 delta-6=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.6 delta-7=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.7 delta-8=/scratch/xiayao/models/7b/4bit/deltazip.lmsys.vicuna-7b-v1.5.4bn2m4-1g.8 \
 --max-deltas 4 --max-cpu-deltas 32 --tensor-parallel-size 2 \
---enforce-eager --enable-prefetch
+--enforce-eager
