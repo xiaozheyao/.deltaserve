@@ -936,6 +936,7 @@ class ModelRunner:
             swap_mapping,
             multi_modal_input,
         ) = self.prepare_input_tensors(seq_group_metadata_list)
+        
         if self.lora_config:
             self.set_active_loras(lora_requests, lora_mapping)
         if self.delta_config:

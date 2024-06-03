@@ -253,7 +253,6 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
     current_prefetching_request: DeltaRequest = None
 
     def create_delta_manager(self, model) -> Any:
-
         def _load_delta_background():
             while True:
                 if time.time() % 10 == 0:
@@ -290,7 +289,7 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
                 time.sleep(CHECK_QUEUE_INTERVAL)
 
         thread = threading.Thread(target=_load_delta_background)
-
+        
         self.prefetching_thread_event.set()
         self.discard_prefetching_event.clear()
 
@@ -374,12 +373,4 @@ class OverlapLRUCacheWorkerDeltaManager(WorkerDeltaManager):
         return loaded
 
     def _activate_delta(self, delta_request: DeltaRequest):
-        global LOG_TIME
-        if not LOG_TIME:
-            logger.info(f"[{time.time()}] activating delta")
-        start = timer()
         self._delta_manager.activate_delta(delta_request.delta_int_id)
-        end = timer()
-        if not LOG_TIME:
-            logger.info(f"[{time.time()}] CPU -> GPU time: {end - start:.4f}")
-            LOG_TIME = True

@@ -220,7 +220,6 @@ class _AsyncLLMEngine(LLMEngine):
         seq_group_metadata_list, scheduler_outputs = self.scheduler.schedule(
             self.model_executor.list_deltas() if self.delta_config else []
         )
-
         if not scheduler_outputs.is_empty():
             # Execute the model.
             output = await self.model_executor.execute_model_async(

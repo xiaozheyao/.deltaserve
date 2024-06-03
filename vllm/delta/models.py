@@ -24,8 +24,6 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_world_size,
 )
 from safetensors import safe_open
-from .config import QuantKernel
-
 
 logger = init_logger(__name__)
 _GLOBAL_DELTA_ID = 0
@@ -315,19 +313,6 @@ class DeltaModelManager:
         self.model.delta_manager = self
         self.current_kernel = delta_config.kernel
 
-        if self.current_kernel == QuantKernel.EXLLAMA:
-            # global variables for exllama
-            self.fixed_bytes = {}
-        if self.current_kernel == QuantKernel.TRITON:
-            from .quant_linears.quant_linear_triton import warmup_triton_kernels
-
-            kn_values = set()
-            for module_name, module in self.modules.items():
-                if self._match_target_modules(module_name):
-                    if hasattr(module.base_layer, "weight"):
-                        kn_values.add(module.base_layer.weight.shape)
-            warmup_triton_kernels(self.delta_config.max_bitwidth, kn_values)
-
     @property
     def capacity(self) -> int:
         return self.delta_config.max_cpu_deltas
@@ -340,6 +325,7 @@ class DeltaModelManager:
         return len(self._registered_deltas)
 
     def activate_delta(self, delta_id: int):
+        logger.info(f"Inserting {delta_id} into {self.delta_index_to_id}")
         """Move delta into GPU buffer to be used in the forward pass"""
         if delta_id in self._active_deltas:
             return False
@@ -613,7 +599,6 @@ class LRUCacheDeltaModelManager(DeltaModelManager):
             self._registered_deltas.remove_oldest()
             return True
         return False
-
 
 def create_delta_manager(
     model: nn.Module,

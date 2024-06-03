@@ -17,6 +17,9 @@ def apply_delta(
     indices: torch.Tensor,
     base_weight: torch.Tensor,
 ):
+    # check if indices are sorted
+    if not torch.all(indices[1:] >= indices[:-1]):
+        raise ValueError(f"Indices must be sorted, got {indices}")
     y = ibmm(
         BITWIDTH, indices, meta_stacked, None, x, qweight_stacked, scales_stacked, None, bias=None, base_weight=base_weight,
     )

@@ -64,11 +64,27 @@ class SchedulerOutputs:
 
         if self.num_loras > 0:
             self._sort_by_lora_ids()
-        if self.num_deltas > 0:
-            self._sort_by_delta_ids()
         if self.num_swaps > 0:
             self._sort_by_swap_ids()
-
+        if self.num_deltas > 0:
+            self._sort_by_delta_ids()
+            
+    def __repr__(self) -> str:
+        return (
+            f"SchedulerOutputs("
+            f"scheduled_seq_groups={self.scheduled_seq_groups}, "
+            f"prompt_run={self.prompt_run}, "
+            f"num_batched_tokens={self.num_batched_tokens}, "
+            f"blocks_to_swap_in={self.blocks_to_swap_in}, "
+            f"blocks_to_swap_out={self.blocks_to_swap_out}, "
+            f"blocks_to_copy={self.blocks_to_copy}, "
+            f"ignored_seq_groups={self.ignored_seq_groups}, "
+            f"deltas={self.delta_requests}, "
+            f"num_loras={self.num_loras}, "
+            f"num_deltas={self.num_deltas}, "
+            f"num_swaps={self.num_swaps}"
+        )
+        
     def is_empty(self) -> bool:
         # NOTE: We do not consider the ignored sequence groups.
         return (

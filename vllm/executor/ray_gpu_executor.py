@@ -520,7 +520,6 @@ class RayGPUExecutorAsync(RayGPUExecutor, ExecutorAsyncBase):
                 "sequence_groups": sequence_groups,
             },
         )
-
         # Only the driver worker returns the sampling results.
         output = all_outputs[0]
         return output
