@@ -32,7 +32,6 @@ from vllm.model_executor.parallel_utils.parallel_state import (
 )
 from .deltazip_marlin import (
     apply_delta,
-    apply_delta_packed_nslice,
     apply_delta_embed,
     apply_delta_uncompressed,
 )
@@ -240,9 +239,6 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
         # (note): this is not actually used.
-        output = self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x, bias
-        )
         output = apply_delta(
             x,
             self.qweight_stacked,
@@ -250,7 +246,7 @@ class ColumnParallelLinearWithDelta(BaseLayerWithDelta):
             self.scales_stacked,
             self.g_idx_stacked,
             self.indices[: self.indices_len[0]],
-            output,
+            self.base_layer.linear_weights['weight'],
         )
         return output
 
@@ -369,22 +365,13 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
-        output = torch.zeros(
-            x.shape[0],
-            self.base_layer.weight.shape[0],
-            device=x.device,
-            dtype=x.dtype,
-        )
-        apply_delta(
+        output = apply_delta(
             x,
             self.qweight_stacked,
             self.scales_stacked,
             self.meta_stacked,
             self.indices[: self.indices_len[0]],
-            output,
-        )
-        output += self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x, bias
+            self.base_layer.linear_weights['weight'],
         )
         return output
 
@@ -482,22 +469,13 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
     ) -> torch.Tensor:
-        output = torch.zeros(
-            x.shape[0],
-            self.base_layer.weight.shape[0],
-            device=x.device,
-            dtype=x.dtype,
-        )
         output = apply_delta(
             x,
             self.qweight_stacked,
             self.scales_stacked,
             self.meta_stacked,
             self.indices[: self.indices_len[0]],
-            output,
-        )
-        output += self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x, bias
+            self.base_layer.linear_weights['weight'],
         )
         return output
 
@@ -590,22 +568,13 @@ class RowParallelLinearWithDelta(BaseLayerWithDelta):
         if self.base_layer.bias is not None:
             raise ValueError(
                 "RowParallelLinearWithDelta does not support bias yet.")
-        output = torch.zeros(
-            x.shape[0],
-            self.base_layer.weight.shape[0],
-            device=x.device,
-            dtype=x.dtype,
-        )
         output = apply_delta(
             x,
             self.qweight_stacked,
             self.scales_stacked,
             self.meta_stacked,
             self.indices[: self.indices_len[0]],
-            output,
-        )
-        output += self.base_layer.linear_method.apply_weights(
-            self.base_layer.linear_weights, x
+            self.base_layer.linear_weights['weight'],
         )
         return output
 
