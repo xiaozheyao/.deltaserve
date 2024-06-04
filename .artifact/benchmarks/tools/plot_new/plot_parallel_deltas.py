@@ -12,13 +12,15 @@ cmp = sns.color_palette("tab10")
 
 def plot(args):
     full_df = prepare_df(args.input)
-    print(full_df)
     metrics = ["E2E Latency", "TTFT"]
     result_df = []
     for metric in metrics:
+        print(f"metric: {metric}")
         sub_df = full_df[full_df["type"] == metric]
-        print(f"Metric: {metric}")
-        print(sub_df['max_deltas'].unique())
+        # group by max_deltas and calculate average
+        sub_df = sub_df.groupby("max_deltas").mean().reset_index()
+        print(sub_df)
+        
 
 if __name__ == "__main__":
     import argparse
