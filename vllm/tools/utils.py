@@ -114,7 +114,6 @@ def _parse_data(data):
         e2e_latency = metric["finished_time"] - metric["arrival_time"]
         first_token_latency = metric["first_token_time"] - metric["arrival_time"]
         queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
-
         gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
         cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
@@ -191,10 +190,12 @@ def _parse_data_order(data):
     results = []
     for id, x in enumerate(data):
         metric = x["response"]["metrics"][0]
+        model = x["response"]["model"]
         arrival_time = metric["arrival_time"]
         results.append(
             {
                 "id": id,
+                "model": model,
                 "arrival": arrival_time,
                 "queueing_start": arrival_time,
                 "queueing_end": metric["first_scheduled_time"],

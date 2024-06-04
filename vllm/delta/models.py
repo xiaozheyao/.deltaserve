@@ -325,7 +325,6 @@ class DeltaModelManager:
         return len(self._registered_deltas)
 
     def activate_delta(self, delta_id: int):
-        logger.info(f"Inserting {delta_id} into {self.delta_index_to_id}")
         """Move delta into GPU buffer to be used in the forward pass"""
         if delta_id in self._active_deltas:
             return False

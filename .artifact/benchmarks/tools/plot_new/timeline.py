@@ -15,9 +15,9 @@ def plot(args):
     filename = args.input.split("/")[-1].removesuffix(".jsonl")
     df = pd.DataFrame(data)
     min_arrival = df["arrival"].min()
-    df.loc[:, df.columns != "id"] -= min_arrival
+    # if columns are not id and model, then subtract min_arrival
+    df.loc[:, (df.columns != "id") & (df.columns!="model")] -= min_arrival
     # select df where type is not in Arrival and Finish
-    print(df)
     df = df.sort_values(by="arrival")
     # rewrite id in ascending order
     id_map = {v: i for i, v in enumerate(df["id"].unique())}
@@ -28,9 +28,7 @@ def plot(args):
     for idx, job_type in enumerate(types):
         patches.append(matplotlib.patches.Patch(color=cmp[idx], label=job_type))
     type_colors = {k: v for k, v in zip(types, cmp)}
-
     for index, row in df.iterrows():
-        print(row)
         plt.barh(
             y=row["id"],
             width=row["queueing_end"] - row["queueing_start"],
@@ -55,15 +53,18 @@ def plot(args):
             left=row["inference_start"],
             color=type_colors["Inference"],
         )
+        plt.text(
+            x=row["inference_end"] + 0.5,
+            y=row['id'] + 0.25,
+            s=row['model'],
+            fontdict=dict(color='black', fontsize=6),
+        )
     plt.title("Time Breakdown", fontsize=15)
     plt.gca().invert_yaxis()
     ax.xaxis.grid(True, alpha=0.5)
-
     # Adding a legend
     ax.legend(handles=patches, fontsize=11)
-
     fig.savefig(f"{args.output}/{filename}.png", bbox_inches="tight", dpi=300)
-
 
 if __name__ == "__main__":
     import argparse

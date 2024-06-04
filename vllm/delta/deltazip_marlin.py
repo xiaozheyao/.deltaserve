@@ -17,9 +17,17 @@ def apply_delta(
     indices: torch.Tensor,
     base_weight: torch.Tensor,
 ):
-    # check if indices are sorted
-    if not torch.all(indices[1:] >= indices[:-1]):
-        raise ValueError(f"Indices must be sorted, got {indices}")
+    # if there are -1 in indices, it should always at the beginning
+    if torch.any(indices == -1):
+        # check how many -1 are there
+        total_minus_one = torch.sum(indices == -1)
+        assert torch.sum(indices[:total_minus_one]) == -total_minus_one, f"index -1 should always be at the beginning: got {indices[:total_minus_one]}, total_minus_one: {total_minus_one}, len(indices): {len(indices)}"
+    
+    # if torch.any(indices == -1) and not indices[0] == -1:
+    #     print(f"wrong indices: {indices}")
+    #     assert indices[0] == -1, "index -1 should always be at the beginning"
+    # if len(indices) > 2:
+    #     print(f"indices: {indices}")
     y = ibmm(
         BITWIDTH, indices, meta_stacked, None, x, qweight_stacked, scales_stacked, None, bias=None, base_weight=base_weight,
     )
