@@ -7,17 +7,9 @@ BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 USE_BITBLAS = os.environ.get("USE_BITBLAS", "0") == "1"
 USE_MARLIN = os.environ.get("USE_MARLIN", "0") == "1"
 
-if USE_BITBLAS:
-    from triteia.ao.ops.ibmm.ibmm_wrapper import (
-        ibmm as quant_select_bmm_248,
-    )
-elif USE_MARLIN:
-    from triteia.ao.ops.ibmm.ibmm_marlin import (
-        ibmm_sparse_marlin as quant_select_bmm_248,
-    )
-else:
-    from triteia.ao.ops.ibmm.ibmm_wrapper import quant_select_bmm_248
-
+from triteia.ao.ops.ibmm.ibmm_marlin import (
+    ibmm_sparse_marlin as quant_select_bmm_248,
+)
 
 def add_delta(
     y: torch.Tensor,
