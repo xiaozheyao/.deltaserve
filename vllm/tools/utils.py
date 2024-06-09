@@ -114,8 +114,13 @@ def _parse_data(data):
         e2e_latency = metric["finished_time"] - metric["arrival_time"]
         first_token_latency = metric["first_token_time"] - metric["arrival_time"]
         queuing_time = metric["first_scheduled_time"] - metric["arrival_time"]
-        gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
-        cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
+        if metric['cpu_loading_time'] is None and metric['gpu_loading_time'] is None:
+            gpu_loading_time = 0
+            cpu_loading_time = 0
+        else:
+            gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
+            cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
+            
         inference_time = metric["finished_time"] - metric["gpu_loading_time"]
 
         arrival_time = metric["arrival_time"]

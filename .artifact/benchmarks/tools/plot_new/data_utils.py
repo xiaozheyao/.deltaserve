@@ -14,7 +14,7 @@ def walk_through_files(path, file_extension=".jsonl"):
                 yield os.path.join(dirpath, filename)
 
 
-def prepare_df(input_file):
+def prepare_df(input_file, order=False):
     if os.path.isdir(input_file):
         # walk through the directory and get all the jsonl files, including the subdirectories
         inputs = list(walk_through_files(input_file))
@@ -23,7 +23,7 @@ def prepare_df(input_file):
     inputs = list(set(inputs))
     results_df = pd.DataFrame([])
     for input_file in inputs:
-        metadata, results = parse_data(input_file)
+        metadata, results = parse_data(input_file, order=order)
         short_sys_name, order = get_short_system_name(metadata)
         results = pd.DataFrame(results)
         results["max_deltas"] = metadata["max_deltas"]

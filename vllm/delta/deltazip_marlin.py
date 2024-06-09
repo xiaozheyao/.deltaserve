@@ -6,7 +6,7 @@ import torch.nn.functional as F
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
 from triteia.ao.ops.ibmm.ibmm_marlin import (
-    ibmm_sparse_marlin_stream as ibmm,
+    ibmm_native as ibmm,
 )
 
 def apply_delta(
@@ -23,13 +23,11 @@ def apply_delta(
         total_minus_one = torch.sum(indices == -1)
         assert torch.sum(indices[:total_minus_one]) == -total_minus_one, f"index -1 should always be at the beginning: got {indices[:total_minus_one]}, total_minus_one: {total_minus_one}, len(indices): {len(indices)}"
     
-    # if torch.any(indices == -1) and not indices[0] == -1:
-    #     print(f"wrong indices: {indices}")
-    #     assert indices[0] == -1, "index -1 should always be at the beginning"
-    # if len(indices) > 2:
-    #     print(f"indices: {indices}")
+    if torch.any(indices == -1) and not indices[0] == -1:
+        print(f"wrong indices: {indices}")
+        assert indices[0] == -1, "index -1 should always be at the beginning"
     y = ibmm(
-        BITWIDTH, indices, meta_stacked, None, x, qweight_stacked, scales_stacked, None, bias=None, base_weight=base_weight,
+        BITWIDTH, indices, meta_stacked, None, x, qweight_stacked, scales_stacked, base_weight=base_weight,
     )
     return y
 

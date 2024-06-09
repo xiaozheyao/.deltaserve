@@ -11,7 +11,7 @@ cmp = sns.color_palette("tab10")
 
 
 def plot(args):
-    full_df = prepare_df(args.input)
+    full_df = prepare_df(args.input, order=True)
     metrics = ["E2E Latency", "TTFT"]
     result_df = []
     for metric in metrics:
