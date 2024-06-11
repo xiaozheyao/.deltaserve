@@ -36,7 +36,6 @@ class PreemptionMode(enum.Enum):
     SWAP = enum.auto()
     RECOMPUTE = enum.auto()
 
-
 class SchedulerOutputs:
     def __init__(
         self,

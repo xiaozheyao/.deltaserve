@@ -210,6 +210,8 @@ def _parse_data_order(data):
                 "first_token_end": metric["first_token_time"],
                 "inference_start": metric["first_token_time"],
                 "inference_end": metric["finished_time"],
+                "E2E Latency": metric["finished_time"] - arrival_time,
+                "TTFT": metric["first_token_time"] - arrival_time,
             }
         )
     return results

@@ -57,7 +57,7 @@ def plot(args):
             x=row["inference_end"] + 0.5,
             y=row['id'] + 0.25,
             s=row['model'],
-            fontdict=dict(color='black', fontsize=6),
+            fontdict=dict(color='black', fontsize=3),
         )
     plt.title("Time Breakdown", fontsize=15)
     plt.gca().invert_yaxis()

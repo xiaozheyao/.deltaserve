@@ -7,62 +7,47 @@ import numpy as np
 import matplotlib
 
 def plot(args):
+    wanted_distribution = "uniform"
 
     SAVEPATH = args.savepath
     set_matplotlib_style()
-
-    full_df = prepare_df(args.path)
-
-    total_models = 33
-    total_max_deltas = 24
-
+    full_df = prepare_df(args.path, order=False)
+    
+    total_max_deltas = 6
     metrics = ["E2E Latency", "TTFT"]
     result_df = []
     for metric in metrics:
         df = full_df[full_df["type"] == metric]
-        df = df[df["total_models"] == total_models]
         # for each row, if max_deltas>0, then choose the row with max_deltas
-
-        distributions = df["distribution"].unique()
-        ars = df["ar"].unique()
-        for dist in distributions:
-            if dist != "zipf:1.5" and dist != "distinct":
-                for ar in ars:
-                    sub_df = df[df["distribution"] == dist]
-                    sub_df = sub_df[sub_df["ar"] == ar]
-                    systems = sub_df["sys_name"].unique()
-                    max_deltas = sub_df["max_deltas"].unique()
-                    for system in systems:
-                        sub_df_sys = sub_df[sub_df["sys_name"] == system]
-                        if system == "Baseline-1":
-                            sub_df_sys = sub_df_sys[sub_df_sys["max_deltas"] == 0]
-                        else:
-                            sub_df_sys = sub_df_sys[
-                                sub_df_sys["max_deltas"] == total_max_deltas
-                            ]
-                        result_df.append(
-                            {
-                                "system": system,
-                                "distribution": dist,
-                                "ar": ar,
-                                "mean": sub_df_sys["time"].mean(),
-                                "metric": metric,
-                            }
-                        )
-
+        sub_df = df[df["distribution"] == wanted_distribution]
+        systems = sub_df["sys_name"].unique()
+        print(systems)
+        for system in systems:
+            sub_df_sys = sub_df[sub_df["sys_name"] == system]
+            if system == "Baseline-1":
+                sub_df_sys = sub_df_sys[sub_df_sys["max_deltas"] == 0]
+            else:
+                sub_df_sys = sub_df_sys[
+                    sub_df_sys["max_deltas"] == total_max_deltas
+                ]
+            result_df.append(
+                {
+                    "system": system,
+                    "distribution": wanted_distribution,
+                    "ar": sub_df_sys["ar"].iloc[0],
+                    "mean": sub_df_sys["time"].mean(),
+                    "metric": metric,
+                }
+            )
+            
+    
     result_df = pd.DataFrame(result_df)
     baseline_df = result_df[result_df["system"] == "Baseline-1"]
     # normalize to baseline
     result_df = result_df.merge(
         baseline_df, on=["distribution", "ar", "metric"], suffixes=("", "_baseline")
     )
-    print(result_df)
-    # calculate relative mean
-    result_df["mean"] = 10 * result_df["mean"] / result_df["mean_baseline"]
-
-    wanted_distribution = "azure"
     result_df = result_df[result_df["distribution"] == wanted_distribution]
-
     baseline_df = result_df[result_df["system"] == "Baseline-1"]
     delta_df = result_df[result_df["system"] == "+Delta"]
     prefetch_df = result_df[result_df["system"] == "+Prefetch"]
@@ -75,12 +60,12 @@ def plot(args):
     fig, (ax1, ax2) = plt.subplots(
         ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75)
     )
-
+    
     x = np.arange(1, 3)
     width = 0.22
     p1 = ax1.bar(
         x - width,
-        baseline_df.loc[["2.0", "6.0"], "E2E Latency"],
+        baseline_df.loc[["1.0", "1.0"], "E2E Latency"],
         width,
         label="Baseline",
         alpha=0.8,
@@ -89,7 +74,7 @@ def plot(args):
     )
     p2 = ax1.bar(
         x,
-        delta_df.loc[["2.0", "6.0"], "E2E Latency"],
+        delta_df.loc[["1.0", "1.0"], "E2E Latency"],
         width,
         label="+Delta",
         alpha=0.8,
@@ -98,7 +83,7 @@ def plot(args):
     )
     p3 = ax1.bar(
         x + width,
-        prefetch_df.loc[["2.0", "6.0"], "E2E Latency"],
+        prefetch_df.loc[["1.0", "1.0"], "E2E Latency"],
         width,
         label="+Prefetch",
         alpha=0.8,
@@ -108,7 +93,7 @@ def plot(args):
 
     p4 = ax2.bar(
         x - width,
-        baseline_df.loc[["2.0", "6.0"], "TTFT"],
+        baseline_df.loc[["1.0", "1.0"], "TTFT"],
         width,
         label="+Delta",
         alpha=0.8,
@@ -117,7 +102,7 @@ def plot(args):
     )
     p5 = ax2.bar(
         x,
-        delta_df.loc[["2.0", "6.0"], "TTFT"],
+        delta_df.loc[["1.0", "1.0"], "TTFT"],
         width,
         label="+Delta",
         alpha=0.8,
@@ -126,7 +111,7 @@ def plot(args):
     )
     p6 = ax2.bar(
         x + width,
-        prefetch_df.loc[["2.0", "6.0"], "TTFT"],
+        prefetch_df.loc[["1.0", "1.0"], "TTFT"],
         width,
         label="+Prefetch",
         alpha=0.8,

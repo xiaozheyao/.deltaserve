@@ -24,14 +24,14 @@ def prepare_df(input_file, order=False):
     results_df = pd.DataFrame([])
     for input_file in inputs:
         metadata, results = parse_data(input_file, order=order)
-        short_sys_name, order = get_short_system_name(metadata)
+        short_sys_name, sys_order = get_short_system_name(metadata)
         results = pd.DataFrame(results)
         results["max_deltas"] = metadata["max_deltas"]
         results["max_cpu_deltas"] = metadata["max_cpu_deltas"]
         results["max_swaps"] = metadata["max_swaps"]
         results["max_cpu_swaps"] = metadata["max_cpu_swaps"]
         results["sys_name"] = short_sys_name
-        results["order"] = order
+        results["order"] = sys_order
         results["distribution"] = metadata["distribution"]
         results["ar"] = (
             metadata["ar"] if metadata["distribution"] != "distinct" else "0"
