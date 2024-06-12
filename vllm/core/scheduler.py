@@ -21,11 +21,6 @@ from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
-enable_delta_policy = True
-
-if enable_delta_policy:
-    print("Delta policy is enabled")
-    
 class PreemptionMode(enum.Enum):
     """Preemption modes.
 
@@ -127,7 +122,6 @@ class SchedulerOutputs:
 
 
 class Scheduler:
-
     def __init__(
         self,
         scheduler_config: SchedulerConfig,
@@ -158,7 +152,6 @@ class Scheduler:
             )
             if self.scheduler_config.scheduler_policy == "deltaserve":
                 self.enable_delta_serve_policy = True
-        
         else:
             if self.scheduler_config.scheduler_policy != "fcfs":
                 logger.warning("Only FCFS policy is supported without DeltaServe.")
@@ -257,12 +250,31 @@ class Scheduler:
 
         # Fix the current time.
         now = time.time()
-        if enable_delta_policy:
+        if self.enable_delta_serve_policy:
             curr_delta_running_mapping = {}
             for seq_group in self.running:
                 if seq_group.delta_int_id > 0 and seq_group.delta_int_id not in curr_delta_running_mapping:
                     curr_delta_running_mapping[seq_group.delta_int_id] = seq_group.request_id
-
+            # check delta swapped out requests
+            leftover_delta_swapped = deque()
+            
+            while self.delta_swapped:
+                num_curr_seqs = sum(
+                    seq_group.get_max_num_running_seqs() for seq_group in self.running
+                )
+                seq_group = self.delta_swapped[0]
+                if not self.block_manager.can_swap_in(seq_group):
+                    break
+                num_new_seqs = seq_group.get_max_num_running_seqs()
+                if num_curr_seqs + num_new_seqs > self.scheduler_config.max_num_seqs:
+                    break
+                self.delta_swapped.popleft()
+                self._delta_swap_in(seq_group, blocks_to_swap_in)
+                self._append_slot(seq_group, blocks_to_copy)
+                num_curr_seqs += num_new_seqs
+                self.waiting.append(seq_group)
+            self.delta_swapped.extendleft(leftover_delta_swapped)
+            
         # Join waiting sequences if possible.
         if not self.swapped:
             # swapped is empty, so we schedule the waiting + running + delta swapped sequences
@@ -290,17 +302,17 @@ class Scheduler:
                 else None
             )
             seq_lens: List[int] = []
-
             # Optimization: We do not sort the waiting queue since the preempted sequence groups are added to the front and the new sequence groups are added to the back.
 
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0
+            # sort waiting sequences by the policy
+            self.waiting = self.policy.sort_by_priority(now, self.waiting, available_deltas=available_deltas)
             while self._passed_delay(now) and self.waiting:
                 seq_group = self.waiting[0]
                 waiting_seqs = seq_group.get_seqs(status=SequenceStatus.WAITING)
-                assert len(waiting_seqs) == 1, (
-                    "Waiting sequence group should have only one prompt " "sequence."
-                )
+                assert len(waiting_seqs) == 1, f"Waiting sequence group should have only one prompt sequence, got: {len(waiting_seqs)}"
+
                 num_prompt_tokens = waiting_seqs[0].get_len()
                 if num_prompt_tokens > self.prompt_limit:
                     logger.warning(
@@ -388,14 +400,15 @@ class Scheduler:
                 
                 if delta_int_id > 0:
                     curr_deltas.add(delta_int_id)
-                    if enable_delta_policy:
+                    if self.enable_delta_serve_policy:
                     # if parent id is None -> set it to the parent of the delta
                         if delta_int_id not in curr_delta_running_mapping:
                             curr_delta_running_mapping[delta_int_id] = seq_group.request_id
-                            
                         if seq_group.parent_req_id is None:
                             seq_group.parent_req_id = curr_delta_running_mapping.get(delta_int_id, None)
-                
+                        if seq_group.delta_swapped_out:
+                            seq_group.add_preempty_in_time(now)
+                            
                 self.waiting.popleft()
                 self._allocate(seq_group)
                 
@@ -432,21 +445,20 @@ class Scheduler:
         # Reserve new token slots for the running sequence groups.
         running: Deque[SequenceGroup] = deque()
         preempted: List[SequenceGroup] = []
-        if enable_delta_policy:
+        if self.enable_delta_serve_policy:
             running_ids = [seq_group.request_id for seq_group in self.running]
         
         while self.running:
             seq_group = self.running.popleft()
-            if self.delta_enabled and enable_delta_policy:
+            if self.delta_enabled and self.enable_delta_serve_policy:
                 # logger.info(f"seq group: {seq_group.request_id}, parent: {seq_group.parent_req_id}")
                 if seq_group.parent_req_id is not None:
                     if seq_group.parent_req_id not in running_ids:
-                        # logger.info(f"[delta {seq_group.delta_int_id}] request for seq_group {seq_group.request_id} is preempted because its parent {seq_group.parent_req_id} is finished")
+                        logger.info(f"[delta {seq_group.delta_int_id}] request for seq_group {seq_group.request_id} is preempted because its parent {seq_group.parent_req_id} is finished")
                         seq_group.add_preempty_out_time(now)
                         self._delta_preempt_by_swap(seq_group, blocks_to_swap_out)
                         # reset parent_req_id since it needs to be re-scheduled
                         seq_group.parent_req_id = None
-                        seq_group.set_seq_status(SequenceStatus.WAITING)
                         preempted.append(seq_group)
                         continue
                     
@@ -467,7 +479,7 @@ class Scheduler:
                 # Append new slots to the sequence group.
                 self._append_slot(seq_group, blocks_to_copy)
                 running.append(seq_group)
-        
+
         self.running = running
 
         # Swap in the sequence groups in the SWAPPED state if possible.
@@ -551,7 +563,7 @@ class Scheduler:
                 if lora_int_id > 0:
                     curr_loras.add(lora_int_id)
                 
-                if delta_int_id > 0 and enable_delta_policy:
+                if delta_int_id > 0 and self.enable_delta_serve_policy:
                     curr_deltas.add(delta_int_id)
 
                     if seq_group.delta_int_id not in curr_delta_running_mapping:
@@ -562,7 +574,6 @@ class Scheduler:
                     curr_swaps.add(swap_int_id)
 
                 self.swapped.popleft()
-                seq_group.add_preempty_in_time(now)
                 self._swap_in(seq_group, blocks_to_swap_in)
                 self._append_slot(seq_group, blocks_to_copy)
                 num_curr_seqs += num_new_seqs
@@ -721,7 +732,8 @@ class Scheduler:
         seq_group: SequenceGroup,
         blocks_to_swap_out: Dict[int, int],
     ) -> None:
-        self._swap_out(seq_group, blocks_to_swap_out)
+        self._delta_swap_out(seq_group, blocks_to_swap_out)
+        seq_group.mark_swapped_out()
         self.delta_swapped.append(seq_group)
 
     def _swap_in(
@@ -733,7 +745,34 @@ class Scheduler:
         blocks_to_swap_in.update(mapping)
         for seq in seq_group.get_seqs(status=SequenceStatus.SWAPPED):
             seq.status = SequenceStatus.RUNNING
+            
+    def _delta_swap_in(
+        self,
+        seq_group: SequenceGroup,
+        blocks_to_swap_in: Dict[int, int],
+    ) -> None:
+        mapping = self.block_manager.swap_in(seq_group)
+        blocks_to_swap_in.update(mapping)
+        for seq in seq_group.get_seqs(status=SequenceStatus.SWAPPED):
+            seq.status = SequenceStatus.WAITING
 
+    def _delta_swap_out(
+        self,
+        seq_group: SequenceGroup,
+        blocks_to_swap_out: Dict[int, int],
+    ) -> None:
+        if not self.block_manager.can_swap_out(seq_group):
+            # FIXME(woosuk): Abort the sequence group instead of aborting the
+            # entire engine.
+            raise RuntimeError(
+                "Aborted due to the lack of CPU swap space. Please increase "
+                "the swap space to avoid this error."
+            )
+        mapping = self.block_manager.swap_out(seq_group)
+        blocks_to_swap_out.update(mapping)
+        for seq in seq_group.get_seqs(status=SequenceStatus.RUNNING):
+            seq.status = SequenceStatus.SWAPPED
+            
     def _swap_out(
         self,
         seq_group: SequenceGroup,
