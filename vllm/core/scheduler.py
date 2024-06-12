@@ -21,7 +21,7 @@ from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
-enable_delta_policy = True
+enable_delta_policy = False
 
 if enable_delta_policy:
     print("Delta policy is enabled")
