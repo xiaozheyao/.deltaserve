@@ -21,8 +21,11 @@ from vllm.delta.config import DeltaConfig
 from vllm.delta.request import DeltaRequest
 
 logger = init_logger(__name__)
-enable_delta_policy = False
+enable_delta_policy = True
 
+if enable_delta_policy:
+    print("Delta policy is enabled")
+    
 class PreemptionMode(enum.Enum):
     """Preemption modes.
 
@@ -146,13 +149,16 @@ class Scheduler:
             self.scheduler_config.max_model_len,
             self.scheduler_config.max_num_batched_tokens,
         )
-
+        self.enable_delta_serve_policy = False
         # Instantiate the scheduling policy.
         if self.delta_enabled:
             logger.info(f"Using {self.scheduler_config.scheduler_policy} policy.")
             self.policy = PolicyFactory.get_policy(
                 policy_name=self.scheduler_config.scheduler_policy
             )
+            if self.scheduler_config.scheduler_policy == "deltaserve":
+                self.enable_delta_serve_policy = True
+        
         else:
             if self.scheduler_config.scheduler_policy != "fcfs":
                 logger.warning("Only FCFS policy is supported without DeltaServe.")
@@ -172,6 +178,8 @@ class Scheduler:
         self.running: Deque[SequenceGroup] = deque()
         # Sequence groups in the SWAPPED state.
         self.swapped: Deque[SequenceGroup] = deque()
+        # Sequence groups in the DELTASWAPPED state.
+        self.delta_swapped: Deque[SequenceGroup] = deque()
 
         # Time at previous scheduling step
         self.prev_time = 0.0
@@ -257,6 +265,7 @@ class Scheduler:
 
         # Join waiting sequences if possible.
         if not self.swapped:
+            # swapped is empty, so we schedule the waiting + running + delta swapped sequences
             ignored_seq_groups: List[SequenceGroup] = []
             scheduled: List[SequenceGroup] = []
             # The total number of sequences on the fly, including the
@@ -282,21 +291,7 @@ class Scheduler:
             )
             seq_lens: List[int] = []
 
-            # Optimization: We do not sort the waiting queue since the preempted
-            # sequence groups are added to the front and the new sequence groups
-            # are added to the back.
-            # Note(xiaozhe): we sort the waiting queue based on the priority, given by the policy here
-            # for deltaserve policy, calculate occurrence of delta requests
-            if self.delta_enabled:
-                most_wanted = self.policy.get_most_wanted(now, seq_groups=self.waiting)
-                # get occurences ranking instead of the actual occurences
-                self.waiting = self.policy.sort_by_priority(
-                    now,
-                    self.waiting,
-                    occurences=None,
-                    available_deltas=available_deltas,
-                    most_wanted=most_wanted,
-                )
+            # Optimization: We do not sort the waiting queue since the preempted sequence groups are added to the front and the new sequence groups are added to the back.
 
             leftover_waiting_sequences = deque()
             num_batched_tokens = 0
@@ -448,10 +443,11 @@ class Scheduler:
                     if seq_group.parent_req_id not in running_ids:
                         # logger.info(f"[delta {seq_group.delta_int_id}] request for seq_group {seq_group.request_id} is preempted because its parent {seq_group.parent_req_id} is finished")
                         seq_group.add_preempty_out_time(now)
-                        self._preempt_by_swap(seq_group, blocks_to_swap_out)
-                        preempted.append(seq_group)
+                        self._delta_preempt_by_swap(seq_group, blocks_to_swap_out)
                         # reset parent_req_id since it needs to be re-scheduled
                         seq_group.parent_req_id = None
+                        seq_group.set_seq_status(SequenceStatus.WAITING)
+                        preempted.append(seq_group)
                         continue
                     
             # if it cannot append anymore -> preempt
@@ -557,8 +553,7 @@ class Scheduler:
                 
                 if delta_int_id > 0 and enable_delta_policy:
                     curr_deltas.add(delta_int_id)
-                    
-                    
+
                     if seq_group.delta_int_id not in curr_delta_running_mapping:
                         curr_delta_running_mapping[seq_group.delta_int_id] = seq_group.request_id
                     seq_group.parent_req_id = curr_delta_running_mapping.get(seq_group.delta_int_id, None)
@@ -720,6 +715,14 @@ class Scheduler:
     ) -> None:
         self._swap_out(seq_group, blocks_to_swap_out)
         self.swapped.append(seq_group)
+
+    def _delta_preempt_by_swap(
+        self,
+        seq_group: SequenceGroup,
+        blocks_to_swap_out: Dict[int, int],
+    ) -> None:
+        self._swap_out(seq_group, blocks_to_swap_out)
+        self.delta_swapped.append(seq_group)
 
     def _swap_in(
         self,

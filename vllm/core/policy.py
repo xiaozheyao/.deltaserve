@@ -74,24 +74,8 @@ class DeltaServe(Policy):
         available_deltas: list = None,
         most_wanted=None,
     ) -> float:
-        if occurences is None and most_wanted is None:
-            # fall back to fcfs
-            return now - seq_group.metrics.arrival_time
-        if available_deltas is None:
-            return (
-                occurences[seq_group.delta_int_id]
-                + now
-                - seq_group.metrics.arrival_time
-            )
-        if most_wanted is not None:
-            most_wanted_bonus = (
-                100 if seq_group.delta_int_id == most_wanted.delta_int_id else 0
-            )
-        else:
-            most_wanted_bonus = 0
-        # available_bonus = 10000 if seq_group.delta_int_id in available_deltas else 0
-        return now - seq_group.metrics.arrival_time + most_wanted_bonus
-
+        priority = now - seq_group.metrics.arrival_time
+        return priority
 
 class RandomPolicy(Policy):
     def get_priority(self, now: float, seq_group: SequenceGroup) -> float:

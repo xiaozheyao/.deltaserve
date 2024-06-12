@@ -436,7 +436,6 @@ class SequenceGroup:
         """Sets the first token time for Request level timings."""
         if self.metrics.first_token_time is None:
             self.metrics.first_token_time = time
-
     
     def set_start_loading_time(self, time: float) -> None:
         self.metrics.start_loading_time = time
@@ -486,7 +485,12 @@ class SequenceGroup:
             if status is None
             else [seq for seq in self.seqs_dict.values() if seq.status == status]
         )
-
+    def set_seq_status(
+        self,
+        status: SequenceStatus,
+    ):
+        for seq in self.seqs_dict.values():
+            seq.status = status
     def get_unfinished_seqs(self) -> List[Sequence]:
         return [seq for seq in self.seqs_dict.values() if not seq.is_finished()]
 
