@@ -59,7 +59,7 @@ def plot(args):
             x=row["inference_end"] + 0.5,
             y=row['id'] + 0.25,
             s=row['model'],
-            fontdict=dict(color='black', fontsize=3),
+            fontdict=dict(color='black', fontsize=8),
         )
         for col in df.columns:
             if col.startswith("preempt_out"):

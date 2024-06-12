@@ -395,7 +395,8 @@ class SequenceGroup:
         self.prompt_logprobs: Optional[PromptLogprobs] = None
         self.state = SequenceGroupState()
         self.multi_modal_data = multi_modal_data
-
+        self.delta_swapped_out = False
+    
     @property
     def prompt(self) -> str:
         # All sequences in the group should have the same prompt.
@@ -419,7 +420,10 @@ class SequenceGroup:
     @property
     def swap_int_id(self) -> int:
         return self.swap_request.swap_int_id if self.swap_request else 0
-
+    
+    def mark_swapped_out(self) -> None:
+        self.delta_swapped_out = True
+    
     def get_last_latency(self, now: float) -> float:
         """Gets last token latency for Request level timings."""
         latency = now - self.metrics.last_token_time

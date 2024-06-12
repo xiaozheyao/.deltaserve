@@ -52,6 +52,11 @@ class Metrics:
             documentation="Number of requests waiting to be processed.",
             labelnames=labelnames,
         )
+        self.gauge_scheduler_deltaswapped = Gauge(
+            name="vllm:num_requests_deltaswapped",
+            documentation="Number of requests swapped due to delta fairness.",
+            labelnames=labelnames,
+        )
         self.gauge_gpu_cache_usage = Gauge(
             name="vllm:gpu_cache_usage_perc",
             documentation="GPU KV-cache usage. 1 means 100 percent usage.",
@@ -150,6 +155,7 @@ class Stats:
     num_running: int
     num_waiting: int
     num_swapped: int
+    num_delta_swapped: int
     gpu_cache_usage: float
     cpu_cache_usage: float
 
@@ -279,6 +285,7 @@ class StatLogger:
                 f"{generation_throughput:.1f} tokens/s, "
                 f"Running: {stats.num_running} reqs, "
                 f"Swapped: {stats.num_swapped} reqs, "
+                f"DeltaSwapped: {stats.num_delta_swapped} reqs, "
                 f"Pending: {stats.num_waiting} reqs, "
                 f"GPU KV cache usage: {stats.gpu_cache_usage * 100:.1f}%, "
                 f"CPU KV cache usage: {stats.cpu_cache_usage * 100:.1f}%"

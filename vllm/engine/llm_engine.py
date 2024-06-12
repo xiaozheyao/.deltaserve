@@ -768,6 +768,7 @@ class LLMEngine:
         num_running = len(self.scheduler.running)
         num_swapped = len(self.scheduler.swapped)
         num_waiting = len(self.scheduler.waiting)
+        num_delta_swapped = len(self.scheduler.delta_swapped)
 
         # Iteration stats if we have scheduler output.
         num_prompt_tokens = 0
@@ -808,6 +809,7 @@ class LLMEngine:
             now=now,
             num_running=num_running,
             num_swapped=num_swapped,
+            num_delta_swapped=num_delta_swapped,
             num_waiting=num_waiting,
             gpu_cache_usage=gpu_cache_usage,
             cpu_cache_usage=cpu_cache_usage,
