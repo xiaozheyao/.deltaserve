@@ -21,7 +21,6 @@ def plot(args):
         # for each row, if max_deltas>0, then choose the row with max_deltas
         sub_df = df[df["distribution"] == wanted_distribution]
         systems = sub_df["sys_name"].unique()
-        print(systems)
         for system in systems:
             sub_df_sys = sub_df[sub_df["sys_name"] == system]
             if system == "Baseline-1":

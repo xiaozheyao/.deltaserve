@@ -197,8 +197,7 @@ def _parse_data_order(data):
         metric = x["response"]["metrics"][0]
         model = x["response"]["model"]
         arrival_time = metric["arrival_time"]
-        results.append(
-            {
+        result = {
                 "id": id,
                 "model": model,
                 "arrival": arrival_time,
@@ -213,7 +212,12 @@ def _parse_data_order(data):
                 "E2E Latency": metric["finished_time"] - arrival_time,
                 "TTFT": metric["first_token_time"] - arrival_time,
             }
-        )
+        if len(metric["preempty_in_times"]) >0 or len(metric["preempty_out_times"]) > 0:
+            for i, time in enumerate(metric["preempty_in_times"]):
+                result[f"preempt_in_{i}"] = time
+            for i, time in enumerate(metric["preempty_out_times"]):
+                result[f"preempt_out_{i}"] = time
+        results.append(result)        
     return results
 
 

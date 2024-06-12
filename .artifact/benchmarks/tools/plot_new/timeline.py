@@ -1,3 +1,4 @@
+import numpy as np
 import matplotlib
 import pandas as pd
 import seaborn as sns
@@ -24,10 +25,11 @@ def plot(args):
     df["id"] = df["id"].map(id_map)
     fig, ax = plt.subplots()
     patches = []
-    types = ["Queuing", "Inference", "Loading", "TTFT"]
+    types = ["Queuing", "Inference", "Loading", "TTFT", "Preempty"]
     for idx, job_type in enumerate(types):
         patches.append(matplotlib.patches.Patch(color=cmp[idx], label=job_type))
     type_colors = {k: v for k, v in zip(types, cmp)}
+    
     for index, row in df.iterrows():
         plt.barh(
             y=row["id"],
@@ -59,6 +61,17 @@ def plot(args):
             s=row['model'],
             fontdict=dict(color='black', fontsize=3),
         )
+        for col in df.columns:
+            if col.startswith("preempt_out"):
+                if not pd.isna(row[col]):
+                    empt_id = col.split("_")[-1]
+                    empt_in_time = row[f"preempt_in_{empt_id}"]
+                    plt.barh(
+                        y=row["id"],
+                        width=empt_in_time - row[col],
+                        left=row[col],
+                        color=type_colors["Preempty"],
+                    )
     plt.title("Time Breakdown", fontsize=15)
     plt.gca().invert_yaxis()
     ax.xaxis.grid(True, alpha=0.5)

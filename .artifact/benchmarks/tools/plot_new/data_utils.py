@@ -26,6 +26,7 @@ def prepare_df(input_file, order=False):
         metadata, results = parse_data(input_file, order=order)
         short_sys_name, sys_order = get_short_system_name(metadata)
         results = pd.DataFrame(results)
+        results["filename"] = input_file
         results["max_deltas"] = metadata["max_deltas"]
         results["max_cpu_deltas"] = metadata["max_cpu_deltas"]
         results["max_swaps"] = metadata["max_swaps"]

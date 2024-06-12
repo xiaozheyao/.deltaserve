@@ -95,8 +95,9 @@ class RequestMetrics:
     first_token_time: Optional[float]
     time_in_queue: Optional[float]
     finished_time: Optional[float] = None
-
-
+    preempty_out_times: Optional[List[float]] = None
+    preempty_in_times:  Optional[List[float]] = None
+    
 class SequenceData:
     """Data associated with a sequence.
 
@@ -370,8 +371,10 @@ class SequenceGroup:
         swap_request: Optional[SwapRequest] = None,
         multi_modal_data: Optional[MultiModalData] = None,
         start_loading_time: Optional[float] = None,
+        parent_req_id: str=None,
     ) -> None:
         self.request_id = request_id
+        self.parent_req_id  = parent_req_id
         self.seqs_dict = {seq.seq_id: seq for seq in seqs}
         self.sampling_params = sampling_params
         self.metrics = RequestMetrics(
@@ -383,6 +386,8 @@ class SequenceGroup:
             start_loading_time=start_loading_time,
             first_token_time=None,
             time_in_queue=None,
+            preempty_out_times=[],
+            preempty_in_times=[],
         )
         self.lora_request = lora_request
         self.delta_request = delta_request
@@ -421,11 +426,18 @@ class SequenceGroup:
         self.metrics.last_token_time = now
         return latency
 
+    def add_preempty_out_time(self, time: float) -> None:
+        self.metrics.preempty_out_times.append(time)
+    
+    def add_preempty_in_time(self, time: float) -> None:
+        self.metrics.preempty_in_times.append(time)
+    
     def maybe_set_first_token_time(self, time: float) -> None:
         """Sets the first token time for Request level timings."""
         if self.metrics.first_token_time is None:
             self.metrics.first_token_time = time
 
+    
     def set_start_loading_time(self, time: float) -> None:
         self.metrics.start_loading_time = time
 

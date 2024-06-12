@@ -185,3 +185,4 @@ _build/
 # Benchmark dataset
 *.json
 .local/
+file.out

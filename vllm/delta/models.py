@@ -510,7 +510,8 @@ class DeltaModelManager:
         ]
 
     def _create_merged_deltas_inplace(self, delta_model: DeltaModel) -> None:
-        print(f"create merged deltas inplace...")
+        # this is now done offline
+        pass
         # for module_name, new_module_names in self.packed_modules.items():
         #     print(f"module_name: {module_name} new_module_names: {new_module_names}")
         #     replacement_deltas = []
