@@ -1,0 +1,2217 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-06-12 19:43:09,462 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-06-12 19:43:09,462 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-06-12 19:43:09,462 - INFO - NumExpr defaulting to 8 threads.
+2024-06-12 19:43:10,333	INFO scripts.py:1182 -- Did not find any active Ray processes.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3831918a30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f38319193c0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 19:43:24 api_server.py:191] vLLM API server version 0.3.3
+INFO 06-12 19:43:24 api_server.py:192] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[Delta(name='delta-1', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-1'), Delta(name='delta-2', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-2'), Delta(name='delta-3', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-3'), Delta(name='delta-4', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-4'), Delta(name='delta-5', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-5'), Delta(name='delta-6', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-6'), Delta(name='delta-7', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-7'), Delta(name='delta-8', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-8'), Delta(name='delta-9', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-9'), Delta(name='delta-10', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-10'), Delta(name='delta-11', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-11'), Delta(name='delta-12', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-12'), Delta(name='delta-13', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-13'), Delta(name='delta-14', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-14'), Delta(name='delta-15', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-15'), Delta(name='delta-16', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-16'), Delta(name='delta-17', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-17'), Delta(name='delta-18', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-18'), Delta(name='delta-19', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-19'), Delta(name='delta-20', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-20'), Delta(name='delta-21', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-21'), Delta(name='delta-22', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-22'), Delta(name='delta-23', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-23'), Delta(name='delta-24', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-24'), Delta(name='delta-25', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-25'), Delta(name='delta-26', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-26'), Delta(name='delta-27', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-27'), Delta(name='delta-28', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-28'), Delta(name='delta-29', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-29'), Delta(name='delta-30', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-30'), Delta(name='delta-31', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-31'), Delta(name='delta-32', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-32')], swap_modules=[], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=4, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=True, max_deltas=16, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=False, scheduler_policy='fcfs', max_swap_slots=1, max_cpu_models=4, enable_swap=False, engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+2024-06-12 19:43:27,982	INFO worker.py:1749 -- Started a local Ray instance.
+INFO 06-12 19:43:30 llm_engine.py:90] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=DeltaConfig(max_deltas=16, max_bitwidth=4, delta_dtype=torch.int32, max_cpu_deltas=32, delta_extra_vocab_size=0, pack_factor=Fraction(8, 1), sparse_factor=Fraction(2, 1), kernel=<QuantKernel.TRITON: 'triton'>), swap_config=None, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=4, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+INFO 06-12 19:43:30 llm_engine.py:243] ignored verifying delta_config
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3831919c90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 19:43:39 models.py:45] Using marlin delta modules
+INFO 06-12 19:43:39 selector.py:16] Using FlashAttention backend.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f383191a560>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3831919ab0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:43:41 models.py:45] Using marlin delta modules
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:43:41 models.py:45] Using marlin delta modules
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:43:41 models.py:45] Using marlin delta modules
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:43:41 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:43:41 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:43:41 selector.py:16] Using FlashAttention backend.
+INFO 06-12 19:43:55 model_runner.py:161] Loading model weights took 6.1114 GB
+INFO 06-12 19:43:55 worker_manager.py:296] Starting prefetching thread
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f38319191e0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:43:56 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:43:56 worker_manager.py:296] Starting prefetching thread
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:43:56 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:43:56 worker_manager.py:296] Starting prefetching thread
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:43:56 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:43:56 worker_manager.py:296] Starting prefetching thread
+INFO 06-12 19:44:09 ray_gpu_executor.py:275] # GPU blocks: 12380, # CPU blocks: 1310
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f3831918b20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 19:44:12 scheduler.py:152] Using fcfs policy.
+INFO 06-12 19:44:12 block_manager.py:264] disable automatic prefix caching
+WARNING 06-12 19:44:12 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [4430]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     ::1:36794 - "GET /sysinfo HTTP/1.1" 200 OK
+Translating from base-model to /vllm/.idea/full_models/Llama-2-13b-hf
+Warming up starts
+{'id': 583, 'prompt': 'USER: introduce einstein\nASSISTANT:', 'timestamp': 0, 'model': 'delta-12', 'min_tokens': 135, 'max_tokens': 135}
+Prefetching is disabled
+WARNING 06-12 19:44:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+INFO 06-12 19:44:21 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:21 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:21 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:21 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:21 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:21 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:21 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:21 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 19:44:22 worker_manager.py:363] Main thread loading delta 12 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:22 worker_manager.py:363] Main thread loading delta 12 done
+INFO 06-12 19:44:23 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:22 worker_manager.py:363] Main thread loading delta 12 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:22 worker_manager.py:363] Main thread loading delta 12 done
+INFO 06-12 19:44:28 metrics.py:276] Avg prompt throughput: 2.4 tokens/s, Avg generation throughput: 9.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 06-12 19:44:33 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:36796 - "POST /v1/completions HTTP/1.1" 200 OK
+Warming up ends
+Issuing queries
+sending 1 queries at 0.8
+sending 1 queries at 2.1
+sending 1 queries at 3.0
+sending 1 queries at 3.8000000000000003
+sending 1 queries at 4.4
+sending 1 queries at 5.4
+sending 1 queries at 6.0
+sending 1 queries at 8.200000000000001
+sending 1 queries at 11.5
+sending 1 queries at 12.0
+sending 1 queries at 13.600000000000001
+sending 1 queries at 14.3
+sending 1 queries at 15.200000000000001
+sending 2 queries at 17.8
+sending 2 queries at 17.900000000000002
+sending 1 queries at 19.700000000000003
+sending 1 queries at 21.200000000000003
+sending 1 queries at 23.3
+sending 1 queries at 27.1
+sending 1 queries at 28.700000000000003
+sending 1 queries at 29.3
+sending 1 queries at 30.900000000000002
+sending 1 queries at 31.0
+sending 1 queries at 32.0
+sending 1 queries at 32.2
+sending 1 queries at 35.1
+sending 1 queries at 35.800000000000004
+sending 1 queries at 36.300000000000004
+sending 1 queries at 36.6
+sending 1 queries at 38.1
+sending 1 queries at 38.7
+sending 2 queries at 39.6
+sending 1 queries at 40.6
+sending 1 queries at 41.5
+sending 1 queries at 42.5
+sending 1 queries at 45.300000000000004
+sending 1 queries at 46.5
+sending 1 queries at 46.900000000000006
+sending 1 queries at 47.5
+sending 1 queries at 48.7
+sending 1 queries at 48.800000000000004
+sending 1 queries at 49.900000000000006
+sending 1 queries at 51.0
+sending 1 queries at 51.2
+sending 1 queries at 51.300000000000004
+sending 1 queries at 51.7
+sending 1 queries at 52.2
+sending 1 queries at 53.0
+sending 1 queries at 53.6
+sending 1 queries at 58.1
+sending 1 queries at 58.2
+sending 1 queries at 58.400000000000006
+sending 1 queries at 58.6
+sending 1 queries at 59.6
+sending 1 queries at 59.900000000000006
+sending 1 queries at 60.6
+sending 1 queries at 60.800000000000004
+sending 1 queries at 61.0
+sending 1 queries at 61.1
+sending 1 queries at 62.2
+sending 1 queries at 62.300000000000004
+sending 1 queries at 62.6
+sending 1 queries at 63.0
+sending 1 queries at 64.7
+sending 1 queries at 64.8
+sending 1 queries at 66.7
+sending 1 queries at 66.8
+sending 1 queries at 70.5
+sending 1 queries at 71.10000000000001
+sending 1 queries at 74.9
+sending 1 queries at 75.8
+sending 2 queries at 77.2
+sending 1 queries at 77.60000000000001
+sending 1 queries at 77.7
+sending 1 queries at 78.0
+sending 1 queries at 78.2
+sending 1 queries at 78.5
+sending 2 queries at 79.10000000000001
+sending 1 queries at 80.30000000000001
+sending 1 queries at 81.2
+sending 1 queries at 81.5
+sending 1 queries at 82.2
+sending 1 queries at 82.30000000000001
+sending 1 queries at 83.2
+sending 1 queries at 85.80000000000001
+sending 1 queries at 86.2
+sending 1 queries at 87.30000000000001
+sending 1 queries at 87.4
+sending 1 queries at 88.7
+sending 1 queries at 89.0
+sending 1 queries at 89.2
+sending 2 queries at 90.10000000000001
+sending 2 queries at 91.9
+sending 1 queries at 93.0
+sending 1 queries at 93.4
+sending 1 queries at 94.7
+sending 1 queries at 98.0
+sending 1 queries at 98.30000000000001
+sending 1 queries at 99.10000000000001
+sending 1 queries at 100.0
+sending 1 queries at 100.9
+sending 1 queries at 101.10000000000001
+sending 1 queries at 104.2
+sending 1 queries at 104.80000000000001
+sending 1 queries at 106.60000000000001
+sending 1 queries at 107.80000000000001
+sending 1 queries at 108.2
+sending 1 queries at 109.9
+sending 1 queries at 110.4
+sending 1 queries at 112.5
+sending 1 queries at 113.4
+sending 1 queries at 115.5
+sending 1 queries at 116.7
+sending 1 queries at 118.0
+sending 1 queries at 118.7
+sending 1 queries at 121.80000000000001
+sending 1 queries at 122.80000000000001
+sending 1 queries at 123.4
+sending 2 queries at 124.30000000000001
+sending 1 queries at 124.7
+sending 1 queries at 125.80000000000001
+sending 1 queries at 126.10000000000001
+sending 1 queries at 127.10000000000001
+sending 1 queries at 127.60000000000001
+sending 1 queries at 127.80000000000001
+sending 1 queries at 128.1
+sending 1 queries at 129.0
+sending 1 queries at 129.9
+sending 1 queries at 130.70000000000002
+sending 1 queries at 131.8
+sending 1 queries at 132.8
+sending 1 queries at 133.4
+sending 1 queries at 135.70000000000002
+sending 1 queries at 136.1
+sending 1 queries at 136.70000000000002
+sending 1 queries at 138.9
+sending 1 queries at 140.6
+sending 1 queries at 141.8
+sending 1 queries at 141.9
+sending 1 queries at 144.4
+sending 1 queries at 145.70000000000002
+sending 1 queries at 152.4
+sending 1 queries at 152.6
+sending 1 queries at 154.60000000000002
+sending 1 queries at 154.8
+sending 1 queries at 155.8
+sending 1 queries at 155.9
+sending 1 queries at 157.8
+sending 1 queries at 159.4
+sending 1 queries at 160.3
+sending 1 queries at 160.8
+sending 1 queries at 160.9
+sending 1 queries at 162.0
+sending 1 queries at 162.70000000000002
+sending 1 queries at 163.9
+sending 1 queries at 165.9
+sending 1 queries at 169.70000000000002
+sending 2 queries at 171.60000000000002
+sending 1 queries at 172.0
+sending 1 queries at 173.4
+sending 1 queries at 173.5
+sending 2 queries at 174.3
+sending 2 queries at 174.60000000000002
+sending 1 queries at 176.20000000000002
+sending 1 queries at 176.4
+sending 1 queries at 176.8
+sending 1 queries at 179.5
+sending 2 queries at 180.70000000000002
+sending 1 queries at 180.9
+sending 1 queries at 181.9
+sending 1 queries at 182.70000000000002
+sending 1 queries at 183.0
+sending 1 queries at 185.70000000000002
+sending 1 queries at 186.70000000000002
+sending 1 queries at 187.4
+sending 1 queries at 188.3
+sending 1 queries at 189.60000000000002
+sending 1 queries at 190.0
+sending 1 queries at 190.5
+sending 1 queries at 190.8
+sending 1 queries at 191.0
+sending 1 queries at 193.9
+sending 1 queries at 195.20000000000002
+sending 1 queries at 195.9
+sending 1 queries at 196.10000000000002
+sending 1 queries at 196.4
+sending 1 queries at 196.5
+sending 1 queries at 197.10000000000002
+sending 1 queries at 197.4
+sending 1 queries at 198.60000000000002
+sending 1 queries at 199.10000000000002
+sending 2 queries at 199.3
+sending 1 queries at 199.4
+sending 1 queries at 200.5
+sending 1 queries at 201.10000000000002
+sending 1 queries at 201.9
+sending 1 queries at 204.20000000000002
+sending 1 queries at 208.8
+sending 1 queries at 209.10000000000002
+sending 1 queries at 210.10000000000002
+sending 1 queries at 210.4
+sending 1 queries at 210.5
+sending 1 queries at 211.9
+sending 1 queries at 212.3
+sending 1 queries at 212.8
+sending 1 queries at 213.60000000000002
+sending 1 queries at 215.4
+sending 1 queries at 216.4
+sending 1 queries at 218.5
+sending 1 queries at 218.8
+sending 1 queries at 220.4
+sending 1 queries at 220.60000000000002
+sending 1 queries at 223.70000000000002
+sending 1 queries at 224.8
+sending 1 queries at 225.10000000000002
+sending 1 queries at 228.0
+sending 1 queries at 229.3
+sending 1 queries at 229.60000000000002
+sending 1 queries at 229.9
+sending 2 queries at 230.60000000000002
+sending 1 queries at 230.8
+sending 1 queries at 231.4
+sending 1 queries at 231.9
+sending 1 queries at 232.5
+sending 1 queries at 232.8
+sending 1 queries at 233.70000000000002
+sending 1 queries at 235.70000000000002
+sending 1 queries at 235.8
+sending 1 queries at 236.5
+sending 1 queries at 236.70000000000002
+sending 1 queries at 237.9
+sending 1 queries at 238.4
+sending 1 queries at 239.3
+sending 1 queries at 239.5
+sending 1 queries at 239.60000000000002
+sending 1 queries at 240.3
+sending 1 queries at 240.70000000000002
+sending 1 queries at 243.60000000000002
+sending 1 queries at 245.0
+sending 1 queries at 246.4
+sending 1 queries at 248.70000000000002
+sending 1 queries at 248.8
+sending 1 queries at 249.60000000000002
+sending 1 queries at 250.5
+sending 1 queries at 253.8
+sending 1 queries at 254.10000000000002
+sending 1 queries at 254.4
+sending 2 queries at 254.5
+sending 1 queries at 257.2
+sending 1 queries at 258.3
+sending 1 queries at 259.8
+sending 1 queries at 260.2
+sending 1 queries at 261.0
+sending 1 queries at 261.1
+sending 1 queries at 261.8
+sending 1 queries at 265.6
+sending 1 queries at 267.7
+sending 1 queries at 268.1
+sending 1 queries at 271.3
+sending 1 queries at 271.6
+sending 1 queries at 274.6
+sending 1 queries at 277.40000000000003
+sending 1 queries at 279.0
+sending 1 queries at 280.0
+sending 1 queries at 282.1
+sending 1 queries at 282.40000000000003
+sending 1 queries at 284.3
+sending 2 queries at 285.3
+sending 1 queries at 285.7
+sending 1 queries at 285.90000000000003
+sending 1 queries at 289.90000000000003
+sending 1 queries at 290.5
+sending 1 queries at 291.2
+sending 1 queries at 292.2
+sending 1 queries at 292.7
+sending 1 queries at 292.90000000000003
+sending 1 queries at 294.6
+sending 1 queries at 294.8
+sending 1 queries at 295.5
+sending 1 queries at 295.8
+sending 1 queries at 295.90000000000003
+sending 1 queries at 297.8
+sending 1 queries at 301.5
+sending 1 queries at 304.7
+sending 1 queries at 307.1
+sending 1 queries at 308.6
+sending 2 queries at 309.0
+sending 1 queries at 309.6
+sending 1 queries at 309.8
+sending 2 queries at 310.0
+sending 2 queries at 311.3
+sending 1 queries at 312.8
+sending 2 queries at 313.0
+sending 1 queries at 313.1
+sending 1 queries at 314.3
+sending 1 queries at 314.5
+sending 1 queries at 315.1
+sending 1 queries at 315.90000000000003
+sending 1 queries at 317.90000000000003
+sending 1 queries at 319.20000000000005
+sending 1 queries at 319.5
+sending 1 queries at 319.6
+sending 1 queries at 319.70000000000005
+sending 1 queries at 320.0
+sending 1 queries at 320.3
+sending 1 queries at 320.90000000000003
+sending 1 queries at 322.1
+sending 1 queries at 323.3
+sending 1 queries at 323.6
+sending 1 queries at 324.1
+sending 1 queries at 324.3
+sending 2 queries at 325.90000000000003
+sending 1 queries at 327.1
+sending 1 queries at 328.6
+sending 1 queries at 330.1
+sending 1 queries at 330.40000000000003
+sending 1 queries at 330.90000000000003
+sending 1 queries at 331.8
+sending 1 queries at 332.1
+sending 1 queries at 332.6
+sending 1 queries at 332.8
+sending 2 queries at 333.40000000000003
+sending 1 queries at 335.0
+sending 1 queries at 335.1
+sending 1 queries at 335.90000000000003
+sending 1 queries at 336.20000000000005
+sending 1 queries at 337.1
+sending 1 queries at 340.3
+sending 1 queries at 341.3
+sending 1 queries at 341.40000000000003
+sending 1 queries at 341.90000000000003
+sending 1 queries at 342.6
+sending 1 queries at 343.40000000000003
+sending 1 queries at 344.5
+sending 1 queries at 344.90000000000003
+sending 1 queries at 345.0
+sending 1 queries at 345.5
+sending 1 queries at 348.6
+sending 1 queries at 348.8
+sending 1 queries at 351.20000000000005
+sending 1 queries at 352.0
+sending 1 queries at 352.6
+sending 1 queries at 354.70000000000005
+sending 1 queries at 355.3
+sending 1 queries at 356.6
+sending 1 queries at 357.1
+sending 1 queries at 359.5
+sending 1 queries at 360.70000000000005
+sending 1 queries at 361.90000000000003
+sending 1 queries at 362.3
+sending 1 queries at 363.70000000000005
+sending 1 queries at 364.70000000000005
+sending 1 queries at 365.0
+sending 1 queries at 365.1
+sending 1 queries at 366.70000000000005
+sending 1 queries at 369.90000000000003
+sending 1 queries at 370.5
+sending 1 queries at 371.40000000000003
+sending 1 queries at 373.40000000000003
+sending 1 queries at 374.0
+sending 1 queries at 377.0
+sending 1 queries at 377.90000000000003
+sending 1 queries at 379.6
+sending 1 queries at 382.0
+sending 1 queries at 383.70000000000005
+sending 1 queries at 383.90000000000003
+sending 1 queries at 384.8
+sending 2 queries at 385.40000000000003
+sending 1 queries at 386.0
+sending 1 queries at 386.3
+sending 2 queries at 388.20000000000005
+sending 1 queries at 391.40000000000003
+sending 1 queries at 391.8
+sending 2 queries at 392.3
+sending 1 queries at 392.5
+sending 1 queries at 393.0
+sending 1 queries at 395.6
+sending 1 queries at 395.8
+sending 1 queries at 398.70000000000005
+sending 1 queries at 400.70000000000005
+sending 1 queries at 401.3
+sending 1 queries at 401.70000000000005
+sending 1 queries at 402.0
+sending 2 queries at 402.90000000000003
+sending 1 queries at 403.0
+sending 1 queries at 403.5
+sending 1 queries at 403.6
+sending 1 queries at 403.90000000000003
+sending 1 queries at 404.1
+sending 1 queries at 404.40000000000003
+sending 2 queries at 404.6
+sending 1 queries at 404.70000000000005
+sending 1 queries at 405.70000000000005
+sending 1 queries at 409.3
+sending 1 queries at 414.0
+sending 1 queries at 414.5
+sending 1 queries at 414.70000000000005
+sending 1 queries at 415.70000000000005
+sending 1 queries at 416.40000000000003
+sending 1 queries at 420.90000000000003
+sending 1 queries at 421.0
+sending 1 queries at 422.5
+sending 1 queries at 422.8
+sending 1 queries at 423.1
+sending 1 queries at 424.20000000000005
+sending 1 queries at 424.5
+sending 1 queries at 425.6
+sending 1 queries at 426.3
+sending 1 queries at 426.90000000000003
+sending 1 queries at 427.70000000000005
+sending 1 queries at 428.0
+sending 1 queries at 429.20000000000005
+sending 1 queries at 429.8
+sending 1 queries at 430.20000000000005
+sending 1 queries at 432.0
+sending 2 queries at 434.6
+sending 1 queries at 434.90000000000003
+sending 1 queries at 435.3
+sending 1 queries at 437.0
+sending 1 queries at 441.20000000000005
+sending 1 queries at 444.70000000000005
+sending 1 queries at 447.1
+sending 1 queries at 447.40000000000003
+sending 1 queries at 452.20000000000005
+sending 1 queries at 452.5
+sending 1 queries at 452.6
+sending 1 queries at 455.70000000000005
+sending 1 queries at 455.90000000000003
+sending 1 queries at 457.1
+sending 1 queries at 457.20000000000005
+sending 1 queries at 458.5
+sending 1 queries at 460.6
+sending 1 queries at 460.90000000000003
+sending 1 queries at 461.40000000000003
+sending 1 queries at 461.90000000000003
+sending 1 queries at 463.20000000000005
+sending 1 queries at 463.5
+sending 1 queries at 463.70000000000005
+sending 1 queries at 464.3
+sending 1 queries at 464.70000000000005
+sending 1 queries at 466.5
+sending 1 queries at 466.8
+sending 1 queries at 467.5
+sending 1 queries at 470.3
+sending 1 queries at 471.3
+sending 1 queries at 473.3
+sending 1 queries at 476.20000000000005
+sending 1 queries at 477.6
+sending 1 queries at 478.8
+sending 1 queries at 482.20000000000005
+sending 1 queries at 487.40000000000003
+sending 1 queries at 488.0
+sending 1 queries at 488.1
+sending 1 queries at 488.40000000000003
+sending 1 queries at 488.6
+sending 1 queries at 489.1
+sending 1 queries at 489.3
+sending 1 queries at 490.20000000000005
+sending 1 queries at 490.70000000000005
+sending 1 queries at 492.90000000000003
+sending 1 queries at 496.40000000000003
+sending 1 queries at 497.1
+sending 1 queries at 497.5
+sending 1 queries at 498.40000000000003
+sending 1 queries at 500.6
+sending 1 queries at 501.20000000000005
+sending 1 queries at 502.0
+sending 1 queries at 502.3
+sending 1 queries at 502.90000000000003
+sending 1 queries at 503.40000000000003
+sending 1 queries at 503.70000000000005
+sending 1 queries at 504.40000000000003
+sending 1 queries at 504.8
+sending 1 queries at 505.20000000000005
+sending 1 queries at 506.0
+sending 1 queries at 507.40000000000003
+sending 1 queries at 507.8
+sending 1 queries at 510.3
+sending 1 queries at 512.3000000000001
+sending 1 queries at 512.4
+sending 1 queries at 512.7
+sending 1 queries at 513.3000000000001
+sending 1 queries at 513.4
+sending 1 queries at 513.8000000000001
+sending 1 queries at 515.1
+sending 1 queries at 516.3000000000001
+sending 1 queries at 517.3000000000001
+sending 1 queries at 518.5
+sending 1 queries at 518.7
+sending 1 queries at 519.1
+sending 1 queries at 520.3000000000001
+sending 1 queries at 522.4
+sending 1 queries at 523.2
+sending 2 queries at 523.5
+sending 2 queries at 524.8000000000001
+sending 1 queries at 525.3000000000001
+sending 1 queries at 526.0
+sending 1 queries at 528.6
+sending 1 queries at 528.7
+sending 2 queries at 529.2
+sending 1 queries at 529.6
+sending 1 queries at 530.6
+sending 1 queries at 530.9
+sending 1 queries at 531.2
+sending 1 queries at 531.3000000000001
+sending 1 queries at 532.1
+sending 1 queries at 533.3000000000001
+sending 1 queries at 534.4
+sending 2 queries at 537.4
+sending 1 queries at 538.5
+sending 1 queries at 539.4
+sending 1 queries at 540.3000000000001
+sending 2 queries at 543.6
+sending 1 queries at 544.8000000000001
+sending 1 queries at 546.4
+sending 1 queries at 547.2
+sending 1 queries at 547.6
+sending 1 queries at 549.1
+sending 1 queries at 549.2
+sending 1 queries at 549.8000000000001
+sending 1 queries at 550.5
+sending 1 queries at 551.7
+sending 1 queries at 551.8000000000001
+sending 1 queries at 552.1
+sending 1 queries at 552.6
+sending 1 queries at 553.6
+sending 1 queries at 555.8000000000001
+sending 1 queries at 556.7
+sending 1 queries at 556.9
+sending 1 queries at 560.8000000000001
+sending 1 queries at 562.9
+sending 1 queries at 563.6
+sending 1 queries at 566.1
+sending 1 queries at 566.9
+sending 1 queries at 569.5
+sending 1 queries at 571.2
+sending 1 queries at 574.7
+sending 1 queries at 577.2
+sending 1 queries at 577.3000000000001
+sending 1 queries at 577.4
+sending 1 queries at 577.9
+sending 1 queries at 581.0
+sending 1 queries at 581.3000000000001
+sending 1 queries at 581.5
+sending 1 queries at 583.7
+sending 1 queries at 584.3000000000001
+sending 1 queries at 586.7
+sending 1 queries at 586.8000000000001
+sending 1 queries at 587.9
+sending 1 queries at 588.5
+sending 1 queries at 588.6
+sending 1 queries at 589.8000000000001
+sending 2 queries at 590.1
+sending 2 queries at 590.2
+sending 1 queries at 592.6
+sending 1 queries at 594.0
+sending 1 queries at 596.2
+sending 1 queries at 597.4
+sending 1 queries at 598.1
+sending 1 queries at 598.5
+Prefetching is disabled
+WARNING 06-12 19:44:37 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+INFO 06-12 19:44:37 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:37 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:37 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:37 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:37 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:37 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:37 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:37 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:37 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:37 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:37 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+INFO 06-12 19:44:38 worker_manager.py:363] Main thread loading delta 10 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:39 worker_manager.py:363] Main thread loading delta 10 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:39 worker_manager.py:363] Main thread loading delta 10 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:39 worker_manager.py:363] Main thread loading delta 10 done
+INFO 06-12 19:44:39 metrics.py:276] Avg prompt throughput: 3.5 tokens/s, Avg generation throughput: 5.6 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+WARNING 06-12 19:44:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+INFO 06-12 19:44:39 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:39 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:39 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:39 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:39 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:39 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:39 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:39 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:44:40 worker_manager.py:363] Main thread loading delta 14 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:41 worker_manager.py:363] Main thread loading delta 14 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:40 worker_manager.py:363] Main thread loading delta 14 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:40 worker_manager.py:363] Main thread loading delta 14 done
+Prefetching is disabled
+WARNING 06-12 19:44:41 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+INFO 06-12 19:44:41 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:41 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:41 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:41 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:41 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:41 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:41 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:41 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:41 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:41 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:41 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:44:42 worker_manager.py:363] Main thread loading delta 1 done
+WARNING 06-12 19:44:42 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+INFO 06-12 19:44:42 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:42 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:43 worker_manager.py:363] Main thread loading delta 1 done
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:43 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:43 worker_manager.py:363] Main thread loading delta 1 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:43 worker_manager.py:363] Main thread loading delta 1 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:43 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:43 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:43 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:43 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:43 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:43 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:43 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:43 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 19:44:44 worker_manager.py:363] Main thread loading delta 15 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:44 worker_manager.py:363] Main thread loading delta 15 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:44 worker_manager.py:363] Main thread loading delta 15 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:44 worker_manager.py:363] Main thread loading delta 15 done
+Prefetching is disabled
+INFO 06-12 19:44:45 metrics.py:276] Avg prompt throughput: 12.6 tokens/s, Avg generation throughput: 0.7 tokens/s, Running: 5 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+WARNING 06-12 19:44:45 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+INFO 06-12 19:44:45 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:45 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:45 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:45 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:45 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:45 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:45 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:45 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:45 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:45 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:45 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 19:44:46 worker_manager.py:363] Main thread loading delta 11 done
+WARNING 06-12 19:44:46 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+INFO 06-12 19:44:46 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:46 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:47 worker_manager.py:363] Main thread loading delta 11 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:47 worker_manager.py:363] Main thread loading delta 11 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:47 worker_manager.py:363] Main thread loading delta 11 done
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:47 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:47 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:47 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:47 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:47 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:47 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:47 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:47 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:47 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+INFO 06-12 19:44:48 worker_manager.py:363] Main thread loading delta 7 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:48 worker_manager.py:363] Main thread loading delta 7 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:48 worker_manager.py:363] Main thread loading delta 7 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:48 worker_manager.py:363] Main thread loading delta 7 done
+Prefetching is disabled
+WARNING 06-12 19:44:49 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+INFO 06-12 19:44:49 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:49 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:49 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:49 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:49 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:49 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:49 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:49 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:49 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:49 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:49 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+INFO 06-12 19:44:50 worker_manager.py:363] Main thread loading delta 2 done
+Prefetching is disabled
+WARNING 06-12 19:44:50 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+INFO 06-12 19:44:50 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:50 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:51 worker_manager.py:363] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:51 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:51 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:51 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:51 worker_manager.py:363] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:51 worker_manager.py:363] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:51 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:51 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:51 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:51 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:51 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:51 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+INFO 06-12 19:44:52 worker_manager.py:363] Main thread loading delta 13 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:52 worker_manager.py:363] Main thread loading delta 13 done
+INFO 06-12 19:44:53 metrics.py:276] Avg prompt throughput: 7.7 tokens/s, Avg generation throughput: 0.4 tokens/s, Running: 10 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:52 worker_manager.py:363] Main thread loading delta 13 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:52 worker_manager.py:363] Main thread loading delta 13 done
+WARNING 06-12 19:44:53 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+INFO 06-12 19:44:53 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:53 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:53 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:53 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:53 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:53 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:53 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:53 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:53 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:53 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:53 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:44:54 worker_manager.py:363] Main thread loading delta 16 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:55 worker_manager.py:363] Main thread loading delta 16 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:55 worker_manager.py:363] Main thread loading delta 16 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:55 worker_manager.py:363] Main thread loading delta 16 done
+INFO:     ::1:37260 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+WARNING 06-12 19:44:56 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+INFO 06-12 19:44:56 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:56 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:56 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:56 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:56 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:56 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:56 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:56 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:56 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:56 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:56 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 19:44:57 worker_manager.py:363] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:57 worker_manager.py:363] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:57 worker_manager.py:363] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:57 worker_manager.py:363] Main thread loading delta 6 done
+Prefetching is disabled
+WARNING 06-12 19:44:58 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+INFO 06-12 19:44:58 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:44:58 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:44:58 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:58 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:58 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:44:58 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:58 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:58 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:44:58 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:58 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:58 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 19:44:59 worker_manager.py:363] Main thread loading delta 8 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:44:59 worker_manager.py:363] Main thread loading delta 8 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:44:59 worker_manager.py:363] Main thread loading delta 8 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:44:59 worker_manager.py:363] Main thread loading delta 8 done
+Prefetching is disabled
+INFO 06-12 19:45:00 metrics.py:276] Avg prompt throughput: 49.3 tokens/s, Avg generation throughput: 6.2 tokens/s, Running: 18 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:37172 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37110 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:45:05 metrics.py:276] Avg prompt throughput: 8.9 tokens/s, Avg generation throughput: 74.6 tokens/s, Running: 18 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+WARNING 06-12 19:45:07 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+INFO 06-12 19:45:07 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:45:07 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:45:07 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:07 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:07 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:45:07 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:07 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:07 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:45:07 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:07 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:07 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:45:08 worker_manager.py:363] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:09 worker_manager.py:363] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:09 worker_manager.py:363] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:09 worker_manager.py:363] Main thread loading delta 4 done
+WARNING 06-12 19:45:09 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:45:09 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:45:09 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:45:09 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+INFO 06-12 19:45:09 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:45:09 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:09 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:09 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:09 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:09 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:09 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:09 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 19:45:10 worker_manager.py:363] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:11 worker_manager.py:363] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:11 worker_manager.py:363] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:11 worker_manager.py:363] Main thread loading delta 5 done
+INFO 06-12 19:45:11 metrics.py:276] Avg prompt throughput: 26.7 tokens/s, Avg generation throughput: 28.8 tokens/s, Running: 24 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.7%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37254 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37320 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37326 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37098 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37330 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 19:45:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+INFO 06-12 19:45:14 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:45:14 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:45:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:14 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:14 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:45:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:14 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:14 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:45:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:14 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:14 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:45:19 worker_manager.py:363] Main thread loading delta 9 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:19 worker_manager.py:363] Main thread loading delta 9 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:19 worker_manager.py:363] Main thread loading delta 9 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:19 worker_manager.py:363] Main thread loading delta 9 done
+INFO 06-12 19:45:19 metrics.py:276] Avg prompt throughput: 16.4 tokens/s, Avg generation throughput: 36.0 tokens/s, Running: 24 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.8%, CPU KV cache usage: 0.0%
+WARNING 06-12 19:45:19 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+INFO 06-12 19:45:19 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 19:45:19 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12358)[0m WARNING 06-12 19:45:19 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:19 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:19 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12633)[0m WARNING 06-12 19:45:19 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:19 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:19 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=12764)[0m WARNING 06-12 19:45:19 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:19 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:19 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 19:45:21 worker_manager.py:363] Main thread loading delta 3 done
+[36m(RayWorkerVllm pid=12358)[0m INFO 06-12 19:45:21 worker_manager.py:363] Main thread loading delta 3 done
+[36m(RayWorkerVllm pid=12633)[0m INFO 06-12 19:45:21 worker_manager.py:363] Main thread loading delta 3 done
+[36m(RayWorkerVllm pid=12764)[0m INFO 06-12 19:45:21 worker_manager.py:363] Main thread loading delta 3 done
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37342 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37332 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37338 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37360 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37340 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:45:24 metrics.py:276] Avg prompt throughput: 52.3 tokens/s, Avg generation throughput: 67.0 tokens/s, Running: 29 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37314 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37004 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37308 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37012 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:45:29 metrics.py:276] Avg prompt throughput: 38.7 tokens/s, Avg generation throughput: 105.8 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.3%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37364 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37194 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37398 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:45:34 metrics.py:276] Avg prompt throughput: 26.3 tokens/s, Avg generation throughput: 131.0 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.5%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37304 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37016 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37300 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37256 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37428 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:45:40 metrics.py:276] Avg prompt throughput: 77.5 tokens/s, Avg generation throughput: 122.5 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37152 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37366 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:45:45 metrics.py:276] Avg prompt throughput: 23.8 tokens/s, Avg generation throughput: 161.6 tokens/s, Running: 43 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37410 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:36994 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37574 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37616 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37346 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:45:50 metrics.py:276] Avg prompt throughput: 59.3 tokens/s, Avg generation throughput: 170.4 tokens/s, Running: 40 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.5%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37600 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37708 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:45:55 metrics.py:276] Avg prompt throughput: 104.8 tokens/s, Avg generation throughput: 145.5 tokens/s, Running: 47 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:37712 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:36992 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37444 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37668 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37732 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37324 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37706 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37384 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:00 metrics.py:276] Avg prompt throughput: 28.0 tokens/s, Avg generation throughput: 170.5 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 3.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:37640 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37316 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:46:05 metrics.py:276] Avg prompt throughput: 25.5 tokens/s, Avg generation throughput: 166.6 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 3.5%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37740 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37730 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37718 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37312 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:36996 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37348 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37414 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:10 metrics.py:276] Avg prompt throughput: 39.1 tokens/s, Avg generation throughput: 175.7 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 3.6%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37734 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37622 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37768 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:46:15 metrics.py:276] Avg prompt throughput: 19.9 tokens/s, Avg generation throughput: 192.6 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 4.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:37716 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37722 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37044 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:46:21 metrics.py:276] Avg prompt throughput: 18.6 tokens/s, Avg generation throughput: 194.2 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 4.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:37434 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37742 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37648 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37554 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37762 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:26 metrics.py:276] Avg prompt throughput: 98.7 tokens/s, Avg generation throughput: 193.4 tokens/s, Running: 52 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.7%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37812 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37752 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37684 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37284 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37318 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:31 metrics.py:276] Avg prompt throughput: 7.3 tokens/s, Avg generation throughput: 210.6 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 4.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:37620 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37412 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37458 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37816 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37000 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:36 metrics.py:276] Avg prompt throughput: 58.1 tokens/s, Avg generation throughput: 180.7 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:37670 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37618 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37328 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37758 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37568 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37783 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:41 metrics.py:276] Avg prompt throughput: 82.2 tokens/s, Avg generation throughput: 169.9 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:37776 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37778 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37636 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:46:46 metrics.py:276] Avg prompt throughput: 47.5 tokens/s, Avg generation throughput: 176.2 tokens/s, Running: 55 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37682 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37826 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37770 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37702 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38037 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37792 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37772 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37726 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37994 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:51 metrics.py:276] Avg prompt throughput: 14.5 tokens/s, Avg generation throughput: 206.0 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:37766 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38048 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37704 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37710 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37382 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37836 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:46:57 metrics.py:276] Avg prompt throughput: 27.9 tokens/s, Avg generation throughput: 188.6 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.4%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37786 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37764 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37868 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37894 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37562 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37724 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38140 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37884 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37974 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:47:02 metrics.py:276] Avg prompt throughput: 15.3 tokens/s, Avg generation throughput: 179.8 tokens/s, Running: 42 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:37924 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37980 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38126 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37592 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37736 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37372 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37938 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37754 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38094 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37788 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:47:07 metrics.py:276] Avg prompt throughput: 5.0 tokens/s, Avg generation throughput: 157.7 tokens/s, Running: 33 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:37652 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37356 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37322 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37930 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:47:12 metrics.py:276] Avg prompt throughput: 20.1 tokens/s, Avg generation throughput: 131.7 tokens/s, Running: 33 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37804 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38158 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38152 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38016 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38160 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38164 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:47:17 metrics.py:276] Avg prompt throughput: 28.9 tokens/s, Avg generation throughput: 126.6 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38150 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37808 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38124 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38174 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38004 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:47:22 metrics.py:276] Avg prompt throughput: 21.4 tokens/s, Avg generation throughput: 128.3 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:37262 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37744 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38170 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37856 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38024 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:47:27 metrics.py:276] Avg prompt throughput: 91.0 tokens/s, Avg generation throughput: 123.9 tokens/s, Running: 29 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:47:32 metrics.py:276] Avg prompt throughput: 186.8 tokens/s, Avg generation throughput: 120.3 tokens/s, Running: 38 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.9%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38196 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38154 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37950 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37714 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38058 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38128 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37952 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38206 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:47:37 metrics.py:276] Avg prompt throughput: 31.3 tokens/s, Avg generation throughput: 138.3 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.6%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:37746 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:37814 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:47:42 metrics.py:276] Avg prompt throughput: 37.6 tokens/s, Avg generation throughput: 145.0 tokens/s, Running: 38 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:38166 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38168 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38226 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38234 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:47:47 metrics.py:276] Avg prompt throughput: 178.0 tokens/s, Avg generation throughput: 131.7 tokens/s, Running: 43 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:38218 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37756 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38242 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:47:53 metrics.py:276] Avg prompt throughput: 33.5 tokens/s, Avg generation throughput: 156.3 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:37748 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38188 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:47:58 metrics.py:276] Avg prompt throughput: 140.4 tokens/s, Avg generation throughput: 167.3 tokens/s, Running: 53 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:38142 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38194 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38068 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37760 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37738 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38220 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:03 metrics.py:276] Avg prompt throughput: 8.7 tokens/s, Avg generation throughput: 198.8 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:38184 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38172 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38182 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38296 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38216 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:08 metrics.py:276] Avg prompt throughput: 19.9 tokens/s, Avg generation throughput: 184.8 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:38298 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38186 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38224 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:48:13 metrics.py:276] Avg prompt throughput: 83.6 tokens/s, Avg generation throughput: 182.1 tokens/s, Running: 52 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:38278 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38228 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38276 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38088 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38210 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38316 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:18 metrics.py:276] Avg prompt throughput: 60.6 tokens/s, Avg generation throughput: 193.5 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:38266 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38240 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:37728 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38204 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38252 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38256 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:23 metrics.py:276] Avg prompt throughput: 11.9 tokens/s, Avg generation throughput: 190.2 tokens/s, Running: 47 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:38318 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38190 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38312 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:48:28 metrics.py:276] Avg prompt throughput: 48.2 tokens/s, Avg generation throughput: 165.0 tokens/s, Running: 53 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:38084 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38306 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38464 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38116 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38338 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38176 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38272 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38448 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38466 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:48:33 metrics.py:276] Avg prompt throughput: 134.0 tokens/s, Avg generation throughput: 179.6 tokens/s, Running: 51 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.7%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:38250 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38482 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38354 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38378 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38490 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38444 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38320 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38247 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:38 metrics.py:276] Avg prompt throughput: 52.9 tokens/s, Avg generation throughput: 178.4 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:37956 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38178 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38518 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38330 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38358 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38484 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38428 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:44 metrics.py:276] Avg prompt throughput: 24.7 tokens/s, Avg generation throughput: 187.9 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:38214 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37998 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38452 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38254 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38270 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38606 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:49 metrics.py:276] Avg prompt throughput: 23.8 tokens/s, Avg generation throughput: 175.2 tokens/s, Running: 43 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:38248 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38238 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38230 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38148 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38302 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:37971 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38508 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38633 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38261 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38624 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:48:54 metrics.py:276] Avg prompt throughput: 30.5 tokens/s, Avg generation throughput: 159.9 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:38244 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38424 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38280 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38631 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38200 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38646 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38468 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:48:59 metrics.py:276] Avg prompt throughput: 67.3 tokens/s, Avg generation throughput: 139.7 tokens/s, Running: 38 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:38670 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38442 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38516 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:49:04 metrics.py:276] Avg prompt throughput: 5.9 tokens/s, Avg generation throughput: 151.5 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:38192 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38258 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38666 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38548 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:49:09 metrics.py:276] Avg prompt throughput: 19.7 tokens/s, Avg generation throughput: 141.8 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:38696 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38592 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:49:14 metrics.py:276] Avg prompt throughput: 8.6 tokens/s, Avg generation throughput: 146.0 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.5%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:38304 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38526 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38656 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:49:19 metrics.py:276] Avg prompt throughput: 14.6 tokens/s, Avg generation throughput: 140.7 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.6%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:49:24 metrics.py:276] Avg prompt throughput: 25.6 tokens/s, Avg generation throughput: 150.7 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:38702 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38626 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38340 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38708 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38684 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38268 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38500 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38710 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:49:29 metrics.py:276] Avg prompt throughput: 31.0 tokens/s, Avg generation throughput: 146.7 tokens/s, Running: 40 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:38668 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38728 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38594 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38730 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38732 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:49:35 metrics.py:276] Avg prompt throughput: 32.8 tokens/s, Avg generation throughput: 148.1 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:38326 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38202 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38284 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38237 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:49:40 metrics.py:276] Avg prompt throughput: 6.6 tokens/s, Avg generation throughput: 158.1 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:38274 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38712 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38688 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38720 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38198 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:49:45 metrics.py:276] Avg prompt throughput: 6.2 tokens/s, Avg generation throughput: 141.8 tokens/s, Running: 35 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.9%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38422 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38222 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38748 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38372 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:49:50 metrics.py:276] Avg prompt throughput: 78.3 tokens/s, Avg generation throughput: 130.4 tokens/s, Running: 43 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 3.7%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38156 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38758 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38660 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38734 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38756 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38760 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:49:55 metrics.py:276] Avg prompt throughput: 40.0 tokens/s, Avg generation throughput: 161.8 tokens/s, Running: 42 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:38676 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38718 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38782 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:50:00 metrics.py:276] Avg prompt throughput: 47.3 tokens/s, Avg generation throughput: 165.2 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 4.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38832 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38608 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38822 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38744 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38816 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38694 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:50:05 metrics.py:276] Avg prompt throughput: 28.1 tokens/s, Avg generation throughput: 189.9 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:38774 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38572 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38860 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38768 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38856 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38850 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38810 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:50:10 metrics.py:276] Avg prompt throughput: 285.5 tokens/s, Avg generation throughput: 167.9 tokens/s, Running: 51 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:38472 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38740 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38780 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38716 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38806 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:50:15 metrics.py:276] Avg prompt throughput: 20.1 tokens/s, Avg generation throughput: 193.2 tokens/s, Running: 52 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:38902 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38898 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38798 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38894 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38722 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38892 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38808 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38820 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:50:21 metrics.py:276] Avg prompt throughput: 28.2 tokens/s, Avg generation throughput: 182.3 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:38958 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38812 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38946 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38828 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38982 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:50:26 metrics.py:276] Avg prompt throughput: 49.5 tokens/s, Avg generation throughput: 186.4 tokens/s, Running: 51 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.6%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38706 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38932 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:50:31 metrics.py:276] Avg prompt throughput: 13.6 tokens/s, Avg generation throughput: 195.7 tokens/s, Running: 52 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:38966 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38738 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38984 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38766 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38888 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38700 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38772 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38382 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38834 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:50:36 metrics.py:276] Avg prompt throughput: 18.7 tokens/s, Avg generation throughput: 189.6 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 5.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:38770 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38800 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38874 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38845 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:50:41 metrics.py:276] Avg prompt throughput: 31.9 tokens/s, Avg generation throughput: 174.7 tokens/s, Running: 47 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 5.4%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:38988 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38654 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39020 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38790 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:50:46 metrics.py:276] Avg prompt throughput: 23.8 tokens/s, Avg generation throughput: 177.4 tokens/s, Running: 47 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 5.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:38818 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38736 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38814 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38714 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39043 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:50:51 metrics.py:276] Avg prompt throughput: 26.5 tokens/s, Avg generation throughput: 174.4 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 5.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:38842 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38862 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38746 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38742 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39200 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38634 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:50:56 metrics.py:276] Avg prompt throughput: 21.9 tokens/s, Avg generation throughput: 171.7 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:39072 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38802 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38514 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38886 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38726 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38796 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:51:01 metrics.py:276] Avg prompt throughput: 18.1 tokens/s, Avg generation throughput: 165.9 tokens/s, Running: 42 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38792 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38530 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39240 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39226 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38786 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39260 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39258 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38488 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:51:06 metrics.py:276] Avg prompt throughput: 29.4 tokens/s, Avg generation throughput: 152.8 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:38891 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38950 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39232 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39036 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39040 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:51:12 metrics.py:276] Avg prompt throughput: 70.8 tokens/s, Avg generation throughput: 145.9 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.8%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39222 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39220 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39238 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:51:17 metrics.py:276] Avg prompt throughput: 12.5 tokens/s, Avg generation throughput: 165.6 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.1%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38558 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39280 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:51:22 metrics.py:276] Avg prompt throughput: 248.8 tokens/s, Avg generation throughput: 140.8 tokens/s, Running: 54 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.8%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:39214 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39310 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39284 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39314 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39244 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38872 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38948 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39306 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:51:27 metrics.py:276] Avg prompt throughput: 9.7 tokens/s, Avg generation throughput: 208.6 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:39304 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39300 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38788 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:51:32 metrics.py:276] Avg prompt throughput: 16.1 tokens/s, Avg generation throughput: 174.2 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39268 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39296 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:51:37 metrics.py:276] Avg prompt throughput: 3.8 tokens/s, Avg generation throughput: 193.7 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 5.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:38986 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39324 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39298 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39322 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39126 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39308 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38876 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39318 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38764 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39118 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:51:42 metrics.py:276] Avg prompt throughput: 49.1 tokens/s, Avg generation throughput: 166.0 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 2 reqs, GPU KV cache usage: 4.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:39316 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39274 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39124 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39302 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39276 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:38776 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:51:47 metrics.py:276] Avg prompt throughput: 24.4 tokens/s, Avg generation throughput: 160.0 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 3 reqs, GPU KV cache usage: 4.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:39336 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39248 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39384 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:51:52 metrics.py:276] Avg prompt throughput: 20.0 tokens/s, Avg generation throughput: 161.7 tokens/s, Running: 45 reqs, Swapped: 0 reqs, Pending: 3 reqs, GPU KV cache usage: 4.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:39146 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39180 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39378 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39070 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39154 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:51:58 metrics.py:276] Avg prompt throughput: 6.3 tokens/s, Avg generation throughput: 174.4 tokens/s, Running: 42 reqs, Swapped: 0 reqs, Pending: 3 reqs, GPU KV cache usage: 4.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:39080 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39358 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39370 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39190 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39352 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39270 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:52:03 metrics.py:276] Avg prompt throughput: 7.3 tokens/s, Avg generation throughput: 162.7 tokens/s, Running: 38 reqs, Swapped: 0 reqs, Pending: 3 reqs, GPU KV cache usage: 4.1%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:38866 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39196 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39272 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39022 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39328 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39356 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:38878 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39376 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39364 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:52:08 metrics.py:276] Avg prompt throughput: 21.8 tokens/s, Avg generation throughput: 150.2 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39082 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39397 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39460 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:52:13 metrics.py:276] Avg prompt throughput: 22.3 tokens/s, Avg generation throughput: 134.3 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:39474 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39406 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39366 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39392 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39458 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39456 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39104 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:52:18 metrics.py:276] Avg prompt throughput: 23.3 tokens/s, Avg generation throughput: 137.5 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:39210 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39408 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39224 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39502 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39428 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39504 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39430 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:52:23 metrics.py:276] Avg prompt throughput: 38.7 tokens/s, Avg generation throughput: 123.1 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:39360 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39390 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39144 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39344 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:52:28 metrics.py:276] Avg prompt throughput: 17.0 tokens/s, Avg generation throughput: 130.6 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.9%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:39544 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39178 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39142 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39486 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39402 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39558 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:52:34 metrics.py:276] Avg prompt throughput: 6.5 tokens/s, Avg generation throughput: 135.8 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.6%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39550 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39498 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39138 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:52:39 metrics.py:276] Avg prompt throughput: 13.7 tokens/s, Avg generation throughput: 118.8 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:39354 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39526 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39286 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39612 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39294 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:52:44 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 115.1 tokens/s, Running: 24 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:39594 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39658 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39652 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:52:49 metrics.py:276] Avg prompt throughput: 47.8 tokens/s, Avg generation throughput: 102.8 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.7%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:39312 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39664 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39340 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:52:54 metrics.py:276] Avg prompt throughput: 15.4 tokens/s, Avg generation throughput: 122.1 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.6%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:39716 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39678 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39292 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:52:59 metrics.py:276] Avg prompt throughput: 34.6 tokens/s, Avg generation throughput: 121.5 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.8%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39626 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39528 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:53:04 metrics.py:276] Avg prompt throughput: 44.9 tokens/s, Avg generation throughput: 135.5 tokens/s, Running: 40 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:39374 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39432 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39496 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39668 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39722 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39482 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:53:09 metrics.py:276] Avg prompt throughput: 21.6 tokens/s, Avg generation throughput: 155.7 tokens/s, Running: 38 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39730 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39688 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39700 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39416 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:53:14 metrics.py:276] Avg prompt throughput: 44.3 tokens/s, Avg generation throughput: 149.3 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:39788 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39670 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39732 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39778 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39524 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39342 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39812 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:53:20 metrics.py:276] Avg prompt throughput: 27.9 tokens/s, Avg generation throughput: 154.1 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39338 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39748 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39320 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39822 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39834 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:53:25 metrics.py:276] Avg prompt throughput: 24.8 tokens/s, Avg generation throughput: 155.4 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.1%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39846 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39422 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:53:30 metrics.py:276] Avg prompt throughput: 47.8 tokens/s, Avg generation throughput: 158.1 tokens/s, Running: 48 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:39858 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39522 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39818 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39662 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39542 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39480 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39388 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39740 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39674 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:53:35 metrics.py:276] Avg prompt throughput: 17.9 tokens/s, Avg generation throughput: 180.7 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:39776 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39786 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39844 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39798 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:53:40 metrics.py:276] Avg prompt throughput: 13.7 tokens/s, Avg generation throughput: 171.3 tokens/s, Running: 43 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:39828 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39876 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39804 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39814 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39756 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:53:45 metrics.py:276] Avg prompt throughput: 35.3 tokens/s, Avg generation throughput: 159.7 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.5%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39840 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39874 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39820 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:53:51 metrics.py:276] Avg prompt throughput: 59.0 tokens/s, Avg generation throughput: 168.0 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:39914 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39928 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39746 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:53:56 metrics.py:276] Avg prompt throughput: 9.4 tokens/s, Avg generation throughput: 193.3 tokens/s, Running: 49 reqs, Swapped: 0 reqs, Pending: 1 reqs, GPU KV cache usage: 4.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:39892 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39842 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39790 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39562 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39868 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39922 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39826 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39472 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:01 metrics.py:276] Avg prompt throughput: 32.7 tokens/s, Avg generation throughput: 178.2 tokens/s, Running: 45 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:39881 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39942 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39884 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:06 metrics.py:276] Avg prompt throughput: 28.6 tokens/s, Avg generation throughput: 179.1 tokens/s, Running: 43 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:39970 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39850 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39606 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39704 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39958 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39830 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:11 metrics.py:276] Avg prompt throughput: 26.5 tokens/s, Avg generation throughput: 168.8 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:39750 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39890 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39760 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39706 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39908 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39660 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:16 metrics.py:276] Avg prompt throughput: 412.8 tokens/s, Avg generation throughput: 141.3 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:40040 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39516 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40052 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 19:54:21 metrics.py:276] Avg prompt throughput: 17.9 tokens/s, Avg generation throughput: 147.0 tokens/s, Running: 40 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:40034 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40062 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39742 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:54:26 metrics.py:276] Avg prompt throughput: 18.9 tokens/s, Avg generation throughput: 152.0 tokens/s, Running: 42 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39900 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39930 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39866 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40124 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 19:54:31 metrics.py:276] Avg prompt throughput: 37.8 tokens/s, Avg generation throughput: 167.5 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:40130 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39998 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39809 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:39576 - "POST /v1/completions HTTP/1.1" 200 OK
+total threads: 595
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:39948 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39784 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40148 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:36 metrics.py:276] Avg prompt throughput: 25.1 tokens/s, Avg generation throughput: 166.3 tokens/s, Running: 42 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:39724 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40100 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40142 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40146 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39906 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40136 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 160.9 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 5.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:40006 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39856 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39916 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:47 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 143.8 tokens/s, Running: 33 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:39862 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39938 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39932 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40090 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:52 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 131.1 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 4.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:40012 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39768 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40087 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40106 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39864 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39936 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39772 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:54:57 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 107.0 tokens/s, Running: 21 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:39738 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39854 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40092 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39924 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:02 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 81.0 tokens/s, Running: 18 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 3.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:39780 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39946 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40112 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40032 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39806 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39986 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:07 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 58.0 tokens/s, Running: 12 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:40030 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:12 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 51.3 tokens/s, Running: 11 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:39896 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:17 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 46.2 tokens/s, Running: 10 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:39962 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:39888 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:22 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 38.3 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:40076 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:27 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 34.8 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.2%, CPU KV cache usage: 0.0%
+INFO 06-12 19:55:32 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 33.2 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:40110 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.9 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.2%, CPU KV cache usage: 0.0%
+INFO 06-12 19:55:43 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.6 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.3%, CPU KV cache usage: 0.0%
+INFO 06-12 19:55:48 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.7 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.3%, CPU KV cache usage: 0.0%
+INFO 06-12 19:55:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 29.1 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:39988 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40050 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:55:58 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 27.2 tokens/s, Running: 4 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:40064 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:56:03 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.3 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:40055 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:40104 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 19:56:08 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 12.7 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:40074 - "POST /v1/completions HTTP/1.1" 200 OK
+Results written to .artifact/benchmarks/results/pjlab/d4f9e39c-82f5-4d5b-ae1b-5bacd935f076.jsonl
+Killing process 4430...
+/var/spool/slurmd/job3696587/slurm_script: line 42:  4397 Killed                  apptainer run --nv --home /mnt/petrelfs/huqinghao/xzyao/:/home/xiayao --bind /mnt/petrelfs/huqinghao/xzyao/code/vllm:/vllm --bind /mnt/petrelfs/huqinghao/xzyao/code/triteia:/triteia --env PYTHONPATH=/vllm:/triteia --env CUDA_LAUNCH_BLOCKING=1 --env TVM_TARGET=nvidia/nvidia-a100 --env BITBLAS_TARGET=nvidia/nvidia-a100 --env RAY_DEDUP_LOGS=0 --env USE_MARLIN=1 --workdir /vllm /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif python3 /vllm/vllm/entrypoints/openai/api_server.py --model /vllm/.idea/full_models/Llama-2-13b-hf --disable-log-requests --gpu-memory-utilization 0.85 --delta-modules delta-1=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-1 delta-2=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-2 delta-3=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-3 delta-4=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-4 delta-5=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-5 delta-6=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-6 delta-7=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-7 delta-8=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-8 delta-9=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-9 delta-10=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-10 delta-11=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-11 delta-12=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-12 delta-13=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-13 delta-14=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-14 delta-15=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-15 delta-16=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-16 delta-17=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-17 delta-18=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-18 delta-19=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-19 delta-20=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-20 delta-21=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-21 delta-22=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-22 delta-23=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-23 delta-24=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-24 delta-25=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-25 delta-26=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-26 delta-27=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-27 delta-28=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-28 delta-29=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-29 delta-30=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-30 delta-31=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-31 delta-32=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-32 --tensor-parallel-size 4 --enforce-eager --max-deltas 16 --enable-delta

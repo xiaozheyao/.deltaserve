@@ -1,0 +1,38 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-06-12 20:07:56,609 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-06-12 20:07:56,609 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-06-12 20:07:56,609 - INFO - NumExpr defaulting to 8 threads.
+2024-06-12 20:07:57,406	INFO scripts.py:1182 -- Did not find any active Ray processes.
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f724cb04a30>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f724cadfac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 20:08:12 api_server.py:191] vLLM API server version 0.3.3
+INFO 06-12 20:08:12 api_server.py:192] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[], swap_modules=[SwapModule(name='delta-1', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-1'), SwapModule(name='delta-2', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-2'), SwapModule(name='delta-3', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-3'), SwapModule(name='delta-4', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-4'), SwapModule(name='delta-5', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-5'), SwapModule(name='delta-6', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-6'), SwapModule(name='delta-7', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-7'), SwapModule(name='delta-8', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-8'), SwapModule(name='delta-9', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-9'), SwapModule(name='delta-10', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-10'), SwapModule(name='delta-11', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-11'), SwapModule(name='delta-12', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-12'), SwapModule(name='delta-13', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-13'), SwapModule(name='delta-14', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-14'), SwapModule(name='delta-15', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-15'), SwapModule(name='delta-16', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-16'), SwapModule(name='delta-17', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-17'), SwapModule(name='delta-18', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-18'), SwapModule(name='delta-19', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-19'), SwapModule(name='delta-20', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-20'), SwapModule(name='delta-21', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-21'), SwapModule(name='delta-22', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-22'), SwapModule(name='delta-23', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-23'), SwapModule(name='delta-24', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-24'), SwapModule(name='delta-25', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-25'), SwapModule(name='delta-26', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-26'), SwapModule(name='delta-27', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-27'), SwapModule(name='delta-28', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-28'), SwapModule(name='delta-29', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-29'), SwapModule(name='delta-30', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-30'), SwapModule(name='delta-31', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-31'), SwapModule(name='delta-32', local_path='/vllm/.idea/full_models/Llama-2-13b-hf-32')], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=4, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=False, max_deltas=0, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=False, scheduler_policy='fcfs', max_swap_slots=1, max_cpu_models=4, enable_swap=False, engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+slurmstepd: error: *** JOB 3696601 ON HOST-10-140-60-14 CANCELLED AT 2024-06-12T20:08:15 ***
+Exception ignored in: <function Popen.__del__ at 0x7fcf6942da20>
+Traceback (most recent call last):
+  File "/usr/lib/python3.10/subprocess.py", line 1065, in __del__
+    def __del__(self, _maxsize=sys.maxsize, _warn=warnings.warn):
+  File "/usr/local/lib/python3.10/dist-packages/ray/_private/worker.py", line 1414, in sigterm_handler
+    sys.exit(signum)
+SystemExit: 15

@@ -1,0 +1,1603 @@
+/mnt/hwfile/huqinghao/miniconda3/bin/python
+2024-06-12 21:05:52,998 - INFO - Note: detected 128 virtual cores but NumExpr set to maximum of 64, check "NUMEXPR_MAX_THREADS" environment variable.
+2024-06-12 21:05:52,998 - INFO - Note: NumExpr detected 128 cores but "NUMEXPR_MAX_THREADS" not set, so enforcing safe limit of 8.
+2024-06-12 21:05:52,998 - INFO - NumExpr defaulting to 8 threads.
+2024-06-12 21:05:54,224	INFO scripts.py:1182 -- Did not find any active Ray processes.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd188a60>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+==========
+== CUDA ==
+==========
+
+CUDA Version 12.1.0
+
+Container image Copyright (c) 2016-2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+This container image and its contents are governed by the NVIDIA Deep Learning Container License.
+By pulling and using the container, you accept the terms and conditions of this license:
+https://developer.nvidia.com/ngc/nvidia-deep-learning-container-license
+
+A copy of this license is made available in this container at /NGC-DL-CONTAINER-LICENSE for your convenience.
+
+*************************
+** DEPRECATION NOTICE! **
+*************************
+THIS IMAGE IS DEPRECATED and is scheduled for DELETION.
+    https://gitlab.com/nvidia/container-images/cuda/blob/master/doc/support-policy.md
+
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd163ac0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 21:06:11 api_server.py:191] vLLM API server version 0.3.3
+INFO 06-12 21:06:11 api_server.py:192] args: Namespace(host=None, port=8000, uvicorn_log_level='info', allow_credentials=False, allowed_origins=['*'], allowed_methods=['*'], allowed_headers=['*'], api_key=None, served_model_name=None, lora_modules=[], delta_modules=[Delta(name='delta-1', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-1'), Delta(name='delta-2', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-2'), Delta(name='delta-3', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-3'), Delta(name='delta-4', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-4'), Delta(name='delta-5', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-5'), Delta(name='delta-6', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-6'), Delta(name='delta-7', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-7'), Delta(name='delta-8', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-8'), Delta(name='delta-9', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-9'), Delta(name='delta-10', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-10'), Delta(name='delta-11', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-11'), Delta(name='delta-12', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-12'), Delta(name='delta-13', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-13'), Delta(name='delta-14', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-14'), Delta(name='delta-15', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-15'), Delta(name='delta-16', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-16'), Delta(name='delta-17', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-17'), Delta(name='delta-18', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-18'), Delta(name='delta-19', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-19'), Delta(name='delta-20', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-20'), Delta(name='delta-21', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-21'), Delta(name='delta-22', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-22'), Delta(name='delta-23', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-23'), Delta(name='delta-24', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-24'), Delta(name='delta-25', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-25'), Delta(name='delta-26', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-26'), Delta(name='delta-27', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-27'), Delta(name='delta-28', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-28'), Delta(name='delta-29', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-29'), Delta(name='delta-30', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-30'), Delta(name='delta-31', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-31'), Delta(name='delta-32', local_path='/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-32')], swap_modules=[], chat_template=None, response_role='assistant', ssl_keyfile=None, ssl_certfile=None, ssl_ca_certs=None, ssl_cert_reqs=0, root_path=None, middleware=[], model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer=None, revision=None, code_revision=None, tokenizer_revision=None, tokenizer_mode='auto', trust_remote_code=False, download_dir=None, load_format='auto', dtype='auto', kv_cache_dtype='auto', max_model_len=None, worker_use_ray=False, pipeline_parallel_size=1, tensor_parallel_size=4, max_parallel_loading_workers=None, ray_workers_use_nsight=False, block_size=16, enable_prefix_caching=False, seed=0, swap_space=4, gpu_memory_utilization=0.85, max_num_batched_tokens=None, max_num_seqs=256, max_logprobs=5, disable_log_stats=False, quantization=None, enforce_eager=True, max_context_len_to_capture=8192, disable_custom_all_reduce=False, tokenizer_pool_size=0, tokenizer_pool_type='ray', tokenizer_pool_extra_config=None, enable_lora=False, max_loras=1, max_lora_rank=64, lora_extra_vocab_size=256, lora_dtype='auto', max_cpu_loras=32, enable_delta=True, max_deltas=8, max_cpu_deltas=32, max_delta_bitwidth=4, device='auto', image_input_type=None, image_token_id=None, image_input_shape=None, image_feature_size=None, scheduler_delay_factor=0.0, enable_prefetch=False, scheduler_policy='fcfs', max_swap_slots=1, max_cpu_models=4, enable_swap=False, engine_use_ray=False, disable_log_requests=True, max_log_len=None)
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd1893f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+2024-06-12 21:06:15,218	INFO worker.py:1749 -- Started a local Ray instance.
+INFO 06-12 21:06:18 llm_engine.py:90] Initializing an LLM engine (v0.3.3) with config: model='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer='/vllm/.idea/full_models/Llama-2-13b-hf', tokenizer_mode=auto, revision=None, tokenizer_revision=None, trust_remote_code=False, dtype=torch.float16, lora_config=None, delta_config=DeltaConfig(max_deltas=8, max_bitwidth=4, delta_dtype=torch.int32, max_cpu_deltas=32, delta_extra_vocab_size=0, pack_factor=Fraction(8, 1), sparse_factor=Fraction(2, 1), kernel=<QuantKernel.TRITON: 'triton'>), swap_config=None, max_seq_len=4096, download_dir=None, load_format=auto, tensor_parallel_size=4, disable_custom_all_reduce=False, quantization=None, enforce_eager=True, kv_cache_dtype=auto, device_config=cuda, seed=0)
+INFO 06-12 21:06:18 llm_engine.py:243] ignored verifying delta_config
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd189cc0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 21:06:27 models.py:45] Using marlin delta modules
+INFO 06-12 21:06:27 selector.py:16] Using FlashAttention backend.
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd18a590>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd18ae60>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd18a890>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd189fc0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd1896f0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd188b20>: Failed to establish a new connection: [Errno 111] Connection refused'))
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:06:29 models.py:45] Using marlin delta modules
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:06:29 models.py:45] Using marlin delta modules
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:06:29 models.py:45] Using marlin delta modules
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:06:29 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:06:29 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:06:29 selector.py:16] Using FlashAttention backend.
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:07:03 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:07:03 worker_manager.py:296] Starting prefetching thread
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:07:13 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:07:13 worker_manager.py:296] Starting prefetching thread
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:07:24 model_runner.py:161] Loading model weights took 6.1114 GB
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:07:24 worker_manager.py:296] Starting prefetching thread
+INFO 06-12 21:07:26 model_runner.py:161] Loading model weights took 6.1114 GB
+INFO 06-12 21:07:26 worker_manager.py:296] Starting prefetching thread
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd188eb0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 21:07:41 ray_gpu_executor.py:275] # GPU blocks: 15699, # CPU blocks: 1310
+Waiting for 10 secs for the system to be ready: HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /sysinfo (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f12dd163940>: Failed to establish a new connection: [Errno 111] Connection refused'))
+INFO 06-12 21:07:45 scheduler.py:152] Using fcfs policy.
+INFO 06-12 21:07:45 block_manager.py:264] disable automatic prefix caching
+WARNING 06-12 21:07:45 serving_chat.py:373] No chat template provided. Chat API will not work.
+INFO:     Started server process [109151]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     ::1:44044 - "GET /sysinfo HTTP/1.1" 200 OK
+Translating from base-model to /vllm/.idea/full_models/Llama-2-13b-hf
+Warming up starts
+{'id': 17, 'prompt': 'USER: could you explain quantum mechanics for me?\nASSISTANT:', 'timestamp': 0, 'model': 'delta-30', 'min_tokens': 297, 'max_tokens': 297}
+Prefetching is disabled
+WARNING 06-12 21:07:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 30 now
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:07:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 30 now
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:07:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 30 now
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:07:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 30 now
+INFO 06-12 21:07:54 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:07:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:07:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:07:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:07:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:07:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:07:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:07:54 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:07:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 06-12 21:08:05 worker_manager.py:363] Main thread loading delta 30 done
+INFO 06-12 21:08:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 06-12 21:08:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:08:16 worker_manager.py:363] Main thread loading delta 30 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:08:17 worker_manager.py:363] Main thread loading delta 30 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:08:17 worker_manager.py:363] Main thread loading delta 30 done
+INFO 06-12 21:08:20 metrics.py:276] Avg prompt throughput: 3.6 tokens/s, Avg generation throughput: 7.4 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+INFO 06-12 21:08:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 06-12 21:08:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.9 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO 06-12 21:08:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.8 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:44046 - "POST /v1/completions HTTP/1.1" 200 OK
+Warming up ends
+Issuing queries
+sending 1 queries at 0.8
+sending 1 queries at 2.1
+sending 1 queries at 3.0
+sending 1 queries at 3.8000000000000003
+sending 1 queries at 4.4
+sending 1 queries at 5.4
+sending 1 queries at 6.0
+sending 1 queries at 8.200000000000001
+sending 1 queries at 11.5
+sending 1 queries at 12.0
+sending 1 queries at 13.600000000000001
+sending 1 queries at 14.3
+sending 1 queries at 15.200000000000001
+sending 2 queries at 17.8
+sending 2 queries at 17.900000000000002
+sending 1 queries at 19.700000000000003
+sending 1 queries at 21.200000000000003
+sending 1 queries at 23.3
+sending 1 queries at 27.1
+sending 1 queries at 28.700000000000003
+sending 1 queries at 29.3
+sending 1 queries at 30.900000000000002
+sending 1 queries at 31.0
+sending 1 queries at 32.0
+sending 1 queries at 32.2
+sending 1 queries at 35.1
+sending 1 queries at 35.800000000000004
+sending 1 queries at 36.300000000000004
+sending 1 queries at 36.6
+sending 1 queries at 38.1
+sending 1 queries at 38.7
+sending 2 queries at 39.6
+sending 1 queries at 40.6
+sending 1 queries at 41.5
+sending 1 queries at 42.5
+sending 1 queries at 45.300000000000004
+sending 1 queries at 46.5
+sending 1 queries at 46.900000000000006
+sending 1 queries at 47.5
+sending 1 queries at 48.7
+sending 1 queries at 48.800000000000004
+sending 1 queries at 49.900000000000006
+sending 1 queries at 51.0
+sending 1 queries at 51.2
+sending 1 queries at 51.300000000000004
+sending 1 queries at 51.7
+sending 1 queries at 52.2
+sending 1 queries at 53.0
+sending 1 queries at 53.6
+sending 1 queries at 58.1
+sending 1 queries at 58.2
+sending 1 queries at 58.400000000000006
+sending 1 queries at 58.6
+sending 1 queries at 59.6
+sending 1 queries at 59.900000000000006
+sending 1 queries at 60.6
+sending 1 queries at 60.800000000000004
+sending 1 queries at 61.0
+sending 1 queries at 61.1
+sending 1 queries at 62.2
+sending 1 queries at 62.300000000000004
+sending 1 queries at 62.6
+sending 1 queries at 63.0
+sending 1 queries at 64.7
+sending 1 queries at 64.8
+sending 1 queries at 66.7
+sending 1 queries at 66.8
+sending 1 queries at 70.5
+sending 1 queries at 71.10000000000001
+sending 1 queries at 74.9
+sending 1 queries at 75.8
+sending 2 queries at 77.2
+sending 1 queries at 77.60000000000001
+sending 1 queries at 77.7
+sending 1 queries at 78.0
+sending 1 queries at 78.2
+sending 1 queries at 78.5
+sending 2 queries at 79.10000000000001
+sending 1 queries at 80.30000000000001
+sending 1 queries at 81.2
+sending 1 queries at 81.5
+sending 1 queries at 82.2
+sending 1 queries at 82.30000000000001
+sending 1 queries at 83.2
+sending 1 queries at 85.80000000000001
+sending 1 queries at 86.2
+sending 1 queries at 87.30000000000001
+sending 1 queries at 87.4
+sending 1 queries at 88.7
+sending 1 queries at 89.0
+sending 1 queries at 89.2
+sending 2 queries at 90.10000000000001
+sending 2 queries at 91.9
+sending 1 queries at 93.0
+sending 1 queries at 93.4
+sending 1 queries at 94.7
+sending 1 queries at 98.0
+sending 1 queries at 98.30000000000001
+sending 1 queries at 99.10000000000001
+sending 1 queries at 100.0
+sending 1 queries at 100.9
+sending 1 queries at 101.10000000000001
+sending 1 queries at 104.2
+sending 1 queries at 104.80000000000001
+sending 1 queries at 106.60000000000001
+sending 1 queries at 107.80000000000001
+sending 1 queries at 108.2
+sending 1 queries at 109.9
+sending 1 queries at 110.4
+sending 1 queries at 112.5
+sending 1 queries at 113.4
+sending 1 queries at 115.5
+sending 1 queries at 116.7
+sending 1 queries at 118.0
+sending 1 queries at 118.7
+sending 1 queries at 121.80000000000001
+sending 1 queries at 122.80000000000001
+sending 1 queries at 123.4
+sending 2 queries at 124.30000000000001
+sending 1 queries at 124.7
+sending 1 queries at 125.80000000000001
+sending 1 queries at 126.10000000000001
+sending 1 queries at 127.10000000000001
+sending 1 queries at 127.60000000000001
+sending 1 queries at 127.80000000000001
+sending 1 queries at 128.1
+sending 1 queries at 129.0
+sending 1 queries at 129.9
+sending 1 queries at 130.70000000000002
+sending 1 queries at 131.8
+sending 1 queries at 132.8
+sending 1 queries at 133.4
+sending 1 queries at 135.70000000000002
+sending 1 queries at 136.1
+sending 1 queries at 136.70000000000002
+sending 1 queries at 138.9
+sending 1 queries at 140.6
+sending 1 queries at 141.8
+sending 1 queries at 141.9
+sending 1 queries at 144.4
+sending 1 queries at 145.70000000000002
+sending 1 queries at 152.4
+sending 1 queries at 152.6
+sending 1 queries at 154.60000000000002
+sending 1 queries at 154.8
+sending 1 queries at 155.8
+sending 1 queries at 155.9
+sending 1 queries at 157.8
+sending 1 queries at 159.4
+sending 1 queries at 160.3
+sending 1 queries at 160.8
+sending 1 queries at 160.9
+sending 1 queries at 162.0
+sending 1 queries at 162.70000000000002
+sending 1 queries at 163.9
+sending 1 queries at 165.9
+sending 1 queries at 169.70000000000002
+sending 2 queries at 171.60000000000002
+sending 1 queries at 172.0
+sending 1 queries at 173.4
+sending 1 queries at 173.5
+sending 2 queries at 174.3
+sending 2 queries at 174.60000000000002
+sending 1 queries at 176.20000000000002
+sending 1 queries at 176.4
+sending 1 queries at 176.8
+sending 1 queries at 179.5
+sending 2 queries at 180.70000000000002
+sending 1 queries at 180.9
+sending 1 queries at 181.9
+sending 1 queries at 182.70000000000002
+sending 1 queries at 183.0
+sending 1 queries at 185.70000000000002
+sending 1 queries at 186.70000000000002
+sending 1 queries at 187.4
+sending 1 queries at 188.3
+sending 1 queries at 189.60000000000002
+sending 1 queries at 190.0
+sending 1 queries at 190.5
+sending 1 queries at 190.8
+sending 1 queries at 191.0
+sending 1 queries at 193.9
+sending 1 queries at 195.20000000000002
+sending 1 queries at 195.9
+sending 1 queries at 196.10000000000002
+sending 1 queries at 196.4
+sending 1 queries at 196.5
+sending 1 queries at 197.10000000000002
+sending 1 queries at 197.4
+sending 1 queries at 198.60000000000002
+sending 1 queries at 199.10000000000002
+sending 2 queries at 199.3
+sending 1 queries at 199.4
+sending 1 queries at 200.5
+sending 1 queries at 201.10000000000002
+sending 1 queries at 201.9
+sending 1 queries at 204.20000000000002
+sending 1 queries at 208.8
+sending 1 queries at 209.10000000000002
+sending 1 queries at 210.10000000000002
+sending 1 queries at 210.4
+sending 1 queries at 210.5
+sending 1 queries at 211.9
+sending 1 queries at 212.3
+sending 1 queries at 212.8
+sending 1 queries at 213.60000000000002
+sending 1 queries at 215.4
+sending 1 queries at 216.4
+sending 1 queries at 218.5
+sending 1 queries at 218.8
+sending 1 queries at 220.4
+sending 1 queries at 220.60000000000002
+sending 1 queries at 223.70000000000002
+sending 1 queries at 224.8
+sending 1 queries at 225.10000000000002
+sending 1 queries at 228.0
+sending 1 queries at 229.3
+sending 1 queries at 229.60000000000002
+sending 1 queries at 229.9
+sending 2 queries at 230.60000000000002
+sending 1 queries at 230.8
+sending 1 queries at 231.4
+sending 1 queries at 231.9
+sending 1 queries at 232.5
+sending 1 queries at 232.8
+sending 1 queries at 233.70000000000002
+sending 1 queries at 235.70000000000002
+sending 1 queries at 235.8
+sending 1 queries at 236.5
+sending 1 queries at 236.70000000000002
+sending 1 queries at 237.9
+sending 1 queries at 238.4
+sending 1 queries at 239.3
+sending 1 queries at 239.5
+sending 1 queries at 239.60000000000002
+sending 1 queries at 240.3
+sending 1 queries at 240.70000000000002
+sending 1 queries at 243.60000000000002
+sending 1 queries at 245.0
+sending 1 queries at 246.4
+sending 1 queries at 248.70000000000002
+sending 1 queries at 248.8
+sending 1 queries at 249.60000000000002
+sending 1 queries at 250.5
+sending 1 queries at 253.8
+sending 1 queries at 254.10000000000002
+sending 1 queries at 254.4
+sending 2 queries at 254.5
+sending 1 queries at 257.2
+sending 1 queries at 258.3
+sending 1 queries at 259.8
+sending 1 queries at 260.2
+sending 1 queries at 261.0
+sending 1 queries at 261.1
+sending 1 queries at 261.8
+sending 1 queries at 265.6
+sending 1 queries at 267.7
+sending 1 queries at 268.1
+sending 1 queries at 271.3
+sending 1 queries at 271.6
+sending 1 queries at 274.6
+sending 1 queries at 277.40000000000003
+sending 1 queries at 279.0
+sending 1 queries at 280.0
+sending 1 queries at 282.1
+sending 1 queries at 282.40000000000003
+sending 1 queries at 284.3
+sending 2 queries at 285.3
+sending 1 queries at 285.7
+sending 1 queries at 285.90000000000003
+sending 1 queries at 289.90000000000003
+sending 1 queries at 290.5
+sending 1 queries at 291.2
+sending 1 queries at 292.2
+sending 1 queries at 292.7
+sending 1 queries at 292.90000000000003
+sending 1 queries at 294.6
+sending 1 queries at 294.8
+sending 1 queries at 295.5
+sending 1 queries at 295.8
+sending 1 queries at 295.90000000000003
+sending 1 queries at 297.8
+Prefetching is disabled
+WARNING 06-12 21:08:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+INFO 06-12 21:08:40 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:08:40 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:08:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:08:40 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:08:40 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:08:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:08:40 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:08:40 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:08:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 4 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:08:40 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:08:40 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:08:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 5.1 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO 06-12 21:08:49 worker_manager.py:363] Main thread loading delta 4 done
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:08:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:08:59 worker_manager.py:363] Main thread loading delta 4 done
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:09:01 worker_manager.py:363] Main thread loading delta 4 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:02 worker_manager.py:363] Main thread loading delta 4 done
+INFO 06-12 21:09:02 metrics.py:276] Avg prompt throughput: 3.2 tokens/s, Avg generation throughput: 0.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.0%, CPU KV cache usage: 0.0%
+WARNING 06-12 21:09:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+INFO 06-12 21:09:02 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:09:02 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:09:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:02 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:02 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:09:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:02 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:02 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:09:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 9 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:09:02 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:09:02 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:09:10 worker_manager.py:363] Main thread loading delta 9 done
+WARNING 06-12 21:09:10 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+INFO 06-12 21:09:10 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:09:10 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:09:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:19 worker_manager.py:363] Main thread loading delta 9 done
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:09:19 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:19 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:19 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:09:25 worker_manager.py:363] Main thread loading delta 12 done
+WARNING 06-12 21:09:25 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+INFO 06-12 21:09:25 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:09:25 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:09:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:26 worker_manager.py:363] Main thread loading delta 9 done
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:09:26 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:26 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:26 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:09:33 worker_manager.py:363] Main thread loading delta 9 done
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:09:33 worker_manager.py:343] Missed prefetch, fall back to loading delta 12 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:09:33 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:09:33 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:09:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:36 worker_manager.py:363] Main thread loading delta 12 done
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:09:36 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:36 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:36 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:09:39 worker_manager.py:363] Main thread loading delta 13 done
+WARNING 06-12 21:09:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 22 now
+INFO 06-12 21:09:39 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:09:39 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:09:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:55 worker_manager.py:363] Main thread loading delta 12 done
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:09:55 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:55 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:09:55 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:09:55 worker_manager.py:363] Main thread loading delta 22 done
+WARNING 06-12 21:09:55 worker_manager.py:343] Missed prefetch, fall back to loading delta 23 now
+INFO 06-12 21:09:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 06-12 21:09:55 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:09:55 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:56 worker_manager.py:363] Main thread loading delta 13 done
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:09:56 worker_manager.py:343] Missed prefetch, fall back to loading delta 22 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:56 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:09:56 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:10:04 worker_manager.py:363] Main thread loading delta 12 done
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:10:04 worker_manager.py:343] Missed prefetch, fall back to loading delta 13 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:10:04 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:10:04 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:10:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:10:11 worker_manager.py:363] Main thread loading delta 23 done
+WARNING 06-12 21:10:11 worker_manager.py:343] Missed prefetch, fall back to loading delta 26 now
+INFO 06-12 21:10:11 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:10:11 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:10:13 worker_manager.py:363] Main thread loading delta 22 done
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:10:13 worker_manager.py:343] Missed prefetch, fall back to loading delta 23 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:10:13 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:10:13 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+INFO 06-12 21:10:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:10:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+INFO 06-12 21:10:25 worker_manager.py:363] Main thread loading delta 26 done
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:10:31 worker_manager.py:363] Main thread loading delta 13 done
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:10:31 worker_manager.py:343] Missed prefetch, fall back to loading delta 22 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:10:31 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:10:31 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:10:32 worker_manager.py:363] Main thread loading delta 13 done
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:10:32 worker_manager.py:343] Missed prefetch, fall back to loading delta 22 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:10:32 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:10:32 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+INFO 06-12 21:10:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:10:36 worker_manager.py:363] Main thread loading delta 23 done
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:10:36 worker_manager.py:343] Missed prefetch, fall back to loading delta 26 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:10:36 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:10:36 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:10:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:10:52 worker_manager.py:363] Main thread loading delta 26 done
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:10:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:11:02 worker_manager.py:363] Main thread loading delta 22 done
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:11:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 23 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:11:02 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:11:02 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:11:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:11:05 worker_manager.py:363] Main thread loading delta 22 done
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:11:05 worker_manager.py:343] Missed prefetch, fall back to loading delta 23 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:11:05 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:11:05 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:11:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:11:22 worker_manager.py:363] Main thread loading delta 23 done
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:11:22 worker_manager.py:343] Missed prefetch, fall back to loading delta 26 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:11:22 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:11:22 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:11:24 worker_manager.py:363] Main thread loading delta 23 done
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:11:24 worker_manager.py:343] Missed prefetch, fall back to loading delta 26 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:11:24 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:11:24 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+INFO 06-12 21:11:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:11:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:11:42 worker_manager.py:363] Main thread loading delta 26 done
+Prefetching is disabled
+INFO 06-12 21:11:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 13 reqs, Swapped: 0 reqs, Pending: 6 reqs, GPU KV cache usage: 0.2%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:11:47 worker_manager.py:363] Main thread loading delta 26 done
+INFO:     ::1:44373 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:44446 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45120 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45210 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44528 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:45280 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44834 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:11:50 metrics.py:276] Avg prompt throughput: 690.5 tokens/s, Avg generation throughput: 117.1 tokens/s, Running: 46 reqs, Swapped: 0 reqs, Pending: 140 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:44860 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44906 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:45108 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44770 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:11:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 271.2 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 144 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:44356 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44690 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:44344 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44680 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44844 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44349 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:44902 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:12:00 metrics.py:276] Avg prompt throughput: 18.2 tokens/s, Avg generation throughput: 257.1 tokens/s, Running: 39 reqs, Swapped: 0 reqs, Pending: 151 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:44808 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44364 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44886 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44382 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45100 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44840 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44350 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:12:05 metrics.py:276] Avg prompt throughput: 8.9 tokens/s, Avg generation throughput: 237.1 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 151 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:45272 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45260 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44360 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44888 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45356 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44838 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44338 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:12:10 metrics.py:276] Avg prompt throughput: 4.9 tokens/s, Avg generation throughput: 201.2 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 155 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+INFO:     ::1:44910 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45334 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44854 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44848 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:44336 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:12:16 metrics.py:276] Avg prompt throughput: 8.5 tokens/s, Avg generation throughput: 172.6 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 159 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:45366 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44936 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44830 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:44892 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:12:21 metrics.py:276] Avg prompt throughput: 7.0 tokens/s, Avg generation throughput: 153.4 tokens/s, Running: 22 reqs, Swapped: 0 reqs, Pending: 162 reqs, GPU KV cache usage: 2.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:45364 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44341 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45300 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:12:26 metrics.py:276] Avg prompt throughput: 3.1 tokens/s, Avg generation throughput: 138.6 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 164 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:44768 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45322 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44800 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:12:27 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+INFO 06-12 21:12:27 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:12:27 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:12:27 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:12:27 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:12:27 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:12:27 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:12:27 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:12:27 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:12:27 worker_manager.py:343] Missed prefetch, fall back to loading delta 15 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:12:27 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:12:27 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:12:35 worker_manager.py:363] Main thread loading delta 15 done
+Prefetching is disabled
+INFO 06-12 21:12:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 9.9 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 156 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:12:44 worker_manager.py:363] Main thread loading delta 15 done
+INFO 06-12 21:12:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 156 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:12:46 worker_manager.py:363] Main thread loading delta 15 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:12:47 worker_manager.py:363] Main thread loading delta 15 done
+INFO:     ::1:45258 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:44359 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44352 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:45476 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45132 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:12:50 metrics.py:276] Avg prompt throughput: 112.3 tokens/s, Avg generation throughput: 103.8 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 178 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:45406 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45304 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44584 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45420 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45348 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:12:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+INFO 06-12 21:12:54 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:12:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:12:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:12:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:12:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:12:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:12:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:12:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:12:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 16 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:12:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:12:54 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:13:03 worker_manager.py:363] Main thread loading delta 16 done
+Prefetching is disabled
+INFO 06-12 21:13:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 42.1 tokens/s, Running: 33 reqs, Swapped: 0 reqs, Pending: 173 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:13:12 worker_manager.py:363] Main thread loading delta 16 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:13:13 worker_manager.py:363] Main thread loading delta 16 done
+Prefetching is disabled
+INFO 06-12 21:13:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 33 reqs, Swapped: 0 reqs, Pending: 173 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:13:15 worker_manager.py:363] Main thread loading delta 16 done
+INFO:     ::1:45410 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44386 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44362 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44454 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45388 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44377 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:45368 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45504 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45400 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:45408 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:13:20 metrics.py:276] Avg prompt throughput: 115.9 tokens/s, Avg generation throughput: 192.6 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 181 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:44342 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45326 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45646 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:44722 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45378 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44736 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:13:25 metrics.py:276] Avg prompt throughput: 8.0 tokens/s, Avg generation throughput: 185.0 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 186 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:44544 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45026 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO 06-12 21:13:30 metrics.py:276] Avg prompt throughput: 5.1 tokens/s, Avg generation throughput: 176.6 tokens/s, Running: 26 reqs, Swapped: 0 reqs, Pending: 188 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:44876 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+INFO:     ::1:45744 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45252 - "POST /v1/completions HTTP/1.1" 200 OK
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO:     ::1:45336 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:13:35 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+INFO 06-12 21:13:35 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:13:35 models.py:216] [main] Lossless Compression Disabled
+total threads: 298
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:13:35 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:13:35 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:13:35 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:13:35 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:13:35 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:13:35 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:13:35 worker_manager.py:343] Missed prefetch, fall back to loading delta 10 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:13:35 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:13:35 models.py:216] [main] Lossless Compression Disabled
+Prefetching is disabled
+Prefetching is disabled
+Prefetching is disabled
+INFO 06-12 21:13:42 worker_manager.py:363] Main thread loading delta 10 done
+INFO 06-12 21:13:45 metrics.py:276] Avg prompt throughput: 1.4 tokens/s, Avg generation throughput: 46.8 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 182 reqs, GPU KV cache usage: 2.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:13:50 worker_manager.py:363] Main thread loading delta 10 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:13:52 worker_manager.py:363] Main thread loading delta 10 done
+INFO 06-12 21:13:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 182 reqs, GPU KV cache usage: 2.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:13:55 worker_manager.py:363] Main thread loading delta 10 done
+INFO:     ::1:45537 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44772 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45708 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45118 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45298 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:14:00 metrics.py:276] Avg prompt throughput: 113.1 tokens/s, Avg generation throughput: 203.1 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 184 reqs, GPU KV cache usage: 2.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:44868 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45028 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45350 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45380 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45470 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:14:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 179.5 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 184 reqs, GPU KV cache usage: 2.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:44900 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44904 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44784 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45571 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45214 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45528 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45316 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45604 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45370 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:14:10 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 140.4 tokens/s, Running: 16 reqs, Swapped: 0 reqs, Pending: 184 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:44367 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45320 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45704 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:14:12 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+INFO 06-12 21:14:12 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:14:12 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:14:12 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:12 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:12 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:14:12 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:12 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:12 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:14:12 worker_manager.py:343] Missed prefetch, fall back to loading delta 11 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:12 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:12 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:14:20 worker_manager.py:363] Main thread loading delta 11 done
+INFO 06-12 21:14:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 13.9 tokens/s, Running: 18 reqs, Swapped: 0 reqs, Pending: 179 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:30 worker_manager.py:363] Main thread loading delta 11 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:30 worker_manager.py:363] Main thread loading delta 11 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:32 worker_manager.py:363] Main thread loading delta 11 done
+INFO 06-12 21:14:33 metrics.py:276] Avg prompt throughput: 24.3 tokens/s, Avg generation throughput: 0.7 tokens/s, Running: 18 reqs, Swapped: 0 reqs, Pending: 179 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:45784 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45178 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45758 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45747 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45478 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:14:36 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+INFO 06-12 21:14:36 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:14:36 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:14:36 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:36 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:36 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:14:36 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:36 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:36 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:14:36 worker_manager.py:343] Missed prefetch, fall back to loading delta 7 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:36 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:36 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:14:44 worker_manager.py:363] Main thread loading delta 7 done
+INFO 06-12 21:14:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.5 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 167 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:50 worker_manager.py:363] Main thread loading delta 7 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:52 worker_manager.py:363] Main thread loading delta 7 done
+INFO 06-12 21:14:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 167 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:56 worker_manager.py:363] Main thread loading delta 7 done
+INFO:     ::1:45360 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45386 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:14:57 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+INFO 06-12 21:14:57 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:14:57 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:14:57 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:57 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:14:57 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:14:57 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:57 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:14:57 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:14:57 worker_manager.py:343] Missed prefetch, fall back to loading delta 6 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:57 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:14:57 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:15:05 metrics.py:276] Avg prompt throughput: 30.7 tokens/s, Avg generation throughput: 22.9 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 156 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+INFO 06-12 21:15:05 worker_manager.py:363] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:15:13 worker_manager.py:363] Main thread loading delta 6 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:15:13 worker_manager.py:363] Main thread loading delta 6 done
+INFO 06-12 21:15:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 156 reqs, GPU KV cache usage: 1.4%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:15:16 worker_manager.py:363] Main thread loading delta 6 done
+INFO:     ::1:45290 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44368 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45048 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45664 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44396 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:15:20 metrics.py:276] Avg prompt throughput: 53.0 tokens/s, Avg generation throughput: 161.7 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 156 reqs, GPU KV cache usage: 1.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:45396 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:15:22 worker_manager.py:343] Missed prefetch, fall back to loading delta 18 now
+INFO 06-12 21:15:22 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:15:22 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:15:22 worker_manager.py:343] Missed prefetch, fall back to loading delta 18 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:15:22 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:15:22 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:15:22 worker_manager.py:343] Missed prefetch, fall back to loading delta 18 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:15:22 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:15:22 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:15:22 worker_manager.py:343] Missed prefetch, fall back to loading delta 18 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:15:22 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:15:22 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:15:31 worker_manager.py:363] Main thread loading delta 18 done
+INFO 06-12 21:15:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 24.4 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 146 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:15:41 worker_manager.py:363] Main thread loading delta 18 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:15:43 worker_manager.py:363] Main thread loading delta 18 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:15:43 worker_manager.py:363] Main thread loading delta 18 done
+INFO 06-12 21:15:43 metrics.py:276] Avg prompt throughput: 25.7 tokens/s, Avg generation throughput: 1.2 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 146 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:44604 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45626 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44796 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:15:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 28 now
+INFO 06-12 21:15:44 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:15:44 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:15:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 28 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:15:44 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:15:44 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:15:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 28 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:15:44 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:15:44 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:15:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 28 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:15:44 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:15:44 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:15:52 worker_manager.py:363] Main thread loading delta 28 done
+INFO 06-12 21:15:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.2 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 136 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:16:01 worker_manager.py:363] Main thread loading delta 28 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:16:02 worker_manager.py:363] Main thread loading delta 28 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:16:03 worker_manager.py:363] Main thread loading delta 28 done
+INFO 06-12 21:16:03 metrics.py:276] Avg prompt throughput: 75.4 tokens/s, Avg generation throughput: 1.3 tokens/s, Running: 44 reqs, Swapped: 0 reqs, Pending: 136 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:44920 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45416 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:16:06 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+INFO 06-12 21:16:06 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:16:06 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:16:06 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:16:06 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:16:06 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:16:06 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:16:06 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:16:06 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:16:06 worker_manager.py:343] Missed prefetch, fall back to loading delta 1 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:16:06 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:16:06 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:16:14 worker_manager.py:363] Main thread loading delta 1 done
+INFO 06-12 21:16:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 81.0 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 128 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:16:23 worker_manager.py:363] Main thread loading delta 1 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:16:24 worker_manager.py:363] Main thread loading delta 1 done
+INFO 06-12 21:16:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 50 reqs, Swapped: 0 reqs, Pending: 128 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:16:26 worker_manager.py:363] Main thread loading delta 1 done
+INFO:     ::1:45232 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45414 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45762 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45684 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45042 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:16:30 metrics.py:276] Avg prompt throughput: 51.7 tokens/s, Avg generation throughput: 215.7 tokens/s, Running: 45 reqs, Swapped: 0 reqs, Pending: 128 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:44668 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45398 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44379 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44614 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45184 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45346 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44824 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:16:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 263.6 tokens/s, Running: 37 reqs, Swapped: 0 reqs, Pending: 128 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:45266 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45764 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44880 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44538 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44846 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44964 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45180 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45358 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:16:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 214.4 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 128 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:45286 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45198 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:16:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+INFO 06-12 21:16:44 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:16:44 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:16:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:16:44 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:16:44 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:16:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:16:44 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:16:44 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:16:44 worker_manager.py:343] Missed prefetch, fall back to loading delta 2 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:16:44 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:16:44 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:16:51 worker_manager.py:363] Main thread loading delta 2 done
+INFO 06-12 21:16:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 41.7 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 120 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:17:01 worker_manager.py:363] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:17:02 worker_manager.py:363] Main thread loading delta 2 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:17:02 worker_manager.py:363] Main thread loading delta 2 done
+INFO 06-12 21:17:03 metrics.py:276] Avg prompt throughput: 29.4 tokens/s, Avg generation throughput: 1.1 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 120 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:44850 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44404 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44654 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44972 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44858 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44398 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45426 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45588 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:17:08 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 190.7 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 120 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:45772 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45166 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44392 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44766 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:17:11 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+INFO 06-12 21:17:11 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:17:11 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:17:11 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:17:11 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:17:11 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:17:11 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:17:11 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:17:11 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:17:11 worker_manager.py:343] Missed prefetch, fall back to loading delta 14 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:17:11 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:17:11 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:17:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 77.2 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 114 reqs, GPU KV cache usage: 2.5%, CPU KV cache usage: 0.0%
+INFO 06-12 21:17:19 worker_manager.py:363] Main thread loading delta 14 done
+INFO 06-12 21:17:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 114 reqs, GPU KV cache usage: 2.5%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:17:26 worker_manager.py:363] Main thread loading delta 14 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:17:27 worker_manager.py:363] Main thread loading delta 14 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:17:33 worker_manager.py:363] Main thread loading delta 14 done
+INFO 06-12 21:17:33 metrics.py:276] Avg prompt throughput: 99.5 tokens/s, Avg generation throughput: 0.8 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 114 reqs, GPU KV cache usage: 2.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:45794 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44856 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45418 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44496 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:17:38 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 166.5 tokens/s, Running: 26 reqs, Swapped: 0 reqs, Pending: 114 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:44794 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:17:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 27 now
+INFO:     ::1:45422 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:17:39 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:17:39 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:17:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 27 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:17:39 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:17:39 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:17:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 27 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:17:39 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:17:39 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:17:39 worker_manager.py:343] Missed prefetch, fall back to loading delta 27 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:17:39 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:17:39 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:17:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 11.2 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 108 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+INFO 06-12 21:17:48 worker_manager.py:363] Main thread loading delta 27 done
+INFO 06-12 21:17:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 108 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:17:56 worker_manager.py:363] Main thread loading delta 27 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:18:01 worker_manager.py:363] Main thread loading delta 27 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:18:03 worker_manager.py:363] Main thread loading delta 27 done
+INFO 06-12 21:18:03 metrics.py:276] Avg prompt throughput: 22.2 tokens/s, Avg generation throughput: 0.7 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 108 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:44424 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44820 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44890 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44872 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44620 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45412 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44470 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45208 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45106 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44662 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44536 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:18:08 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 137.2 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 108 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:44749 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44938 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:18:14 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 119.1 tokens/s, Running: 16 reqs, Swapped: 0 reqs, Pending: 108 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:45490 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:18:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 31 now
+INFO 06-12 21:18:14 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:18:14 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:18:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 31 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:18:14 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:18:14 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:18:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 31 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:18:14 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:18:14 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:18:14 worker_manager.py:343] Missed prefetch, fall back to loading delta 31 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:18:14 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:18:14 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:18:22 worker_manager.py:363] Main thread loading delta 31 done
+INFO 06-12 21:18:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 105 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:18:33 worker_manager.py:363] Main thread loading delta 31 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:18:34 worker_manager.py:363] Main thread loading delta 31 done
+INFO 06-12 21:18:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 19 reqs, Swapped: 0 reqs, Pending: 105 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:18:36 worker_manager.py:363] Main thread loading delta 31 done
+INFO:     ::1:44400 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45782 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:18:40 metrics.py:276] Avg prompt throughput: 22.0 tokens/s, Avg generation throughput: 100.3 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 105 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:44944 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:18:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 29 now
+INFO 06-12 21:18:40 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:18:40 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:18:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 29 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:18:40 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:18:40 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:18:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 29 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:18:40 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:18:40 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:18:40 worker_manager.py:343] Missed prefetch, fall back to loading delta 29 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:18:40 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:18:40 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:18:49 worker_manager.py:363] Main thread loading delta 29 done
+INFO 06-12 21:18:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 1.1 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 93 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:18:59 worker_manager.py:363] Main thread loading delta 29 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:18:59 worker_manager.py:363] Main thread loading delta 29 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:18:59 worker_manager.py:363] Main thread loading delta 29 done
+INFO 06-12 21:19:00 metrics.py:276] Avg prompt throughput: 83.0 tokens/s, Avg generation throughput: 18.8 tokens/s, Running: 28 reqs, Swapped: 0 reqs, Pending: 93 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:44440 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44430 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44778 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44422 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44894 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:19:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 165.4 tokens/s, Running: 23 reqs, Swapped: 0 reqs, Pending: 93 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:45402 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45534 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44828 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:19:10 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 139.1 tokens/s, Running: 20 reqs, Swapped: 0 reqs, Pending: 93 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:45362 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45577 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44774 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:19:16 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 124.2 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 93 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:45324 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44406 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:19:16 worker_manager.py:343] Missed prefetch, fall back to loading delta 32 now
+INFO 06-12 21:19:16 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:19:16 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:19:16 worker_manager.py:343] Missed prefetch, fall back to loading delta 32 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:19:16 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:19:16 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:19:16 worker_manager.py:343] Missed prefetch, fall back to loading delta 32 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:19:16 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:19:16 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:19:16 worker_manager.py:343] Missed prefetch, fall back to loading delta 32 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:19:16 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:19:16 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:19:24 worker_manager.py:363] Main thread loading delta 32 done
+INFO 06-12 21:19:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 3.5 tokens/s, Running: 22 reqs, Swapped: 0 reqs, Pending: 86 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO 06-12 21:19:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 22 reqs, Swapped: 0 reqs, Pending: 86 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:19:37 worker_manager.py:363] Main thread loading delta 32 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:19:38 worker_manager.py:363] Main thread loading delta 32 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:19:38 worker_manager.py:363] Main thread loading delta 32 done
+INFO 06-12 21:19:40 metrics.py:276] Avg prompt throughput: 33.1 tokens/s, Avg generation throughput: 35.7 tokens/s, Running: 22 reqs, Swapped: 0 reqs, Pending: 86 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:44452 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44371 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:19:43 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+INFO 06-12 21:19:43 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:19:43 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:19:43 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:19:43 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:19:43 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:19:43 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:19:43 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:19:43 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:19:43 worker_manager.py:343] Missed prefetch, fall back to loading delta 8 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:19:43 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:19:43 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:19:51 worker_manager.py:363] Main thread loading delta 8 done
+INFO 06-12 21:19:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 25.6 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 79 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:20:00 worker_manager.py:363] Main thread loading delta 8 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:20:01 worker_manager.py:363] Main thread loading delta 8 done
+INFO 06-12 21:20:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 79 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:20:07 worker_manager.py:363] Main thread loading delta 8 done
+INFO:     ::1:44656 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:20:08 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+INFO 06-12 21:20:08 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:20:08 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:20:08 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:20:08 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:20:08 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:20:08 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:20:08 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:20:08 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:20:08 worker_manager.py:343] Missed prefetch, fall back to loading delta 5 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:20:08 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:20:08 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:20:15 metrics.py:276] Avg prompt throughput: 18.8 tokens/s, Avg generation throughput: 16.9 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 64 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+INFO 06-12 21:20:17 worker_manager.py:363] Main thread loading delta 5 done
+INFO 06-12 21:20:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 64 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:20:26 worker_manager.py:363] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:20:27 worker_manager.py:363] Main thread loading delta 5 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:20:31 worker_manager.py:363] Main thread loading delta 5 done
+INFO 06-12 21:20:31 metrics.py:276] Avg prompt throughput: 205.0 tokens/s, Avg generation throughput: 2.7 tokens/s, Running: 41 reqs, Swapped: 0 reqs, Pending: 64 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:44776 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45441 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45608 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44786 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44806 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:20:36 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 237.9 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 64 reqs, GPU KV cache usage: 2.4%, CPU KV cache usage: 0.0%
+INFO:     ::1:44696 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44798 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:20:41 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 228.4 tokens/s, Running: 34 reqs, Swapped: 0 reqs, Pending: 64 reqs, GPU KV cache usage: 2.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:45344 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45306 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44780 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45330 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:20:46 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 208.8 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 64 reqs, GPU KV cache usage: 2.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:45450 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45468 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45776 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45302 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45444 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45318 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44426 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44832 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:20:50 worker_manager.py:343] Missed prefetch, fall back to loading delta 24 now
+INFO 06-12 21:20:50 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:20:50 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:20:50 worker_manager.py:343] Missed prefetch, fall back to loading delta 24 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:20:50 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:20:50 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:20:50 worker_manager.py:343] Missed prefetch, fall back to loading delta 24 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:20:50 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:20:50 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:20:50 worker_manager.py:343] Missed prefetch, fall back to loading delta 24 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:20:50 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:20:50 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:20:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 79.4 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 55 reqs, GPU KV cache usage: 2.7%, CPU KV cache usage: 0.0%
+INFO 06-12 21:20:59 worker_manager.py:363] Main thread loading delta 24 done
+INFO 06-12 21:21:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 55 reqs, GPU KV cache usage: 2.7%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:21:09 worker_manager.py:363] Main thread loading delta 24 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:21:09 worker_manager.py:363] Main thread loading delta 24 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:21:10 worker_manager.py:363] Main thread loading delta 24 done
+INFO 06-12 21:21:11 metrics.py:276] Avg prompt throughput: 55.9 tokens/s, Avg generation throughput: 1.6 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 55 reqs, GPU KV cache usage: 2.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:45542 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45340 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44822 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45310 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44970 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44864 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:21:16 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 153.9 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 55 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:45456 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:21:17 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+INFO 06-12 21:21:17 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:21:17 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:21:17 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:21:17 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:21:17 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:21:17 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:21:17 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:21:17 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:21:17 worker_manager.py:343] Missed prefetch, fall back to loading delta 3 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:21:17 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:21:17 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:21:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 26.5 tokens/s, Running: 35 reqs, Swapped: 0 reqs, Pending: 44 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO 06-12 21:21:25 worker_manager.py:363] Main thread loading delta 3 done
+INFO 06-12 21:21:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 35 reqs, Swapped: 0 reqs, Pending: 44 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:21:39 worker_manager.py:363] Main thread loading delta 3 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:21:40 worker_manager.py:363] Main thread loading delta 3 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:21:42 worker_manager.py:363] Main thread loading delta 3 done
+INFO 06-12 21:21:43 metrics.py:276] Avg prompt throughput: 39.5 tokens/s, Avg generation throughput: 1.5 tokens/s, Running: 35 reqs, Swapped: 0 reqs, Pending: 44 reqs, GPU KV cache usage: 2.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:44986 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44478 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45492 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44750 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45036 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45212 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45228 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45464 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44866 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:21:48 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 187.0 tokens/s, Running: 26 reqs, Swapped: 0 reqs, Pending: 44 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:45710 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44782 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44818 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:21:53 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 157.9 tokens/s, Running: 23 reqs, Swapped: 0 reqs, Pending: 44 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:44590 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45390 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:21:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 19 now
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:21:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 19 now
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:21:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 19 now
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:21:54 worker_manager.py:343] Missed prefetch, fall back to loading delta 19 now
+INFO 06-12 21:21:54 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:21:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:21:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:21:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:21:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:21:54 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:21:54 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:21:54 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:22:02 worker_manager.py:363] Main thread loading delta 19 done
+INFO 06-12 21:22:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 9.3 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 35 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:22:13 worker_manager.py:363] Main thread loading delta 19 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:22:13 worker_manager.py:363] Main thread loading delta 19 done
+INFO 06-12 21:22:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 30 reqs, Swapped: 0 reqs, Pending: 35 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:22:16 worker_manager.py:363] Main thread loading delta 19 done
+INFO:     ::1:44710 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45074 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45354 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45482 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44566 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:22:20 metrics.py:276] Avg prompt throughput: 50.8 tokens/s, Avg generation throughput: 117.1 tokens/s, Running: 25 reqs, Swapped: 0 reqs, Pending: 35 reqs, GPU KV cache usage: 2.2%, CPU KV cache usage: 0.0%
+INFO:     ::1:45510 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:22:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 20 now
+INFO 06-12 21:22:21 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:22:21 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:22:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 20 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:22:21 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:22:21 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:22:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 20 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:22:21 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:22:21 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:22:21 worker_manager.py:343] Missed prefetch, fall back to loading delta 20 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:22:21 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:22:21 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:22:29 worker_manager.py:363] Main thread loading delta 20 done
+INFO 06-12 21:22:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 10.1 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 28 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:22:37 worker_manager.py:363] Main thread loading delta 20 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:22:38 worker_manager.py:363] Main thread loading delta 20 done
+INFO 06-12 21:22:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 31 reqs, Swapped: 0 reqs, Pending: 28 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:22:45 worker_manager.py:363] Main thread loading delta 20 done
+INFO:     ::1:45092 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45374 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44852 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44926 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44596 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45488 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45146 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44918 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:22:50 metrics.py:276] Avg prompt throughput: 27.3 tokens/s, Avg generation throughput: 142.5 tokens/s, Running: 23 reqs, Swapped: 0 reqs, Pending: 28 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%
+INFO 06-12 21:22:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 151.5 tokens/s, Running: 23 reqs, Swapped: 0 reqs, Pending: 28 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:44678 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44870 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44562 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45382 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45438 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44942 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:23:00 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 123.4 tokens/s, Running: 16 reqs, Swapped: 0 reqs, Pending: 28 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:44874 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45046 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:23:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 21 now
+INFO 06-12 21:23:02 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:23:02 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:23:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 21 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:02 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:02 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:23:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 21 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:02 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:02 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:23:02 worker_manager.py:343] Missed prefetch, fall back to loading delta 21 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:02 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:02 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:23:10 worker_manager.py:363] Main thread loading delta 21 done
+INFO 06-12 21:23:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 9.7 tokens/s, Running: 21 reqs, Swapped: 0 reqs, Pending: 22 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:18 worker_manager.py:363] Main thread loading delta 21 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:20 worker_manager.py:363] Main thread loading delta 21 done
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:22 worker_manager.py:363] Main thread loading delta 21 done
+INFO 06-12 21:23:23 metrics.py:276] Avg prompt throughput: 19.1 tokens/s, Avg generation throughput: 0.8 tokens/s, Running: 21 reqs, Swapped: 0 reqs, Pending: 22 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO 06-12 21:23:28 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 119.2 tokens/s, Running: 21 reqs, Swapped: 0 reqs, Pending: 22 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:45262 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44814 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:23:30 worker_manager.py:343] Missed prefetch, fall back to loading delta 17 now
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:23:30 worker_manager.py:343] Missed prefetch, fall back to loading delta 17 now
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:23:30 worker_manager.py:343] Missed prefetch, fall back to loading delta 17 now
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:23:30 worker_manager.py:343] Missed prefetch, fall back to loading delta 17 now
+INFO 06-12 21:23:30 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:23:30 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:30 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:30 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:30 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:30 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:30 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:30 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:23:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 41.4 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 14 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%
+INFO 06-12 21:23:38 worker_manager.py:363] Main thread loading delta 17 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:44 worker_manager.py:363] Main thread loading delta 17 done
+INFO 06-12 21:23:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 0.0 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 14 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:47 worker_manager.py:363] Main thread loading delta 17 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:50 worker_manager.py:363] Main thread loading delta 17 done
+INFO 06-12 21:23:50 metrics.py:276] Avg prompt throughput: 83.8 tokens/s, Avg generation throughput: 1.5 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 14 reqs, GPU KV cache usage: 1.9%, CPU KV cache usage: 0.0%
+INFO:     ::1:44908 - "POST /v1/completions HTTP/1.1" 200 OK
+WARNING 06-12 21:23:52 worker_manager.py:343] Missed prefetch, fall back to loading delta 25 now
+INFO 06-12 21:23:52 models.py:196] Loading from ['model.tp4.safetensors']
+INFO 06-12 21:23:52 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117099)[0m WARNING 06-12 21:23:52 worker_manager.py:343] Missed prefetch, fall back to loading delta 25 now
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:52 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:23:52 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117342)[0m WARNING 06-12 21:23:52 worker_manager.py:343] Missed prefetch, fall back to loading delta 25 now
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:52 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:23:52 models.py:216] [main] Lossless Compression Disabled
+[36m(RayWorkerVllm pid=117551)[0m WARNING 06-12 21:23:52 worker_manager.py:343] Missed prefetch, fall back to loading delta 25 now
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:52 models.py:196] Loading from ['model.tp4.safetensors']
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:23:52 models.py:216] [main] Lossless Compression Disabled
+INFO 06-12 21:24:01 worker_manager.py:363] Main thread loading delta 25 done
+INFO 06-12 21:24:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 14.6 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 4 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+[36m(RayWorkerVllm pid=117551)[0m INFO 06-12 21:24:08 worker_manager.py:363] Main thread loading delta 25 done
+[36m(RayWorkerVllm pid=117342)[0m INFO 06-12 21:24:11 worker_manager.py:363] Main thread loading delta 25 done
+[36m(RayWorkerVllm pid=117099)[0m INFO 06-12 21:24:14 worker_manager.py:363] Main thread loading delta 25 done
+INFO 06-12 21:24:14 metrics.py:276] Avg prompt throughput: 41.0 tokens/s, Avg generation throughput: 1.1 tokens/s, Running: 36 reqs, Swapped: 0 reqs, Pending: 4 reqs, GPU KV cache usage: 2.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:45424 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45338 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44810 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44992 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:19 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 221.7 tokens/s, Running: 32 reqs, Swapped: 0 reqs, Pending: 4 reqs, GPU KV cache usage: 2.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:45224 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45696 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44610 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45680 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45670 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44948 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44594 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44960 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45372 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:25 metrics.py:276] Avg prompt throughput: 34.5 tokens/s, Avg generation throughput: 169.1 tokens/s, Running: 27 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.6%, CPU KV cache usage: 0.0%
+INFO:     ::1:45524 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45384 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44712 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 174.9 tokens/s, Running: 24 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.8%, CPU KV cache usage: 0.0%
+INFO:     ::1:45430 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44812 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44718 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44700 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45706 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44914 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45392 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:35 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 141.2 tokens/s, Running: 17 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:44836 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:40 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 111.4 tokens/s, Running: 16 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:45738 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45486 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44694 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44792 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45288 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:45 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 90.2 tokens/s, Running: 11 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:44790 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:45342 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44740 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:50 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 64.0 tokens/s, Running: 8 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:45786 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:24:55 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 54.2 tokens/s, Running: 7 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:45200 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:25:00 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 49.1 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.9%, CPU KV cache usage: 0.0%
+INFO 06-12 21:25:05 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 45.2 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%
+INFO 06-12 21:25:10 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 46.1 tokens/s, Running: 6 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.1%, CPU KV cache usage: 0.0%
+INFO:     ::1:44826 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:25:15 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 43.5 tokens/s, Running: 5 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 1.0%, CPU KV cache usage: 0.0%
+INFO:     ::1:44896 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO:     ::1:44802 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:25:20 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 28.7 tokens/s, Running: 3 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.7%, CPU KV cache usage: 0.0%
+INFO:     ::1:45270 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:25:25 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 17.9 tokens/s, Running: 2 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.5%, CPU KV cache usage: 0.0%
+INFO:     ::1:45446 - "POST /v1/completions HTTP/1.1" 200 OK
+INFO 06-12 21:25:30 metrics.py:276] Avg prompt throughput: 0.0 tokens/s, Avg generation throughput: 15.2 tokens/s, Running: 1 reqs, Swapped: 0 reqs, Pending: 0 reqs, GPU KV cache usage: 0.3%, CPU KV cache usage: 0.0%
+INFO:     ::1:45436 - "POST /v1/completions HTTP/1.1" 200 OK
+Results written to .artifact/benchmarks/results/pjlab/90c13f20-d102-45c3-9d96-04e8ee1fd8d3.jsonl
+Killing process 109151...
+/var/spool/slurmd/job3696607/slurm_script: line 39: 109118 Killed                  apptainer run --nv --home /mnt/petrelfs/huqinghao/xzyao/:/home/xiayao --bind /mnt/petrelfs/huqinghao/xzyao/code/vllm:/vllm --bind /mnt/petrelfs/huqinghao/xzyao/code/triteia:/triteia --env PYTHONPATH=/vllm:/triteia --env RAY_DEDUP_LOGS=0 --env USE_MARLIN=1 --workdir /vllm /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif python3 /vllm/vllm/entrypoints/openai/api_server.py --model /vllm/.idea/full_models/Llama-2-13b-hf --disable-log-requests --gpu-memory-utilization 0.85 --delta-modules delta-1=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-1 delta-2=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-2 delta-3=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-3 delta-4=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-4 delta-5=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-5 delta-6=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-6 delta-7=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-7 delta-8=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-8 delta-9=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-9 delta-10=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-10 delta-11=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-11 delta-12=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-12 delta-13=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-13 delta-14=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-14 delta-15=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-15 delta-16=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-16 delta-17=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-17 delta-18=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-18 delta-19=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-19 delta-20=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-20 delta-21=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-21 delta-22=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-22 delta-23=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-23 delta-24=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-24 delta-25=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-25 delta-26=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-26 delta-27=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-27 delta-28=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-28 delta-29=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-29 delta-30=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-30 delta-31=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-31 delta-32=/vllm/.idea/models/13b/4bit/deltazip.lmsys.vicuna-13b-v1.5.4bn2m4-1g-32 --tensor-parallel-size 4 --enforce-eager --max-deltas 8 --enable-delta
