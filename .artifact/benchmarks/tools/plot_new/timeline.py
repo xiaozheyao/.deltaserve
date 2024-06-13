@@ -9,6 +9,11 @@ import matplotlib.pyplot as plt
 set_matplotlib_style()
 cmp = sns.color_palette("tab10")
 
+def get_model_name(model_name):
+    if "delta" in model_name:
+        return model_name.replace("delta-", "Model #")
+    else:
+        return "Base Model"
 
 def plot(args):
     metadata, data = parse_data(args.input, order=True)
@@ -25,9 +30,10 @@ def plot(args):
     df["id"] = df["id"].map(id_map)
     fig, ax = plt.subplots()
     patches = []
-    types = ["Queuing", "Inference", "Loading", "TTFT", "Preempty"]
+    types = ["Queuing", "Inference", "Loading", "TTFT"]
     for idx, job_type in enumerate(types):
         patches.append(matplotlib.patches.Patch(color=cmp[idx], label=job_type))
+        
     type_colors = {k: v for k, v in zip(types, cmp)}
     
     for index, row in df.iterrows():
@@ -58,8 +64,8 @@ def plot(args):
         plt.text(
             x=row["inference_end"] + 0.5,
             y=row['id'] + 0.25,
-            s=row['model'],
-            fontdict=dict(color='black', fontsize=4),
+            s=get_model_name(row['model']),
+            fontdict=dict(color='black', fontsize=8),
         )
         for col in df.columns:
             if col.startswith("preempt_out"):
