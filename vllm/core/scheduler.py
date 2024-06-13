@@ -234,7 +234,7 @@ class Scheduler:
                     self.free_seq(seq)
 
     def has_unfinished_seqs(self) -> bool:
-        return self.waiting or self.running or self.swapped
+        return self.waiting or self.running or self.swapped or self.delta_swapped
 
     def has_running_seqs(self) -> bool:
         return True if self.running else False
@@ -268,11 +268,11 @@ class Scheduler:
                 num_new_seqs = seq_group.get_max_num_running_seqs()
                 if num_curr_seqs + num_new_seqs > self.scheduler_config.max_num_seqs:
                     break
-                self.delta_swapped.popleft()
                 self._delta_swap_in(seq_group, blocks_to_swap_in)
                 self._append_slot(seq_group, blocks_to_copy)
                 num_curr_seqs += num_new_seqs
                 self.waiting.append(seq_group)
+                self.delta_swapped.popleft()
             self.delta_swapped.extendleft(leftover_delta_swapped)
             
         # Join waiting sequences if possible.
@@ -406,12 +406,13 @@ class Scheduler:
                             curr_delta_running_mapping[delta_int_id] = seq_group.request_id
                         if seq_group.parent_req_id is None:
                             seq_group.parent_req_id = curr_delta_running_mapping.get(delta_int_id, None)
+
                         if seq_group.delta_swapped_out:
                             seq_group.add_preempty_in_time(now)
-                            
+
                 self.waiting.popleft()
                 self._allocate(seq_group)
-                
+
                 self.running.append(seq_group)
                 num_curr_seqs += num_new_seqs
                 scheduled.append(seq_group)
@@ -735,7 +736,7 @@ class Scheduler:
         self._delta_swap_out(seq_group, blocks_to_swap_out)
         seq_group.mark_swapped_out()
         self.delta_swapped.append(seq_group)
-
+    
     def _swap_in(
         self,
         seq_group: SequenceGroup,

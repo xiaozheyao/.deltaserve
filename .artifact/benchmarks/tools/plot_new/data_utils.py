@@ -23,24 +23,27 @@ def prepare_df(input_file, order=False):
     inputs = list(set(inputs))
     results_df = pd.DataFrame([])
     for input_file in inputs:
-        metadata, results = parse_data(input_file, order=order)
-        short_sys_name, sys_order = get_short_system_name(metadata)
-        results = pd.DataFrame(results)
-        results["filename"] = input_file
-        results["max_deltas"] = metadata["max_deltas"]
-        results["max_cpu_deltas"] = metadata["max_cpu_deltas"]
-        results["max_swaps"] = metadata["max_swaps"]
-        results["max_cpu_swaps"] = metadata["max_cpu_swaps"]
-        results["sys_name"] = short_sys_name
-        results["order"] = sys_order
-        results["distribution"] = metadata["distribution"]
-        results["ar"] = (
-            metadata["ar"] if metadata["distribution"] != "distinct" else "0"
-        )
-        results["tp_size"] = metadata["tp_size"]
-        results["policy"] = metadata["policy"]
-        results["total_models"] = metadata["total_models"]
-        results_df = pd.concat([results_df, results])
+        try:
+            metadata, results = parse_data(input_file, order=order)
+            short_sys_name, sys_order = get_short_system_name(metadata)
+            results = pd.DataFrame(results)
+            results["filename"] = input_file
+            results["max_deltas"] = metadata["max_deltas"]
+            results["max_cpu_deltas"] = metadata["max_cpu_deltas"]
+            results["max_swaps"] = metadata["max_swaps"]
+            results["max_cpu_swaps"] = metadata["max_cpu_swaps"]
+            results["sys_name"] = short_sys_name
+            results["order"] = sys_order
+            results["distribution"] = metadata["distribution"]
+            results["ar"] = (
+                metadata["ar"] if metadata["distribution"] != "distinct" else "0"
+            )
+            results["tp_size"] = metadata["tp_size"]
+            results["policy"] = metadata["policy"]
+            results["total_models"] = metadata["total_models"]
+            results_df = pd.concat([results_df, results])
+        except Exception as e:
+            print(f"Error in file: {input_file}, {e}")
     return results_df
 
 

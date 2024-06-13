@@ -21,8 +21,8 @@ def peek_perf(args):
                 "max": max_per_model.max(),
             })
     df = pd.DataFrame(result_df)
+    print(df)
     
-    print(df)        
 if __name__=="__main__":
     import argparse
     parser = argparse.ArgumentParser()
