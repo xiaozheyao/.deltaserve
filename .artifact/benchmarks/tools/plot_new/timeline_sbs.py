@@ -39,19 +39,33 @@ def plot(args):
         ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75)
     )
     patches = []
+    figs = [ax1, ax2]
     types = ["Queuing", "Inference", "Loading", "TTFT"]
     for idx, job_type in enumerate(types):
         patches.append(matplotlib.patches.Patch(color=cmp[idx], label=job_type))
     type_colors = {k: v for k, v in zip(types, cmp)}
-    for system in systems:
+    for id, system in enumerate(systems):
+        ax = figs[id]
         sub_df = df[df['system'] == system]
         for index, row in sub_df.iterrows():
-        
-        
-        
+            ax.barh(
+                y=row["id"],
+                width=row["queueing_end"] - row["queueing_start"],
+                left=row["queueing_start"],
+                color=type_colors["Queuing"],
+            )
+            ax.barh(
+                y=row["id"],
+                width=row["loading_end"] - row["loading_start"],
+                left=row["loading_start"],
+                color=type_colors["Loading"],
+            )
+    fig.savefig(f"{args.output}/timeline.png", bbox_inches="tight", dpi=300)
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=str)
+    parser.add_argument("--output", type=str)
     args = parser.parse_args()
     plot(args)

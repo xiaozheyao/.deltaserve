@@ -32,7 +32,8 @@ apptainer run --nv \
 --bind /mnt/petrelfs/huqinghao/xzyao/code/vllm:/vllm \
 --bind /mnt/petrelfs/huqinghao/xzyao/code/triteia:/triteia \
 --env PYTHONPATH=/vllm:/triteia \
---env RAY_DEDUP_LOGS=0 \
+--env RAY_DEDUP_LOGS=1 \
+--env LOG_LEVEL=ERROR \
 --env USE_MARLIN=1 \
 --workdir /vllm \
 /mnt/petrelfs/huqinghao/xzyao/images/deltaserve.sif \
