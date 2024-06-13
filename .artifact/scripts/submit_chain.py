@@ -1,10 +1,10 @@
 import os
 import subprocess
 
-SCRIPT_PATH = ".artifact/scripts/pjlab/workdir"
+SCRIPT_PATH = ".artifact/scripts/pjlab/workdir/baselines"
 
 scripts = [x for x in os.listdir(SCRIPT_PATH) if x.endswith(".slurm")]
-previous_id = 0
+previous_id = 3697342
 
 for idx, script in enumerate(scripts):
     print(f"Previous ID: {previous_id}")
