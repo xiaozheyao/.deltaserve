@@ -3,6 +3,7 @@
 #SBATCH --gres=gpu:4
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
+#SBATCH --time=2:00:00
 #SBATCH --output=./logs/%A_%x.out
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=64
