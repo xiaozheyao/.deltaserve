@@ -597,7 +597,7 @@ class AsyncLLMEngine:
         if self._enable_prefetch:
             self.engine.prefetch_delta(delta_request)
         else:
-            print("Prefetching is disabled")
+            logger.info("Prefetching is disabled")
 
         if self.engine_use_ray:
             prompt_token_ids = await self.engine.encode_request_async.remote(

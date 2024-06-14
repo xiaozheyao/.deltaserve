@@ -27,6 +27,10 @@ def prepare_df(input_file, order=False):
         short_sys_name, sys_order = get_short_system_name(metadata)
         results = pd.DataFrame(results)
         results["filename"] = input_file
+        if '3090' in input_file:
+            results['model_size'] = '7B'
+        else:
+            results['model_size'] = '13B'
         results["max_deltas"] = metadata["max_deltas"]
         results["max_cpu_deltas"] = metadata["max_cpu_deltas"]
         results["max_swaps"] = metadata["max_swaps"]

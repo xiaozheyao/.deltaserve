@@ -10,6 +10,7 @@ def plot(args):
     SAVEPATH = args.savepath
     set_matplotlib_style()
     full_df = prepare_df(args.path, order=False)
+    # if 3090 in full_df['filename'], add a new column called model_type and fill in 7b
     result_df = []
     metrics = ["E2E Latency","TTFT"]
     for metric in metrics:
@@ -22,143 +23,94 @@ def plot(args):
             for dist in distribution:
                 dist_df = tp_df[tp_df['distribution'] == dist]
                 sys_name = f"TP-{tp_size}"
-                result_df.append({
-                    "system": sys_name,
-                    "distribution": dist,
-                    "mean": dist_df["time"].mean(),
-                    "metric": metric,
-                })
+                model_sizes = dist_df['model_size'].unique()
+                for model_size in model_sizes:
+                    model_size_df = dist_df[dist_df['model_size'] == model_size]
+                    result_df.append({
+                        "system": sys_name,
+                        "distribution": dist,
+                        "mean": model_size_df["time"].mean(),
+                        "metric": metric,
+                        "model_size": model_size,
+                        "tp_size": tp_size,
+                    })
     result_df = pd.DataFrame(result_df)
-    tp_2_df = result_df[result_df["system"] == "TP-2"]
-    tp_4_df = result_df[result_df["system"] == "TP-4"]
-    tp_2_df = tp_2_df.set_index(["distribution", "metric"])["mean"].unstack()
-    tp_4_df = tp_4_df.set_index(["distribution", "metric"])["mean"].unstack()
+    result_df = result_df[result_df["distribution"] == "zipf:1.5"]
+    sgs_df = result_df[result_df["model_size"] == "7B"]
+    pjlab_df = result_df[result_df["model_size"] == "13B"]
+    print(pjlab_df)
+    sgs_df = sgs_df.set_index(["system", "metric"])["mean"].unstack()
+    pjlab_df = pjlab_df.set_index(["system", "metric"])["mean"].unstack()
     grid_params = dict(width_ratios=[1, 1])
     fig, (ax1, ax2) = plt.subplots(
         ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75)
     )
-    x = np.arange(1, 2)
+    print(sgs_df.loc[("TP-1")])
+    x = np.arange(1, 3)
     width = 0.22
     p1 = ax1.bar(
-        x - width,
-        tp_2_df.loc[("zipf:1.5", "E2E Latency")],
+        x - 0.5 * width,
+        sgs_df.loc[("TP-1")],
         width,
-        label="E2E",
+        label="TP-1",
         alpha=0.8,
         linewidth=1,
         edgecolor="k",
     )
     p2 = ax1.bar(
-        x,
-        tp_4_df.loc[("zipf:1.5", "E2E Latency")],
+        x + 0.5 * width,
+        sgs_df.loc[("TP-2")],
         width,
-        label="+Delta (N=8)",
+        label="TP-2",
         alpha=0.8,
         linewidth=1,
         edgecolor="k",
     )
-    p3 = ax1.bar(
-        x - width,
-        tp_2_df.loc[("zipf:1.5", "E2E Latency")],
+    p3 = ax2.bar(
+        x - 0.5 * width,
+        pjlab_df.loc[("TP-2")],
         width,
-        label="E2E",
+        label="TP-2",
         alpha=0.8,
         linewidth=1,
         edgecolor="k",
     )
-    p4 = ax1.bar(
-        x,
-        tp_4_df.loc[("zipf:1.5", "E2E Latency")],
+    p4 = ax2.bar(
+        x + 0.5 * width,
+        pjlab_df.loc[("TP-4")],
         width,
-        label="+Delta (N=8)",
+        label="TP-4",
         alpha=0.8,
         linewidth=1,
         edgecolor="k",
     )
-    # p4 = ax2.bar(
-    #     x - width,
-    #     baseline_df.loc[("uniform")],
-    #     width,
-    #     label="Baseline",
-    #     alpha=0.8,
-    #     linewidth=1,
-    #     edgecolor="k",
-    # )
-    # p5 = ax2.bar(
-    #     x,
-    #     delta_8_df.loc[("uniform")],
-    #     width,
-    #     label="+Delta (N=8)",
-    #     alpha=0.8,
-    #     linewidth=1,
-    #     edgecolor="k",
-    # )
-    # p6 = ax2.bar(
-    #     x + width,
-    #     delta_12_df.loc[("uniform")],
-    #     width,
-    #     label="+Delta (N=12)",
-    #     alpha=0.8,
-    #     linewidth=1,
-    #     edgecolor="k",
-    # )
-    # p7 = ax3.bar(
-    #     x - width,
-    #     baseline_df.loc[("zipf:1.5")],
-    #     width,
-    #     label="Baseline",
-    #     alpha=0.8,
-    #     linewidth=1,
-    #     edgecolor="k",
-    # )
-    # p8 = ax3.bar(
-    #     x,
-    #     delta_8_df.loc[("zipf:1.5")],
-    #     width,
-    #     label="+Delta (N=8)",
-    #     alpha=0.8,
-    #     linewidth=1,
-    #     edgecolor="k",
-    # )
-    # p9 = ax3.bar(
-    #     x + width,
-    #     delta_12_df.loc[("zipf:1.5")],
-    #     width,
-    #     label="+Delta (N=12)",
-    #     alpha=0.8,
-    #     linewidth=1,
-    #     edgecolor="k",
-    # )
-    autolabel(p1, ax1, prec=0)
-    # autolabel(p2, ax1, prec=0)
-    # autolabel(p3, ax1, prec=0)
-    # autolabel(p4, ax2, prec=0)
-    # autolabel(p5, ax2, prec=0)
-    # autolabel(p6, ax2, prec=0)
-    # autolabel(p7, ax3, prec=0)
-    # autolabel(p8, ax3, prec=0)
-    # autolabel(p9, ax3, prec=0)
-    
-    # ax1.set_xlabel(f"(a) Azure")
-    # ax1.set_ylabel(f"E2E Latency (s)")
-    # ax1.set_xticks(x)
-    # ax1.set_xticklabels(["0.5", "2.0"])
-    # ax1.set_xlim(0.5, 2.5)
-    # ax1.grid(axis="y", linestyle=":")
 
-    # ax2.set_xlabel(f"(b) Uniform")
-    # ax2.set_ylabel(f"")
-    # ax2.set_xticks(x)
-    # ax2.set_xticklabels(["0.5", "2.0"])
-    # ax2.set_xlim(0.5, 2.5)
-    # # ax2.set_ylim(0, 10)
-    # ax2.grid(axis="y", linestyle=":")
+    autolabel(p1, ax1, prec=1)
+    autolabel(p2, ax1, prec=1)
+    autolabel(p3, ax2, prec=1)
+    autolabel(p4, ax2, prec=1)
+    
+    ax1.set_xlabel(f"(a) 7B")
+    ax1.set_ylabel(f"Time (s)")
+    ax1.set_xticks(x)
+    ax1.set_xticklabels(["1x 3090", "2x 3090"])
+    ax1.set_xlim(0.5, 2.5)
+    ax1.grid(axis="y", linestyle=":")
+
+    ax2.set_xlabel(f"(b) 13B")
+    ax2.set_ylabel(f"")
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(["2x A800", "4x A800"])
+    ax2.set_xlim(0.5, 2.5)
+    ax2.grid(axis="y", linestyle=":")
+
     handles, labels = ax1.get_legend_handles_labels()
+    labels = ['E2E Latency', 'TTFT']
     fig.legend(
         handles=handles,
         labels=labels,
         ncols=3,
-        bbox_to_anchor=(0.05, 1.145),
+        bbox_to_anchor=(0.25, 1.145),
         loc=2,
     )
     sns.despine()
