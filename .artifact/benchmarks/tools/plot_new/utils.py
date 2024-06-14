@@ -9,7 +9,6 @@ from pathlib import Path
 
 def set_matplotlib_style():
     pd.set_option("display.max_columns", 500)
-
     sns.set_style("ticks")
     font = {
         # "font.family": "Roboto",
