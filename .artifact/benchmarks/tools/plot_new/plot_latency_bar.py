@@ -61,9 +61,6 @@ def plot(args):
         baseline_df = result_df[result_df["system"] == "Baseline-1"]
         delta_8_df = result_df[result_df["system"] == "+Delta (N=8)"]
         delta_12_df = result_df[result_df["system"] == "+Delta (N=12)"]
-        
-        
-        
         baseline_df = baseline_df.set_index(["distribution","ar"])["mean"].unstack()
         delta_8_df = delta_8_df.set_index(["distribution","ar"])["mean"].unstack()
         delta_12_df = delta_12_df.set_index(["distribution","ar"])["mean"].unstack()
