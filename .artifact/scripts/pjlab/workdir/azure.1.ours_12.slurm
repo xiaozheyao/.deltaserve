@@ -8,7 +8,7 @@
 #SBATCH --exclusive
 #SBATCH --cpus-per-task=64
 #SBATCH --mem-per-cpu=8GB
-#SBATCH --exclude=HOST-10-140-60-14
+#SBATCH --exclude=HOST-10-140-60-9
 set -e
 
 export HOME=/mnt/petrelfs/huqinghao
