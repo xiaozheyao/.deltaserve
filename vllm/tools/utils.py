@@ -117,11 +117,15 @@ def _parse_data(data):
         if metric['cpu_loading_time'] is None and metric['gpu_loading_time'] is None:
             gpu_loading_time = 0
             cpu_loading_time = 0
+        elif metric['cpu_loading_time'] is None:
+            raise ValueError("CPU loading time is None but GPU loading time is not None")
+        elif metric['gpu_loading_time'] is None:
+            raise ValueError("GPU loading time is None but CPU loading time is not None")
         else:
             gpu_loading_time = metric["gpu_loading_time"] - metric["cpu_loading_time"]
             cpu_loading_time = metric["cpu_loading_time"] - metric["first_scheduled_time"]
             
-        inference_time = metric["finished_time"] - metric["gpu_loading_time"]
+        inference_time = metric["finished_time"] - gpu_loading_time
 
         arrival_time = metric["arrival_time"]
         finish_time = metric["finished_time"]
