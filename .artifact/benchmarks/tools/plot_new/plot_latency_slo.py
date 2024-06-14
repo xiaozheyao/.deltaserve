@@ -95,7 +95,7 @@ def plot(args):
         ax1.grid(linestyle=":")
         ax2.grid(linestyle=":")
         handles, labels = ax1.get_legend_handles_labels()
-        fig.legend(handles=handles, labels=labels, ncols=5, bbox_to_anchor=(0.1, 1.145), loc=2, columnspacing=1.5, handletextpad=0.5)
+        fig.legend(handles=handles, labels=labels, ncols=3, bbox_to_anchor=(0.1, 1.145), loc=2, columnspacing=1.5, handletextpad=0.5)
         
         sns.despine()
         fig.savefig(f"{SAVEPATH}/slo_{metric_id}.pdf", bbox_inches="tight")

@@ -36,7 +36,7 @@ def autolabel(rects, ax, prec=1):
             textcoords="offset points",
             ha="center",
             va="bottom",
-            size=10,
+            size=9,
         )
 
 
