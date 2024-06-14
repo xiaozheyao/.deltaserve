@@ -13,6 +13,7 @@ def plot(args):
     
     metrics = ["E2E Latency","TTFT"]
     for metric in metrics:
+        metric_id = metric.lower().replace(" ", "_")
         result_df = []
         df = full_df[full_df["type"] == metric]
         systems = df["sys_name"].unique()
@@ -66,8 +67,8 @@ def plot(args):
         delta_12_df = delta_12_df.set_index(["distribution","ar"])["mean"].unstack()
         
         grid_params = dict(width_ratios=[1, 1])
-        fig, (ax1, ax2) = plt.subplots(
-            ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75)
+        fig, (ax1, ax2, ax3) = plt.subplots(
+            ncols=3, nrows=1, constrained_layout=True, figsize=(9, 3.75)
         )
         x = np.arange(1, 3)
         width = 0.22
@@ -102,7 +103,7 @@ def plot(args):
             x - width,
             baseline_df.loc[("uniform")],
             width,
-            label="+Prefetch",
+            label="Baseline",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -125,13 +126,43 @@ def plot(args):
             linewidth=1,
             edgecolor="k",
         )
-        autolabel(p1, ax1)
-        autolabel(p2, ax1)
-        autolabel(p3, ax1)
-        autolabel(p4, ax2)
-        autolabel(p5, ax2)
-        autolabel(p6, ax2)
-
+        p7 = ax3.bar(
+            x - width,
+            baseline_df.loc[("zipf:1.5")],
+            width,
+            label="Baseline",
+            alpha=0.8,
+            linewidth=1,
+            edgecolor="k",
+        )
+        p8 = ax3.bar(
+            x,
+            delta_8_df.loc[("zipf:1.5")],
+            width,
+            label="+Delta (N=8)",
+            alpha=0.8,
+            linewidth=1,
+            edgecolor="k",
+        )
+        p9 = ax3.bar(
+            x + width,
+            delta_12_df.loc[("zipf:1.5")],
+            width,
+            label="+Delta (N=12)",
+            alpha=0.8,
+            linewidth=1,
+            edgecolor="k",
+        )
+        autolabel(p1, ax1, prec=0)
+        autolabel(p2, ax1, prec=0)
+        autolabel(p3, ax1, prec=0)
+        autolabel(p4, ax2, prec=0)
+        autolabel(p5, ax2, prec=0)
+        autolabel(p6, ax2, prec=0)
+        autolabel(p7, ax3, prec=0)
+        autolabel(p8, ax3, prec=0)
+        autolabel(p9, ax3, prec=0)
+        
         ax1.set_xlabel(f"(a) Azure")
         ax1.set_ylabel(f"E2E Latency (s)")
         ax1.set_xticks(x)
@@ -147,17 +178,24 @@ def plot(args):
         # ax2.set_ylim(0, 10)
         ax2.grid(axis="y", linestyle=":")
 
+        ax3.set_xlabel(f"(c) Zipf:1.5")
+        ax3.set_ylabel(f"")
+        ax3.set_xticks(x)
+        ax3.set_xticklabels(["0.5", "2.0"])
+        ax3.set_xlim(0.5, 2.5)
+        # ax2.set_ylim(0, 10)
+        ax3.grid(axis="y", linestyle=":")
+
         handles, labels = ax1.get_legend_handles_labels()
         fig.legend(
             handles=handles,
             labels=labels,
-            ncols=5,
-            bbox_to_anchor=(0.18, 1.145),
+            ncols=3,
+            bbox_to_anchor=(0.05, 1.145),
             loc=2,
         )
-
         sns.despine()
-        fig.savefig(f"{SAVEPATH}/latency_improv_{metric}.pdf", bbox_inches="tight")
+        fig.savefig(f"{SAVEPATH}/latency_improv_{metric_id}.pdf", bbox_inches="tight")
 
 if __name__ == "__main__":
     import argparse
