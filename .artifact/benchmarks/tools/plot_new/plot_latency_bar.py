@@ -6,6 +6,8 @@ import seaborn as sns
 import numpy as np
 import matplotlib
 
+cmp = sns.color_palette("tab10")
+
 def plot(args):
     SAVEPATH = args.savepath
     set_matplotlib_style()
@@ -76,7 +78,7 @@ def plot(args):
             x - width,
             baseline_df.loc[("azure")],
             width,
-            label="Baseline",
+            label="vLLM+SCB",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -89,6 +91,7 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
+            color=cmp[2],
         )
         p3 = ax1.bar(
             x + width,
@@ -98,12 +101,13 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
+            color=cmp[3],
         )
         p4 = ax2.bar(
             x - width,
             baseline_df.loc[("uniform")],
             width,
-            label="Baseline",
+            label="vLLM+SCB",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -116,6 +120,7 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
+            color=cmp[2],
         )
         p6 = ax2.bar(
             x + width,
@@ -125,12 +130,13 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
+            color=cmp[3],
         )
         p7 = ax3.bar(
             x - width,
             baseline_df.loc[("zipf:1.5")],
             width,
-            label="Baseline",
+            label="vLLM+SCB",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -143,6 +149,7 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
+            color=cmp[2],
         )
         p9 = ax3.bar(
             x + width,
@@ -152,6 +159,7 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
+            color=cmp[3],
         )
         autolabel(p1, ax1, prec=0)
         autolabel(p2, ax1, prec=0)
