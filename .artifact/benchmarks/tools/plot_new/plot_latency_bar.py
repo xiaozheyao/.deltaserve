@@ -101,7 +101,7 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
-            color=cmp[3],
+            color=cmp[4],
         )
         p4 = ax2.bar(
             x - width,
@@ -130,7 +130,7 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
-            color=cmp[3],
+            color=cmp[4],
         )
         p7 = ax3.bar(
             x - width,
@@ -159,7 +159,7 @@ def plot(args):
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
-            color=cmp[3],
+            color=cmp[4],
         )
         autolabel(p1, ax1, prec=0)
         autolabel(p2, ax1, prec=0)

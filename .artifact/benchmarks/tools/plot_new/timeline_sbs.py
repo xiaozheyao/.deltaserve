@@ -77,6 +77,8 @@ def plot(args):
     for idx, job_type in enumerate(types):
         patches.append(matplotlib.patches.Patch(color=cmp[idx], label=job_type))
     type_colors = {k: v for k, v in zip(types, cmp)}
+    # sort systems
+    systems = sorted(systems)
     for id, system in enumerate(systems):
         ax = figs[id]
         sub_df = df[df['system'] == system]
@@ -110,8 +112,8 @@ def plot(args):
             )
             ax.xaxis.grid(True, alpha=0.5)
     # add legend to the bottom of the figure, in 3 cols and 1 row
-    ax1.set_xlabel("(a) Ours")
-    ax2.set_xlabel("(b) Baseline")
+    ax1.set_xlabel("(a) vLLM+SCB")
+    ax2.set_xlabel("(b) Ours")
     ax1.set_ylabel("Task ID")
     
     ax1.invert_yaxis()
