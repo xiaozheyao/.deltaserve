@@ -60,14 +60,13 @@ def plot(args):
                         )
         result_df = pd.DataFrame(result_df)
         # pick either ar=0.5 or 2
-        result_df = result_df[result_df["ar"].isin(["0.5", "2.0"])]
+        result_df = result_df[result_df["ar"].isin(["0.5", "1.0"])]
         baseline_df = result_df[result_df["system"] == "Baseline-1"]
         delta_8_df = result_df[result_df["system"] == "+Delta (N=8)"]
         delta_12_df = result_df[result_df["system"] == "+Delta (N=12)"]
         baseline_df = baseline_df.set_index(["distribution","ar"])["mean"].unstack()
         delta_8_df = delta_8_df.set_index(["distribution","ar"])["mean"].unstack()
         delta_12_df = delta_12_df.set_index(["distribution","ar"])["mean"].unstack()
-        
         grid_params = dict(width_ratios=[1, 1])
         fig, (ax1, ax2, ax3) = plt.subplots(
             ncols=3, nrows=1, constrained_layout=True, figsize=(9, 3.75)
@@ -174,14 +173,14 @@ def plot(args):
         ax1.set_xlabel(f"(a) Azure")
         ax1.set_ylabel(f"E2E Latency (s)")
         ax1.set_xticks(x)
-        ax1.set_xticklabels(["0.5", "2.0"])
+        ax1.set_xticklabels(["0.5", "1.0"])
         ax1.set_xlim(0.5, 2.5)
         ax1.grid(axis="y", linestyle=":")
 
         ax2.set_xlabel(f"(b) Uniform")
         ax2.set_ylabel(f"")
         ax2.set_xticks(x)
-        ax2.set_xticklabels(["0.5", "2.0"])
+        ax2.set_xticklabels(["0.5", "1.0"])
         ax2.set_xlim(0.5, 2.5)
         # ax2.set_ylim(0, 10)
         ax2.grid(axis="y", linestyle=":")
@@ -189,7 +188,7 @@ def plot(args):
         ax3.set_xlabel(f"(c) Zipf:1.5")
         ax3.set_ylabel(f"")
         ax3.set_xticks(x)
-        ax3.set_xticklabels(["0.5", "2.0"])
+        ax3.set_xticklabels(["0.5", "1.0"])
         ax3.set_xlim(0.5, 2.5)
         # ax2.set_ylim(0, 10)
         ax3.grid(axis="y", linestyle=":")
@@ -204,7 +203,7 @@ def plot(args):
         )
         sns.despine()
         fig.savefig(f"{SAVEPATH}/latency_improv_{metric_id}.pdf", bbox_inches="tight")
-
+        print('done')
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()

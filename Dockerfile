@@ -99,11 +99,11 @@ RUN --mount=type=cache,target=/root/.cache/pip VLLM_USE_PRECOMPILED=1 pip instal
 # We used base cuda image because pytorch installs its own cuda libraries.
 # However cupy depends on cuda libraries so we had to switch to the runtime image
 # In the future it would be nice to get a container with pytorch and cuda without duplicating cuda
-FROM nvidia/cuda:12.1.0-runtime-ubuntu22.04 AS vllm-base
+FROM nvidia/cuda:12.1.0-devel-ubuntu22.04 AS vllm-base
 
 # libnccl required for ray
 RUN apt-get update -y \
-    && apt-get install -y python3-pip
+    && apt-get install -y python3-pip git
 
 WORKDIR /workspace
 COPY requirements.txt requirements.txt
@@ -113,19 +113,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 # Install flash attention (from pre-built wheel)
 RUN --mount=type=bind,from=flash-attn-builder,src=/usr/src/flash-attention-v2,target=/usr/src/flash-attention-v2 \
     pip install /usr/src/flash-attention-v2/*.whl --no-cache-dir
-
-#################### RUNTIME BASE IMAGE ####################
-
-
-#################### OPENAI API SERVER ####################
-# openai api server alternative
-FROM vllm-base AS vllm-openai
-# install additional dependencies for openai api server
-RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install accelerate hf_transfer modelscope
-
-COPY --from=build /workspace/vllm/*.so /workspace/vllm/
-COPY vllm vllm
-
-ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
-#################### OPENAI API SERVER ####################
+RUN pip install git+https://github.com/eth-easl/triteia.git

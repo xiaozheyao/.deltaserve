@@ -82,6 +82,7 @@ def plot(args):
     for id, system in enumerate(systems):
         ax = figs[id]
         sub_df = df[df['system'] == system]
+        total_loading_time = (sub_df["loading_end"] - sub_df["loading_start"]).mean()
         for index, row in sub_df.iterrows():
             ax.barh(
                 y=row["id"],

@@ -68,11 +68,11 @@ def plot(args):
 
         slo_df = pd.concat(slo_dfs)
         target_distribution = 'azure'
-        target_ar = ['0.5', '2.0']
+        target_ar = ['0.5', '1.0']
         slo_df = slo_df[slo_df['distribution'] == target_distribution]
         slo_df = slo_df[slo_df['ar'].isin(target_ar)]
         ar_1_slo = slo_df[slo_df['ar'] == '0.5']
-        ar_2_slo = slo_df[slo_df['ar'] == '2.0']
+        ar_2_slo = slo_df[slo_df['ar'] == '1.0']
         # set index
         print(ar_1_slo[ar_1_slo['system'] == 'Baseline']['percentage'])
         
@@ -90,13 +90,13 @@ def plot(args):
         ax2.plot(x2, ar_2_slo[ar_2_slo['system'] == '+Delta (N=12)']['percentage'], linestyles[2], linewidth=3, alpha=0.9, color=cmp[4], label='+Delta (N=12)')
         
         ax1.set_xlabel(f"(a) Arrival Rate=0.5")
-        ax2.set_xlabel(f"(b) Arrival Rate=2.0")
+        ax2.set_xlabel(f"(b) Arrival Rate=1.0")
         ax1.set_ylabel(f"Success Rate (%)")
         ax1.grid(linestyle=":")
         ax2.grid(linestyle=":")
         handles, labels = ax1.get_legend_handles_labels()
         fig.legend(handles=handles, labels=labels, ncols=3, bbox_to_anchor=(0.1, 1.145), loc=2, columnspacing=1.5, handletextpad=0.5)
-        
+
         sns.despine()
         fig.savefig(f"{SAVEPATH}/slo_{metric_id}.pdf", bbox_inches="tight")
         

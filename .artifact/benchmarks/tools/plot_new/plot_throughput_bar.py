@@ -65,7 +65,7 @@ def plot(args):
                         )
         result_df = pd.DataFrame(result_df)
         # pick either ar=0.5 or 2
-        result_df = result_df[result_df["ar"].isin(["0.5", "2.0"])]
+        result_df = result_df[result_df["ar"].isin(["0.5", "1.0"])]
         baseline_df = result_df[result_df["system"] == "Baseline-1"]
         delta_8_df = result_df[result_df["system"] == "+Delta (N=8)"]
         delta_12_df = result_df[result_df["system"] == "+Delta (N=12)"]
@@ -180,14 +180,14 @@ def plot(args):
         ax1.set_xlabel(f"(a) Azure")
         ax1.set_ylabel(f"E2E Latency (s)")
         ax1.set_xticks(x)
-        ax1.set_xticklabels(["0.5", "2.0"])
+        ax1.set_xticklabels(["0.5", "1.0"])
         ax1.set_xlim(0.5, 2.5)
         ax1.grid(axis="y", linestyle=":")
 
         ax2.set_xlabel(f"(b) Uniform")
         ax2.set_ylabel(f"")
         ax2.set_xticks(x)
-        ax2.set_xticklabels(["0.5", "2.0"])
+        ax2.set_xticklabels(["0.5", "1.0"])
         ax2.set_xlim(0.5, 2.5)
         # ax2.set_ylim(0, 10)
         ax2.grid(axis="y", linestyle=":")
@@ -195,7 +195,7 @@ def plot(args):
         ax3.set_xlabel(f"(c) Zipf:1.5")
         ax3.set_ylabel(f"")
         ax3.set_xticks(x)
-        ax3.set_xticklabels(["0.5", "2.0"])
+        ax3.set_xticklabels(["0.5", "1.0"])
         ax3.set_xlim(0.5, 2.5)
         ax3.grid(axis="y", linestyle=":")
 
