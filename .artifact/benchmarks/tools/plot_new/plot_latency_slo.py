@@ -82,12 +82,12 @@ def plot(args):
         
         linestyles = [":", "-", "--"]
         ax1.plot(x1, ar_1_slo[ar_1_slo['system'] == 'Baseline']['percentage'], linestyles[0], linewidth=3, alpha=0.9, color=cmp[0], label="vLLM+SCB")
-        ax1.plot(x1, ar_1_slo[ar_1_slo['system'] == '+Delta (N=8)']['percentage'], linestyles[1], linewidth=3, alpha=0.9, color=cmp[2], label='+Delta (N=8)')
-        ax1.plot(x1, ar_1_slo[ar_1_slo['system'] == '+Delta (N=12)']['percentage'], linestyles[2], linewidth=3, alpha=0.9, color=cmp[4], label='+Delta (N=12)')
+        ax1.plot(x1, ar_1_slo[ar_1_slo['system'] == '+Delta (N=8)']['percentage'], linestyles[1], linewidth=3, alpha=0.9, color=cmp[2], label='Ours (N=8)')
+        ax1.plot(x1, ar_1_slo[ar_1_slo['system'] == '+Delta (N=12)']['percentage'], linestyles[2], linewidth=3, alpha=0.9, color=cmp[4], label='Ours (N=12)')
         
         ax2.plot(x2, ar_2_slo[ar_2_slo['system'] == 'Baseline']['percentage'], linestyles[0], linewidth=3, alpha=0.9, color=cmp[0], label="vLLM+SCB")
-        ax2.plot(x2, ar_2_slo[ar_2_slo['system'] == '+Delta (N=8)']['percentage'], linestyles[1], linewidth=3, alpha=0.9, color=cmp[2], label='+Delta (N=8)')
-        ax2.plot(x2, ar_2_slo[ar_2_slo['system'] == '+Delta (N=12)']['percentage'], linestyles[2], linewidth=3, alpha=0.9, color=cmp[4], label='+Delta (N=12)')
+        ax2.plot(x2, ar_2_slo[ar_2_slo['system'] == '+Delta (N=8)']['percentage'], linestyles[1], linewidth=3, alpha=0.9, color=cmp[2], label='Ours (N=8)')
+        ax2.plot(x2, ar_2_slo[ar_2_slo['system'] == '+Delta (N=12)']['percentage'], linestyles[2], linewidth=3, alpha=0.9, color=cmp[4], label='Ours (N=12)')
         
         ax1.set_xlabel(f"(a) Arrival Rate=0.5")
         ax2.set_xlabel(f"(b) Arrival Rate=1.0")

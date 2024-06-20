@@ -39,18 +39,18 @@ def plot(args):
     sgs_df = result_df[result_df["model_size"] == "7B"]
     pjlab_df = result_df[result_df["model_size"] == "13B"]
     print(pjlab_df)
-    sgs_df = sgs_df.set_index(["system", "metric"])["mean"].unstack()
-    pjlab_df = pjlab_df.set_index(["system", "metric"])["mean"].unstack()
+    print(sgs_df)
+    sgs_df = sgs_df.set_index(["metric", "system"])["mean"].unstack()
+    pjlab_df = pjlab_df.set_index(["metric", "system"])["mean"].unstack()
     grid_params = dict(width_ratios=[1, 1])
     fig, (ax1, ax2) = plt.subplots(
         ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75)
     )
-    print(sgs_df.loc[("TP-1")])
     x = np.arange(1, 3)
     width = 0.22
     p1 = ax1.bar(
         x - 0.5 * width,
-        sgs_df.loc[("TP-1")],
+        sgs_df.loc[("E2E Latency")],
         width,
         label="TP-1",
         alpha=0.8,
@@ -59,7 +59,7 @@ def plot(args):
     )
     p2 = ax1.bar(
         x + 0.5 * width,
-        sgs_df.loc[("TP-2")],
+        sgs_df.loc[("TTFT")],
         width,
         label="TP-2",
         alpha=0.8,
@@ -68,7 +68,7 @@ def plot(args):
     )
     p3 = ax2.bar(
         x - 0.5 * width,
-        pjlab_df.loc[("TP-2")],
+        pjlab_df.loc[("E2E Latency")],
         width,
         label="TP-2",
         alpha=0.8,
@@ -77,7 +77,7 @@ def plot(args):
     )
     p4 = ax2.bar(
         x + 0.5 * width,
-        pjlab_df.loc[("TP-4")],
+        pjlab_df.loc[("TTFT")],
         width,
         label="TP-4",
         alpha=0.8,

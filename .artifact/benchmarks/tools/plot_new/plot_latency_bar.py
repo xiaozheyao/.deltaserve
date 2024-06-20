@@ -12,7 +12,6 @@ def plot(args):
     SAVEPATH = args.savepath
     set_matplotlib_style()
     full_df = prepare_df(args.path, order=False)
-    
     metrics = ["E2E Latency","TTFT"]
     for metric in metrics:
         metric_id = metric.lower().replace(" ", "_")
@@ -59,8 +58,9 @@ def plot(args):
                             }
                         )
         result_df = pd.DataFrame(result_df)
-        # pick either ar=0.5 or 2
+        # pick either ar=0.5 or ar=1
         result_df = result_df[result_df["ar"].isin(["0.5", "1.0"])]
+        print(result_df)
         baseline_df = result_df[result_df["system"] == "Baseline-1"]
         delta_8_df = result_df[result_df["system"] == "+Delta (N=8)"]
         delta_12_df = result_df[result_df["system"] == "+Delta (N=12)"]
@@ -86,7 +86,7 @@ def plot(args):
             x,
             delta_8_df.loc[("azure")],
             width,
-            label="+Delta (N=8)",
+            label="Ours (N=8)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -96,7 +96,7 @@ def plot(args):
             x + width,
             delta_12_df.loc[("azure")],
             width,
-            label="+Delta (N=12)",
+            label="Ours (N=12)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -115,7 +115,7 @@ def plot(args):
             x,
             delta_8_df.loc[("uniform")],
             width,
-            label="+Delta (N=8)",
+            label="Ours (N=8)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -125,7 +125,7 @@ def plot(args):
             x + width,
             delta_12_df.loc[("uniform")],
             width,
-            label="+Delta (N=12)",
+            label="Ours (N=12)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -144,7 +144,7 @@ def plot(args):
             x,
             delta_8_df.loc[("zipf:1.5")],
             width,
-            label="+Delta (N=8)",
+            label="Ours (N=8)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -154,7 +154,7 @@ def plot(args):
             x + width,
             delta_12_df.loc[("zipf:1.5")],
             width,
-            label="+Delta (N=12)",
+            label="Ours (N=12)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",

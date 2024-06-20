@@ -41,6 +41,7 @@ def plot(args):
                                     "ar": ar_df["ar"].iloc[0],
                                     "max": ar_df["time"].max(),
                                     "throughput": num_requests / ar_df["time"].max(),
+                                    "len_requests": num_requests,
                                     "metric": metric,
                                 }
                             )
@@ -60,12 +61,14 @@ def plot(args):
                                 "ar": ar_df["ar"].iloc[0],
                                 "max": ar_df["time"].max(),
                                 "throughput": num_requests / ar_df["time"].max(),
+                                "len_requests": num_requests,
                                 "metric": metric,
                             }
                         )
         result_df = pd.DataFrame(result_df)
         # pick either ar=0.5 or 2
         result_df = result_df[result_df["ar"].isin(["0.5", "1.0"])]
+        print(result_df)
         baseline_df = result_df[result_df["system"] == "Baseline-1"]
         delta_8_df = result_df[result_df["system"] == "+Delta (N=8)"]
         delta_12_df = result_df[result_df["system"] == "+Delta (N=12)"]
@@ -93,7 +96,7 @@ def plot(args):
             x,
             delta_8_df.loc[("azure")],
             width,
-            label="+Delta (N=8)",
+            label="Ours (N=8)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -103,7 +106,7 @@ def plot(args):
             x + width,
             delta_12_df.loc[("azure")],
             width,
-            label="+Delta (N=12)",
+            label="Ours (N=12)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -122,7 +125,7 @@ def plot(args):
             x,
             delta_8_df.loc[("uniform")],
             width,
-            label="+Delta (N=8)",
+            label="Ours (N=8)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -132,7 +135,7 @@ def plot(args):
             x + width,
             delta_12_df.loc[("uniform")],
             width,
-            label="+Delta (N=12)",
+            label="Ours (N=12)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -151,7 +154,7 @@ def plot(args):
             x,
             delta_8_df.loc[("zipf:1.5")],
             width,
-            label="+Delta (N=8)",
+            label="Ours (N=8)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
@@ -161,7 +164,7 @@ def plot(args):
             x + width,
             delta_12_df.loc[("zipf:1.5")],
             width,
-            label="+Delta (N=12)",
+            label="Ours (N=12)",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
