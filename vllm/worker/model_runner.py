@@ -22,7 +22,7 @@ from vllm.lora.request import LoRARequest
 from vllm.lora.worker_manager import LRUCacheWorkerLoRAManager
 
 from vllm.delta.config import DeltaConfig
-from vllm.delta.layers import DeltaMapping
+from vllm.delta.layers_marlin import DeltaMapping
 from vllm.delta.request import DeltaRequest
 from vllm.delta.worker_manager import OverlapLRUCacheWorkerDeltaManager
 

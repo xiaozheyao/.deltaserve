@@ -249,7 +249,6 @@ class OpenAIServingCompletion(OpenAIServing):
         previous_texts = [""] * request.n * num_prompts
         previous_num_tokens = [0] * request.n * num_prompts
         has_echoed = [False] * request.n * num_prompts
-
         try:
             async for prompt_idx, res in result_generator:
                 # Abort the request if the client disconnects.
@@ -361,7 +360,7 @@ class OpenAIServingCompletion(OpenAIServing):
                 elif request.echo and request.max_tokens > 0:
                     token_ids = prompt_token_ids + output.token_ids
                     top_logprobs = prompt_logprobs + output.logprobs
-                    output_text = prompt_text + output.text
+                    output_text = str(prompt_text) + output.text
                 else:
                     token_ids = output.token_ids
                     top_logprobs = output.logprobs
@@ -378,7 +377,7 @@ class OpenAIServingCompletion(OpenAIServing):
 
                 choice_data = CompletionResponseChoice(
                     index=len(choices),
-                    text=output_text,
+                    text=str(output_text),
                     logprobs=logprobs,
                     finish_reason=output.finish_reason,
                     stop_reason=output.stop_reason,

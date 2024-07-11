@@ -30,9 +30,8 @@ from vllm.model_executor.parallel_utils.parallel_state import (
     get_tensor_model_parallel_rank,
     get_tensor_model_parallel_world_size,
 )
-from .deltazip import (
+from .deltazip_marlin import (
     apply_delta,
-    apply_delta_packed_nslice,
     apply_delta_embed,
     apply_delta_uncompressed,
 )

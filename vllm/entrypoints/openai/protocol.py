@@ -205,7 +205,13 @@ class ReloadRequest(BaseModel):
     type: str
     timestamp: float
 
-
+class CompletionLogProbs(BaseModel):
+    text_offset: List[int] = Field(default_factory=list)
+    token_logprobs: List[Optional[float]] = Field(default_factory=list)
+    tokens: List[str] = Field(default_factory=list)
+    top_logprobs: List[Optional[Dict[str,
+                                     float]]] = Field(default_factory=list)
+    
 class CompletionRequest(BaseModel):
     # Ordered by official OpenAI API documentation
     # https://platform.openai.com/docs/api-reference/completions/create
@@ -348,17 +354,15 @@ class LogProbs(BaseModel):
 class CompletionResponseChoice(BaseModel):
     index: int
     text: str
-    logprobs: Optional[LogProbs] = None
-    finish_reason: Optional[Literal["stop", "length"]] = None
-    stop_reason: Union[None, int, str] = Field(
+    logprobs: Optional[CompletionLogProbs] = None
+    finish_reason: Optional[str] = None
+    stop_reason: Optional[Union[int, str]] = Field(
         default=None,
         description=(
             "The stop string or token id that caused the completion "
             "to stop, None if the completion finished for some other reason "
-            "including encountering the EOS token"
-        ),
+            "including encountering the EOS token"),
     )
-
 
 class CompletionResponse(BaseModel):
     id: str = Field(default_factory=lambda: f"cmpl-{random_uuid()}")
@@ -436,3 +440,4 @@ class ChatCompletionStreamResponse(BaseModel):
     model: str
     choices: List[ChatCompletionResponseStreamChoice]
     usage: Optional[UsageInfo] = Field(default=None)
+

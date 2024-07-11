@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from typing import Any, List, Optional, Set, Type, Dict
 import torch
 import time
-from .layers import DeltaMapping
+from .layers_marlin import DeltaMapping
 from .request import DeltaRequest
 from .config import DeltaConfig
 from vllm.logger import init_logger
