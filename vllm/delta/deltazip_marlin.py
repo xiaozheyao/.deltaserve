@@ -5,9 +5,7 @@ import torch.nn.functional as F
 
 BITWIDTH = int(os.environ.get("BITWIDTH", "4"))
 
-from triteia.ao.ops.ibmm.ibmm_marlin import (
-    ibmm_native as ibmm,
-)
+from triteia.python.ops import sbmm_4bit_2_4_native
 
 def apply_delta(
     x: torch.Tensor,
@@ -17,14 +15,7 @@ def apply_delta(
     indices: torch.Tensor,
     base_weight: torch.Tensor,
 ):
-    try:
-        y = ibmm(
-            BITWIDTH, indices, meta_stacked, None, x, qweight_stacked, scales_stacked, base_weight=base_weight,
-        )
-    except Exception as e:
-        print(f"Error in ibmm: {e}")
-        print(f"indices: {indices}")
-        print(f"qweight_stacked: {qweight_stacked.shape}, x.shape: {x.shape}, scales_stacked: {scales_stacked.shape}, base_weight: {base_weight.shape}, indices: {indices.shape}")
+    y = sbmm_4bit_2_4_native(qweight_stacked, x, meta_stacked, scales_stacked, indices, base_weight)
     return y
 
 def apply_delta_uncompressed(
