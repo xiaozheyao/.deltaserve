@@ -249,6 +249,7 @@ class DeltaModel:
                         if any([y in x for y in uncompressed_modules])
                     ]
                 )
+                print(f"remaining_module_names: {remaining_module_names}")
                 for module in remaining_module_names:
                     modules[module] = DeltaLayerWeights(
                         module_name=module,

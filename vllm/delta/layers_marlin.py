@@ -126,10 +126,8 @@ class VocabParallelEmbeddingWithDelta(BaseLayerWithDelta):
         weight: torch.Tensor,
     ):
         self.bitwidth[index] = bitwidth
-        shard_size = self.base_layer.org_vocab_size // self.tp_size
-        weight = weight[0:shard_size, :]
         self.delta_weights[index].copy_(weight, non_blocking=ASYNC_COPY)
-
+        
     def set_mapping(
         self,
         base_indices: torch.Tensor,
@@ -334,7 +332,6 @@ class MergedColumnParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             device=self.base_layer.weight.device,
         )
         self.indices: Optional[torch.Tensor] = None
-        self.output_dim = self.base_layer.weight.shape[0] // 2
 
     def reset_delta(self, index: int):
         self.bitwidth[index] = 0
@@ -405,8 +402,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.kv_proj_shard_size = (
             self.base_layer.num_kv_heads * self.base_layer.head_size
         )
-        self.q_shard_id = self.tp_rank
-        self.kv_shard_id = self.tp_rank // self.base_layer.num_kv_head_replicas
 
         self.pack_factor = delta_config.pack_factor
         self.qweight_stacked = torch.zeros(
@@ -431,11 +426,6 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
             // (delta_config.pack_factor * delta_config.sparse_factor),
             dtype=torch.int16,
             device=self.base_layer.weight.device,
-        )
-        self.output_slices = (
-            self.q_proj_shard_size,
-            self.kv_proj_shard_size,
-            self.kv_proj_shard_size,
         )
         self.packed_indices: Optional[torch.Tensor] = None
         self.standard_indices: Optional[torch.Tensor] = None
@@ -465,6 +455,8 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         )
         self.scales_stacked[index].copy_(scales, non_blocking=ASYNC_COPY)
         self.meta_stacked[index].copy_(meta, non_blocking=ASYNC_COPY)
+        
+        print(f"set delta {index}, qweight: {qweight.shape}->{self.qweight_stacked.shape}, scales: {scales.shape}->{self.scales_stacked.shape}, meta: {meta.shape}->{self.meta_stacked.shape}")
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]
