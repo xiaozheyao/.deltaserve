@@ -24,6 +24,10 @@ def before_benchmark(args):
     for job_id, job in enumerate(workload):
         if job["model"] == "base-model":
             workload[job_id]["model"] = sysinfo["model"]
+    if args.is_lora:
+        for job_id, job in enumerate(workload):
+            if "delta" in job['model']:
+                workload[job_id]["model"] = workload[job_id]["model"].replace("delta", "lora")
     return args.endpoints, workload, warmup, sysinfo
 
 
@@ -41,6 +45,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--warmup-strategy", type=str, default="random", choices=["random", "none"]
     )
+    parser.add_argument("--is-lora", action="store_true", default=False)
     parser.add_argument("--endpoints", default=["http://localhost:8000"], nargs="+")
     parser.add_argument("--output", type=str, default="outputs/")
     args = parser.parse_args()

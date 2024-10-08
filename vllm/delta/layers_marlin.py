@@ -456,7 +456,7 @@ class MergedQKVParallelLinearWithDelta(ColumnParallelLinearWithDelta):
         self.scales_stacked[index].copy_(scales, non_blocking=ASYNC_COPY)
         self.meta_stacked[index].copy_(meta, non_blocking=ASYNC_COPY)
         
-        print(f"set delta {index}, qweight: {qweight.shape}->{self.qweight_stacked.shape}, scales: {scales.shape}->{self.scales_stacked.shape}, meta: {meta.shape}->{self.meta_stacked.shape}")
+        # print(f"set delta {index}, qweight: {qweight.shape}->{self.qweight_stacked.shape}, scales: {scales.shape}->{self.scales_stacked.shape}, meta: {meta.shape}->{self.meta_stacked.shape}")
 
     def apply_weights(
         self, x: torch.Tensor, bias: Optional[torch.Tensor]

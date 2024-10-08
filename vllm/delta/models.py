@@ -31,7 +31,7 @@ _GLOBAL_DELTA_ID = 0
 use_unoptimized_delta = os.environ.get("UNOPTIMIZED_DELTA", "0") == "1"
 use_bitblas = os.environ.get("USE_BITBLAS", "0") == "1"
 use_triteia = os.environ.get("USE_TRITEIA", "0") == "1"
-use_marlin = os.environ.get("USE_MARLIN", "0") == "1"
+use_marlin = os.environ.get("USE_MARLIN", "1") == "1"
 
 if use_unoptimized_delta:
     logger.warning("Using unoptimized delta modules")
@@ -190,7 +190,8 @@ class DeltaModel:
         compress_config = CompressionConfig.from_pretrained(path_or_name)
         logger.debug(f"Loaded DeltaModel from {path_or_name}, config: {config}")
         if use_marlin:
-            model_tensor_filenames = [f"model.tp{tp_size}.safetensors"]
+            # model_tensor_filenames = [f"model.tp{tp_size}.safetensors"]
+            model_tensor_filenames = [f"deltazip-compressed.safetensors"]
         else:
             raise ValueError("Only Marlin is supported for now")
         logger.info(f"Loading from {model_tensor_filenames}")

@@ -2,6 +2,7 @@
 from huggingface_hub import snapshot_download
 import os
 import shutil
+
 def download(args):
     print(args)
     hf_name = args.hf_id.split("/")[-1]
@@ -15,6 +16,7 @@ def download(args):
     # rename to -1
     shutil.move(os.path.join(args.local_dir, hf_name), os.path.join(args.local_dir, hf_name + "-1"))
     # copy the model to replicas
+    print(f"Creating {args.replicas} replicas...")
     for i in range(1, args.replicas):
         shutil.copytree(os.path.join(args.local_dir, hf_name + "-1"), os.path.join(args.local_dir, hf_name + f"-{i+1}"))
     
