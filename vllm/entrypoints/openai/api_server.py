@@ -102,6 +102,10 @@ async def get_sysinfo():
     engine_info.update({"pid": os.getpid()})
     return JSONResponse(content=engine_info)
 
+@app.get("/kill")
+async def kill():
+    exit(0)
+    
 
 @app.post("/v1/reload")
 async def reload_model_weights(request: ReloadRequest):

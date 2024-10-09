@@ -39,11 +39,18 @@ def handle_sys_info():
         responses[upstream] = response.json()
     return responses
 
+def kill_servers():
+    for upstream in upstreams:
+        requests.get(f"{upstream}/kill")
+
 async def _reverse_proxy(request: Request):
     url = httpx.URL(path=request.url.path, query=request.url.query.encode("utf-8"))
     if request.url.path == "/sysinfo":
         res =  handle_sys_info()
         return JSONResponse(content=res, status_code=200)
+    if request.url.path == "/kill":
+        kill_servers()
+        return "ok"
     res = await request.json()
     model = res['model']
     client = clients[relations[model][0]]
@@ -58,6 +65,7 @@ async def _reverse_proxy(request: Request):
         headers=rp_resp.headers,
         background=BackgroundTask(rp_resp.aclose),
     )
+
 
 
 app.add_route("/{path:path}", _reverse_proxy, ["GET", "POST"])

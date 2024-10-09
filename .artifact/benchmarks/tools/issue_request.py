@@ -9,6 +9,10 @@ import uuid
 import argparse
 from core import run, get_sys_info
 import time
+import requests
+
+def kill_server(endpoint):
+    requests.get(f"{endpoint}/kill")
 
 def before_benchmark(args):
     with open(args.workload, "r") as f:
@@ -81,8 +85,6 @@ if __name__ == "__main__":
             f.write(json.dumps(output))
             f.write("\n")
     print(f"Results written to {output_file}", flush=True)
-
-    pid = sysinfo["pid"]
-    print(f"Killing process {pid}...")
-    os.system(f"kill -9 {pid}")
+    kill_server(args.endpoints[0])
+    
 
