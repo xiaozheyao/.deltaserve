@@ -117,6 +117,5 @@ def run(
     issue_queries(endpoints[0], workload)
     return inference_results
 
-
 def get_sys_info(endpoint: str):
     return requests.get(endpoint + "/sysinfo").json()

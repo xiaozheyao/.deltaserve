@@ -59,6 +59,16 @@ def get_dialogs():
         response_tokens.append(len(enc.encode(item["conversation_a"][1]["content"])))
     return all_dialogs, response_tokens
 
+def generate_to_eval_model_id(args, i):
+    if args.mode == "lora":
+        return f"lora-{i}"
+    if args.mode == "delta":
+        return f"delta-{i}"
+    if args.mode == "mixed":
+        if np.random.rand() < args.lora_ratio:
+            return f"lora-{i}"
+        else:
+            return f"delta-{i}"
 
 def generate_synthetic(args):
     print(args)
@@ -66,7 +76,9 @@ def generate_synthetic(args):
         "base-model",
     ]
     for i in range(1, args.num_models + 1, 1):
-        to_eval_models.append(f"delta-{i}")
+        to_eval_models.append(generate_to_eval_model_id(args, i))
+    # shuffle to_eval_models
+    np.random.shuffle(to_eval_models)
     print("Models to evaluate:", to_eval_models)
 
     poisson_ticks = PoissonProcess(args.arrival_rate).generate_arrivals(
@@ -144,7 +156,8 @@ if __name__ == "__main__":
     parser.add_argument("--arrival-rate", type=float, default=0)
     parser.add_argument("--duration", type=float, default=0)
     parser.add_argument("--num-models", type=int, default=8)
-
+    parser.add_argument("--mode", type=str, choices=["lora", "delta", "mixed"], default="delta")
+    parser.add_argument("--lora-ratio", type=float, default=0.5)
     args = parser.parse_args()
     main(args)
 

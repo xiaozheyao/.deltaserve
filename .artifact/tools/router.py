@@ -19,7 +19,7 @@ def build_clients(upstreams: list):
     global clients
     global relations
     for upstream in upstreams:
-        client = httpx.AsyncClient(base_url=upstream)
+        client = httpx.AsyncClient(base_url=upstream, timeout=None)
         clients[upstream] = client
         models = get_available_models(upstream)
         for model in models:
@@ -44,16 +44,20 @@ async def _reverse_proxy(request: Request):
     if request.url.path == "/sysinfo":
         res =  handle_sys_info()
         return JSONResponse(content=res, status_code=200)
-    # rp_req = client.build_request(
-    #     request.method, url, headers=request.headers.raw, content=await request.body()
-    # )
-    # rp_resp = await client.send(rp_req, stream=True)
-    # return StreamingResponse(
-    #     rp_resp.aiter_raw(),
-    #     status_code=rp_resp.status_code,
-    #     headers=rp_resp.headers,
-    #     background=BackgroundTask(rp_resp.aclose),
-    # )
+    res = await request.json()
+    model = res['model']
+    client = clients[relations[model][0]]
+    
+    rp_req = client.build_request(
+        request.method, url, headers=request.headers.raw, content=await request.body()
+    )
+    rp_resp = await client.send(rp_req, stream=True)
+    return StreamingResponse(
+        rp_resp.aiter_raw(),
+        status_code=rp_resp.status_code,
+        headers=rp_resp.headers,
+        background=BackgroundTask(rp_resp.aclose),
+    )
 
 
 app.add_route("/{path:path}", _reverse_proxy, ["GET", "POST"])
