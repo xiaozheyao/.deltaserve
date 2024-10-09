@@ -1,5 +1,6 @@
 """Multi-node request router"""
 
+import time
 import httpx
 import uvicorn
 import requests
@@ -78,6 +79,13 @@ if __name__ == "__main__":
     parser.add_argument("--upstreams", type=str, default="http://localhost:8000")
     args = parser.parse_args()
     upstreams = args.upstreams.split(",")
-    build_clients(upstreams)
+    clients_built = False
+    while not clients_built:
+        try:
+            build_clients(upstreams)
+            clients_built = True
+        except Exception as e:
+            print(f"waiting for upstreams to be ready: {e}")
+            time.sleep(10)
     print(relations)
     uvicorn.run(app, host=args.host, port=args.port)

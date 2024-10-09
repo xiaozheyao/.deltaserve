@@ -1,4 +1,5 @@
 import os
+import signal
 import asyncio
 import inspect
 import importlib
@@ -104,7 +105,7 @@ async def get_sysinfo():
 
 @app.get("/kill")
 async def kill():
-    exit(0)
+    os.kill(os.getpid(), signal.SIGTERM)
     
 
 @app.post("/v1/reload")
