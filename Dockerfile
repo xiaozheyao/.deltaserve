@@ -106,11 +106,10 @@ RUN apt-get update -y \
     && apt-get install -y python3-pip git
 
 WORKDIR /workspace
-COPY requirements.txt requirements.txt
+COPY . .
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 
 # Install flash attention (from pre-built wheel)
 RUN --mount=type=bind,from=flash-attn-builder,src=/usr/src/flash-attention-v2,target=/usr/src/flash-attention-v2 \
     pip install /usr/src/flash-attention-v2/*.whl --no-cache-dir
-RUN pip install git+https://github.com/xiaozheyao/triteia.git

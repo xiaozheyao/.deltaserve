@@ -1,3 +1,4 @@
+import torch
 import contextlib
 import io
 import logging
@@ -7,10 +8,8 @@ import subprocess
 import warnings
 from pathlib import Path
 from typing import List, Set
-
 from packaging.version import parse, Version
 import setuptools
-import torch
 import torch.utils.cpp_extension as torch_cpp_ext
 from torch.utils.cpp_extension import (
     BuildExtension,

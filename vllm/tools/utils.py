@@ -32,6 +32,7 @@ def merge_sysinfo(sysinfo):
         first_sysinfo['swap_modules'] = first_sysinfo['swap_modules'][0]
     
     return first_sysinfo
+
 def get_system_name(sys):
     sys = sys.lower()
     if "vllm" in sys:
@@ -66,7 +67,6 @@ def extract_key_metadata(metadata):
     gen_tokens = metadata["workload"].split("/")[-2].removeprefix("gen_")
     endpoints = list(metadata["sys_info"].keys())
     metadata["sys_info"] = merge_sysinfo(metadata["sys_info"])
-    print(metadata["sys_info"])
     tp_size = metadata["sys_info"]["tensor_parallel_size"]
     is_swap = len(metadata["sys_info"]["swap_modules"]) > 0
     is_delta = len(metadata["sys_info"]["delta_modules"]) > 0
@@ -325,6 +325,19 @@ def get_short_system_name(key_metadata):
     elif key_metadata["is_delta"]:
         return "+Delta", 1
     elif key_metadata["is_lora"]:
-        return "Lora", 0
+        return "LoRA", 0
     else:
         raise ValueError("Unknown system type")
+
+def get_mixed_system_name(key_metadata):
+    if key_metadata["is_swap"] and key_metadata["is_lora"]:
+        return "Swap + LoRA", 0
+    if key_metadata["is_delta"] and key_metadata["is_lora"]:
+        return "Delta + LoRA", 1
+    
+
+def walk_through_files(path, file_extension=".jsonl"):
+    for dirpath, dirnames, filenames in os.walk(path):
+        for filename in filenames:
+            if filename.endswith(file_extension):
+                yield os.path.join(dirpath, filename)

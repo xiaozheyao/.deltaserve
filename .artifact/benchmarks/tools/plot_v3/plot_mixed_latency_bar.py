@@ -1,81 +1,106 @@
+import os
 import pandas as pd
 from data_utils import prepare_df, DEFAULT_PATH
 from utils import autolabel, set_matplotlib_style
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
-import matplotlib
-
+from vllm.tools.utils import parse_data, walk_through_files, get_mixed_system_name
 cmp = sns.color_palette("tab10")
 
+def prepare_df(input_file, order=False):
+    if os.path.isdir(input_file):
+        # walk through the directory and get all the jsonl files, including the subdirectories
+        inputs = list(walk_through_files(input_file))
+    else:
+        inputs = [input_file]
+    inputs = list(set(inputs))
+    results_df = pd.DataFrame([])
+    for input_file in inputs:
+        metadata, results = parse_data(input_file, order=order)
+        short_sys_name, sys_order = get_mixed_system_name(metadata)
+        results = pd.DataFrame(results)
+        results["filename"] = input_file
+        if '3090' in input_file:
+            results['model_size'] = '7B'
+        else:
+            results['model_size'] = '13B'
+        results["max_deltas"] = metadata["max_deltas"]
+        results["max_cpu_deltas"] = metadata["max_cpu_deltas"]
+        results["max_swaps"] = metadata["max_swaps"]
+        results["max_cpu_swaps"] = metadata["max_cpu_swaps"]
+        results["sys_name"] = short_sys_name
+        results["order"] = sys_order
+        results["distribution"] = metadata["distribution"]
+        results["ar"] = (
+            metadata["ar"] if metadata["distribution"] != "distinct" else "0"
+        )
+        results["tp_size"] = metadata["tp_size"]
+        results["policy"] = metadata["policy"]
+        results["total_models"] = metadata["total_models"]
+        results_df = pd.concat([results_df, results])
+        
+    return results_df
+
+def process_entry(df):
+    model = df['model'].unique()
+    # select df where "lora" is in df['model']
+    lora_df = df[df['model'].str.contains("lora")]
+    delta_df = df[df['model'].str.contains("delta")]
+    lora_mean = lora_df['time'].mean()
+    delta_mean = delta_df['time'].mean()
+    return {
+        'lora_mean': lora_mean,
+        'delta_mean': delta_mean,
+    }
 def plot(args):
     SAVEPATH = args.savepath
     set_matplotlib_style()
     full_df = prepare_df(args.path, order=False)
     metrics = ["E2E Latency","TTFT"]
+    result_df = []
     for metric in metrics:
         metric_id = metric.lower().replace(" ", "_")
-        result_df = []
         df = full_df[full_df["type"] == metric]
         systems = df["sys_name"].unique()
         for system in systems:
-            # get num_of deltas
             sub_df_sys = df[df["sys_name"] == system]
-            if system == "+Delta":
-                max_deltas = sub_df_sys["max_deltas"].unique()
-                for max_delta in max_deltas:
-                    sys_name = f"{system} (N={max_delta})"
-                    delta_df = sub_df_sys[sub_df_sys["max_deltas"] == max_delta]
-                    distributions = delta_df["distribution"].unique()
-                    for dist in distributions:
-                        dist_df = delta_df[delta_df["distribution"] == dist]
-                        arrival_rate = dist_df["ar"].unique()
-                        for ar in arrival_rate:
-                            ar_df = dist_df[dist_df["ar"] == ar]
-                            result_df.append(
-                                {
-                                    "system": sys_name,
-                                    "distribution": dist,
-                                    "ar": ar_df["ar"].iloc[0],
-                                    "mean": ar_df["time"].mean(),
-                                    "metric": metric,
-                                }
-                            )
-            elif system == "Baseline-1":
-                distributions = sub_df_sys["distribution"].unique()
-                for dist in distributions:
-                    dist_df = sub_df_sys[sub_df_sys["distribution"] == dist]
-                    arrival_rate = dist_df["ar"].unique()
-                    for ar in arrival_rate:
-                        ar_df = dist_df[dist_df["ar"] == ar]
-                        result_df.append(
-                            {
-                                "system": system,
-                                "distribution": dist,
-                                "ar": ar_df["ar"].iloc[0],
-                                "mean": ar_df["time"].mean(),
-                                "metric": metric,
-                            }
-                        )
-        result_df = pd.DataFrame(result_df)
-        # pick either ar=0.5 or ar=1
-        result_df = result_df[result_df["ar"].isin(["0.5", "1.0"])]
-        print(result_df)
-        baseline_df = result_df[result_df["system"] == "Baseline-1"]
-        delta_8_df = result_df[result_df["system"] == "+Delta (N=8)"]
-        delta_12_df = result_df[result_df["system"] == "+Delta (N=12)"]
-        baseline_df = baseline_df.set_index(["distribution","ar"])["mean"].unstack()
-        delta_8_df = delta_8_df.set_index(["distribution","ar"])["mean"].unstack()
-        delta_12_df = delta_12_df.set_index(["distribution","ar"])["mean"].unstack()
-        grid_params = dict(width_ratios=[1, 1])
-        fig, (ax1, ax2, ax3) = plt.subplots(
-            ncols=3, nrows=1, constrained_layout=True, figsize=(9, 3.75)
+            dists = sub_df_sys["distribution"].unique()
+            for dist in dists:
+                dist_df = sub_df_sys[sub_df_sys["distribution"] == dist]
+                ars = dist_df["ar"].unique()
+                for ar in ars:
+                    res = process_entry(dist_df[dist_df["ar"] == ar])
+                    result_df.append({
+                        "system": system,
+                        "distribution": dist,
+                        "ar": ar,
+                        "mean": res['lora_mean'],
+                        "models": "lora",
+                        "metric": metric,
+                    })
+                    result_df.append({
+                        "system": system,
+                        "distribution": dist,
+                        "ar": ar,
+                        "mean": res['delta_mean'],
+                        "models": "delta",
+                        "metric": metric,
+                    })
+    full_df = pd.DataFrame(result_df)
+    
+    for metric in metrics:
+        fig, (ax1, ax2) = plt.subplots(
+            ncols=2, nrows=1, constrained_layout=True, figsize=(9, 3.75)
         )
-        x = np.arange(1, 3)
+        result_df = full_df[full_df["metric"] == metric]
+        metric_id = metric.lower().replace(" ", "_")
+        result_df = result_df.set_index(["system", "models"])['mean'].unstack()
+        x = np.arange(1, 2)
         width = 0.22
         p1 = ax1.bar(
             x - width,
-            baseline_df.loc[("azure")],
+            result_df.loc[("Swap + LoRA", "lora")],
             width,
             label="vLLM+SCB",
             alpha=0.8,
@@ -84,115 +109,45 @@ def plot(args):
         )
         p2 = ax1.bar(
             x,
-            delta_8_df.loc[("azure")],
+            result_df.loc[("Delta + LoRA", "lora")],
             width,
-            label="Ours (N=8)",
+            label="Ours",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
             color=cmp[2],
         )
-        p3 = ax1.bar(
-            x + width,
-            delta_12_df.loc[("azure")],
+        p3 = ax2.bar(
+            x - width,
+            result_df.loc[("Swap + LoRA", "delta")],
             width,
-            label="Ours (N=12)",
+            label="vLLM+SCB",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
-            color=cmp[4],
         )
         p4 = ax2.bar(
-            x - width,
-            baseline_df.loc[("uniform")],
-            width,
-            label="vLLM+SCB",
-            alpha=0.8,
-            linewidth=1,
-            edgecolor="k",
-        )
-        p5 = ax2.bar(
             x,
-            delta_8_df.loc[("uniform")],
+            result_df.loc[("Delta + LoRA", "delta")],
             width,
-            label="Ours (N=8)",
+            label="Our",
             alpha=0.8,
             linewidth=1,
             edgecolor="k",
             color=cmp[2],
-        )
-        p6 = ax2.bar(
-            x + width,
-            delta_12_df.loc[("uniform")],
-            width,
-            label="Ours (N=12)",
-            alpha=0.8,
-            linewidth=1,
-            edgecolor="k",
-            color=cmp[4],
-        )
-        p7 = ax3.bar(
-            x - width,
-            baseline_df.loc[("zipf:1.5")],
-            width,
-            label="vLLM+SCB",
-            alpha=0.8,
-            linewidth=1,
-            edgecolor="k",
-        )
-        p8 = ax3.bar(
-            x,
-            delta_8_df.loc[("zipf:1.5")],
-            width,
-            label="Ours (N=8)",
-            alpha=0.8,
-            linewidth=1,
-            edgecolor="k",
-            color=cmp[2],
-        )
-        p9 = ax3.bar(
-            x + width,
-            delta_12_df.loc[("zipf:1.5")],
-            width,
-            label="Ours (N=12)",
-            alpha=0.8,
-            linewidth=1,
-            edgecolor="k",
-            color=cmp[4],
         )
         autolabel(p1, ax1, prec=0)
         autolabel(p2, ax1, prec=0)
-        autolabel(p3, ax1, prec=0)
+        autolabel(p3, ax2, prec=0)
         autolabel(p4, ax2, prec=0)
-        autolabel(p5, ax2, prec=0)
-        autolabel(p6, ax2, prec=0)
-        autolabel(p7, ax3, prec=0)
-        autolabel(p8, ax3, prec=0)
-        autolabel(p9, ax3, prec=0)
-        
-        ax1.set_xlabel(f"(a) Azure")
-        ax1.set_ylabel(f"E2E Latency (s)")
+        ax1.set_xlabel(f"(a) LoRA")
+        ax2.set_xlabel(f"(b) Delta")
+        ax1.set_ylabel(f"{metric} (s)")
         ax1.set_xticks(x)
-        ax1.set_xticklabels(["0.5", "1.0"])
-        ax1.set_xlim(0.5, 2.5)
+        # ax1.set_xticklabels(["0.5", "1.0"])
+        # ax1.set_xlim(0.5, 2.5)
         ax1.grid(axis="y", linestyle=":")
-
-        ax2.set_xlabel(f"(b) Uniform")
-        ax2.set_ylabel(f"")
-        ax2.set_xticks(x)
-        ax2.set_xticklabels(["0.5", "1.0"])
-        ax2.set_xlim(0.5, 2.5)
-        # ax2.set_ylim(0, 10)
-        ax2.grid(axis="y", linestyle=":")
-
-        ax3.set_xlabel(f"(c) Zipf:1.5")
-        ax3.set_ylabel(f"")
-        ax3.set_xticks(x)
-        ax3.set_xticklabels(["0.5", "1.0"])
-        ax3.set_xlim(0.5, 2.5)
-        # ax2.set_ylim(0, 10)
-        ax3.grid(axis="y", linestyle=":")
-
+        print(result_df)
         handles, labels = ax1.get_legend_handles_labels()
         fig.legend(
             handles=handles,
@@ -202,8 +157,10 @@ def plot(args):
             loc=2,
         )
         sns.despine()
-        fig.savefig(f"{SAVEPATH}/latency_improv_{metric_id}.pdf", bbox_inches="tight")
+        fig.savefig(f"{SAVEPATH}/mixed_latency_improv_{metric_id}.pdf", bbox_inches="tight")
+        
         print('done')
+        
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()

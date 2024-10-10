@@ -67,6 +67,7 @@ def plot(args):
         baseline_df = baseline_df.set_index(["distribution","ar"])["mean"].unstack()
         delta_8_df = delta_8_df.set_index(["distribution","ar"])["mean"].unstack()
         delta_12_df = delta_12_df.set_index(["distribution","ar"])["mean"].unstack()
+        
         grid_params = dict(width_ratios=[1, 1])
         fig, (ax1, ax2, ax3) = plt.subplots(
             ncols=3, nrows=1, constrained_layout=True, figsize=(9, 3.75)

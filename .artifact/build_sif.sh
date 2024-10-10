@@ -1,0 +1,1 @@
+APPTAINER_TMPDIR=/home/xiayao/temp apptainer build deltaserve.dev.sif docker-daemon://ghcr.io/xiaozheyao/deltaserve:0.1.0dev
