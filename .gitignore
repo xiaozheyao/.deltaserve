@@ -187,3 +187,4 @@ _build/
 .local/
 file.out
 logs/
+*.sif
