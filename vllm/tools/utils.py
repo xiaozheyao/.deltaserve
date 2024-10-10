@@ -12,7 +12,26 @@ color_palette = {
     ]
 }
 
+def merge_sysinfo(sysinfo):
+    endpoints = list(sysinfo.keys())
+    # merge principles: if the keys exist, skip
+    # otherwise, add
+    first_sysinfo = sysinfo[endpoints[0]]
+    first_sysinfo['lora_modules'] = [sysinfo[x]['lora_modules'] for x in endpoints if len(sysinfo[x]['lora_modules']) > 0]
+    first_sysinfo['delta_modules'] = [sysinfo[x]['delta_modules'] for x in endpoints if len(sysinfo[x]['delta_modules']) > 0]
+    first_sysinfo['swap_modules'] = [sysinfo[x]['swap_modules'] for x in endpoints if len(sysinfo[x]['swap_modules']) > 0]
 
+    if len(first_sysinfo['lora_modules']) > 0:
+        first_sysinfo['lora_modules'] = first_sysinfo['lora_modules'][0]
+
+    if len(first_sysinfo['delta_modules']) > 0:
+        first_sysinfo['delta_modules'] = first_sysinfo['delta_modules'][0]
+
+    
+    if len(first_sysinfo['swap_modules']) > 0:
+        first_sysinfo['swap_modules'] = first_sysinfo['swap_modules'][0]
+    
+    return first_sysinfo
 def get_system_name(sys):
     sys = sys.lower()
     if "vllm" in sys:
@@ -45,10 +64,13 @@ def extract_key_metadata(metadata):
         metadata["workload"].split("/")[-1].removesuffix(".jsonl")
     )
     gen_tokens = metadata["workload"].split("/")[-2].removeprefix("gen_")
-
+    endpoints = list(metadata["sys_info"].keys())
+    metadata["sys_info"] = merge_sysinfo(metadata["sys_info"])
+    print(metadata["sys_info"])
     tp_size = metadata["sys_info"]["tensor_parallel_size"]
     is_swap = len(metadata["sys_info"]["swap_modules"]) > 0
     is_delta = len(metadata["sys_info"]["delta_modules"]) > 0
+    is_lora = len(metadata["sys_info"]["lora_modules"]) > 0
     total_models = len(metadata["sys_info"]["delta_modules"]) + len(
         metadata["sys_info"]["swap_modules"]
     )
@@ -96,6 +118,7 @@ def extract_key_metadata(metadata):
             "tp_size": tp_size,
             "is_swap": is_swap,
             "is_delta": is_delta,
+            "is_lora": is_lora,
             "is_unoptimized_delta": is_unoptimized_delta,
             "gen_tokens": gen_tokens,
             "is_nvme": is_nvme,
@@ -301,5 +324,7 @@ def get_short_system_name(key_metadata):
         return "+Prefetch", 2
     elif key_metadata["is_delta"]:
         return "+Delta", 1
+    elif key_metadata["is_lora"]:
+        return "Lora", 0
     else:
         raise ValueError("Unknown system type")
