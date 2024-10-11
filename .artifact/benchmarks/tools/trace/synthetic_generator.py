@@ -135,7 +135,7 @@ def generate_synthetic(args):
             )
     output_file = os.path.join(
         args.output,
-        f"models={args.num_models},distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl",
+        f"mode={args.mode},models={args.num_models},distribution={args.distribution},ar={args.arrival_rate},duration={args.duration}.jsonl",
     )
     with open(output_file, "w") as fp:
         for datum in traces_data:

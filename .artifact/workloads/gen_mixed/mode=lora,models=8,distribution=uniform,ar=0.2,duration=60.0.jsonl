@@ -1,0 +1,10 @@
+{"id": 0, "prompt": "USER: What is the difference between OpenCL and CUDA?\nASSISTANT:", "timestamp": 3.9793725408155503, "model": "lora-8", "min_tokens": 171, "max_tokens": 171}
+{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 10.259026355644739, "model": "lora-2", "min_tokens": 139, "max_tokens": 139}
+{"id": 2, "prompt": "USER: Fuji vs. Nikon, which is better?\nASSISTANT:", "timestamp": 14.875142084665082, "model": "lora-1", "min_tokens": 212, "max_tokens": 212}
+{"id": 3, "prompt": "USER: How to build an arena for chatbots?\nASSISTANT:", "timestamp": 18.811147846251437, "model": "lora-5", "min_tokens": 318, "max_tokens": 318}
+{"id": 4, "prompt": "USER: When is it today?\nASSISTANT:", "timestamp": 21.566390301728934, "model": "lora-1", "min_tokens": 61, "max_tokens": 61}
+{"id": 5, "prompt": "USER: Count from 1 to 10 with step = 3\nASSISTANT:", "timestamp": 26.75718677644698, "model": "lora-3", "min_tokens": 67, "max_tokens": 67}
+{"id": 6, "prompt": "USER: Emoji for \"sharing\". List 10\nASSISTANT:", "timestamp": 29.634782772290176, "model": "lora-5", "min_tokens": 103, "max_tokens": 103}
+{"id": 7, "prompt": "USER: How to parallelize a neural network?\nASSISTANT:", "timestamp": 40.75240483745346, "model": "lora-6", "min_tokens": 258, "max_tokens": 258}
+{"id": 8, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 57.32696574772253, "model": "lora-1", "min_tokens": 44, "max_tokens": 44}
+{"id": 9, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 59.7449762522338, "model": "lora-8", "min_tokens": 12, "max_tokens": 12}

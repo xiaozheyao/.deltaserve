@@ -1,0 +1,10 @@
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.1 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.2 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.3 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.4 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.5 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.6 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.7 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.8 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 0.9 --duration 60 --output .artifact/workloads/gen_mixed --mode lora
+python .artifact/benchmarks/tools/trace/synthetic_generator.py --distribution uniform --num-models 8 --gen-tokens auto --arrival-rate 1.0 --duration 60 --output .artifact/workloads/gen_mixed --mode lora

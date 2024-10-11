@@ -1,13 +1,14 @@
 """Multi-node request router"""
-
+import os
 import time
 import httpx
+import signal
 import uvicorn
 import requests
+from fastapi import FastAPI
 from starlette.requests import Request
 from starlette.responses import StreamingResponse
 from starlette.background import BackgroundTask
-from fastapi import FastAPI, Response
 from fastapi.responses import JSONResponse
 
 app = FastAPI()
@@ -51,7 +52,7 @@ async def _reverse_proxy(request: Request):
         return JSONResponse(content=res, status_code=200)
     if request.url.path == "/kill":
         kill_servers()
-        return "ok"
+        os.kill(os.getpid(), signal.SIGTERM)
     res = await request.json()
     model = res['model']
     client = clients[relations[model][0]]
