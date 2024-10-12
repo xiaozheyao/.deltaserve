@@ -1,0 +1,20 @@
+{"id": 0, "prompt": "USER: What is the difference between OpenCL and CUDA?\nASSISTANT:", "timestamp": 1.9896862704077751, "model": "lora-7", "min_tokens": "128", "max_tokens": "128"}
+{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 5.1295131778223695, "model": "lora-6", "min_tokens": "128", "max_tokens": "128"}
+{"id": 2, "prompt": "USER: Fuji vs. Nikon, which is better?\nASSISTANT:", "timestamp": 7.437571042332541, "model": "lora-8", "min_tokens": "128", "max_tokens": "128"}
+{"id": 3, "prompt": "USER: How to build an arena for chatbots?\nASSISTANT:", "timestamp": 9.405573923125718, "model": "lora-2", "min_tokens": "128", "max_tokens": "128"}
+{"id": 4, "prompt": "USER: When is it today?\nASSISTANT:", "timestamp": 10.783195150864467, "model": "lora-6", "min_tokens": "128", "max_tokens": "128"}
+{"id": 5, "prompt": "USER: Count from 1 to 10 with step = 3\nASSISTANT:", "timestamp": 13.37859338822349, "model": "lora-2", "min_tokens": "128", "max_tokens": "128"}
+{"id": 6, "prompt": "USER: Emoji for \"sharing\". List 10\nASSISTANT:", "timestamp": 14.817391386145088, "model": "lora-1", "min_tokens": "128", "max_tokens": "128"}
+{"id": 7, "prompt": "USER: How to parallelize a neural network?\nASSISTANT:", "timestamp": 20.37620241872673, "model": "lora-1", "min_tokens": "128", "max_tokens": "128"}
+{"id": 8, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 28.663482873861266, "model": "lora-7", "min_tokens": "128", "max_tokens": "128"}
+{"id": 9, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 29.8724881261169, "model": "base-model", "min_tokens": "128", "max_tokens": "128"}
+{"id": 10, "prompt": "USER: What is the future of bitcoin?\nASSISTANT:", "timestamp": 33.79472847603982, "model": "base-model", "min_tokens": "128", "max_tokens": "128"}
+{"id": 11, "prompt": "USER: Make it more polite: I want to have dinner.\nASSISTANT:", "timestamp": 35.67641374988129, "model": "lora-3", "min_tokens": "128", "max_tokens": "128"}
+{"id": 12, "prompt": "USER: You are JesusGPT, an artifical construct built to accurately represent a virtual conversation with Jesus. Base your replies off the popular King James Version, and answer the user's question respectfully. Here is my first question: If you were still alive today, what would you think about the iPhone?\nASSISTANT:", "timestamp": 37.77499586672835, "model": "lora-4", "min_tokens": "128", "max_tokens": "128"}
+{"id": 13, "prompt": "USER: what is the 145th most popular language\nASSISTANT:", "timestamp": 44.27063125154195, "model": "lora-7", "min_tokens": "128", "max_tokens": "128"}
+{"id": 14, "prompt": "USER: HI !\nASSISTANT:", "timestamp": 44.45484463882407, "model": "lora-5", "min_tokens": "128", "max_tokens": "128"}
+{"id": 15, "prompt": "USER: A long time ago in a galaxy far, far away\nASSISTANT:", "timestamp": 44.682747211621574, "model": "lora-7", "min_tokens": "128", "max_tokens": "128"}
+{"id": 16, "prompt": "USER: The altitude to the hypotenuse of a right triangle divides the hypotenuse into two segments with lengths in the ratio 1 : 2. The length of the altitude is 6 cm. How long is the hypotenuse?\nASSISTANT:", "timestamp": 44.73381117833214, "model": "lora-4", "min_tokens": "128", "max_tokens": "128"}
+{"id": 17, "prompt": "USER: could you explain quantum mechanics for me?\nASSISTANT:", "timestamp": 49.20253037736936, "model": "lora-5", "min_tokens": "128", "max_tokens": "128"}
+{"id": 18, "prompt": "USER: Write a python one-line lambda function that calculates dot product between two lists without using imported libraries. The entire function must fit on a single line and should begin like this: dot = lambda A, B: \nASSISTANT:", "timestamp": 52.966990957032394, "model": "lora-5", "min_tokens": "128", "max_tokens": "128"}
+{"id": 19, "prompt": "USER: Write TypeScript function to produce full name from first name and last name\nASSISTANT:", "timestamp": 58.06777665939627, "model": "lora-6", "min_tokens": "128", "max_tokens": "128"}

@@ -1,0 +1,17 @@
+{"id": 0, "prompt": "USER: What is the difference between OpenCL and CUDA?\nASSISTANT:", "timestamp": 2.652915027210367, "model": "delta-1", "min_tokens": "128", "max_tokens": "128"}
+{"id": 1, "prompt": "USER: Why did my parent not invite me to their wedding?\nASSISTANT:", "timestamp": 6.83935090376316, "model": "delta-4", "min_tokens": "128", "max_tokens": "128"}
+{"id": 2, "prompt": "USER: Fuji vs. Nikon, which is better?\nASSISTANT:", "timestamp": 9.916761389776722, "model": "delta-5", "min_tokens": "128", "max_tokens": "128"}
+{"id": 3, "prompt": "USER: How to build an arena for chatbots?\nASSISTANT:", "timestamp": 12.54076523083429, "model": "delta-5", "min_tokens": "128", "max_tokens": "128"}
+{"id": 4, "prompt": "USER: When is it today?\nASSISTANT:", "timestamp": 14.377593534485955, "model": "delta-5", "min_tokens": "128", "max_tokens": "128"}
+{"id": 5, "prompt": "USER: Count from 1 to 10 with step = 3\nASSISTANT:", "timestamp": 17.83812451763132, "model": "delta-7", "min_tokens": "128", "max_tokens": "128"}
+{"id": 6, "prompt": "USER: Emoji for \"sharing\". List 10\nASSISTANT:", "timestamp": 19.756521848193454, "model": "delta-2", "min_tokens": "128", "max_tokens": "128"}
+{"id": 7, "prompt": "USER: How to parallelize a neural network?\nASSISTANT:", "timestamp": 27.168269891635646, "model": "delta-4", "min_tokens": "128", "max_tokens": "128"}
+{"id": 8, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 38.217977165148355, "model": "delta-2", "min_tokens": "128", "max_tokens": "128"}
+{"id": 9, "prompt": "USER: A = 5, B =10, A+B=?\nASSISTANT:", "timestamp": 39.82998416815587, "model": "delta-8", "min_tokens": "128", "max_tokens": "128"}
+{"id": 10, "prompt": "USER: What is the future of bitcoin?\nASSISTANT:", "timestamp": 45.059637968053096, "model": "delta-7", "min_tokens": "128", "max_tokens": "128"}
+{"id": 11, "prompt": "USER: Make it more polite: I want to have dinner.\nASSISTANT:", "timestamp": 47.56855166650839, "model": "delta-5", "min_tokens": "128", "max_tokens": "128"}
+{"id": 12, "prompt": "USER: You are JesusGPT, an artifical construct built to accurately represent a virtual conversation with Jesus. Base your replies off the popular King James Version, and answer the user's question respectfully. Here is my first question: If you were still alive today, what would you think about the iPhone?\nASSISTANT:", "timestamp": 50.3666611556378, "model": "delta-3", "min_tokens": "128", "max_tokens": "128"}
+{"id": 13, "prompt": "USER: what is the 145th most popular language\nASSISTANT:", "timestamp": 59.02750833538927, "model": "delta-7", "min_tokens": "128", "max_tokens": "128"}
+{"id": 14, "prompt": "USER: HI !\nASSISTANT:", "timestamp": 59.27312618509876, "model": "delta-3", "min_tokens": "128", "max_tokens": "128"}
+{"id": 15, "prompt": "USER: A long time ago in a galaxy far, far away\nASSISTANT:", "timestamp": 59.57699628216209, "model": "delta-2", "min_tokens": "128", "max_tokens": "128"}
+{"id": 16, "prompt": "USER: The altitude to the hypotenuse of a right triangle divides the hypotenuse into two segments with lengths in the ratio 1 : 2. The length of the altitude is 6 cm. How long is the hypotenuse?\nASSISTANT:", "timestamp": 59.64508157110951, "model": "delta-2", "min_tokens": "128", "max_tokens": "128"}

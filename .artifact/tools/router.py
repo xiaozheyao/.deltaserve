@@ -88,5 +88,6 @@ if __name__ == "__main__":
         except Exception as e:
             print(f"waiting for upstreams to be ready: {e}")
             time.sleep(10)
+    print(f"Connected to upstreams: {upstreams}")
     print(relations)
     uvicorn.run(app, host=args.host, port=args.port)
